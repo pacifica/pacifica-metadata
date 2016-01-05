@@ -4,7 +4,8 @@ import sys,traceback,pprint,logging
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
+# ch.setLevel(logging.DEBUG)
+#logger.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
@@ -12,15 +13,11 @@ logger.addHandler(ch)
 
 class EUSDBInterface(object):
 	'''
-	class documentation here
+	This is the interface to the MySQL database that EUS is using to store their
+	proposal and user metadata.
 	'''
 	
-	def __init__(self,
-							 host='localhost',
-							 database='default',
-							 user=None,
-							 password=None):
-							 
+	def __init__(self,host='localhost',database='default',user=None,password=None):			 
 		self.debug_on = True if logger.getEffectiveLevel() == logging.DEBUG else False
 							 
 		self.database = database
@@ -49,32 +46,24 @@ class EUSDBInterface(object):
 			# traceback.print_exc()
 			
 			
-	def get_record_collection(self,table_list):
-		results = {}
-		for table_name in table_list.keys():
-			where_clause = table_list.get(table_name).get('where_clause')
-			results[table_name] = self.get_records(table_name,None,where_clause)
-			
-		return results
-	
+				
 	
 	def get_records(self,table,field_collection=None,whereclause=None,orderbyclause=None):
 		if field_collection is None:
 			field_collection = self.get_field_names(table)
-		# field_collection = field_collection if not None else self.get_field_names(table)
 		logger.debug("field collection => {0}".format(",".join(field_collection)))
 		cleaned_field_collection = ["{0} as {1}".format(x,x.lower()) for x in field_collection] if field_collection is not None else ['*']
 		logger.debug("cleaned field collection => {0}".format(",".join(cleaned_field_collection)))
 
 		fields = ",".join(cleaned_field_collection) if field_collection is not None else '*'
-		print "fields => {0}".format(fields)
+		#print "fields => {0}".format(fields)
 		select_sql = "SELECT {0} FROM {1}".format(fields,table)
 		if whereclause is not None:
 			select_sql += " WHERE {0}".format(whereclause)
 		if orderbyclause is not None:
 			select_sql += " ORDER BY {0}".format(orderbyclause)
-		if logger.getEffectiveLevel() == logging.DEBUG:
-			select_sql += " LIMIT 100"
+		# if logger.getEffectiveLevel() == logging.DEBUG:
+		# 	select_sql += " LIMIT 100"
 		logger.debug("Current Query => {0}".format(select_sql))
 		with self.db_conn.cursor() as cur:
 			try:
@@ -103,7 +92,7 @@ WHERE TABLE_SCHEMA = %s AND
 		with self.db_conn.cursor() as cur:
 			cur.execute(select_sql,(self.database,table_name))
 			for row in cur.fetchall():
-				col_name = row.values().pop()
+				col_name = row.values().pop().encode('ascii', 'ignore')
 				if lower_case:
 					col_name = col_name.lower()
 				col_list.append(col_name)
@@ -126,12 +115,12 @@ if __name__ == '__main__':
 	# 							"last_change_date > '2015-12-01'",
 	# 							"PERSON_ID")
 	
-	table_list = {
-		'MYEMSL_EUS_USERS' : {"where_clause":"last_change_date > '2015-12-01'"},
-		'MYEMSL_INSTITUTION_PERSON_XREF' : {"where_clause" : "1=1"},
-		'MYEMSL_INSTITUTIONS' : {"where_clause" : "1=1"},
-		'MYEMSL_INSTRUMENTS' : {"where_clause" : "1=1"}
-	}
-	results = i.get_record_collection(table_list)
-	pprint.pprint(results)
+	# table_list = {
+	# 	'MYEMSL_EUS_USERS' : {"where_clause":"last_change_date > '2015-12-01'"},
+	# 	'MYEMSL_INSTITUTION_PERSON_XREF' : {"where_clause" : "1=1"},
+	# 	'MYEMSL_INSTITUTIONS' : {"where_clause" : "1=1"},
+	# 	'MYEMSL_INSTRUMENTS' : {"where_clause" : "1=1"}
+	# }
+	# results = i.get_record_collection(table_list)
+	# pprint.pprint(results)
 	
