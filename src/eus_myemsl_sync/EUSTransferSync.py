@@ -43,12 +43,17 @@ class EUSTransferSync():
 
       #get the last updated timestamp
       last_update = self.dest_db.get_last_update_time(dest_schema,dest_table)
-      logger.debug("{0} was last updated on {1} at {2}".format(dest_table, last_update.strftime('%m/%d/%Y'),last_update.strftime('%H:%M:%S')))
+      if last_update is not None:
+        logger.debug("{0} was last updated on {1} at {2}".format(dest_table, last_update.strftime('%m/%d/%Y'),last_update.strftime('%H:%M:%S')))
+      else:
+        logger.debug("{0} has no last updated time".format(dest_table))
       
       #get the column list for the source table
       incoming_columns = self.source_db.get_field_names(table)
       logger.debug("Source Table Columns => {0}".format(incoming_columns))
-            
+      
+      has_change_date = True if 'last_change_date' in incoming_columns else False
+                  
       #get the column list for the destination table
       dest_columns = self.dest_db.get_field_names(dest_schema,dest_table)
       logger.debug("Destination Table Columns => {0}".format(dest_columns))
@@ -58,7 +63,11 @@ class EUSTransferSync():
             
       #now get the records for the incoming data
       logger.debug("last_update_time => {0}".format(last_update))
-      where_clause = "last_change_date > '{0}'".format(last_update.strftime('%Y-%m-%d %H:%M:%S')) if force == False else None
+      if has_change_date:
+        where_clause = "last_change_date > '{0}'".format(last_update.strftime('%Y-%m-%d %H:%M:%S')) if force == False else None
+      else:
+        where_clause = None
+        
       incoming_records = self.source_db.get_records(table,incoming_columns,where_clause)
       
     
