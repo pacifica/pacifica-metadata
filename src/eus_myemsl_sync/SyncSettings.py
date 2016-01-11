@@ -46,5 +46,10 @@ TRANSFER_QUEUE_LIST = {
    	'destination_table' : 'proposal_participants',
    	'destination_schema' : 'proposal_info',
    	'order_by_clause' : 'proposal_id,person_id'
+    },
+    'UP_ERICA_PROPOSALS' : {
+	   'destination_table' : 'erica_proposal_xref',
+	   'destination_schema' : 'proposal_info',
+	   'order_by_clause' : 'erica_product_id'
     }
  }
