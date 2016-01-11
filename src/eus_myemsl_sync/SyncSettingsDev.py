@@ -47,7 +47,7 @@ TRANSFER_QUEUE_LIST = {
    	'destination_schema' : 'proposal_info',
    	'order_by_clause' : 'proposal_id,person_id'
     },
-    'UP_ERICA_PROPOSALS' : {
+    'MYEMSL_ERICA_PROPOSAL_XREF' : {
 	   'destination_table' : 'erica_proposal_xref',
 	   'destination_schema' : 'proposal_info',
 	   'order_by_clause' : 'erica_product_id'
