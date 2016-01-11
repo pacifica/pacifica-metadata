@@ -236,21 +236,21 @@ ALTER TABLE proposal_info.instruments OWNER TO metadata_admins;
 -- Name: internal_publications; Type: TABLE; Schema: proposal_info; Owner: metadata_admins; Tablespace: 
 --
 
-CREATE TABLE internal_publications (
-    eus_publication_id integer NOT NULL,
-    submitted_by integer NOT NULL,
-    submitted_date date,
-    document_url character varying,
-    file_size_in_bytes bigint,
-    citation_text text,
-    last_change_date timestamp(6) without time zone,
-    created timestamp(6) with time zone DEFAULT now() NOT NULL,
-    updated timestamp(6) with time zone NOT NULL,
-    deleted timestamp(6) with time zone
-);
+-- CREATE TABLE internal_publications (
+--     eus_publication_id integer NOT NULL,
+--     submitted_by integer NOT NULL,
+--     submitted_date date,
+--     document_url character varying,
+--     file_size_in_bytes bigint,
+--     citation_text text,
+--     last_change_date timestamp(6) without time zone,
+--     created timestamp(6) with time zone DEFAULT now() NOT NULL,
+--     updated timestamp(6) with time zone NOT NULL,
+--     deleted timestamp(6) with time zone
+-- );
 
 
-ALTER TABLE proposal_info.internal_publications OWNER TO metadata_admins;
+-- ALTER TABLE proposal_info.internal_publications OWNER TO metadata_admins;
 
 --
 -- Name: journal_cache; Type: TABLE; Schema: proposal_info; Owner: metadata_admins; Tablespace: 
@@ -311,16 +311,16 @@ ALTER TABLE proposal_info.proposal_instrument_xref OWNER TO metadata_admins;
 -- Name: proposal_int_publication_xref; Type: TABLE; Schema: proposal_info; Owner: metadata_admins; Tablespace: 
 --
 
-CREATE TABLE proposal_int_publication_xref (
-    eus_publication_id integer NOT NULL,
-    proposal_id character varying NOT NULL,
-    created timestamp(6) with time zone DEFAULT now() NOT NULL,
-    updated timestamp(6) with time zone NOT NULL,
-    deleted timestamp(6) with time zone
-);
-
-
-ALTER TABLE proposal_info.proposal_int_publication_xref OWNER TO metadata_admins;
+-- CREATE TABLE proposal_int_publication_xref (
+--     eus_publication_id integer NOT NULL,
+--     proposal_id character varying NOT NULL,
+--     created timestamp(6) with time zone DEFAULT now() NOT NULL,
+--     updated timestamp(6) with time zone NOT NULL,
+--     deleted timestamp(6) with time zone
+-- );
+-- 
+-- 
+-- ALTER TABLE proposal_info.proposal_int_publication_xref OWNER TO metadata_admins;
 
 --
 -- Name: proposal_participants; Type: TABLE; Schema: proposal_info; Owner: metadata_admins; Tablespace: 
@@ -416,8 +416,8 @@ ALTER TABLE ONLY instruments
 -- Name: internal_publications_pkey; Type: CONSTRAINT; Schema: proposal_info; Owner: metadata_admins; Tablespace: 
 --
 
-ALTER TABLE ONLY internal_publications
-    ADD CONSTRAINT internal_publications_pkey PRIMARY KEY (eus_publication_id);
+-- ALTER TABLE ONLY internal_publications
+--     ADD CONSTRAINT internal_publications_pkey PRIMARY KEY (eus_publication_id);
 
 
 --
@@ -448,8 +448,8 @@ ALTER TABLE ONLY proposal_instrument_xref
 -- Name: proposal_int_publication_xref_pkey; Type: CONSTRAINT; Schema: proposal_info; Owner: metadata_admins; Tablespace: 
 --
 
-ALTER TABLE ONLY proposal_int_publication_xref
-    ADD CONSTRAINT proposal_int_publication_xref_pkey PRIMARY KEY (eus_publication_id, proposal_id);
+-- ALTER TABLE ONLY proposal_int_publication_xref
+--     ADD CONSTRAINT proposal_int_publication_xref_pkey PRIMARY KEY (eus_publication_id, proposal_id);
 
 
 --
@@ -478,7 +478,7 @@ CREATE TRIGGER erica_contrib_updated_modified BEFORE INSERT OR UPDATE ON erica_c
 -- Name: erica_interal_pub_updated_modified; Type: TRIGGER; Schema: proposal_info; Owner: metadata_admins
 --
 
-CREATE TRIGGER erica_interal_pub_updated_modified BEFORE INSERT OR UPDATE ON internal_publications FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+-- CREATE TRIGGER erica_interal_pub_updated_modified BEFORE INSERT OR UPDATE ON internal_publications FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 
 --
@@ -648,10 +648,10 @@ GRANT SELECT ON TABLE instruments TO metadata_readers;
 -- Name: internal_publications; Type: ACL; Schema: proposal_info; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE internal_publications FROM PUBLIC;
-REVOKE ALL ON TABLE internal_publications FROM metadata_admins;
-GRANT ALL ON TABLE internal_publications TO metadata_admins;
-GRANT SELECT ON TABLE internal_publications TO metadata_readers;
+-- REVOKE ALL ON TABLE internal_publications FROM PUBLIC;
+-- REVOKE ALL ON TABLE internal_publications FROM metadata_admins;
+-- GRANT ALL ON TABLE internal_publications TO metadata_admins;
+-- GRANT SELECT ON TABLE internal_publications TO metadata_readers;
 
 
 --
@@ -688,10 +688,10 @@ GRANT SELECT ON TABLE proposal_instrument_xref TO metadata_readers;
 -- Name: proposal_int_publication_xref; Type: ACL; Schema: proposal_info; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE proposal_int_publication_xref FROM PUBLIC;
-REVOKE ALL ON TABLE proposal_int_publication_xref FROM metadata_admins;
-GRANT ALL ON TABLE proposal_int_publication_xref TO metadata_admins;
-GRANT SELECT ON TABLE proposal_int_publication_xref TO metadata_readers;
+-- REVOKE ALL ON TABLE proposal_int_publication_xref FROM PUBLIC;
+-- REVOKE ALL ON TABLE proposal_int_publication_xref FROM metadata_admins;
+-- GRANT ALL ON TABLE proposal_int_publication_xref TO metadata_admins;
+-- GRANT SELECT ON TABLE proposal_int_publication_xref TO metadata_readers;
 
 
 --
