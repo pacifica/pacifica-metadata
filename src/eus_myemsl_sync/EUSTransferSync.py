@@ -1,6 +1,5 @@
 #!/usr/bin/python
 import pprint, logging
-from SyncSettings import SOURCE_DATABASE_CREDS, DESTINATION_DATABASE_CREDS, TRANSFER_QUEUE_LIST
 from database_interfaces.EUSDBInterface import EUSDBInterface
 from database_interfaces.MyEMSLPGInterface import MyEMSLPGInterface
 
@@ -11,6 +10,10 @@ logger.setLevel(logging.ERROR)
 formatter = logging.Formatter('%(asctime)s  - %(levelname)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
+
+
+
+from SyncSettingsDev import SOURCE_DATABASE_CREDS, DESTINATION_DATABASE_CREDS, TRANSFER_QUEUE_LIST
 
 
 
