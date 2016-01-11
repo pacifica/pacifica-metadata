@@ -66,32 +66,13 @@ END;$$;
 
 ALTER FUNCTION proposal_info.update_modified_column() OWNER TO metadata_admins;
 
---
--- Name: update_modified_time(); Type: FUNCTION; Schema: proposal_info; Owner: metadata_admins
---
-
-CREATE FUNCTION update_modified_time() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    NEW.updated = now();
-    RETURN NEW;
-END;
-$$;
-
-
-ALTER FUNCTION proposal_info.update_modified_time() OWNER TO metadata_admins;
-
-SET default_tablespace = '';
-
-SET default_with_oids = false;
 
 --
 -- Name: erica_citations; Type: TABLE; Schema: proposal_info; Owner: metadata_admins; Tablespace: 
 --
 
 CREATE TABLE erica_citations (
-    erica_product_id integer NOT NULL,
+    product_id integer NOT NULL,
     article_title text NOT NULL,
     journal_id integer NOT NULL,
     journal_volume integer NOT NULL,
@@ -99,9 +80,9 @@ CREATE TABLE erica_citations (
     page_range character varying,
     abstract_text text,
     erica_xml_text text,
-    last_change_date timestamp(6) without time zone NOT NULL,
     pnnl_clearance_id character varying,
     doi_reference character varying,
+    last_change_date timestamp(6) without time zone NOT NULL,
     created timestamp(6) with time zone DEFAULT now() NOT NULL,
     updated timestamp(6) with time zone NOT NULL,
     deleted timestamp(6) with time zone
@@ -122,6 +103,7 @@ CREATE TABLE erica_contributors (
     network_id character varying,
     dept_code character varying,
     institution_name text,
+    last_change_date timestamp(6) without time zone NOT NULL,
     created timestamp(6) with time zone DEFAULT now() NOT NULL,
     updated timestamp(6) with time zone NOT NULL,
     deleted timestamp(6) with time zone
@@ -136,8 +118,9 @@ ALTER TABLE proposal_info.erica_contributors OWNER TO metadata_admins;
 
 CREATE TABLE erica_keywords (
     keyword_id integer NOT NULL,
-    erica_product_id integer NOT NULL,
+    product_id integer NOT NULL,
     erica_keyword character varying NOT NULL,
+    last_change_date timestamp(6) without time zone NOT NULL,
     created timestamp(6) with time zone DEFAULT now() NOT NULL,
     updated timestamp(6) with time zone NOT NULL,
     deleted timestamp(6) with time zone
@@ -151,9 +134,10 @@ ALTER TABLE proposal_info.erica_keywords OWNER TO metadata_admins;
 --
 
 CREATE TABLE erica_product_contributor_xref (
-    erica_product_id integer NOT NULL,
+    product_id integer NOT NULL,
     erica_author_id integer NOT NULL,
     author_precedence integer DEFAULT 1 NOT NULL,
+    last_change_date timestamp(6) without time zone NOT NULL,
     created timestamp(6) with time zone DEFAULT now() NOT NULL,
     updated timestamp(6) with time zone NOT NULL,
     deleted timestamp(6) with time zone
@@ -167,9 +151,9 @@ ALTER TABLE proposal_info.erica_product_contributor_xref OWNER TO metadata_admin
 --
 
 CREATE TABLE erica_proposal_xref (
-    erica_product_id integer NOT NULL,
+    product_id integer NOT NULL,
     proposal_id character varying NOT NULL,
-    last_change_date date NOT NULL,
+    last_change_date timestamp(6) without time zone NOT NULL,
     created timestamp(6) with time zone DEFAULT now() NOT NULL,
     updated timestamp(6) with time zone NOT NULL,
     deleted timestamp(6) with time zone
@@ -361,7 +345,7 @@ ALTER TABLE proposal_info.proposal_participants OWNER TO metadata_admins;
 --
 
 ALTER TABLE ONLY erica_citations
-    ADD CONSTRAINT erica_citations_pkey PRIMARY KEY (erica_product_id);
+    ADD CONSTRAINT erica_citations_pkey PRIMARY KEY (product_id);
 
 
 --
@@ -385,7 +369,7 @@ ALTER TABLE ONLY erica_keywords
 --
 
 ALTER TABLE ONLY erica_product_contributor_xref
-    ADD CONSTRAINT erica_product_contributor_xref_pkey PRIMARY KEY (erica_product_id, erica_author_id);
+    ADD CONSTRAINT erica_product_contributor_xref_pkey PRIMARY KEY (product_id, erica_author_id);
 
 
 --
@@ -393,7 +377,7 @@ ALTER TABLE ONLY erica_product_contributor_xref
 --
 
 ALTER TABLE ONLY erica_proposal_xref
-    ADD CONSTRAINT erica_proposal_xref_pkey PRIMARY KEY (erica_product_id, proposal_id);
+    ADD CONSTRAINT erica_proposal_xref_pkey PRIMARY KEY (product_id, proposal_id);
 
 
 --
