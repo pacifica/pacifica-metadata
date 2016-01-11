@@ -1,4 +1,5 @@
-#MyEMSL Bibliographic Database#
+MyEMSL Bibliographic Database
+==========
 This repository contains both the synchronization script and concomitant database schema for managing the transfer of EUS Bibliographic Data that has been mirrored to MyEMSL to allow streamlined search and retrieval operations.
 
 ##Transfer Script##
