@@ -153,7 +153,7 @@ ALTER TABLE proposal_info.erica_product_contributor_xref OWNER TO metadata_admin
 CREATE TABLE erica_proposal_xref (
     product_id integer NOT NULL,
     proposal_id character varying NOT NULL,
-    last_change_date timestamp(6) without time zone NOT NULL,
+    last_change_date timestamp(6) without time zone,
     created timestamp(6) with time zone DEFAULT now() NOT NULL,
     updated timestamp(6) with time zone NOT NULL,
     deleted timestamp(6) with time zone
