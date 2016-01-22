@@ -3,7 +3,7 @@
 import psycopg2
 import psycopg2.extras
 import datetime as dt
-import traceback,logging,itertools
+import traceback,logging,itertools,pprint,os
 
 logger = logging.getLogger(__name__)
 #logger.setLevel(logging.DEBUG)
@@ -14,7 +14,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-class MyEMSLPGInterface(object):
+class PGDBInterface(object):
 	'''
 	class documentation here
 	'''
@@ -49,11 +49,24 @@ class MyEMSLPGInterface(object):
 			conn = psycopg2.connect(connection_string)
 			logger.debug("Sucessfully connected to '{0}' database on host {1}".format(conn_params.get('dbname'),conn_params.get('host')))
 			return conn
-		except:
-			logger.error(traceback.format_exc())
-			# traceback.print_exc()
-			
-			
+		except psycopg2.OperationalError, e:
+			#most likely a missing database, try to instantiate?
+			print e
+
+
+	# def check_destination_database(self,db_connection,database_schema):
+	#   #see if our destination database exists
+	#   check_sql = "SELECT EXISTS(SELECT 1 FROM pg_namespace WHERE nspname = %s) as exists"
+	#   cur = db_connection.cursor()
+	#   cur.execute(check_sql,database_schema)
+	#   result = cur.fetchone()
+	#   if result.get('exists') == False:
+	#   	#build our schema
+	#   	db_connection.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
+	#   	
+	#   	cur.execute()
+  	
+	  	
 			
 	
 	
@@ -240,8 +253,6 @@ if __name__ == '__main__':
 	# 
 	# records = i.get_records('proposal_info.proposal_info',None)
 	# pprint.pprint(records)
-
-	# insert_data = [("49067","PREMIER CAT - Using Dynamic TEM to Study the Nucleation and Growth of Organic Semiconductor Nanostructures","The in situ growth of organic crystalline nanostructures in solution will be examined by dynamic TEM to understand the growth mechanism of these unusual structures. This understanding will aid in the development of new materials with novel geometries for applications in light sensing devices for electronics and energy production. Using the liquid flow holder available at EMSL we will react two heated solutions and observe the growth phenomenon by the successive image capturing capabilities of the dynamic TEM. The dynamic TEM will enable us to avoid electron beam damage of these organic materials.","Other","4","PREMIER CAT","12/03/2015 17:19:27","12/17/2015","01/04/2016","09/30/2016","12/17/2015 14:04:34"),("49197","Atom-probe tomography of epitaxial complex oxide nanocomposites","The goal of this proposal is to study the interfacial composition of between immiscible complex oxides and spinel oxide nanostructures using atom probe tomography in order to understanding the chemical interactions that drive phase segregation.  To date, no systematic study of complex oxide materials using atom probe tomography has been reported.  The results from atom probe tomography will open new pathways for future research related to solid oxide fuel cells and solar driven energy applications such as artificial photosynthesis at PNNL and enhance the understanding of the thermodynamics and kinetics that drive phase segregation in the materials.","Energy Materials and Processes","2","EMSL","11/30/2015 12:35:26","12/17/2015","12/17/2015","09/30/2016","12/17/2015 12:24:03"),("49196","FT ICRMS analysis to assess the molecular-level composition of dissolved organic nitrogen in the runoff and surface water in the Indian River Lagoon, South Florida","We propose to utilize EMSL’s ultra-high resolution mass spectrometry to determine the composition of dissolved organic N from runoff water and surface water of Indian River Lagoon. It is important to quantify and qualify dynamics of dissolved organic nitrogen, which remains poorly represented in in existing models for prediction of N fate and transport in surface waters of this area. Specifically, this experiment is designed to test the influence of rainfall, temperature and fertilization on the dynamics of dissolved organic nitrogen in runoff and surface water samples in the Indian River Lagoon. Integration of this information will help to develop best management practices (BMPs) in south Florida.","Terrestrial and Subsurface Ecosystems","1","RAPID","11/23/2015 14:08:37","12/16/2015","01/26/2016","02/24/2016","12/16/2015 14:23:09")]
 	# 
 	# #i.insert_records('proposal_info.proposal_info',insert_data)
 	

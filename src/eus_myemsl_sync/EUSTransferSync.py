@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import pprint, logging
-from database_interfaces.EUSDBInterface import EUSDBInterface
-from database_interfaces.MyEMSLPGInterface import MyEMSLPGInterface
+from database_interfaces.MySQLDBInterface import MySQLDBInterface
+from database_interfaces.PGDBInterface import PGDBInterface
 
 logger = logging.getLogger(__name__)
 ch = logging.StreamHandler()
@@ -20,21 +20,26 @@ from SyncSettingsDev import SOURCE_DATABASE_CREDS, DESTINATION_DATABASE_CREDS, T
 class EUSTransferSync():
   def __init__(self):
     
+  
     source = SOURCE_DATABASE_CREDS
     dest = DESTINATION_DATABASE_CREDS
     
-    self.source_db = EUSDBInterface(
+
+    self.source_db = MySQLDBInterface(
       host=source.get('host'),
       database=source.get('database'),
       user=source.get('user'),
       password=source.get('password')    
     )
-    self.dest_db = MyEMSLPGInterface(
+  
+    self.dest_db = PGDBInterface(
       host=dest.get('host'),
       database=dest.get('database'),
       user=dest.get('user'),
       password=dest.get('password')
-    )
+    )      
+    
+    self.dest_schema = dest.get('schema')    
   
   
   def start_transfer(self, force=False):
@@ -124,7 +129,7 @@ if __name__ == '__main__':
   logger.setLevel(logging.DEBUG)
   sync = EUSTransferSync()
   table_list = TRANSFER_QUEUE_LIST
-  
+    
   # for table in table_list.keys():
   #   dest_table = table_list.get(table).get('destination_table')
   #   dest_schema = table_list.get(table).get('destination_schema')
@@ -136,4 +141,4 @@ if __name__ == '__main__':
   # source_table = 'MYEMSL_EUS_USERS'
   # destination_table = 'eus_users'
   # sync.transfer_table_contents(source_table, destination_table)
-  sync.start_transfer()
+  #sync.start_transfer()

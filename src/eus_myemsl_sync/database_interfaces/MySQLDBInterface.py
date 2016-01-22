@@ -11,7 +11,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-class EUSDBInterface(object):
+class MySQLDBInterface(object):
 	'''
 	This is the interface to the MySQL database that EUS is using to store their
 	proposal and user metadata.
