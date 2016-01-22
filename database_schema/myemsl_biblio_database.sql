@@ -320,10 +320,8 @@ CREATE TRIGGER user_update_modified BEFORE INSERT OR UPDATE ON users FOR EACH RO
 -- Name: public; Type: ACL; Schema: -; Owner: metadata_admins
 --
 
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
 REVOKE ALL ON SCHEMA public FROM metadata_admins;
 GRANT ALL ON SCHEMA public TO metadata_admins;
-GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
 
@@ -331,7 +329,6 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- Name: users; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE users FROM PUBLIC;
 REVOKE ALL ON TABLE users FROM metadata_admins;
 GRANT ALL ON TABLE users TO metadata_admins;
 GRANT SELECT ON TABLE users TO metadata_readers;
@@ -341,7 +338,6 @@ GRANT SELECT ON TABLE users TO metadata_readers;
 -- Name: institution_person_xref; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE institution_person_xref FROM PUBLIC;
 REVOKE ALL ON TABLE institution_person_xref FROM metadata_admins;
 GRANT ALL ON TABLE institution_person_xref TO metadata_admins;
 GRANT SELECT ON TABLE institution_person_xref TO metadata_readers;
@@ -351,7 +347,6 @@ GRANT SELECT ON TABLE institution_person_xref TO metadata_readers;
 -- Name: institutions; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE institutions FROM PUBLIC;
 REVOKE ALL ON TABLE institutions FROM metadata_admins;
 GRANT ALL ON TABLE institutions TO metadata_admins;
 GRANT SELECT ON TABLE institutions TO metadata_readers;
@@ -361,7 +356,6 @@ GRANT SELECT ON TABLE institutions TO metadata_readers;
 -- Name: instruments; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE instruments FROM PUBLIC;
 REVOKE ALL ON TABLE instruments FROM metadata_admins;
 GRANT ALL ON TABLE instruments TO metadata_admins;
 GRANT SELECT ON TABLE instruments TO metadata_readers;
@@ -371,7 +365,6 @@ GRANT SELECT ON TABLE instruments TO metadata_readers;
 -- Name: internal_publications; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
--- REVOKE ALL ON TABLE internal_publications FROM PUBLIC;
 -- REVOKE ALL ON TABLE internal_publications FROM metadata_admins;
 -- GRANT ALL ON TABLE internal_publications TO metadata_admins;
 -- GRANT SELECT ON TABLE internal_publications TO metadata_readers;
@@ -381,7 +374,6 @@ GRANT SELECT ON TABLE instruments TO metadata_readers;
 -- Name: journal_cache; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE journal_cache FROM PUBLIC;
 REVOKE ALL ON TABLE journal_cache FROM metadata_admins;
 GRANT ALL ON TABLE journal_cache TO metadata_admins;
 GRANT SELECT ON TABLE journal_cache TO metadata_readers;
@@ -391,7 +383,6 @@ GRANT SELECT ON TABLE journal_cache TO metadata_readers;
 -- Name: proposal_info; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE proposal_info FROM PUBLIC;
 REVOKE ALL ON TABLE proposal_info FROM metadata_admins;
 GRANT ALL ON TABLE proposal_info TO metadata_admins;
 GRANT SELECT ON TABLE proposal_info TO metadata_readers;
@@ -401,7 +392,6 @@ GRANT SELECT ON TABLE proposal_info TO metadata_readers;
 -- Name: proposal_instrument_xref; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE proposal_instrument_xref FROM PUBLIC;
 REVOKE ALL ON TABLE proposal_instrument_xref FROM metadata_admins;
 GRANT ALL ON TABLE proposal_instrument_xref TO metadata_admins;
 GRANT SELECT ON TABLE proposal_instrument_xref TO metadata_readers;
@@ -411,7 +401,6 @@ GRANT SELECT ON TABLE proposal_instrument_xref TO metadata_readers;
 -- Name: proposal_int_publication_xref; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
--- REVOKE ALL ON TABLE proposal_int_publication_xref FROM PUBLIC;
 -- REVOKE ALL ON TABLE proposal_int_publication_xref FROM metadata_admins;
 -- GRANT ALL ON TABLE proposal_int_publication_xref TO metadata_admins;
 -- GRANT SELECT ON TABLE proposal_int_publication_xref TO metadata_readers;
@@ -421,7 +410,6 @@ GRANT SELECT ON TABLE proposal_instrument_xref TO metadata_readers;
 -- Name: proposal_participants; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE proposal_participants FROM PUBLIC;
 REVOKE ALL ON TABLE proposal_participants FROM metadata_admins;
 GRANT ALL ON TABLE proposal_participants TO metadata_admins;
 GRANT SELECT ON TABLE proposal_participants TO metadata_readers;
