@@ -143,10 +143,10 @@ CREATE TABLE journal_cache (
 ALTER TABLE eus_new.journal_cache OWNER TO metadata_admins;
 
 --
--- Name: eus_new; Type: TABLE; Schema: eus_new; Owner: metadata_admins; Tablespace: 
+-- Name: proposal_info; Type: TABLE; Schema: eus_new; Owner: metadata_admins; Tablespace: 
 --
 
-CREATE TABLE eus_new (
+CREATE TABLE proposal_info (
     proposal_id character varying NOT NULL,
     title text NOT NULL,
     abstract text,
@@ -164,7 +164,7 @@ CREATE TABLE eus_new (
 );
 
 
-ALTER TABLE eus_new.eus_new OWNER TO metadata_admins;
+ALTER TABLE eus_new.proposal_info OWNER TO metadata_admins;
 
 --
 -- Name: proposal_instrument_xref; Type: TABLE; Schema: eus_new; Owner: metadata_admins; Tablespace: 
@@ -247,8 +247,8 @@ ALTER TABLE ONLY journal_cache
 -- Name: eus_new_pkey; Type: CONSTRAINT; Schema: eus_new; Owner: metadata_admins; Tablespace: 
 --
 
-ALTER TABLE ONLY eus_new
-    ADD CONSTRAINT eus_new_pkey PRIMARY KEY (proposal_id);
+ALTER TABLE ONLY proposal_info
+    ADD CONSTRAINT proposal_info_pkey PRIMARY KEY (proposal_id);
 
 
 --
@@ -306,7 +306,7 @@ CREATE TRIGGER prop_part_updated_modified BEFORE INSERT OR UPDATE ON proposal_pa
 -- Name: trg_prop_info_update; Type: TRIGGER; Schema: eus_new; Owner: metadata_admins
 --
 
-CREATE TRIGGER trg_prop_info_update BEFORE INSERT OR UPDATE ON eus_new FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+CREATE TRIGGER trg_prop_info_update BEFORE INSERT OR UPDATE ON proposal_info FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 
 --
@@ -388,13 +388,13 @@ GRANT SELECT ON TABLE journal_cache TO metadata_readers;
 
 
 --
--- Name: eus_new; Type: ACL; Schema: eus_new; Owner: metadata_admins
+-- Name: proposal_info; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
-REVOKE ALL ON TABLE eus_new FROM PUBLIC;
-REVOKE ALL ON TABLE eus_new FROM metadata_admins;
-GRANT ALL ON TABLE eus_new TO metadata_admins;
-GRANT SELECT ON TABLE eus_new TO metadata_readers;
+REVOKE ALL ON TABLE proposal_info FROM PUBLIC;
+REVOKE ALL ON TABLE proposal_info FROM metadata_admins;
+GRANT ALL ON TABLE proposal_info TO metadata_admins;
+GRANT SELECT ON TABLE proposal_info TO metadata_readers;
 
 
 --

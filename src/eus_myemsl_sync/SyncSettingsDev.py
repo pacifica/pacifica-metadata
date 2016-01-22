@@ -28,8 +28,8 @@ TRANSFER_QUEUE_LIST = {
 		'destination_schema' : 'eus_new',
 		'order_by_clause' : 'instrument_id'
 	},
-   'MYEMSL_eus_new' : {
-   	'destination_table' : 'eus_new',
+   'MYEMSL_PROPOSAL_INFO' : {
+   	'destination_table' : 'proposal_info',
    	'destination_schema' : 'eus_new',
    	'order_by_clause' : 'proposal_id'
    },
