@@ -204,7 +204,7 @@ ALTER TABLE eus_new.proposal_participants OWNER TO metadata_admins;
 
 
 --
--- Name: publication_publication_proposal_xref; Type: TABLE; Schema: erica_info; Owner: metadata_admins; Tablespace: 
+-- Name: publication_publication_proposal_xref; Type: TABLE; Schema: eus_new; Owner: metadata_admins; Tablespace: 
 --
 
 CREATE TABLE publication_proposal_xref (
@@ -217,12 +217,12 @@ CREATE TABLE publication_proposal_xref (
 );
 
 
-ALTER TABLE erica_info.publication_proposal_xref OWNER TO metadata_admins;
+ALTER TABLE eus_new.publication_proposal_xref OWNER TO metadata_admins;
 
 
 
 --
--- Name: publication_proposal_xref_pkey; Type: CONSTRAINT; Schema: erica_info; Owner: metadata_admins; Tablespace: 
+-- Name: publication_proposal_xref_pkey; Type: CONSTRAINT; Schema: eus_new; Owner: metadata_admins; Tablespace: 
 --
 
 ALTER TABLE ONLY publication_proposal_xref
@@ -440,7 +440,7 @@ GRANT ALL ON TABLE proposal_participants TO metadata_admins;
 GRANT SELECT ON TABLE proposal_participants TO metadata_readers;
 
 --
--- Name: publication_proposal_xref; Type: ACL; Schema: erica_info; Owner: metadata_admins
+-- Name: publication_proposal_xref; Type: ACL; Schema: eus_new; Owner: metadata_admins
 --
 
 REVOKE ALL ON TABLE publication_proposal_xref FROM metadata_admins;
