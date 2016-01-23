@@ -316,14 +316,6 @@ CREATE TRIGGER trg_prop_info_update BEFORE INSERT OR UPDATE ON proposal_info FOR
 CREATE TRIGGER user_update_modified BEFORE INSERT OR UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 
---
--- Name: public; Type: ACL; Schema: -; Owner: metadata_admins
---
-
-REVOKE ALL ON SCHEMA public FROM metadata_admins;
-GRANT ALL ON SCHEMA public TO metadata_admins;
-
-
 
 --
 -- Name: users; Type: ACL; Schema: eus_new; Owner: metadata_admins

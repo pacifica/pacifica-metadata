@@ -5,7 +5,7 @@ SOURCE_DATABASE_CREDS = {
 	'password':'play'
 }
 DESTINATION_DATABASE_CREDS = {
-	'host':'localhost',
+	'host':'172.22.196.169',
 	'database':'myemsl_metadata',
 	'schema':'eus_new',
 	'user':'metadata_admins',
