@@ -119,22 +119,6 @@ CREATE TABLE product_contributor_xref (
 
 ALTER TABLE erica_info.product_contributor_xref OWNER TO metadata_admins;
 
---
--- Name: proposal_xref; Type: TABLE; Schema: erica_info; Owner: metadata_admins; Tablespace: 
---
-
-CREATE TABLE proposal_xref (
-		product_id integer NOT NULL,
-		proposal_id character varying NOT NULL,
-		last_change_date timestamp(6) without time zone,
-		created timestamp(6) with time zone DEFAULT now() NOT NULL,
-		updated timestamp(6) with time zone NOT NULL,
-		deleted timestamp(6) with time zone
-);
-
-
-ALTER TABLE erica_info.proposal_xref OWNER TO metadata_admins;
-
 
 --
 -- Name: citations_pkey; Type: CONSTRAINT; Schema: erica_info; Owner: metadata_admins; Tablespace: 
@@ -169,14 +153,6 @@ ALTER TABLE ONLY product_contributor_xref
 
 
 --
--- Name: proposal_xref_pkey; Type: CONSTRAINT; Schema: erica_info; Owner: metadata_admins; Tablespace: 
---
-
-ALTER TABLE ONLY proposal_xref
-		ADD CONSTRAINT proposal_xref_pkey PRIMARY KEY (product_id, proposal_id);
-
-
---
 -- Name: cit_updated_modified; Type: TRIGGER; Schema: erica_info; Owner: metadata_admins
 --
 
@@ -195,20 +171,6 @@ CREATE TRIGGER contrib_updated_modified BEFORE INSERT OR UPDATE ON contributors 
 --
 
 -- CREATE TRIGGER interal_pub_updated_modified BEFORE INSERT OR UPDATE ON internal_publications FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
-
-
---
--- Name: prod_contrib_updated_modified; Type: TRIGGER; Schema: erica_info; Owner: metadata_admins
---
-
-CREATE TRIGGER prod_contrib_updated_modified BEFORE INSERT OR UPDATE ON product_contributor_xref FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
-
-
---
--- Name: prop_xref_updated_modified; Type: TRIGGER; Schema: erica_info; Owner: metadata_admins
---
-
-CREATE TRIGGER prop_xref_updated_modified BEFORE INSERT OR UPDATE ON proposal_xref FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 
 --

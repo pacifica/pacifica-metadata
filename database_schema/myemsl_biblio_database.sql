@@ -204,6 +204,32 @@ ALTER TABLE eus_new.proposal_participants OWNER TO metadata_admins;
 
 
 --
+-- Name: publication_publication_proposal_xref; Type: TABLE; Schema: erica_info; Owner: metadata_admins; Tablespace: 
+--
+
+CREATE TABLE publication_proposal_xref (
+        product_id integer NOT NULL,
+        proposal_id character varying NOT NULL,
+        last_change_date timestamp(6) without time zone,
+        created timestamp(6) with time zone DEFAULT now() NOT NULL,
+        updated timestamp(6) with time zone NOT NULL,
+        deleted timestamp(6) with time zone
+);
+
+
+ALTER TABLE erica_info.publication_proposal_xref OWNER TO metadata_admins;
+
+
+
+--
+-- Name: publication_proposal_xref_pkey; Type: CONSTRAINT; Schema: erica_info; Owner: metadata_admins; Tablespace: 
+--
+
+ALTER TABLE ONLY publication_proposal_xref
+        ADD CONSTRAINT publication_proposal_xref_pkey PRIMARY KEY (product_id, proposal_id);
+
+
+--
 -- Name: users_pkey; Type: CONSTRAINT; Schema: eus_new; Owner: metadata_admins; Tablespace: 
 --
 
@@ -315,6 +341,13 @@ CREATE TRIGGER trg_prop_info_update BEFORE INSERT OR UPDATE ON proposal_info FOR
 
 CREATE TRIGGER user_update_modified BEFORE INSERT OR UPDATE ON users FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
+--
+-- Name: prod_contrib_updated_modified; Type: TRIGGER; Schema: erica_info; Owner: metadata_admins
+--
+
+CREATE TRIGGER prod_contrib_updated_modified BEFORE INSERT OR UPDATE ON product_contributor_xref FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+
 
 
 --
@@ -405,6 +438,15 @@ GRANT SELECT ON TABLE proposal_instrument_xref TO metadata_readers;
 REVOKE ALL ON TABLE proposal_participants FROM metadata_admins;
 GRANT ALL ON TABLE proposal_participants TO metadata_admins;
 GRANT SELECT ON TABLE proposal_participants TO metadata_readers;
+
+--
+-- Name: publication_proposal_xref; Type: ACL; Schema: erica_info; Owner: metadata_admins
+--
+
+REVOKE ALL ON TABLE publication_proposal_xref FROM metadata_admins;
+GRANT ALL ON TABLE publication_proposal_xref TO metadata_admins;
+GRANT SELECT ON TABLE publication_proposal_xref TO metadata_readers;
+
 
 
 --
