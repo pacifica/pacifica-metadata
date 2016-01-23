@@ -172,6 +172,13 @@ CREATE TRIGGER contrib_updated_modified BEFORE INSERT OR UPDATE ON contributors 
 
 -- CREATE TRIGGER interal_pub_updated_modified BEFORE INSERT OR UPDATE ON internal_publications FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
+--
+-- Name: prod_contrib_updated_modified; Type: TRIGGER; Schema: erica_info; Owner: metadata_admins
+--
+
+CREATE TRIGGER prod_contrib_updated_modified BEFORE INSERT OR UPDATE ON product_contributor_xref FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+
 
 --
 -- Name: citations; Type: ACL; Schema: erica_info; Owner: metadata_admins
