@@ -1,23 +1,37 @@
 #!/usr/bin/python
 
-from peewee import PostgresqlDatabase as pgdb
-from peewee import Model, DateTimeField
-from datetime.datetime import now
-from os import getenv
+from metadata.orm.base import DB
+from metadata.orm.citations import Citations
+from metadata.orm.contributors import Contributors
+from metadata.orm.institution_person import InstitutionPerson
+from metadata.orm.institutions import Institutions
+from metadata.orm.instruments import Instruments
+from metadata.orm.journals import Journals
+from metadata.orm.keywords import Keywords
+from metadata.orm.product_contributor import ProductContributor
+from metadata.orm.proposal_instrument import ProposalInstrument
+from metadata.orm.users import Users
+from metadata.orm.proposal_participants import ProposalParticipants
+from metadata.orm.proposals import Proposals
+from metadata.orm.publication_proposal import PublicationProposal
 
-DB = pgdb(os.getenv('POSTGRES_ENV_POSTGRES_DB'),
-          user=os.getenv('POSTGRES_ENV_POSTGRES_USER'),
-          password=os.getenv('POSTGRES_ENV_POSTGRES_PASSWORD'),
-          host=os.getenv('POSTGRES_PORT_5432_TCP_ADDR'),
-          port=os.getenv('POSTGRES_PORT_5432_TCP_PORT')
-         )
-
-class PacificaModel(Model):
-    last_change_date = DateTimeField(default=now)
-    created = DateTimeField(default=now)
-    updated = DateTimeField(default=now)
-    deleted = DateTimeField(default=now)
-
-    class Meta(object):
-        database = DB
+def create_tables():
+    objects = [
+        Citations,
+        Contributors,
+        InstitutionPerson,
+        Institutions,
+        Instruments,
+        Journals,
+        Keywords,
+        ProductContributor,
+        ProposalInstrument,
+        ProposalParticipants,
+        Proposals,
+        PublicationProposal,
+        Users
+    ]
+    DB.connect()
+    DB.create_tables(objects)
+    DB.close()
 

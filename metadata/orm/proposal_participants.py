@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-from peewee import IntegerField, TextField, CharField
-from metadata.orm import DB, PacificaModel
+from peewee import IntegerField, TextField, CharField, CompositeKey
+from metadata.orm.base import DB, PacificaModel
 
 class ProposalParticipants(PacificaModel):
     proposal_id = CharField(default="")

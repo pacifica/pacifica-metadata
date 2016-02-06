@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-from peewee import IntegerField, TextField, CharField
-from metadata.orm import DB, PacificaModel
+from peewee import IntegerField, TextField, CharField, CompositeKey
+from metadata.orm.base import DB, PacificaModel
 
 class ProductContributor(PacificaModel):
     product_id = IntegerField(default=-1)

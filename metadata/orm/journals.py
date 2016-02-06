@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from peewee import IntegerField, TextField, CharField, FloatField
-from metadata.orm import DB, PacificaModel
+from metadata.orm.base import DB, PacificaModel
 
 class Journals(PacificaModel):
     journal_id = IntegerField(default=-1, primary_key=True)
