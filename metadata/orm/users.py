@@ -3,12 +3,9 @@
 from peewee import IntegerField, TextField, CharField
 from metadata.orm import DB, PacificaModel
 
-class Contributors(PacificaModel):
-    author_id = IntegerField(default=-1, primary_key=True)
+class Users(PacificaModel):
+    person_id = IntegerField(default=-1)
     first_name = CharField(default="")
-    middle_initial = CharField(default="")
     last_name = CharField(default="")
     network_id = CharField(default="")
-    dept_code = CharField(default="")
-    institution_name = TextField(default="")
 
