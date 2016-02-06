@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
-from peewee import IntegerField, TextField, CharField, CompositeKey
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.base import DB, PacificaModel
 
-class FileGroup(PacificaModel):
-    file_id = IntegerField(default=-1)
-    key_id = IntegerField(default=-1)
-    value_id = IntegerField(default=-1)
+class FileKeyValue(PacificaModel):
+    file_id = ForeignKeyField(Files, related_name='file_id')
+    key_id = ForeignKeyField(Keys, related_name='key_id')
+    value_id = ForeignKeyField(Values, related_name='value_id')
 
     class Meta(object):
         database = DB
