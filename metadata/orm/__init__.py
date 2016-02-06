@@ -14,6 +14,12 @@ from metadata.orm.users import Users
 from metadata.orm.proposal_participants import ProposalParticipants
 from metadata.orm.proposals import Proposals
 from metadata.orm.publication_proposal import PublicationProposal
+from metadata.orm.files import Files
+from metadata.orm.keys import Keys
+from metadata.orm.values import Values
+from metadata.orm.transactions import Transactions
+from metadata.orm.file_transaction import FileTransaction
+from metadata.orm.file_key_value import FileKeyValue
 
 def create_tables():
     objects = [
@@ -29,7 +35,13 @@ def create_tables():
         ProposalParticipants,
         Proposals,
         PublicationProposal,
-        Users
+        Users,
+        Files,
+        Keys,
+        Values,
+        Transactions,
+        FileTransaction,
+        FileKeyValue
     ]
     DB.connect()
     DB.create_tables(objects)
