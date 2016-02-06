@@ -18,7 +18,6 @@ from metadata.orm.files import Files
 from metadata.orm.keys import Keys
 from metadata.orm.values import Values
 from metadata.orm.transactions import Transactions
-from metadata.orm.file_transaction import FileTransaction
 from metadata.orm.file_key_value import FileKeyValue
 
 def create_tables():
@@ -40,7 +39,6 @@ def create_tables():
         Keys,
         Values,
         Transactions,
-        FileTransaction,
         FileKeyValue
     ]
     DB.connect()

@@ -3,15 +3,15 @@
 from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.base import DB, PacificaModel
 from metadata.orm.files import Files
-from metadata.orm.values import Keys
-from metadata.orm.keys import Values
+from metadata.orm.values import Values
+from metadata.orm.keys import Keys
 
 class FileKeyValue(PacificaModel):
-    file_id = ForeignKeyField(Files, related_name='file_id')
-    key_id = ForeignKeyField(Keys, related_name='key_id')
-    value_id = ForeignKeyField(Values, related_name='value_id')
+    file = ForeignKeyField(Files, related_name='metadata')
+    key = ForeignKeyField(Keys, related_name='metadata')
+    value = ForeignKeyField(Values, related_name='metadata')
 
     class Meta(object):
         database = DB
-        primary_key = CompositeKey('file_id', 'key_id', 'value_id')
+        primary_key = CompositeKey('file', 'key', 'value')
 
