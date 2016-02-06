@@ -4,7 +4,7 @@ from peewee import IntegerField, TextField, CharField
 from metadata.orm import DB, PacificaModel
 
 class Instruments(PacificaModel):
-    instrument_id = IntegerField(default=-1)
+    instrument_id = IntegerField(default=-1, primary_key=True)
     display_name = CharField(default="")
     instrument_name = CharField(default="")
     name_short = CharField(default="")
