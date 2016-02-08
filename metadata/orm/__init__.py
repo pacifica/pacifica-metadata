@@ -42,6 +42,8 @@ def create_tables():
         FileKeyValue
     ]
     DB.connect()
-    DB.create_tables(objects)
+    for obj in objects:
+        if not obj.table_exists():
+            obj.create_table()
     DB.close()
 
