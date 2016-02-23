@@ -1,9 +1,17 @@
 #!/usr/bin/python
+"""
+Citations model for tracking journal articles.
+"""
+from peewee import IntegerField, TextField, CharField, Expression, OP
+from metadata.orm.base import PacificaModel
 
-from peewee import IntegerField, TextField, CharField
-from metadata.orm.base import DB, PacificaModel
-
+# Citations has too many attributes...
+# pylint: disable=too-many-instance-attributes
 class Citations(PacificaModel):
+    """
+    Citations model tracks metadata for a journal article and
+    links it to a product.
+    """
     product_id = IntegerField(default=-1, primary_key=True)
     article_title = TextField(default="")
     journal_id = IntegerField(default=-1)
@@ -12,6 +20,56 @@ class Citations(PacificaModel):
     page_range = CharField(default="")
     abstract_text = TextField(default="")
     xml_text = TextField(default="")
+    # TODO: Why is this here?
     pnnl_clearance_id = CharField(default="")
     doi_reference = CharField(default="")
+
+    def to_hash(self):
+        """
+        Convert the citation fields to a serializable hash.
+        """
+        obj = super(Citations, self).to_hash()
+        obj['product_id'] = int(self.product_id)
+        obj['article_title'] = str(self.article_title)
+        obj['journal_id'] = int(self.journal_id)
+        obj['journal_volume'] = int(self.journal_volume)
+        obj['journal_issue'] = int(self.journal_issue)
+        obj['page_range'] = str(self.page_range)
+        obj['doi_reference'] = int(self.doi_reference)
+
+    def from_hash(self, obj):
+        """
+        Converts the object into the citation object fields.
+        """
+        super(Citations, self).from_hash(obj)
+        if 'product_id' in obj:
+            self.product_id = int(obj['product_id'])
+        if 'article_title' in obj:
+            self.article_title = str(obj['article_title'])
+        if 'journal_id' in obj:
+            self.journal_id = int(obj['journal_id'])
+        if 'journal_volume' in obj:
+            self.journal_volume = int(obj['journal_volume'])
+        if 'journal_issue' in obj:
+            self.journal_issue = int(obj['journal_issue'])
+        if 'page_range' in obj:
+            self.page_range = str(obj['page_range'])
+        if 'doi_reference' in obj:
+            self.doi_reference = int(obj['doi_reference'])
+        if 'xml_text' in obj:
+            self.xml_text = str(obj['xml_text'])
+        if 'abstract_text' in obj:
+            self.abstract_text = str(obj['abstract_text'])
+
+    def where_clause(self, kwargs):
+        """
+        Generate the PeeWee where clause used in searching.
+        """
+        where_clause = super(Citations, self).where_clause(kwargs)
+        for key in ['product_id', 'article_title', 'journal_id',
+                    'journal_volume', 'journal_issue', 'page_range',
+                    'doi_reference']:
+            if key in kwargs:
+                where_clause &= Expression(Citations.__dict__[key].field, OP.EQ, kwargs[key])
+        return where_clause
 

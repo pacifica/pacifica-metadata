@@ -1,5 +1,8 @@
 #!/usr/bin/python
-
+"""
+Core module loads all model objects and contains global operations
+on those objects.
+"""
 from metadata.orm.base import DB
 from metadata.orm.citations import Citations
 from metadata.orm.contributors import Contributors
@@ -21,6 +24,9 @@ from metadata.orm.transactions import Transactions
 from metadata.orm.file_key_value import FileKeyValue
 
 def create_tables():
+    """
+    Create the tables for the objects if they exist.
+    """
     objects = [
         Citations,
         Contributors,
@@ -35,10 +41,10 @@ def create_tables():
         Proposals,
         PublicationProposal,
         Users,
+        Transactions,
         Files,
         Keys,
         Values,
-        Transactions,
         FileKeyValue
     ]
     DB.connect()
