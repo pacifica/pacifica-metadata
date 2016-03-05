@@ -11,7 +11,7 @@ from metadata.orm.institutions import Institutions
 from metadata.orm.instruments import Instruments
 from metadata.orm.journals import Journals
 from metadata.orm.keywords import Keywords
-from metadata.orm.product_contributor import ProductContributor
+from metadata.orm.citation_contributor import CitationContributor
 from metadata.orm.proposal_instrument import ProposalInstrument
 from metadata.orm.users import Users
 from metadata.orm.proposal_participants import ProposalParticipants
@@ -35,7 +35,7 @@ def create_tables():
         Instruments,
         Journals,
         Keywords,
-        ProductContributor,
+        CitationContributor,
         ProposalInstrument,
         ProposalParticipants,
         Proposals,

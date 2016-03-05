@@ -9,10 +9,9 @@ from metadata.orm.base import PacificaModel
 # pylint: disable=too-many-instance-attributes
 class Citations(PacificaModel):
     """
-    Citations model tracks metadata for a journal article and
-    links it to a product.
+    Citations model tracks metadata for a journal article.
     """
-    product_id = IntegerField(default=-1, primary_key=True)
+    citation_id = IntegerField(default=-1, primary_key=True)
     article_title = TextField(default="")
     journal_id = IntegerField(default=-1)
     journal_volume = IntegerField(default=-1)
@@ -20,8 +19,7 @@ class Citations(PacificaModel):
     page_range = CharField(default="")
     abstract_text = TextField(default="")
     xml_text = TextField(default="")
-    # TODO: Why is this here?
-    pnnl_clearance_id = CharField(default="")
+    release_authorization_id = CharField(default="")
     doi_reference = CharField(default="")
 
     def to_hash(self):
@@ -29,21 +27,22 @@ class Citations(PacificaModel):
         Convert the citation fields to a serializable hash.
         """
         obj = super(Citations, self).to_hash()
-        obj['product_id'] = int(self.product_id)
+        obj['citation_id'] = int(self.citation_id)
         obj['article_title'] = str(self.article_title)
         obj['journal_id'] = int(self.journal_id)
         obj['journal_volume'] = int(self.journal_volume)
         obj['journal_issue'] = int(self.journal_issue)
         obj['page_range'] = str(self.page_range)
         obj['doi_reference'] = int(self.doi_reference)
+        obj['release_authorization_id'] = str(self.release_authorization_id)
 
     def from_hash(self, obj):
         """
         Converts the object into the citation object fields.
         """
         super(Citations, self).from_hash(obj)
-        if 'product_id' in obj:
-            self.product_id = int(obj['product_id'])
+        if 'citation_id' in obj:
+            self.citation_id = int(obj['citation_id'])
         if 'article_title' in obj:
             self.article_title = str(obj['article_title'])
         if 'journal_id' in obj:
@@ -58,6 +57,8 @@ class Citations(PacificaModel):
             self.doi_reference = int(obj['doi_reference'])
         if 'xml_text' in obj:
             self.xml_text = str(obj['xml_text'])
+        if 'release_authorization_id' in obj:
+            self.release_authorization_id = str(obj['release_authorization_id'])
         if 'abstract_text' in obj:
             self.abstract_text = str(obj['abstract_text'])
 
@@ -66,7 +67,7 @@ class Citations(PacificaModel):
         Generate the PeeWee where clause used in searching.
         """
         where_clause = super(Citations, self).where_clause(kwargs)
-        for key in ['product_id', 'article_title', 'journal_id',
+        for key in ['citation_id', 'article_title', 'journal_id',
                     'journal_volume', 'journal_issue', 'page_range',
                     'doi_reference']:
             if key in kwargs:

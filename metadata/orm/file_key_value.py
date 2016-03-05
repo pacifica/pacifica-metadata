@@ -52,8 +52,14 @@ class FileKeyValue(PacificaModel):
         Where clause for the various elements.
         """
         where_clause = super(FileKeyValue, self).where_clause(kwargs)
-        for key in ['file_id', 'key_id', 'value_id']:
-            if key in kwargs:
-                where_clause &= Expression(FileKeyValue.__dict__[key].field, OP.EQ, kwargs[key])
+        if 'file_id' in kwargs:
+            file_ = Files.get(Files.file_id == kwargs['file_id'])
+            where_clause &= Expression(FileKeyValue.file, OP.EQ, file_)
+        if 'key_id' in kwargs:
+            key = Keys.get(Keys.key_id == kwargs['key_id'])
+            where_clause &= Expression(FileKeyValue.file, OP.EQ, key)
+        if 'value_id' in kwargs:
+            value = Values.get(Values.value_id == kwargs['value_id'])
+            where_clause &= Expression(FileKeyValue.file, OP.EQ, value)
         return where_clause
 
