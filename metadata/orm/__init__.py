@@ -16,7 +16,7 @@ from metadata.orm.proposal_instrument import ProposalInstrument
 from metadata.orm.users import Users
 from metadata.orm.proposal_participants import ProposalParticipants
 from metadata.orm.proposals import Proposals
-from metadata.orm.publication_proposal import PublicationProposal
+from metadata.orm.citation_proposal import CitationProposal
 from metadata.orm.files import Files
 from metadata.orm.keys import Keys
 from metadata.orm.values import Values
@@ -39,7 +39,7 @@ def create_tables():
         ProposalInstrument,
         ProposalParticipants,
         Proposals,
-        PublicationProposal,
+        CitationProposal,
         Users,
         Transactions,
         Files,

@@ -42,7 +42,8 @@ class Keywords(PacificaModel):
         """
         where_clause = super(Keywords, self).where_clause(kwargs)
         if 'citation_id' in kwargs:
-            where_clause &= Expression(Keywords.citation, OP.EQ, Citations.get(Citations.citation_id == kwargs['citation_id']))
+            citation = Citations.get(Citations.citation_id == kwargs['citation_id'])
+            where_clause &= Expression(Keywords.citation, OP.EQ, citation)
         for key in ['keyword_id', 'keyword']:
             if key in kwargs:
                 where_clause &= Expression(Keywords.__dict__[key].field, OP.EQ, kwargs[key])

@@ -50,18 +50,10 @@ class InstitutionPerson(PacificaModel):
         """
         where_clause = super(InstitutionPerson, self).where_clause(kwargs)
         if 'person_id' in kwargs:
-            kwargs['person_id'] = Users.get(Users.person_id == kwargs['person_id'])
+            person = Users.get(Users.person_id == kwargs['person_id'])
+            where_clause &= Expression(InstitutionPerson.user, OP.EQ, person)
         if 'institution_id' in kwargs:
-            kwargs['institution_id'] = Institutions.get(
-                Institutions.institution_id == kwargs['institution_id']
-            )
-
-        for key in ['person_id', 'institution_id']:
-            if key in kwargs:
-                where_clause &= Expression(
-                    InstitutionPerson.__dict__[key].field,
-                    OP.EQ,
-                    kwargs[key]
-                )
+            institution = Institutions.get(Institutions.institution_id == kwargs['institution_id'])
+            where_clause &= Expression(InstitutionPerson.institution, OP.EQ, institution)
         return where_clause
 
