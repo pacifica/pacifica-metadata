@@ -1,6 +1,5 @@
-# MyEMSL Bibliographic Database #
-
-This repository contains both the synchronization script and concomitant database schema for managing the transfer of EUS Bibliographic Data that has been mirrored to MyEMSL to allow streamlined search and retrieval operations.
+# Pacifica Metadata Services
+[![Build Status](https://travis-ci.org/EMSL-MSC/pacifica-metadata.svg?branch=master)](https://travis-ci.org/EMSL-MSC/pacifica-metadata)
 
 ## Transfer Script ##
 The **`EUSTransferSync`** script is written for the Python 2.7 runtime. This script looks in the **`SyncSettings(Dev/Prod).py`** file for its database connection string info and a list of tables to be mirrored over from EUS. Currently, two different files are present: **`SyncSettingsDev`** and **`SyncSettingsProd`**. These refer to the development settings and production settings to be used for the transfer script.

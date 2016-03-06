@@ -23,33 +23,33 @@ from metadata.orm.values import Values
 from metadata.orm.transactions import Transactions
 from metadata.orm.file_key_value import FileKeyValue
 
+ORM_OBJECTS = [
+    Citations,
+    Contributors,
+    InstitutionPerson,
+    Institutions,
+    Instruments,
+    Journals,
+    Keywords,
+    CitationContributor,
+    ProposalInstrument,
+    ProposalParticipants,
+    Proposals,
+    CitationProposal,
+    Users,
+    Transactions,
+    Files,
+    Keys,
+    Values,
+    FileKeyValue
+]
+
 def create_tables():
     """
     Create the tables for the objects if they exist.
     """
-    objects = [
-        Citations,
-        Contributors,
-        InstitutionPerson,
-        Institutions,
-        Instruments,
-        Journals,
-        Keywords,
-        CitationContributor,
-        ProposalInstrument,
-        ProposalParticipants,
-        Proposals,
-        CitationProposal,
-        Users,
-        Transactions,
-        Files,
-        Keys,
-        Values,
-        FileKeyValue
-    ]
     DB.connect()
-    for obj in objects:
+    for obj in ORM_OBJECTS:
         if not obj.table_exists():
             obj.create_table()
     DB.close()
-
