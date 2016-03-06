@@ -16,7 +16,9 @@ class TestBase(TestCase):
     Setup the test cases for the base object attributes for the ORM
     """
     obj_cls = PacificaModel
+    # pylint: disable=no-member
     obj_id = PacificaModel.id
+    # pylint: enable=no-member
     zero_obj_hash = {
         'created': 0,
         'updated': 0,
@@ -33,7 +35,11 @@ class TestBase(TestCase):
         Stub in the temporary database and create the tables
         """
         self.db_filename = NamedTemporaryFile()
+        # pylint: disable=no-member
+        # pylint: disable=protected-access
         self.obj_cls._meta.database = SqliteDatabase(self.db_filename.name)
+        # pylint: enable=no-member
+        # pylint: enable=protected-access
         self.obj_cls.create_table()
 
     def test_zero_dates_from_hash(self):
