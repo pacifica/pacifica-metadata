@@ -46,13 +46,13 @@ class TestBase(TestCase):
         """
         Test method to check the hash against zero dates.
         """
-        self.base_test_hash(self.zero_obj_hash, self.obj_id)
+        self.base_test_hash(self.zero_obj_hash)
 
     def test_zero_dates_from_json(self):
         """
         Test method to check the json against zero dates.
         """
-        self.base_test_json(dumps(self.zero_obj_hash), self.obj_id)
+        self.base_test_json(dumps(self.zero_obj_hash))
 
     def test_zero_dates_from_where(self):
         """
@@ -64,13 +64,13 @@ class TestBase(TestCase):
         """
         Test method to check the hash against now dates
         """
-        self.base_test_hash(self.now_obj_hash, self.obj_id)
+        self.base_test_hash(self.now_obj_hash)
 
     def test_now_dates_from_json(self):
         """
         Test method to check the json against now dates
         """
-        self.base_test_json(dumps(self.now_obj_hash), self.obj_id)
+        self.base_test_json(dumps(self.now_obj_hash))
 
     def test_now_dates_from_where(self):
         """
@@ -78,7 +78,7 @@ class TestBase(TestCase):
         """
         self.base_where_clause(self.now_obj_hash)
 
-    def base_test_hash(self, obj_hash, obj_id):
+    def base_test_hash(self, obj_hash):
         """
         Base hash test
 
@@ -91,12 +91,12 @@ class TestBase(TestCase):
         obj = self.obj_cls()
         obj.from_hash(obj_hash)
         obj.save(force_insert=True)
-        new_obj = self.obj_cls.get(obj_id == getattr(obj, obj_id.db_column))
+        new_obj = self.obj_cls.get(self.obj_id == getattr(obj, self.obj_id.db_column))
         chk_obj_hash = new_obj.to_hash()
         for key in obj_hash.keys():
             self.assertEqual(chk_obj_hash[key], obj_hash[key])
 
-    def base_test_json(self, json_str, obj_id):
+    def base_test_json(self, json_str):
         """
         Base test json
 
@@ -109,7 +109,7 @@ class TestBase(TestCase):
         obj = self.obj_cls()
         obj.from_json(json_str)
         obj.save(force_insert=True)
-        new_obj = self.obj_cls.get(obj_id == getattr(obj, obj_id.db_column))
+        new_obj = self.obj_cls.get(self.obj_id == getattr(obj, self.obj_id.db_column))
         chk_obj_json = new_obj.to_json()
         self.assertEqual(type(chk_obj_json), str)
 
