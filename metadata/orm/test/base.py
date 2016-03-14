@@ -29,6 +29,11 @@ class TestBase(TestCase):
         'updated': int(mktime(datetime.now().timetuple())),
         'deleted': 0
     }
+    bad_obj_hash = {
+        'created': 'blarg',
+        'updated': int(mktime(datetime.now().timetuple())),
+        'deleted': 0
+    }
 
     def setUp(self):
         """
@@ -41,6 +46,16 @@ class TestBase(TestCase):
         # pylint: enable=no-member
         # pylint: enable=protected-access
         self.obj_cls.create_table()
+
+    def test_bad_dates_from_hash(self):
+        """
+        Test method to check the hash against zero dates.
+        """
+        exception_str = "invalid literal for int() with base 10: 'blarg'"
+        try:
+            self.base_test_hash(self.bad_obj_hash)
+        except ValueError, ex:
+            self.assertEqual(str(ex), exception_str)
 
     def test_zero_dates_from_hash(self):
         """
