@@ -123,7 +123,10 @@ class PacificaModel(Model):
             obj = self.get(self.where_clause(kwargs))
         except DoesNotExist, ex:
             raise HTTPError(404, str(ex))
-        obj.from_json(request.body.read())
+        try:
+            obj.from_json(request.body.read())
+        except ValueError, ex:
+            raise HTTPError(500, str(ex))
         obj.updated = datetime.now()
         obj.save()
 
@@ -133,7 +136,10 @@ class PacificaModel(Model):
         request body.
         """
         print "Running PUT"
-        self.from_json(request.body.read())
+        try:
+            self.from_json(request.body.read())
+        except ValueError, ex:
+            raise HTTPError(500, str(ex))
         self.deleted = datetime.fromtimestamp(0)
         self.updated = datetime.now()
         self.created = datetime.now()

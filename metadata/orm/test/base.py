@@ -11,6 +11,21 @@ from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
 from metadata.orm.base import PacificaModel
 
+SAMPLE_ZERO_HASH = {
+    'created': 0,
+    'updated': 0,
+    'deleted': 0
+}
+SAMPLE_REP_HASH = {
+    'created': int(mktime(datetime.now().timetuple())),
+    'updated': int(mktime(datetime.now().timetuple())),
+    'deleted': 0
+}
+SAMPLE_BAD_HASH = {
+    'created': 'blarg',
+    'updated': int(mktime(datetime.now().timetuple())),
+    'deleted': 0
+}
 
 class TestBase(TestCase):
     """
@@ -21,52 +36,52 @@ class TestBase(TestCase):
     # pylint: disable=no-member
     obj_id = PacificaModel.id
     # pylint: enable=no-member
-    zero_obj_hash = {
-        'created': 0,
-        'updated': 0,
-        'deleted': 0
-    }
-    now_obj_hash = {
-        'created': int(mktime(datetime.now().timetuple())),
-        'updated': int(mktime(datetime.now().timetuple())),
-        'deleted': 0
-    }
+
+    def test_bad_dates_from_hash(self):
+        """
+        Test method to check the hash against zero dates.
+        """
+        exception_str = "invalid literal for int() with base 10: 'blarg'"
+        try:
+            self.base_test_hash(SAMPLE_BAD_HASH)
+        except ValueError, ex:
+            self.assertEqual(str(ex), exception_str)
 
     def test_zero_dates_from_hash(self):
         """
         Test method to check the hash against zero dates.
         """
-        self.base_test_hash(self.zero_obj_hash)
+        self.base_test_hash(SAMPLE_ZERO_HASH)
 
     def test_zero_dates_from_json(self):
         """
         Test method to check the json against zero dates.
         """
-        self.base_test_json(dumps(self.zero_obj_hash))
+        self.base_test_json(dumps(SAMPLE_ZERO_HASH))
 
     def test_zero_dates_from_where(self):
         """
         Test method to check the where clause against zero dates.
         """
-        self.base_where_clause(self.zero_obj_hash)
+        self.base_where_clause(SAMPLE_ZERO_HASH)
 
     def test_now_dates_from_hash(self):
         """
         Test method to check the hash against now dates
         """
-        self.base_test_hash(self.now_obj_hash)
+        self.base_test_hash(SAMPLE_REP_HASH)
 
     def test_now_dates_from_json(self):
         """
         Test method to check the json against now dates
         """
-        self.base_test_json(dumps(self.now_obj_hash))
+        self.base_test_json(dumps(SAMPLE_REP_HASH))
 
     def test_now_dates_from_where(self):
         """
         Test method to check the where clause against now dates
         """
-        self.base_where_clause(self.now_obj_hash)
+        self.base_where_clause(SAMPLE_REP_HASH)
 
     def base_create_obj(self, cls, obj_hash):
         """
