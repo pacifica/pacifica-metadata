@@ -5,7 +5,7 @@ Base testing module implements the temporary database to be used.
 from datetime import datetime
 from time import mktime
 from json import dumps
-from unittest import TestCase, main
+from unittest import main
 from metadata.orm.base import PacificaModel
 from metadata.orm.test.base import TestBase
 

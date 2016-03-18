@@ -3,7 +3,6 @@
 Base testing module implements the temporary database to be used.
 """
 from unittest import TestCase, main
-from json import dumps
 from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
 from metadata.orm.base import PacificaModel
@@ -12,6 +11,12 @@ class TestBase(TestCase):
     """
     Setup the test cases for the base object attributes for the ORM
     """
+    dependent_cls = []
+    obj_cls = PacificaModel
+    #pylint: disable=no-member
+    obj_id = PacificaModel.id
+    #pylint: enable=no-member
+
     def base_create_dep_objs(self):
         """
         Create dependent objects
@@ -82,3 +87,6 @@ class TestBase(TestCase):
                 chk_obj_hash = new_obj.to_hash()
                 for key in obj_hash.keys():
                     self.assertEqual(chk_obj_hash[key], obj_hash[key])
+
+if __name__ == '__main__':
+    main()
