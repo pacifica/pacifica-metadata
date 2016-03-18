@@ -2,91 +2,27 @@
 """
 Base testing module implements the temporary database to be used.
 """
-from datetime import datetime
-from time import mktime
 from unittest import TestCase, main
-from tempfile import NamedTemporaryFile
 from json import dumps
 from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
 from metadata.orm.base import PacificaModel
 
-SAMPLE_ZERO_HASH = {
-    'created': 0,
-    'updated': 0,
-    'deleted': 0
-}
-SAMPLE_REP_HASH = {
-    'created': int(mktime(datetime.now().timetuple())),
-    'updated': int(mktime(datetime.now().timetuple())),
-    'deleted': 0
-}
-SAMPLE_BAD_HASH = {
-    'created': 'blarg',
-    'updated': int(mktime(datetime.now().timetuple())),
-    'deleted': 0
-}
-
 class TestBase(TestCase):
     """
     Setup the test cases for the base object attributes for the ORM
     """
-    dependent_cls = []
-    obj_cls = PacificaModel
-    # pylint: disable=no-member
-    obj_id = PacificaModel.id
-    # pylint: enable=no-member
-
-    def test_bad_dates_from_hash(self):
+    def base_create_dep_objs(self):
         """
-        Test method to check the hash against zero dates.
+        Create dependent objects
         """
-        exception_str = "invalid literal for int() with base 10: 'blarg'"
-        try:
-            self.base_test_hash(SAMPLE_BAD_HASH)
-        except ValueError, ex:
-            self.assertEqual(str(ex), exception_str)
-
-    def test_zero_dates_from_hash(self):
-        """
-        Test method to check the hash against zero dates.
-        """
-        self.base_test_hash(SAMPLE_ZERO_HASH)
-
-    def test_zero_dates_from_json(self):
-        """
-        Test method to check the json against zero dates.
-        """
-        self.base_test_json(dumps(SAMPLE_ZERO_HASH))
-
-    def test_zero_dates_from_where(self):
-        """
-        Test method to check the where clause against zero dates.
-        """
-        self.base_where_clause(SAMPLE_ZERO_HASH)
-
-    def test_now_dates_from_hash(self):
-        """
-        Test method to check the hash against now dates
-        """
-        self.base_test_hash(SAMPLE_REP_HASH)
-
-    def test_now_dates_from_json(self):
-        """
-        Test method to check the json against now dates
-        """
-        self.base_test_json(dumps(SAMPLE_REP_HASH))
-
-    def test_now_dates_from_where(self):
-        """
-        Test method to check the where clause against now dates
-        """
-        self.base_where_clause(SAMPLE_REP_HASH)
+        pass
 
     def base_create_obj(self, cls, obj_hash):
         """
         Create obj based on the class given.
         """
+        self.base_create_dep_objs()
         obj = cls()
         obj.from_hash(obj_hash)
         obj.save(force_insert=True)
@@ -120,6 +56,7 @@ class TestBase(TestCase):
         """
         with test_database(SqliteDatabase(':memory:'), self.dependent_cls + [self.obj_cls]):
             self.assertEqual(type(json_str), str)
+            self.base_create_dep_objs()
             obj = self.obj_cls()
             obj.from_json(json_str)
             obj.save(force_insert=True)

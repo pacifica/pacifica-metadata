@@ -14,13 +14,17 @@ class Files(PacificaModel):
     Files metadata contains various attributes describing a file and where
     it came from.
     """
+    #pylint: disable=too-many-instance-attributes
     file_id = BigIntegerField(default=-1, primary_key=True)
     name = CharField(default="")
     subdir = CharField(default="")
     vtime = DateTimeField(default=datetime.now)
+    ctime = DateTimeField(default=datetime.now)
+    mtime = DateTimeField(default=datetime.now)
     verified = BooleanField(default=False)
     size = BigIntegerField(default=-1)
     transaction = ForeignKeyField(Transactions, related_name='files')
+    #pylint: enable=too-many-instance-attributes
 
     def to_hash(self):
         """
@@ -31,9 +35,12 @@ class Files(PacificaModel):
         obj['name'] = str(self.name)
         obj['subdir'] = str(self.subdir)
         obj['vtime'] = int(mktime(self.vtime.timetuple()))
+        obj['ctime'] = int(mktime(self.ctime.timetuple()))
+        obj['mtime'] = int(mktime(self.mtime.timetuple()))
         obj['verified'] = str(self.verified)
         obj['size'] = int(self.size)
         obj['transaction_id'] = int(self.transaction.transaction_id)
+        return obj
 
     def from_hash(self, obj):
         """
@@ -48,6 +55,10 @@ class Files(PacificaModel):
             self.subdir = str(obj['subdir'])
         if 'vtime' in obj:
             self.vtime = datetime.fromtimestamp(int(obj['vtime']))
+        if 'ctime' in obj:
+            self.ctime = datetime.fromtimestamp(int(obj['ctime']))
+        if 'mtime' in obj:
+            self.mtime = datetime.fromtimestamp(int(obj['mtime']))
         if 'verified' in obj:
             self.verified = bool(obj['verified'])
         if 'size' in obj:
@@ -65,6 +76,10 @@ class Files(PacificaModel):
         where_clause = super(Files, self).where_clause(kwargs)
         if 'vtime' in kwargs:
             kwargs['vtime'] = datetime.fromtimestamp(kwargs['vtime'])
+        if 'ctime' in kwargs:
+            kwargs['ctime'] = datetime.fromtimestamp(kwargs['ctime'])
+        if 'mtime' in kwargs:
+            kwargs['mtime'] = datetime.fromtimestamp(kwargs['mtime'])
         if 'verified' in kwargs:
             kwargs['verified'] = bool(kwargs['verified'])
         if 'transaction_id' in kwargs:
