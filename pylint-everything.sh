@@ -1,4 +1,4 @@
 #!/bin/bash -xe
 
 pylint metadata
-python -m metadata.orm.test -v
+PYTHONPATH=$PWD python -m metadata.orm.test -v
