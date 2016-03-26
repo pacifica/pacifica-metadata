@@ -12,6 +12,7 @@ from metadata.orm.test.values import TestValues
 from metadata.orm.test.dbdates import TestDBDates
 from metadata.orm.test.file_key_value import TestFileKeyValue
 from metadata.orm.test.institutions import TestInstitutions
+from metadata.orm.test.institution_person import TestInstitutionPerson
 #pylint: enable=unused-import
 
 if __name__ == '__main__':
