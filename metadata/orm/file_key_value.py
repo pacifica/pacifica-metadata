@@ -57,9 +57,9 @@ class FileKeyValue(PacificaModel):
             where_clause &= Expression(FileKeyValue.file, OP.EQ, file_)
         if 'key_id' in kwargs:
             key = Keys.get(Keys.key_id == kwargs['key_id'])
-            where_clause &= Expression(FileKeyValue.file, OP.EQ, key)
+            where_clause &= Expression(FileKeyValue.key, OP.EQ, key)
         if 'value_id' in kwargs:
             value = Values.get(Values.value_id == kwargs['value_id'])
-            where_clause &= Expression(FileKeyValue.file, OP.EQ, value)
+            where_clause &= Expression(FileKeyValue.value, OP.EQ, value)
         return where_clause
 

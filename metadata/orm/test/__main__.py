@@ -10,6 +10,8 @@ from metadata.orm.test.files import TestFiles
 from metadata.orm.test.keys import TestKeys
 from metadata.orm.test.values import TestValues
 from metadata.orm.test.dbdates import TestDBDates
+from metadata.orm.test.file_key_value import TestFileKeyValue
+from metadata.orm.test.institutions import TestInstitutions
 #pylint: enable=unused-import
 
 if __name__ == '__main__':
