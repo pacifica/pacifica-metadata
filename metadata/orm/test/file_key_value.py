@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Test the keys ORM object
+Test the file_key_values ORM object
 """
 from unittest import main
 from json import dumps
@@ -33,23 +33,23 @@ class TestFileKeyValue(TestBase):
 
     def base_create_dep_objs(self):
         """
-        Create files object from hash and dependent objects.
+        Create all objects that FileKeyValue need.
         """
         user = Users()
         user.from_hash(SAMPLE_USER_HASH)
         user.save(force_insert=True)
-        trans = Transactions()
-        trans.from_hash(SAMPLE_TRANSACTION_HASH)
-        trans.save(force_insert=True)
-        files = Files()
-        files.from_hash(SAMPLE_FILE_HASH)
-        files.save(force_insert=True)
         keys = Keys()
         keys.from_hash(SAMPLE_KEY_HASH)
         keys.save(force_insert=True)
+        trans = Transactions()
+        trans.from_hash(SAMPLE_TRANSACTION_HASH)
+        trans.save(force_insert=True)
         values = Values()
         values.from_hash(SAMPLE_VALUE_HASH)
         values.save(force_insert=True)
+        files = Files()
+        files.from_hash(SAMPLE_FILE_HASH)
+        files.save(force_insert=True)
 
     def test_file_key_value_hash(self):
         """

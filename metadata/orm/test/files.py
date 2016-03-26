@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Test the keys ORM object
+Test the files ORM object
 """
 from datetime import datetime
 from time import mktime
@@ -35,7 +35,7 @@ class TestFiles(TestBase):
 
     def base_create_dep_objs(self):
         """
-        Create files object from hash and dependent objects.
+        Create all objects that Files depend on.
         """
         user = Users()
         user.from_hash(SAMPLE_USER_HASH)
