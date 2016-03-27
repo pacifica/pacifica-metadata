@@ -56,7 +56,7 @@ class Proposals(PacificaModel):
         if 'science_theme_id' in obj:
             self.science_theme_id = int(obj['science_theme_id'])
         if 'proposal_type' in obj:
-            self.proposal_type = int(obj['proposal_type'])
+            self.proposal_type = str(obj['proposal_type'])
         if 'submitted_date' in obj:
             self.submitted_date = datetime.fromtimestamp(int(obj['submitted_date']))
         if 'accepted_date' in obj:
@@ -70,14 +70,14 @@ class Proposals(PacificaModel):
         """
         PeeWee specific where clause used for search.
         """
+        where_clause = super(Proposals, self).where_clause(kwargs)
         for date_key in ['submitted_date', 'accepted_date',
                          'actual_start_date', 'actual_end_date']:
             if date_key in kwargs:
-                kwargs[date_key] = datetime.fromtimestamp(kwargs[date_key])
-        where_clause = super(Proposals, self).where_clause(kwargs)
+                date_obj = datetime.fromtimestamp(kwargs[date_key])
+                where_clause &= Expression(getattr(Proposals, date_key), OP.EQ, date_obj)
         for key in ['proposal_id', 'title', 'abstract', 'science_theme', 'science_theme_id'
-                    'proposal_type', 'submitted_date', 'accepted_date', 'actual_start_date'
-                    'actual_end_date']:
+                    'proposal_type']:
             if key in kwargs:
-                where_clause &= Expression(Proposals.__dict__[key].field, OP.EQ, kwargs[key])
+                where_clause &= Expression(getattr(Proposals, key), OP.EQ, kwargs[key])
         return where_clause

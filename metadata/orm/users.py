@@ -46,6 +46,6 @@ class Users(PacificaModel):
         where_clause = super(Users, self).where_clause(kwargs)
         for key in ['person_id', 'first_name', 'last_name', 'network_id']:
             if key in kwargs:
-                where_clause &= Expression(Users.__dict__[key].field, OP.EQ, kwargs[key])
+                where_clause &= Expression(getattr(Users, key), OP.EQ, kwargs[key])
         return where_clause
 

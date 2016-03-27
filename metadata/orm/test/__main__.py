@@ -17,6 +17,7 @@ from metadata.orm.test.journals import TestJournals
 from metadata.orm.test.citations import TestCitations
 from metadata.orm.test.contributors import TestContributors
 from metadata.orm.test.citation_contributor import TestCitationContributor
+from metadata.orm.test.proposals import TestProposals
 #pylint: enable=unused-import
 
 if __name__ == '__main__':
