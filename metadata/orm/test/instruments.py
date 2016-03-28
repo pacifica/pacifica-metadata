@@ -2,8 +2,6 @@
 """
 Test the proposals ORM object
 """
-from datetime import datetime
-from time import mktime
 from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
