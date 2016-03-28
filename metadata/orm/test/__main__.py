@@ -22,6 +22,8 @@ from metadata.orm.test.instruments import TestInstruments
 from metadata.orm.test.proposal_instrument import TestProposalInstrument
 from metadata.orm.test.proposal_participant import TestProposalParticipant
 from metadata.orm.test.instrument_custodian import TestInstrumentCustodian
+from metadata.orm.test.citation_proposal import TestCitationProposal
+from metadata.orm.test.keywords import TestKeywords
 #pylint: enable=unused-import
 
 if __name__ == '__main__':
