@@ -47,6 +47,6 @@ class Institutions(PacificaModel):
         for key in ['institution_id', 'institution_name', 'is_foreign',
                     'association_cd']:
             if key in kwargs:
-                where_clause &= Expression(Institutions.__dict__[key].field, OP.EQ, kwargs[key])
+                where_clause &= Expression(getattr(Institutions, key), OP.EQ, kwargs[key])
         return where_clause
 

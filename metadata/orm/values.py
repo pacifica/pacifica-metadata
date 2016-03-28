@@ -38,5 +38,5 @@ class Values(PacificaModel):
         where_clause = super(Values, self).where_clause(kwargs)
         for key in ['value_id', 'value']:
             if key in kwargs:
-                where_clause &= Expression(Values.__dict__[key].field, OP.EQ, kwargs[key])
+                where_clause &= Expression(getattr(Values, key), OP.EQ, kwargs[key])
         return where_clause

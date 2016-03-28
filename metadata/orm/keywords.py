@@ -46,5 +46,5 @@ class Keywords(PacificaModel):
             where_clause &= Expression(Keywords.citation, OP.EQ, citation)
         for key in ['keyword_id', 'keyword']:
             if key in kwargs:
-                where_clause &= Expression(Keywords.__dict__[key].field, OP.EQ, kwargs[key])
+                where_clause &= Expression(getattr(Keywords, key), OP.EQ, kwargs[key])
         return where_clause

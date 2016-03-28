@@ -47,6 +47,6 @@ class Instruments(PacificaModel):
         for key in ['instrument_id', 'instrument_name', 'display_name',
                     'name_short']:
             if key in kwargs:
-                where_clause &= Expression(Instruments.__dict__[key].field, OP.EQ, kwargs[key])
+                where_clause &= Expression(getattr(Instruments, key), OP.EQ, kwargs[key])
         return where_clause
 

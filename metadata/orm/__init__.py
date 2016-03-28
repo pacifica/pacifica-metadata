@@ -60,7 +60,8 @@ def try_db_connect(attempts=0):
             sleep(DATABASE_WAIT)
             attempts += 1
             try_db_connect(attempts)
-        raise ex
+        else:
+            raise ex
 
 def create_tables():
     """

@@ -47,6 +47,6 @@ class Journals(PacificaModel):
         for key in ['journal_id', 'journal_name', 'impact_factor',
                     'website_url']:
             if key in kwargs:
-                where_clause &= Expression(Journals.__dict__[key].field, OP.EQ, kwargs[key])
+                where_clause &= Expression(getattr(Journals, key), OP.EQ, kwargs[key])
         return where_clause
 

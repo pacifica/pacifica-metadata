@@ -78,6 +78,6 @@ class Citations(PacificaModel):
                     'journal_volume', 'journal_issue', 'page_range',
                     'doi_reference']:
             if key in kwargs:
-                where_clause &= Expression(Citations.__dict__[key].field, OP.EQ, kwargs[key])
+                where_clause &= Expression(getattr(Citations, key), OP.EQ, kwargs[key])
         return where_clause
 

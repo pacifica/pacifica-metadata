@@ -89,6 +89,6 @@ class Files(PacificaModel):
         for key in ['file_id', 'name', 'subdir', 'size', 'vtime', 'verified'
                     'transaction_id']:
             if key in kwargs:
-                where_clause &= Expression(Files.__dict__[key].field, OP.EQ, kwargs[key])
+                where_clause &= Expression(getattr(Files, key), OP.EQ, kwargs[key])
         return where_clause
 

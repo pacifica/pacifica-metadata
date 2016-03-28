@@ -68,7 +68,7 @@ class Contributors(PacificaModel):
         for key in ['author_id', 'first_name', 'last_name',
                     'middle_initial', 'dept_code']:
             if key in kwargs:
-                where_clause &= Expression(Contributors.__dict__[key].field, OP.EQ, kwargs[key])
+                where_clause &= Expression(getattr(Contributors, key), OP.EQ, kwargs[key])
         return where_clause
 
 
