@@ -7,6 +7,26 @@ This service provides metadata for all objects and relationships
 between the objects that the other components want to share between
 themselves.
 
+## Installing the Service
+
+### Use the docker container
+
+```
+docker pull pacifica/metadata
+```
+
+### The Manual Way
+
+Install the dependencies using pip (or some other similar python way).
+```
+pip install -r requirements.txt
+```
+
+Run the code.
+```
+python MetadataServer.py
+```
+
 ## The API
 
 There are many different types of objects that all get queried and
