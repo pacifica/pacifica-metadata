@@ -1,0 +1,16 @@
+metadatadb:
+  image: postgres
+  container_name: metadatadb
+  environment:
+    POSTGRES_PASSWORD: password
+    POSTGRES_DB: pacifica_metadata
+    POSTGRES_USER: metadata
+
+metadataserver:
+  container_name: metadataserver
+  build: .
+  dockerfile: Dockerfile
+  links:
+    - metadatadb:postgres
+  ports:
+    - 8121:8080

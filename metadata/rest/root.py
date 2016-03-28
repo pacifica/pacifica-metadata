@@ -17,4 +17,4 @@ class Root(object):
 for cls in ORM_OBJECTS:
     # this is based on the module name being something like metadata.orm.BLAH
     obj_loc = cls.__module__.split('.')[2]
-    Root.__dict__[obj_loc] = cls
+    setattr(Root, obj_loc, cls())

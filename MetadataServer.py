@@ -14,5 +14,5 @@ CONF = {
 }
 create_tables()
 application = cherrypy.Application(Root(), '/', config=CONF)
-HTTPD = make_server('0.0.0.0', 8051, application)
+HTTPD = make_server('0.0.0.0', 8080, application)
 HTTPD.serve_forever()
