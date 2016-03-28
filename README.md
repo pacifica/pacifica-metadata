@@ -51,3 +51,97 @@ Then put the file.
 ```
 curl -X PUT -T foo.json http://localhost:8080/users
 ```
+
+### Get the Object
+
+To get the object just created issue an HTTP GET request.
+
+```
+curl http://localhost:8080/users?person_id=127
+{
+  "updated": 1459204793,
+  "last_name": "Doe",
+  "created": 1459204793,
+  "deleted": 0,
+  "first_name": "John",
+  "network_id": "guest",
+  "person_id": 127
+}
+```
+
+Optionally query on any other parts of the object.
+
+```
+curl http://localhost:8080/users?last_name=Doe&first_name=John
+{
+  "updated": 1459204793,
+  "last_name": "Doe",
+  "created": 1459204793,
+  "deleted": 0,
+  "first_name": "John",
+  "network_id": "guest",
+  "person_id": 127
+}
+```
+
+### Update the Object
+
+To update the object with new data use the get args to identify the
+object and post data to update the attributes of the object.
+
+```
+{
+  "network_id": "jdoe"
+}
+```
+
+Issue the POST
+```
+curl -X POST -T update.json 'http://localhost:8121/users?last_name=Doe&first_name=John'
+```
+
+Get the object to make sure it stuck.
+```
+{
+  "updated": 1459205143,
+  "last_name": "Doe",
+  "created": 1459204793,
+  "deleted": 0,
+  "first_name": "John",
+  "network_id": "jdoe",
+  "person_id": 127
+}
+```
+
+*Notice* the updated field did change to the current time when the 
+POST happened.
+
+### Delete the Object
+
+To delete the object issue an HTTP DELETE request.
+```
+curl -X DELETE 'http://localhost:8121/users?person_id=127'
+```
+
+*Notice* the deleted field is set on the object but the object isn't 
+really deleted.
+
+```
+curl http://localhost:8121/users?person_id=127
+{
+  "updated": 1459205143,
+  "last_name": "Doe",
+  "created": 1459204793,
+  "deleted": 1459205341,
+  "first_name": "John",
+  "network_id": "jdoe",
+  "person_id": 127
+}
+```
+
+## Contributions
+
+Contributions are accepted on github via the fork and pull request
+workflow. Github has a good [help article]
+(https://help.github.com/articles/using-pull-requests/) if you are
+unfamiliar with this method of contributing.
