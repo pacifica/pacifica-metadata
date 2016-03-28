@@ -14,7 +14,7 @@ from metadata.orm.keywords import Keywords
 from metadata.orm.citation_contributor import CitationContributor
 from metadata.orm.proposal_instrument import ProposalInstrument
 from metadata.orm.users import Users
-from metadata.orm.proposal_participants import ProposalParticipants
+from metadata.orm.proposal_participant import ProposalParticipant
 from metadata.orm.proposals import Proposals
 from metadata.orm.citation_proposal import CitationProposal
 from metadata.orm.files import Files
@@ -33,7 +33,7 @@ ORM_OBJECTS = [
     Keywords,
     CitationContributor,
     ProposalInstrument,
-    ProposalParticipants,
+    ProposalParticipant,
     Proposals,
     CitationProposal,
     Users,

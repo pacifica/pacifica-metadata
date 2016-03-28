@@ -19,6 +19,9 @@ from metadata.orm.test.contributors import TestContributors
 from metadata.orm.test.citation_contributor import TestCitationContributor
 from metadata.orm.test.proposals import TestProposals
 from metadata.orm.test.instruments import TestInstruments
+from metadata.orm.test.proposal_instrument import TestProposalInstrument
+from metadata.orm.test.proposal_participant import TestProposalParticipant
+from metadata.orm.test.instrument_custodian import TestInstrumentCustodian
 #pylint: enable=unused-import
 
 if __name__ == '__main__':
