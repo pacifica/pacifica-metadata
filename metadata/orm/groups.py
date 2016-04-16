@@ -2,7 +2,7 @@
 """
 Contains model for groups
 """
-from peewee import IntegerField, CharField, Boolean, Expression, OP
+from peewee import IntegerField, CharField, BooleanField, Expression, OP
 from metadata.orm.base import PacificaModel
 
 class Groups(PacificaModel):
