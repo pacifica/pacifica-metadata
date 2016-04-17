@@ -9,7 +9,7 @@ from metadata.orm.user_group import UserGroup
 from metadata.orm.test.users import SAMPLE_USER_HASH
 from metadata.orm.users import Users
 from metadata.orm.test.groups import SAMPLE_GROUP_HASH
-from metadata.orm.groups import groups
+from metadata.orm.groups import Groups
 
 SAMPLE_USER_GROUP_HASH = {
     "person_id": SAMPLE_USER_HASH['person_id'],
