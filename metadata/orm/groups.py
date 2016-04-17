@@ -20,7 +20,7 @@ class Groups(PacificaModel):
         obj = super(Groups, self).to_hash()
         obj['group_id'] = int(self.group_id)
         obj['group_name'] = str(self.group_name)
-        obj['is_admin'] = str(self.is_admin)
+        obj['is_admin'] = bool(self.is_admin)
         return obj
 
     def from_hash(self, obj):
