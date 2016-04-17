@@ -12,7 +12,7 @@ class InstrumentGroup(PacificaModel):
     InstrumentGroup attributes are foreign keys.
     """
     instrument = ForeignKeyField(Instruments, related_name='groups')
-    group = ForeignKeyField(Groups, related_name='members')
+    group = ForeignKeyField(Groups, related_name='instrument_members')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
