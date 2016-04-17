@@ -52,6 +52,6 @@ class InstrumentGroup(PacificaModel):
             where_clause &= Expression(InstrumentGroup.instrument, OP.EQ, instrument)
         if 'group_id' in kwargs:
             group = Groups.get(Groups.group_id == kwargs['group_id'])
-            where_clause &= Expression(UserGroup.group, OP.EQ, group)
+            where_clause &= Expression(InstrumentGroup.group, OP.EQ, group)
         return where_clause
 
