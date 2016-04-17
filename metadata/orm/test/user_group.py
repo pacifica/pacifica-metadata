@@ -22,7 +22,7 @@ class TestUserGroup(TestBase):
     """
     dependent_cls = [Users, Groups]
     obj_cls = UserGroup
-    obj_id = UserGroup.file
+    obj_id = UserGroup.user
 
     def base_create_dep_objs(self):
         """
