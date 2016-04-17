@@ -26,6 +26,7 @@ from metadata.orm.test.citation_proposal import TestCitationProposal
 from metadata.orm.test.keywords import TestKeywords
 from metadata.orm.test.groups import TestGroups
 from metadata.orm.test.user_group import TestUserGroup
+from metadata.orm.test.instrument_group import TestInstrumentGroup
 #pylint: enable=unused-import
 
 if __name__ == '__main__':
