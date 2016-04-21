@@ -4,8 +4,8 @@ Core interface for each ORM object to interface with CherryPy
 """
 from datetime import datetime
 from cherrypy import request, HTTPError
-from metadata.orm.base import PacificaModel
 from peewee import DoesNotExist
+from metadata.orm.base import PacificaModel
 from metadata.elastic.orm import ElasticAPI
 
 class CherryPyAPI(PacificaModel, ElasticAPI):

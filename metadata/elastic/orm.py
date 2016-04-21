@@ -3,9 +3,9 @@
 Elastic search core class to convert db object.
 """
 from StringIO import StringIO
+from os import getenv
 from pycurl import Curl, URL, READFUNCTION, UPLOAD
 from pycurl import INFILESIZE_LARGE, HTTP_CODE, error, PUT
-from os import getenv
 
 DEFAULT_ELASTIC_ENDPOINT = getenv('ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
