@@ -5,9 +5,10 @@ Proposal person relationship
 from peewee import ForeignKeyField, CharField, Expression, OP, CompositeKey
 from metadata.orm.proposals import Proposals
 from metadata.orm.users import Users
-from metadata.orm.base import DB, PacificaModel
+from metadata.orm.base import DB
+from metadata.rest.orm import CherryPyAPI
 
-class ProposalParticipant(PacificaModel):
+class ProposalParticipant(CherryPyAPI):
     """
     Relates proposals and users objects.
     """

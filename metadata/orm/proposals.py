@@ -5,10 +5,10 @@ Proposals data model
 from datetime import datetime
 from time import mktime
 from peewee import IntegerField, TextField, CharField, DateTimeField, Expression, OP
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 
 # pylint: disable=too-many-instance-attributes
-class Proposals(PacificaModel):
+class Proposals(CherryPyAPI):
     """
     Proposals data model
     """

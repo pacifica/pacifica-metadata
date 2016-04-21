@@ -3,9 +3,9 @@
 Instrument model describing data generators.
 """
 from peewee import IntegerField, CharField, Expression, OP
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 
-class Instruments(PacificaModel):
+class Instruments(CherryPyAPI):
     """
     Instrument and associated fields.
     """

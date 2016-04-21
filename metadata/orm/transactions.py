@@ -3,10 +3,10 @@
 Transactions model
 """
 from peewee import BigIntegerField, ForeignKeyField, BooleanField, Expression, OP
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 from metadata.orm.users import Users
 
-class Transactions(PacificaModel):
+class Transactions(CherryPyAPI):
     """
     Transactions model class
     """

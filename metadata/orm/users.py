@@ -3,9 +3,9 @@
 Users data model
 """
 from peewee import IntegerField, CharField, Expression, OP
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 
-class Users(PacificaModel):
+class Users(CherryPyAPI):
     """
     Users data model object
     """
@@ -13,6 +13,16 @@ class Users(PacificaModel):
     first_name = CharField(default="")
     last_name = CharField(default="")
     network_id = CharField(default="")
+
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(Users, Users).elastic_mapping_builder(obj)
+        obj['first_name'] = obj['last_name'] = obj['network_id'] = \
+        {'type': 'string'}
+        obj['person_id'] = {'type': 'integer'}
 
     def to_hash(self):
         """

@@ -3,12 +3,13 @@
 FileKeyValue links Files and Keys and Values objects.
 """
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
-from metadata.orm.base import DB, PacificaModel
+from metadata.orm.base import DB
 from metadata.orm.files import Files
 from metadata.orm.values import Values
 from metadata.orm.keys import Keys
+from metadata.rest.orm import CherryPyAPI
 
-class FileKeyValue(PacificaModel):
+class FileKeyValue(CherryPyAPI):
     """
     FileKeyValue attributes are foreign keys.
     """

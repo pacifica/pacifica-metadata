@@ -4,11 +4,11 @@ Citations model for tracking journal articles.
 """
 from peewee import IntegerField, TextField, CharField, ForeignKeyField, Expression, OP
 from metadata.orm.journals import Journals
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 
 # Citations has too many attributes...
 # pylint: disable=too-many-instance-attributes
-class Citations(PacificaModel):
+class Citations(CherryPyAPI):
     """
     Citations model tracks metadata for a journal article.
     """
@@ -22,6 +22,20 @@ class Citations(PacificaModel):
     xml_text = TextField(default="")
     release_authorization_id = CharField(default="")
     doi_reference = CharField(default="")
+
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(Citations, Citations).elastic_mapping_builder(obj)
+        obj['journal_id'] = obj['journal_volume'] = \
+        obj['journal_issue'] = {'type': 'integer'}
+        obj['_id'] = {'type': 'integer'}
+        obj['citation_id'] = {'type': 'integer', 'copy_to': '_id'}
+        obj['article_title'] = obj['abstract_text'] = obj['xml_text'] = \
+        obj['page_range'] = obj['doi_reference'] = obj['release_authorization_id'] = \
+        {'type': 'string'}
 
     def to_hash(self):
         """

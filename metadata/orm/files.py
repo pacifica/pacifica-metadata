@@ -6,10 +6,10 @@ from datetime import datetime
 from time import mktime
 from peewee import ForeignKeyField, CharField, BigIntegerField
 from peewee import DateTimeField, BooleanField, Expression, OP
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 from metadata.orm.transactions import Transactions
 
-class Files(PacificaModel):
+class Files(CherryPyAPI):
     """
     Files metadata contains various attributes describing a file and where
     it came from.

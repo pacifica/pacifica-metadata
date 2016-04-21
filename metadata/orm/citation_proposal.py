@@ -3,11 +3,13 @@
 Citation proposal relationship
 """
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from metadata.orm.utils import index_hash
 from metadata.orm.proposals import Proposals
 from metadata.orm.citations import Citations
-from metadata.orm.base import DB, PacificaModel
+from metadata.orm.base import DB
+from metadata.rest.orm import CherryPyAPI
 
-class CitationProposal(PacificaModel):
+class CitationProposal(CherryPyAPI):
     """
     Relates citations with proposals
     """
@@ -23,11 +25,21 @@ class CitationProposal(PacificaModel):
         primary_key = CompositeKey('citation', 'proposal')
     # pylint: enable=too-few-public-methods
 
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(CitationProposal, CitationProposal).elastic_mapping_builder(obj)
+        obj['citation_id'] = obj['proposal_id'] = \
+        {'type': 'integer'}
+
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(CitationProposal, self).to_hash()
+        obj['_id'] = index_hash(int(self.citation.citation_id), int(self.proposal.proposal_id))
         obj['citation_id'] = int(self.citation.citation_id)
         obj['proposal_id'] = int(self.proposal.proposal_id)
         return obj

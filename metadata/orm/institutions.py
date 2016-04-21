@@ -3,9 +3,9 @@
 Describes an institution and its attributes.
 """
 from peewee import IntegerField, TextField, CharField, Expression, OP
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 
-class Institutions(PacificaModel):
+class Institutions(CherryPyAPI):
     """
     Institution model scribes an institute.
     """

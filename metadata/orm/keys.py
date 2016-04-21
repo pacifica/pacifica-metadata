@@ -3,9 +3,9 @@
 Contains the model for metadata keys
 """
 from peewee import IntegerField, CharField, Expression, OP
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 
-class Keys(PacificaModel):
+class Keys(CherryPyAPI):
     """
     Keys model class for metadata
     """

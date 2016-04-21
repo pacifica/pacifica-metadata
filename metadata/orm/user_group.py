@@ -3,11 +3,12 @@
 UserGroup links Groups and Users and objects.
 """
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
-from metadata.orm.base import DB, PacificaModel
+from metadata.orm.base import DB
+from metadata.rest.orm import CherryPyAPI
 from metadata.orm.groups import Groups
 from metadata.orm.users import Users
 
-class UserGroup(PacificaModel):
+class UserGroup(CherryPyAPI):
     """
     UserGroup attributes are foreign keys.
     """

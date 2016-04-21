@@ -6,6 +6,7 @@ on those objects.
 from time import sleep
 from peewee import OperationalError
 from metadata.orm.base import DB
+from metadata.orm.base import ELASTIC_ENDPOINT
 from metadata.orm.citations import Citations
 from metadata.orm.contributors import Contributors
 from metadata.orm.institution_person import InstitutionPerson
@@ -71,4 +72,6 @@ def create_tables():
     for obj in ORM_OBJECTS:
         if not obj.table_exists():
             obj.create_table()
+            obj.create_elastic_index()
     DB.close()
+

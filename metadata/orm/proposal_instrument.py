@@ -5,9 +5,10 @@ Proposal instrument relationship
 from peewee import ForeignKeyField, IntegerField, Expression, OP, CompositeKey
 from metadata.orm.proposals import Proposals
 from metadata.orm.instruments import Instruments
-from metadata.orm.base import DB, PacificaModel
+from metadata.orm.base import DB
+from metadata.rest.orm import CherryPyAPI
 
-class ProposalInstrument(PacificaModel):
+class ProposalInstrument(CherryPyAPI):
     """
     Relates proposals and instrument objects.
     """

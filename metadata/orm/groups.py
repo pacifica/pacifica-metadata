@@ -3,9 +3,9 @@
 Contains model for groups
 """
 from peewee import IntegerField, CharField, BooleanField, Expression, OP
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 
-class Groups(PacificaModel):
+class Groups(CherryPyAPI):
     """
     Groups model and associated fields.
     """

@@ -5,9 +5,10 @@ Connects a User with an Institution
 from peewee import ForeignKeyField, Expression, OP, CompositeKey
 from metadata.orm.users import Users
 from metadata.orm.institutions import Institutions
-from metadata.orm.base import DB, PacificaModel
+from metadata.orm.base import DB
+from metadata.rest.orm import CherryPyAPI
 
-class InstitutionPerson(PacificaModel):
+class InstitutionPerson(CherryPyAPI):
     """
     Relates persons and institution objects.
     """

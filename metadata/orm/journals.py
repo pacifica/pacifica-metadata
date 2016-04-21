@@ -3,9 +3,9 @@
 Contains model for Journal
 """
 from peewee import IntegerField, CharField, FloatField, Expression, OP
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 
-class Journals(PacificaModel):
+class Journals(CherryPyAPI):
     """
     Journal model and associated fields.
     """

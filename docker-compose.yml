@@ -1,3 +1,7 @@
+elasticdb:
+  image: elasticsearch
+  container_name: elasticdb
+
 metadatadb:
   image: postgres
   container_name: metadatadb
@@ -12,5 +16,6 @@ metadataserver:
   dockerfile: Dockerfile
   links:
     - metadatadb:postgres
+    - elasticdb:elasticdb
   ports:
     - 8121:8080

@@ -3,10 +3,10 @@
 Keywords linked to citations
 """
 from peewee import IntegerField, CharField, ForeignKeyField, Expression, OP
-from metadata.orm.base import PacificaModel
+from metadata.rest.orm import CherryPyAPI
 from metadata.orm.citations import Citations
 
-class Keywords(PacificaModel):
+class Keywords(CherryPyAPI):
     """
     Keywords Model
     """

@@ -3,11 +3,11 @@
 Contributors model describes an author to a journal article.
 """
 from peewee import IntegerField, CharField, ForeignKeyField, Expression, OP
-from metadata.orm.base import PacificaModel
 from metadata.orm.users import Users
 from metadata.orm.institutions import Institutions
+from metadata.rest.orm import CherryPyAPI
 
-class Contributors(PacificaModel):
+class Contributors(CherryPyAPI):
     """
     Contributors object and associated fields.
     """
@@ -18,6 +18,18 @@ class Contributors(PacificaModel):
     last_name = CharField(default="")
     dept_code = CharField(default="")
     institution = ForeignKeyField(Institutions, related_name='contributors')
+
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(Contributors, Contributors).elastic_mapping_builder(obj)
+        obj['person_id'] = obj['institution_id'] = {'type': 'integer'}
+        obj['_id'] = {'type': 'integer'}
+        obj['author_id'] = {'type': 'integer', 'copy_to': '_id'}
+        obj['first_name'] = obj['middle_initial'] = obj['last_name'] = \
+        obj['dept_code'] = {'type': 'string'}
 
     def to_hash(self):
         """
