@@ -4,7 +4,7 @@ Core interface for each ORM object to interface with CherryPy
 """
 from datetime import datetime
 from cherrypy import request, HTTPError
-from peewee import DoesNotExist
+from peewee import DoesNotExist, IntegrityError
 from metadata.orm.base import PacificaModel
 from metadata.elastic.orm import ElasticAPI
 
@@ -42,7 +42,10 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         except ValueError, ex:
             raise HTTPError(500, str(ex))
         obj.updated = datetime.now()
-        obj.save()
+        try:
+            obj.save(force_insert=True)
+        except IntegrityError, ex:
+            obj._rollback()
 
     def PUT(self):
         """
@@ -57,7 +60,11 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         self.deleted = datetime.fromtimestamp(0)
         self.updated = datetime.now()
         self.created = datetime.now()
-        self.save(force_insert=True)
+        try:
+            self.save(force_insert=True)
+        except IntegrityError, ex:
+            self._rollback()
+            raise HTTPError(500, str(ex))
 
     def DELETE(self, **kwargs):
         """
@@ -69,5 +76,9 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         except DoesNotExist, ex:
             raise HTTPError(404, str(ex))
         obj.deleted = datetime.now()
-        obj.save()
+        try:
+            obj.save(force_insert=True)
+        except IntegrityError, ex:
+            obj._rollback()
+            raise HTTPError(500, str(ex))
     # pylint: enable=invalid-name

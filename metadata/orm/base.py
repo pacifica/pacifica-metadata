@@ -49,6 +49,12 @@ class PacificaModel(Model):
         database = DB
     # pylint: enable=too-few-public-methods
 
+    def _rollback(self):
+        """
+        Reconnect to the database on errors.
+        """
+        self._meta.database.rollback()
+
     def to_hash(self):
         """
         Converts the base object fields into serializable attributes
