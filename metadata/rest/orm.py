@@ -45,7 +45,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         try:
             obj.save(force_insert=True)
         except IntegrityError, ex:
-            obj._rollback()
+            obj.rollback()
 
     def PUT(self):
         """
@@ -63,7 +63,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         try:
             self.save(force_insert=True)
         except IntegrityError, ex:
-            self._rollback()
+            self.rollback()
             raise HTTPError(500, str(ex))
 
     def DELETE(self, **kwargs):
@@ -79,6 +79,6 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         try:
             obj.save(force_insert=True)
         except IntegrityError, ex:
-            obj._rollback()
+            obj.rollback()
             raise HTTPError(500, str(ex))
     # pylint: enable=invalid-name

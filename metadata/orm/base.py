@@ -49,7 +49,7 @@ class PacificaModel(Model):
         database = DB
     # pylint: enable=too-few-public-methods
 
-    def _rollback(self):
+    def rollback(self):
         """
         Reconnect to the database on errors.
         """
