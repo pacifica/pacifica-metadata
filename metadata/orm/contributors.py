@@ -26,7 +26,6 @@ class Contributors(CherryPyAPI):
         """
         super(Contributors, Contributors).elastic_mapping_builder(obj)
         obj['person_id'] = obj['institution_id'] = {'type': 'integer'}
-        obj['_id'] = {'type': 'integer'}
         obj['author_id'] = {'type': 'integer', 'copy_to': '_id'}
         obj['first_name'] = obj['middle_initial'] = obj['last_name'] = \
         obj['dept_code'] = {'type': 'string'}

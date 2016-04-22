@@ -25,6 +25,7 @@ from metadata.orm.keys import Keys
 from metadata.orm.values import Values
 from metadata.orm.transactions import Transactions
 from metadata.orm.file_key_value import FileKeyValue
+from metadata.elastic.orm import create_elastic_index
 
 DATABASE_CONNECT_ATTEMPTS = 10
 DATABASE_WAIT = 1
@@ -69,9 +70,10 @@ def create_tables():
     Create the tables for the objects if they exist.
     """
     try_db_connect()
+    create_elastic_index()
     for obj in ORM_OBJECTS:
         if not obj.table_exists():
             obj.create_table()
-            obj.create_elastic_index()
+            obj.create_elastic_mapping()
     DB.close()
 

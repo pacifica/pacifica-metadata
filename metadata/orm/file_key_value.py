@@ -4,6 +4,7 @@ FileKeyValue links Files and Keys and Values objects.
 """
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.base import DB
+from metadata.orm.utils import index_hash
 from metadata.orm.files import Files
 from metadata.orm.values import Values
 from metadata.orm.keys import Keys
@@ -26,11 +27,23 @@ class FileKeyValue(CherryPyAPI):
         primary_key = CompositeKey('file', 'key', 'value')
     # pylint: enable=too-few-public-methods
 
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(FileKeyValue, FileKeyValue).elastic_mapping_builder(obj)
+        obj['file_id'] = obj['key_id'] = obj['value_id'] = \
+        {'type': 'integer'}
+
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(FileKeyValue, self).to_hash()
+        obj['_id'] = index_hash(int(self.key.key_id),
+                                int(self.file.file_id),
+                                int(self.value.value_id))
         obj['file_id'] = int(self.file.file_id)
         obj['key_id'] = int(self.key.key_id)
         obj['value_id'] = int(self.value.value_id)

@@ -26,6 +26,20 @@ class Files(CherryPyAPI):
     transaction = ForeignKeyField(Transactions, related_name='files')
     #pylint: enable=too-many-instance-attributes
 
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(Files, Files).elastic_mapping_builder(obj)
+        obj['file_id'] = obj['transaction_id'] = obj['size'] = \
+        {'type': 'integer'}
+        obj['vtime'] = obj['ctime'] = obj['mtime'] = \
+        {'type': 'date', 'format': 'epoch_second'}
+        obj['name'] = obj['subdir'] = \
+        {'type': 'string'}
+        obj['verified'] = {'type': 'boolean'}
+
     def to_hash(self):
         """
         Converts the object to a hash

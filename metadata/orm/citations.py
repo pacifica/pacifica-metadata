@@ -31,7 +31,6 @@ class Citations(CherryPyAPI):
         super(Citations, Citations).elastic_mapping_builder(obj)
         obj['journal_id'] = obj['journal_volume'] = \
         obj['journal_issue'] = {'type': 'integer'}
-        obj['_id'] = {'type': 'integer'}
         obj['citation_id'] = {'type': 'integer', 'copy_to': '_id'}
         obj['article_title'] = obj['abstract_text'] = obj['xml_text'] = \
         obj['page_range'] = obj['doi_reference'] = obj['release_authorization_id'] = \

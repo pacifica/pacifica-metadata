@@ -4,6 +4,7 @@ Elastic search core class to convert db object.
 """
 from StringIO import StringIO
 from os import getenv
+from json import dumps
 from pycurl import Curl, URL, READFUNCTION, UPLOAD
 from pycurl import INFILESIZE_LARGE, HTTP_CODE, error, PUT
 
@@ -11,26 +12,43 @@ DEFAULT_ELASTIC_ENDPOINT = getenv('ELASTICDB_PORT', 'tcp://127.0.0.1:9200').repl
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 ELASTIC_INDEX = 'pacifica'
 
+def create_elastic_index():
+    """
+    Create the elastic search index for all our data
+    """
+    try:
+        es_index_url = "%s/%s"%(ELASTIC_ENDPOINT, ELASTIC_INDEX)
+        curl = Curl()
+        curl.setopt(URL, es_index_url.encode('utf-8'))
+        curl.setopt(PUT, 1)
+        curl.perform()
+        curl_http_code = curl.getinfo(HTTP_CODE)
+        if curl_http_code != 200:
+            raise Exception("create_elastic_index: %s\n"%(curl_http_code))
+    except error:
+        raise Exception("cURL operations failed during upload: %s" % curl.errstr())
+
 class ElasticAPI(object):
     """
     Elastic search conversion and interface methods.
     """
     @classmethod
-    def create_elastic_index(cls):
+    def create_elastic_mapping(cls):
         """
         take the elastic search mapping from the object and
         create an elastic search index with it.
         PUT /{index}/_mapping/{type}
         { body }
         """
-        es_mapping_str = cls.elastic_mapping()
+        es_mapping_str = dumps(cls.elastic_mapping())
         es_mapping_len = len(es_mapping_str)
         elastic_mapping = StringIO(es_mapping_str)
         class_name = cls.__name__
+        es_index_url = "%s/%s"%(ELASTIC_ENDPOINT, ELASTIC_INDEX)
+        es_mapping_url = "%s/_mapping/%s"%(es_index_url, class_name)
         try:
             curl = Curl()
-            es_index_url = "%s/%s/_mapping/%s"%(ELASTIC_ENDPOINT, ELASTIC_INDEX, class_name)
-            curl.setopt(URL, es_index_url.encode('utf-8'))
+            curl.setopt(URL, es_mapping_url.encode('utf-8'))
             curl.setopt(PUT, 1)
             curl.setopt(UPLOAD, 1)
             curl.setopt(READFUNCTION, elastic_mapping.read)

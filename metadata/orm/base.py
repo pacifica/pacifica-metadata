@@ -55,6 +55,7 @@ class PacificaModel(Model):
         in a hash.
         """
         obj = {}
+        obj['_type'] = self.__class__.__name__.lower()
         obj['created'] = int(mktime(self.created.timetuple()))
         obj['updated'] = int(mktime(self.updated.timetuple()))
         obj['deleted'] = int(mktime(self.deleted.timetuple()))
