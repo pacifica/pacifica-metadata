@@ -18,8 +18,8 @@ from metadata.orm.test.institutions import SAMPLE_INSTITUTION_HASH
 from metadata.orm.institutions import Institutions
 
 SAMPLE_CITATION_CONTRIBUTOR_HASH = {
-    "citation_id": SAMPLE_CITATION_HASH['citation_id'],
-    "author_id": SAMPLE_CONTRIBUTOR_HASH['author_id'],
+    "citation_id": SAMPLE_CITATION_HASH['_id'],
+    "author_id": SAMPLE_CONTRIBUTOR_HASH['_id'],
     "author_precedence": 20
 }
 

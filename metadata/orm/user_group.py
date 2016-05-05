@@ -29,8 +29,8 @@ class UserGroup(CherryPyAPI):
         Converts the object to a hash
         """
         obj = super(UserGroup, self).to_hash()
-        obj['person_id'] = int(self.user.person_id)
-        obj['group_id'] = int(self.group.group_id)
+        obj['person_id'] = int(self.user.id)
+        obj['group_id'] = int(self.group.id)
         return obj
 
     def from_hash(self, obj):
@@ -39,9 +39,9 @@ class UserGroup(CherryPyAPI):
         """
         super(UserGroup, self).from_hash(obj)
         if 'person_id' in obj:
-            self.user = Users.get(Users.person_id == obj['person_id'])
+            self.user = Users.get(Users.id == obj['person_id'])
         if 'group_id' in obj:
-            self.group = Groups.get(Groups.group_id == obj['group_id'])
+            self.group = Groups.get(Groups.id == obj['group_id'])
 
     def where_clause(self, kwargs):
         """
@@ -49,10 +49,10 @@ class UserGroup(CherryPyAPI):
         """
         where_clause = super(UserGroup, self).where_clause(kwargs)
         if 'person_id' in kwargs:
-            user = Users.get(Users.person_id == kwargs['person_id'])
+            user = Users.get(Users.id == kwargs['person_id'])
             where_clause &= Expression(UserGroup.user, OP.EQ, user)
         if 'group_id' in kwargs:
-            group = Groups.get(Groups.group_id == kwargs['group_id'])
+            group = Groups.get(Groups.id == kwargs['group_id'])
             where_clause &= Expression(UserGroup.group, OP.EQ, group)
         return where_clause
 

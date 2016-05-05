@@ -2,7 +2,7 @@
 """
 Keywords linked to citations
 """
-from peewee import IntegerField, CharField, ForeignKeyField, Expression, OP
+from peewee import CharField, ForeignKeyField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.citations import Citations
 
@@ -10,18 +10,26 @@ class Keywords(CherryPyAPI):
     """
     Keywords Model
     """
-    keyword_id = IntegerField(default=-1, primary_key=True)
     citation = ForeignKeyField(Citations, related_name='keywords')
     keyword = CharField(default="")
+
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(Keywords, Keywords).elastic_mapping_builder(obj)
+        obj['citation_id'] = {'type': 'integer'}
+        obj['keyword'] = {'type': 'string'}
 
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(Keywords, self).to_hash()
-        obj['keyword_id'] = int(self.keyword_id)
+        obj['_id'] = int(self.id)
         obj['keyword'] = str(self.keyword)
-        obj['citation_id'] = int(self.citation.citation_id)
+        obj['citation_id'] = int(self.citation.id)
         return obj
 
     def from_hash(self, obj):
@@ -29,12 +37,14 @@ class Keywords(CherryPyAPI):
         Converts the hash to the object
         """
         super(Keywords, self).from_hash(obj)
-        if 'keyword_id' in obj:
-            self.keyword_id = obj['keyword_id']
+        if '_id' in obj:
+            # pylint: disable=invalid-name
+            self.id = obj['_id']
+            # pylint: enable=invalid-name
         if 'keyword' in obj:
             self.keyword = obj['keyword']
         if 'citation_id' in obj:
-            self.citation = Citations.get(Citations.citation_id == obj['citation_id'])
+            self.citation = Citations.get(Citations.id == obj['citation_id'])
 
     def where_clause(self, kwargs):
         """
@@ -42,9 +52,10 @@ class Keywords(CherryPyAPI):
         """
         where_clause = super(Keywords, self).where_clause(kwargs)
         if 'citation_id' in kwargs:
-            citation = Citations.get(Citations.citation_id == kwargs['citation_id'])
+            citation = Citations.get(Citations.id == kwargs['citation_id'])
             where_clause &= Expression(Keywords.citation, OP.EQ, citation)
-        for key in ['keyword_id', 'keyword']:
-            if key in kwargs:
-                where_clause &= Expression(getattr(Keywords, key), OP.EQ, kwargs[key])
+        if '_id' in kwargs:
+            where_clause &= Expression(Keywords.id, OP.EQ, kwargs['_id'])
+        if 'keyword' in kwargs:
+            where_clause &= Expression(Keywords.keyword, OP.EQ, kwargs['keyword'])
         return where_clause

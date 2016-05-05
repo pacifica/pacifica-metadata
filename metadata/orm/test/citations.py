@@ -10,9 +10,9 @@ from metadata.orm.journals import Journals
 from metadata.orm.test.journals import SAMPLE_JOURNAL_HASH
 
 SAMPLE_CITATION_HASH = {
-    "citation_id": 43,
+    "_id": 43,
     "article_title": "Applications of Dove-Tail Joints in Log Cabin Constructions",
-    "journal_id": SAMPLE_JOURNAL_HASH['journal_id'],
+    "journal_id": SAMPLE_JOURNAL_HASH['_id'],
     "journal_volume": 43,
     "journal_issue": 42,
     "page_range": "34-45",
@@ -36,7 +36,7 @@ class TestCitations(TestBase):
     """
     dependent_cls = [Journals]
     obj_cls = Citations
-    obj_id = Citations.citation_id
+    obj_id = Citations.id
 
     def base_create_dep_objs(self):
         """

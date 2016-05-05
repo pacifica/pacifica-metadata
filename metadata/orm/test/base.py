@@ -47,6 +47,7 @@ class TestBase(TestCase):
             obj = self.base_create_obj(self.obj_cls, obj_hash)
             new_obj = self.obj_cls.get(self.obj_id == getattr(obj, self.obj_id.db_column))
             chk_obj_hash = new_obj.to_hash()
+            self.assertEqual('_id' in chk_obj_hash, True)
             for key in obj_hash.keys():
                 self.assertEqual(chk_obj_hash[key], obj_hash[key])
 

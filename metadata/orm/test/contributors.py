@@ -12,13 +12,13 @@ from metadata.orm.test.institutions import SAMPLE_INSTITUTION_HASH
 from metadata.orm.institutions import Institutions
 
 SAMPLE_CONTRIBUTOR_HASH = {
-    "author_id": 192,
-    "person_id": SAMPLE_USER_HASH['person_id'],
+    "_id": 192,
+    "person_id": SAMPLE_USER_HASH['_id'],
     "first_name": "John",
     "middle_initial": "F",
     "last_name": "Doe",
     "dept_code": "Ecology",
-    "institution_id": SAMPLE_INSTITUTION_HASH['institution_id']
+    "institution_id": SAMPLE_INSTITUTION_HASH['_id']
 }
 
 class TestContributors(TestBase):
@@ -27,7 +27,7 @@ class TestContributors(TestBase):
     """
     dependent_cls = [Users, Institutions]
     obj_cls = Contributors
-    obj_id = Contributors.author_id
+    obj_id = Contributors.id
 
     def base_create_dep_objs(self):
         """

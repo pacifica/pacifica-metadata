@@ -8,7 +8,7 @@ from metadata.orm.test.base import TestBase
 from metadata.orm.users import Users
 
 SAMPLE_USER_HASH = {
-    "person_id": 127,
+    "_id": 127,
     "first_name": "John",
     "last_name": "Doe",
     "network_id": "guest"
@@ -20,7 +20,7 @@ class TestUsers(TestBase):
     """
     dependent_cls = []
     obj_cls = Users
-    obj_id = Users.person_id
+    obj_id = Users.id
 
     def test_users_hash(self):
         """

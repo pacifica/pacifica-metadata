@@ -11,7 +11,9 @@ from os import getenv
 from json import dumps, loads
 
 from peewee import PostgresqlDatabase as pgdb
-from peewee import Model, DateTimeField, Expression, OP
+from peewee import Model, DateTimeField, Expression, OP, PrimaryKeyField
+
+from metadata.orm.utils import index_hash
 
 # Primary PeeWee database connection object constant
 DB = pgdb(getenv('POSTGRES_ENV_POSTGRES_DB'),
@@ -38,6 +40,10 @@ class PacificaModel(Model):
     """
     Basic fields for an object within the model
     """
+    # this is peewee specific need to disable this check
+    # pylint: disable=invalid-name
+    id = PrimaryKeyField()
+    # pylint: enable=invalid-name
     created = DateTimeField(default=datetime.now)
     updated = DateTimeField(default=datetime.now)
     deleted = DateTimeField(default=datetime.now)
@@ -61,10 +67,10 @@ class PacificaModel(Model):
         in a hash.
         """
         obj = {}
-        obj['_type'] = self.__class__.__name__.lower()
         obj['created'] = int(mktime(self.created.timetuple()))
         obj['updated'] = int(mktime(self.updated.timetuple()))
         obj['deleted'] = int(mktime(self.deleted.timetuple()))
+        obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         return obj
 
     def from_hash(self, obj):

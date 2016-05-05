@@ -8,7 +8,7 @@ from metadata.orm.test.base import TestBase
 from metadata.orm.keys import Keys
 
 SAMPLE_KEY_HASH = {
-    "key_id": 127,
+    "_id": 127,
     "key": "proposal"
 }
 
@@ -18,7 +18,7 @@ class TestKeys(TestBase):
     """
     dependent_cls = []
     obj_cls = Keys
-    obj_id = Keys.key_id
+    obj_id = Keys.id
 
     def test_keys_hash(self):
         """

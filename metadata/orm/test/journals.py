@@ -8,7 +8,7 @@ from metadata.orm.test.base import TestBase
 from metadata.orm.journals import Journals
 
 SAMPLE_JOURNAL_HASH = {
-    "journal_id": 45,
+    "_id": 45,
     "journal_name": "Northern Yukon Master Workworking",
     "impact_factor": 10.0,
     "website_url": "http://www.ehwoodworkers.ca"
@@ -20,7 +20,7 @@ class TestJournals(TestBase):
     """
     dependent_cls = []
     obj_cls = Journals
-    obj_id = Journals.journal_id
+    obj_id = Journals.id
 
     def test_journal_hash(self):
         """

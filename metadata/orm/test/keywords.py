@@ -12,8 +12,8 @@ from metadata.orm.test.journals import SAMPLE_JOURNAL_HASH
 from metadata.orm.journals import Journals
 
 SAMPLE_KEYWORD_HASH = {
-    "keyword_id": 142,
-    "citation_id": SAMPLE_CITATION_HASH['citation_id'],
+    "_id": 142,
+    "citation_id": SAMPLE_CITATION_HASH['_id'],
     "keyword": "halitosis"
 }
 
@@ -23,7 +23,7 @@ class TestKeywords(TestBase):
     """
     dependent_cls = [Journals, Citations]
     obj_cls = Keywords
-    obj_id = Keywords.keyword_id
+    obj_id = Keywords.id
 
     def base_create_dep_objs(self):
         """

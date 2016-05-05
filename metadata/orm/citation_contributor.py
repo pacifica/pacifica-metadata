@@ -40,9 +40,9 @@ class CitationContributor(CherryPyAPI):
         Converts the object to a hash
         """
         obj = super(CitationContributor, self).to_hash()
-        obj['_id'] = index_hash(int(self.citation.citation_id), int(self.author.author_id))
-        obj['citation_id'] = int(self.citation.citation_id)
-        obj['author_id'] = int(self.author.author_id)
+        obj['_id'] = index_hash(int(self.citation.id), int(self.author.id))
+        obj['citation_id'] = int(self.citation.id)
+        obj['author_id'] = int(self.author.id)
         obj['author_precedence'] = int(self.author_precedence)
         return obj
 
@@ -52,9 +52,9 @@ class CitationContributor(CherryPyAPI):
         """
         super(CitationContributor, self).from_hash(obj)
         if 'citation_id' in obj:
-            self.citation = Citations.get(Citations.citation_id == obj['citation_id'])
+            self.citation = Citations.get(Citations.id == obj['citation_id'])
         if 'author_id' in obj:
-            self.author = Contributors.get(Contributors.author_id == obj['author_id'])
+            self.author = Contributors.get(Contributors.id == obj['author_id'])
         if 'author_precedence' in obj:
             self.author_precedence = int(obj['author_precedence'])
 
@@ -64,10 +64,10 @@ class CitationContributor(CherryPyAPI):
         """
         where_clause = super(CitationContributor, self).where_clause(kwargs)
         if 'citation_id' in kwargs:
-            citation = Citations.get(Citations.citation_id == kwargs['citation_id'])
+            citation = Citations.get(Citations.id == kwargs['citation_id'])
             where_clause &= Expression(CitationContributor.citation, OP.EQ, citation)
         if 'person_id' in kwargs:
-            author = Contributors.get(Contributors.author_id == kwargs['author_id'])
+            author = Contributors.get(Contributors.id == kwargs['author_id'])
             where_clause &= Expression(CitationContributor.author, OP.EQ, author)
         if 'author_precedence' in kwargs:
             auth_prec = int(kwargs['author_precedence'])

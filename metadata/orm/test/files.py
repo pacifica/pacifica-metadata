@@ -14,7 +14,7 @@ from metadata.orm.transactions import Transactions
 from metadata.orm.test.transactions import SAMPLE_TRANSACTION_HASH
 
 SAMPLE_FILE_HASH = {
-    "file_id": 127,
+    "_id": 127,
     "name": "test.txt",
     "subdir": "a/b",
     "vtime": int(mktime(datetime.now().timetuple())),
@@ -22,7 +22,7 @@ SAMPLE_FILE_HASH = {
     "ctime": int(mktime(datetime.now().timetuple())),
     "verified": "True",
     "size": 1234,
-    "transaction_id": SAMPLE_TRANSACTION_HASH['transaction_id']
+    "transaction_id": SAMPLE_TRANSACTION_HASH['_id']
 }
 
 class TestFiles(TestBase):
@@ -31,7 +31,7 @@ class TestFiles(TestBase):
     """
     dependent_cls = [Users, Transactions]
     obj_cls = Files
-    obj_id = Files.file_id
+    obj_id = Files.id
 
     def base_create_dep_objs(self):
         """

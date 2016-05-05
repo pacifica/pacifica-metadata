@@ -2,22 +2,29 @@
 """
 Contains the model for metadata values
 """
-from peewee import IntegerField, CharField, Expression, OP
+from peewee import CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
 
 class Values(CherryPyAPI):
     """
     Values model class for metadata
     """
-    value_id = IntegerField(default=-1, primary_key=True)
     value = CharField(default="")
+
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(Values, Values).elastic_mapping_builder(obj)
+        obj['value'] = {'type': 'string'}
 
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(Values, self).to_hash()
-        obj['value_id'] = int(self.value_id)
+        obj['_id'] = int(self.id)
         obj['value'] = str(self.value)
         return obj
 
@@ -26,8 +33,10 @@ class Values(CherryPyAPI):
         Converts the hash to the object
         """
         super(Values, self).from_hash(obj)
-        if 'value_id' in obj:
-            self.value_id = obj['value_id']
+        if '_id' in obj:
+            # pylint: disable=invalid-name
+            self.id = obj['_id']
+            # pylint: enable=invalid-name
         if 'value' in obj:
             self.value = obj['value']
 
@@ -36,7 +45,8 @@ class Values(CherryPyAPI):
         PeeWee specific where clause used for search.
         """
         where_clause = super(Values, self).where_clause(kwargs)
-        for key in ['value_id', 'value']:
-            if key in kwargs:
-                where_clause &= Expression(getattr(Values, key), OP.EQ, kwargs[key])
+        if '_id' in kwargs:
+            where_clause &= Expression(Values.id, OP.EQ, kwargs['_id'])
+        if 'value' in kwargs:
+            where_clause &= Expression(Values.value, OP.EQ, kwargs['value'])
         return where_clause

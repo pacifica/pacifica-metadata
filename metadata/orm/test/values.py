@@ -8,7 +8,7 @@ from metadata.orm.test.base import TestBase
 from metadata.orm.values import Values
 
 SAMPLE_VALUE_HASH = {
-    "value_id": 127,
+    "_id": 127,
     "value": "43278a"
 }
 
@@ -18,7 +18,7 @@ class TestValues(TestBase):
     """
     dependent_cls = []
     obj_cls = Values
-    obj_id = Values.value_id
+    obj_id = Values.id
 
     def test_values_hash(self):
         """

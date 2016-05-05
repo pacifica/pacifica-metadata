@@ -3,6 +3,7 @@
 Connects a User with an Institution
 """
 from peewee import ForeignKeyField, Expression, OP, CompositeKey
+from metadata.orm.utils import index_hash
 from metadata.orm.users import Users
 from metadata.orm.institutions import Institutions
 from metadata.orm.base import DB
@@ -24,13 +25,22 @@ class InstitutionPerson(CherryPyAPI):
         primary_key = CompositeKey('user', 'institution')
     # pylint: enable=too-few-public-methods
 
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(InstitutionPerson, InstitutionPerson).elastic_mapping_builder(obj)
+        obj['person_id'] = obj['institution_id'] = {'type': 'integer'}
+
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(InstitutionPerson, self).to_hash()
-        obj['person_id'] = int(self.user.person_id)
-        obj['institution_id'] = int(self.institution.institution_id)
+        obj['_id'] = index_hash(int(self.user.id), int(self.institution.id))
+        obj['person_id'] = int(self.user.id)
+        obj['institution_id'] = int(self.institution.id)
         return obj
 
     def from_hash(self, obj):
@@ -39,10 +49,10 @@ class InstitutionPerson(CherryPyAPI):
         """
         super(InstitutionPerson, self).from_hash(obj)
         if 'person_id' in obj:
-            self.user = Users.get(Users.person_id == obj['person_id'])
+            self.user = Users.get(Users.id == obj['person_id'])
         if 'institution_id' in obj:
             self.institution = Institutions.get(
-                Institutions.institution_id == obj['institution_id']
+                Institutions.id == obj['institution_id']
             )
 
     def where_clause(self, kwargs):
@@ -51,10 +61,10 @@ class InstitutionPerson(CherryPyAPI):
         """
         where_clause = super(InstitutionPerson, self).where_clause(kwargs)
         if 'person_id' in kwargs:
-            person = Users.get(Users.person_id == kwargs['person_id'])
+            person = Users.get(Users.id == kwargs['person_id'])
             where_clause &= Expression(InstitutionPerson.user, OP.EQ, person)
         if 'institution_id' in kwargs:
-            institution = Institutions.get(Institutions.institution_id == kwargs['institution_id'])
+            institution = Institutions.get(Institutions.id == kwargs['institution_id'])
             where_clause &= Expression(InstitutionPerson.institution, OP.EQ, institution)
         return where_clause
 

@@ -12,8 +12,8 @@ from metadata.orm.test.users import SAMPLE_USER_HASH
 from metadata.orm.users import Users
 
 SAMPLE_INSTRUMENT_CUSTODIAN_HASH = {
-    "person_id": SAMPLE_USER_HASH['person_id'],
-    "instrument_id": SAMPLE_INSTRUMENT_HASH['instrument_id']
+    "person_id": SAMPLE_USER_HASH['_id'],
+    "instrument_id": SAMPLE_INSTRUMENT_HASH['_id']
 }
 
 class TestInstrumentCustodian(TestBase):

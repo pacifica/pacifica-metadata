@@ -8,7 +8,7 @@ from metadata.orm.test.base import TestBase
 from metadata.orm.groups import Groups
 
 SAMPLE_GROUP_HASH = {
-    "group_id": 10,
+    "_id": 10,
     "group_name": "Custodians",
     "is_admin": True
 }
@@ -19,7 +19,7 @@ class TestGroups(TestBase):
     """
     dependent_cls = []
     obj_cls = Groups
-    obj_id = Groups.group_id
+    obj_id = Groups.id
 
     def test_group_hash(self):
         """

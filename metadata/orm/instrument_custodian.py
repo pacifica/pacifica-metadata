@@ -3,6 +3,7 @@
 Instrument custodian relationship
 """
 from peewee import ForeignKeyField, Expression, OP, CompositeKey
+from metadata.orm.utils import index_hash
 from metadata.orm.users import Users
 from metadata.orm.instruments import Instruments
 from metadata.orm.base import DB, PacificaModel
@@ -23,13 +24,22 @@ class InstrumentCustodian(PacificaModel):
         primary_key = CompositeKey('instrument', 'custodian')
     # pylint: enable=too-few-public-methods
 
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(InstrumentCustodian, InstrumentCustodian).elastic_mapping_builder(obj)
+        obj['instrument_id'] = obj['person_id'] = {'type': 'integer'}
+
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(InstrumentCustodian, self).to_hash()
-        obj['instrument_id'] = int(self.instrument.instrument_id)
-        obj['person_id'] = int(self.custodian.person_id)
+        obj['_id'] = index_hash(int(self.custodian.id), int(self.instrument.id))
+        obj['instrument_id'] = int(self.instrument.id)
+        obj['person_id'] = int(self.custodian.id)
         return obj
 
     def from_hash(self, obj):
@@ -38,9 +48,9 @@ class InstrumentCustodian(PacificaModel):
         """
         super(InstrumentCustodian, self).from_hash(obj)
         if 'instrument_id' in obj:
-            self.instrument = Instruments.get(Instruments.instrument_id == obj['instrument_id'])
+            self.instrument = Instruments.get(Instruments.id == obj['instrument_id'])
         if 'person_id' in obj:
-            self.custodian = Users.get(Users.person_id == obj['person_id'])
+            self.custodian = Users.get(Users.id == obj['person_id'])
 
     def where_clause(self, kwargs):
         """
@@ -48,9 +58,9 @@ class InstrumentCustodian(PacificaModel):
         """
         where_clause = super(InstrumentCustodian, self).where_clause(kwargs)
         if 'instrument_id' in kwargs:
-            instrument = Instruments.get(Instruments.instrument_id == kwargs['instrument_id'])
+            instrument = Instruments.get(Instruments.id == kwargs['instrument_id'])
             where_clause &= Expression(InstrumentCustodian.instrument, OP.EQ, instrument)
         if 'person_id' in kwargs:
-            user = Users.get(Users.person_id == kwargs['person_id'])
+            user = Users.get(Users.id == kwargs['person_id'])
             where_clause &= Expression(InstrumentCustodian.custodian, OP.EQ, user)
         return where_clause

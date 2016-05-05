@@ -39,9 +39,9 @@ class CitationProposal(CherryPyAPI):
         Converts the object to a hash
         """
         obj = super(CitationProposal, self).to_hash()
-        obj['_id'] = index_hash(int(self.citation.citation_id), int(self.proposal.proposal_id))
-        obj['citation_id'] = int(self.citation.citation_id)
-        obj['proposal_id'] = int(self.proposal.proposal_id)
+        obj['_id'] = index_hash(int(self.citation.id), int(self.proposal.id))
+        obj['citation_id'] = int(self.citation.id)
+        obj['proposal_id'] = int(self.proposal.id)
         return obj
 
     def from_hash(self, obj):
@@ -50,9 +50,9 @@ class CitationProposal(CherryPyAPI):
         """
         super(CitationProposal, self).from_hash(obj)
         if 'citation_id' in obj:
-            self.citation = Citations.get(Citations.citation_id == obj['citation_id'])
+            self.citation = Citations.get(Citations.id == obj['citation_id'])
         if 'proposal_id' in obj:
-            self.proposal = Proposals.get(Proposals.proposal_id == obj['proposal_id'])
+            self.proposal = Proposals.get(Proposals.id == obj['proposal_id'])
 
     def where_clause(self, kwargs):
         """
@@ -60,9 +60,9 @@ class CitationProposal(CherryPyAPI):
         """
         where_clause = super(CitationProposal, self).where_clause(kwargs)
         if 'citation_id' in kwargs:
-            citation = Citations.get(Citations.citation_id == kwargs['citation_id'])
+            citation = Citations.get(Citations.id == kwargs['citation_id'])
             where_clause &= Expression(CitationProposal.citation, OP.EQ, citation)
         if 'proposal_id' in kwargs:
-            proposal = Proposals.get(Proposals.proposal_id == kwargs['proposal_id'])
+            proposal = Proposals.get(Proposals.id == kwargs['proposal_id'])
             where_clause &= Expression(CitationProposal.proposal, OP.EQ, proposal)
         return where_clause

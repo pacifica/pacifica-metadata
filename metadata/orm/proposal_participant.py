@@ -3,6 +3,7 @@
 Proposal person relationship
 """
 from peewee import ForeignKeyField, CharField, Expression, OP, CompositeKey
+from metadata.orm.utils import index_hash
 from metadata.orm.proposals import Proposals
 from metadata.orm.users import Users
 from metadata.orm.base import DB
@@ -26,13 +27,23 @@ class ProposalParticipant(CherryPyAPI):
         primary_key = CompositeKey('member', 'proposal')
     # pylint: enable=too-few-public-methods
 
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(ProposalParticipant, ProposalParticipant).elastic_mapping_builder(obj)
+        obj['person_id'] = obj['proposal_id'] = {'type': 'integer'}
+        obj['proposal_author_sw'] = obj['proposal_co_author_sw'] = {'type': 'string'}
+
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(ProposalParticipant, self).to_hash()
-        obj['person_id'] = int(self.member.person_id)
-        obj['proposal_id'] = int(self.proposal.proposal_id)
+        obj['_id'] = index_hash(int(self.proposal.id), int(self.member.id))
+        obj['person_id'] = int(self.member.id)
+        obj['proposal_id'] = int(self.proposal.id)
         return obj
 
     def from_hash(self, obj):
@@ -41,9 +52,9 @@ class ProposalParticipant(CherryPyAPI):
         """
         super(ProposalParticipant, self).from_hash(obj)
         if 'person_id' in obj:
-            self.member = Users.get(Users.person_id == obj['person_id'])
+            self.member = Users.get(Users.id == obj['person_id'])
         if 'proposal_id' in obj:
-            self.proposal = Proposals.get(Proposals.proposal_id == obj['proposal_id'])
+            self.proposal = Proposals.get(Proposals.id == obj['proposal_id'])
 
     def where_clause(self, kwargs):
         """
@@ -51,9 +62,9 @@ class ProposalParticipant(CherryPyAPI):
         """
         where_clause = super(ProposalParticipant, self).where_clause(kwargs)
         if 'person_id' in kwargs:
-            member = Users.get(Users.person_id == kwargs['person_id'])
+            member = Users.get(Users.id == kwargs['person_id'])
             where_clause &= Expression(ProposalParticipant.member, OP.EQ, member)
         if 'proposal_id' in kwargs:
-            proposal = Proposals.get(Proposals.proposal_id == kwargs['proposal_id'])
+            proposal = Proposals.get(Proposals.id == kwargs['proposal_id'])
             where_clause &= Expression(ProposalParticipant.proposal, OP.EQ, proposal)
         return where_clause

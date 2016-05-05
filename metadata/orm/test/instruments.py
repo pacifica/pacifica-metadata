@@ -8,7 +8,7 @@ from metadata.orm.test.base import TestBase
 from metadata.orm.instruments import Instruments
 
 SAMPLE_INSTRUMENT_HASH = {
-    "instrument_id": 1234,
+    "_id": 1234,
     "instrument_name": "My Really Long Winded Instrument Name",
     "display_name": "My Instrument Name",
     "name_short": "Instrument"
@@ -20,7 +20,7 @@ class TestInstruments(TestBase):
     """
     dependent_cls = []
     obj_cls = Instruments
-    obj_id = Instruments.instrument_id
+    obj_id = Instruments.id
 
     def test_instruments_hash(self):
         """

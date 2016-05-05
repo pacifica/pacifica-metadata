@@ -43,6 +43,10 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             raise HTTPError(500, str(ex))
         obj.updated = datetime.now()
         try:
+            self.elastic_upload(obj.to_hash())
+        except Exception, ex:
+            raise HTTPError(500, str(ex))
+        try:
             obj.save(force_insert=True)
         except IntegrityError, ex:
             obj.rollback()
@@ -61,6 +65,10 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         self.updated = datetime.now()
         self.created = datetime.now()
         try:
+            self.elastic_upload(self.to_hash())
+        except Exception, ex:
+            raise HTTPError(500, str(ex))
+        try:
             self.save(force_insert=True)
         except IntegrityError, ex:
             self.rollback()
@@ -76,6 +84,10 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         except DoesNotExist, ex:
             raise HTTPError(404, str(ex))
         obj.deleted = datetime.now()
+        try:
+            self.elastic_delete(obj.to_hash()['_id'])
+        except Exception, ex:
+            raise HTTPError(500, str(ex))
         try:
             obj.save(force_insert=True)
         except IntegrityError, ex:

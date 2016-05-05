@@ -12,8 +12,8 @@ from metadata.orm.test.groups import SAMPLE_GROUP_HASH
 from metadata.orm.groups import Groups
 
 SAMPLE_INSTRUMENT_GROUP_HASH = {
-    "instrument_id": SAMPLE_INSTRUMENT_HASH['instrument_id'],
-    "group_id": SAMPLE_GROUP_HASH['group_id']
+    "instrument_id": SAMPLE_INSTRUMENT_HASH['_id'],
+    "group_id": SAMPLE_GROUP_HASH['_id']
 }
 
 class TestInstrumentGroup(TestBase):

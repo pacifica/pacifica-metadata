@@ -2,14 +2,13 @@
 """
 Users data model
 """
-from peewee import IntegerField, CharField, Expression, OP
+from peewee import CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
 
 class Users(CherryPyAPI):
     """
     Users data model object
     """
-    person_id = IntegerField(default=-1, primary_key=True)
     first_name = CharField(default="")
     last_name = CharField(default="")
     network_id = CharField(default="")
@@ -22,14 +21,13 @@ class Users(CherryPyAPI):
         super(Users, Users).elastic_mapping_builder(obj)
         obj['first_name'] = obj['last_name'] = obj['network_id'] = \
         {'type': 'string'}
-        obj['person_id'] = {'type': 'integer'}
 
     def to_hash(self):
         """
         Convert the object to a hash
         """
         obj = super(Users, self).to_hash()
-        obj['person_id'] = self.person_id
+        obj['_id'] = self.id
         obj['first_name'] = self.first_name
         obj['last_name'] = self.last_name
         obj['network_id'] = self.network_id
@@ -40,8 +38,10 @@ class Users(CherryPyAPI):
         Convert the hash into the object
         """
         super(Users, self).from_hash(obj)
-        if 'person_id' in obj:
-            self.person_id = int(obj['person_id'])
+        if '_id' in obj:
+            # pylint: disable=invalid-name
+            self.id = int(obj['_id'])
+            # pylint: enable=invalid-name
         if 'first_name' in obj:
             self.first_name = obj['first_name']
         if 'last_name' in obj:
@@ -54,7 +54,9 @@ class Users(CherryPyAPI):
         Where clause for the various elements.
         """
         where_clause = super(Users, self).where_clause(kwargs)
-        for key in ['person_id', 'first_name', 'last_name', 'network_id']:
+        if '_id' in kwargs:
+            where_clause &= Expression(Users.id, OP.EQ, kwargs['_id'])
+        for key in ['first_name', 'last_name', 'network_id']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Users, key), OP.EQ, kwargs[key])
         return where_clause

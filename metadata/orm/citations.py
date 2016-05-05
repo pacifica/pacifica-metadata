@@ -12,7 +12,6 @@ class Citations(CherryPyAPI):
     """
     Citations model tracks metadata for a journal article.
     """
-    citation_id = IntegerField(default=-1, primary_key=True)
     article_title = TextField(default="")
     journal = ForeignKeyField(Journals, related_name='citations')
     journal_volume = IntegerField(default=-1)
@@ -31,7 +30,6 @@ class Citations(CherryPyAPI):
         super(Citations, Citations).elastic_mapping_builder(obj)
         obj['journal_id'] = obj['journal_volume'] = \
         obj['journal_issue'] = {'type': 'integer'}
-        obj['citation_id'] = {'type': 'integer', 'copy_to': '_id'}
         obj['article_title'] = obj['abstract_text'] = obj['xml_text'] = \
         obj['page_range'] = obj['doi_reference'] = obj['release_authorization_id'] = \
         {'type': 'string'}
@@ -41,11 +39,11 @@ class Citations(CherryPyAPI):
         Convert the citation fields to a serializable hash.
         """
         obj = super(Citations, self).to_hash()
-        obj['citation_id'] = int(self.citation_id)
+        obj['_id'] = int(self.id)
         obj['article_title'] = str(self.article_title)
         obj['abstract_text'] = str(self.abstract_text)
         obj['xml_text'] = str(self.xml_text)
-        obj['journal_id'] = int(self.journal.journal_id)
+        obj['journal_id'] = int(self.journal.id)
         obj['journal_volume'] = int(self.journal_volume)
         obj['journal_issue'] = int(self.journal_issue)
         obj['page_range'] = str(self.page_range)
@@ -58,12 +56,14 @@ class Citations(CherryPyAPI):
         Converts the object into the citation object fields.
         """
         super(Citations, self).from_hash(obj)
-        if 'citation_id' in obj:
-            self.citation_id = int(obj['citation_id'])
+        if '_id' in obj:
+            # pylint: disable=invalid-name
+            self.id = int(obj['_id'])
+            # pylint: enable=invalid-name
         if 'article_title' in obj:
             self.article_title = str(obj['article_title'])
         if 'journal_id' in obj:
-            self.journal = Journals.get(Journals.journal_id == int(obj['journal_id']))
+            self.journal = Journals.get(Journals.id == int(obj['journal_id']))
         if 'journal_volume' in obj:
             self.journal_volume = int(obj['journal_volume'])
         if 'journal_issue' in obj:
@@ -85,10 +85,11 @@ class Citations(CherryPyAPI):
         """
         where_clause = super(Citations, self).where_clause(kwargs)
         if 'journal_id' in kwargs:
-            journal = Journals.get(Journals.journal_id == int(kwargs['journal_id']))
+            journal = Journals.get(Journals.id == int(kwargs['journal_id']))
             where_clause &= Expression(Citations.journal, OP.EQ, journal)
-        for key in ['citation_id', 'article_title'
-                    'journal_volume', 'journal_issue', 'page_range',
+        if '_id' in kwargs:
+            where_clause &= Expression(Citations.id, OP.EQ, int(kwargs['_id']))
+        for key in ['article_title', 'journal_volume', 'journal_issue', 'page_range',
                     'doi_reference']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Citations, key), OP.EQ, kwargs[key])

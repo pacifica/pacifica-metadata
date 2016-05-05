@@ -12,8 +12,8 @@ from metadata.orm.test.proposals import SAMPLE_PROPOSAL_HASH
 from metadata.orm.proposals import Proposals
 
 SAMPLE_PROPOSAL_INSTRUMENT_HASH = {
-    "proposal_id": SAMPLE_PROPOSAL_HASH['proposal_id'],
-    "instrument_id": SAMPLE_INSTRUMENT_HASH['instrument_id']
+    "proposal_id": SAMPLE_PROPOSAL_HASH['_id'],
+    "instrument_id": SAMPLE_INSTRUMENT_HASH['_id']
 }
 
 class TestProposalInstrument(TestBase):

@@ -3,6 +3,7 @@
 Proposal instrument relationship
 """
 from peewee import ForeignKeyField, IntegerField, Expression, OP, CompositeKey
+from metadata.orm.utils import index_hash
 from metadata.orm.proposals import Proposals
 from metadata.orm.instruments import Instruments
 from metadata.orm.base import DB
@@ -25,13 +26,23 @@ class ProposalInstrument(CherryPyAPI):
         primary_key = CompositeKey('instrument', 'proposal')
     # pylint: enable=too-few-public-methods
 
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """
+        Build the elasticsearch mapping bits
+        """
+        super(ProposalInstrument, ProposalInstrument).elastic_mapping_builder(obj)
+        obj['instrument_id'] = obj['proposal_id'] = obj['hours_estimated'] = \
+        {'type': 'integer'}
+
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(ProposalInstrument, self).to_hash()
-        obj['instrument_id'] = int(self.instrument.instrument_id)
-        obj['proposal_id'] = int(self.proposal.proposal_id)
+        obj['_id'] = index_hash(int(self.proposal.id), int(self.instrument.id))
+        obj['instrument_id'] = int(self.instrument.id)
+        obj['proposal_id'] = int(self.proposal.id)
         return obj
 
     def from_hash(self, obj):
@@ -40,9 +51,9 @@ class ProposalInstrument(CherryPyAPI):
         """
         super(ProposalInstrument, self).from_hash(obj)
         if 'instrument_id' in obj:
-            self.instrument = Instruments.get(Instruments.instrument_id == obj['instrument_id'])
+            self.instrument = Instruments.get(Instruments.id == obj['instrument_id'])
         if 'proposal_id' in obj:
-            self.proposal = Proposals.get(Proposals.proposal_id == obj['proposal_id'])
+            self.proposal = Proposals.get(Proposals.id == obj['proposal_id'])
 
     def where_clause(self, kwargs):
         """
@@ -50,9 +61,9 @@ class ProposalInstrument(CherryPyAPI):
         """
         where_clause = super(ProposalInstrument, self).where_clause(kwargs)
         if 'instrument_id' in kwargs:
-            instrument = Instruments.get(Instruments.instrument_id == kwargs['instrument_id'])
+            instrument = Instruments.get(Instruments.id == kwargs['instrument_id'])
             where_clause &= Expression(ProposalInstrument.instrument, OP.EQ, instrument)
         if 'proposal_id' in kwargs:
-            proposal = Proposals.get(Proposals.proposal_id == kwargs['proposal_id'])
+            proposal = Proposals.get(Proposals.id == kwargs['proposal_id'])
             where_clause &= Expression(ProposalInstrument.proposal, OP.EQ, proposal)
         return where_clause

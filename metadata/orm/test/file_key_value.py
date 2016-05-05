@@ -18,9 +18,9 @@ from metadata.orm.test.values import SAMPLE_VALUE_HASH
 from metadata.orm.values import Values
 
 SAMPLE_FILE_KEY_VALUE_HASH = {
-    "file_id": SAMPLE_FILE_HASH['file_id'],
-    "key_id": SAMPLE_KEY_HASH['key_id'],
-    "value_id": SAMPLE_VALUE_HASH['value_id']
+    "file_id": SAMPLE_FILE_HASH['_id'],
+    "key_id": SAMPLE_KEY_HASH['_id'],
+    "value_id": SAMPLE_VALUE_HASH['_id']
 }
 
 class TestFileKeyValue(TestBase):

@@ -12,8 +12,8 @@ from metadata.orm.test.users import SAMPLE_USER_HASH
 from metadata.orm.users import Users
 
 SAMPLE_INSTITUTION_PERSON_HASH = {
-    "person_id": SAMPLE_USER_HASH['person_id'],
-    "institution_id": SAMPLE_INSTITUTION_HASH['institution_id']
+    "person_id": SAMPLE_USER_HASH['_id'],
+    "institution_id": SAMPLE_INSTITUTION_HASH['_id']
 }
 
 class TestInstitutionPerson(TestBase):

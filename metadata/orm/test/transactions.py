@@ -10,9 +10,9 @@ from metadata.orm.test.users import SAMPLE_USER_HASH
 from metadata.orm.users import Users
 
 SAMPLE_TRANSACTION_HASH = {
-    "transaction_id": 127,
+    "_id": 127,
     "verified": "True",
-    "submitter": SAMPLE_USER_HASH['person_id']
+    "submitter": SAMPLE_USER_HASH['_id']
 }
 
 class TestTransactions(TestBase):
@@ -21,7 +21,7 @@ class TestTransactions(TestBase):
     """
     dependent_cls = [Users]
     obj_cls = Transactions
-    obj_id = Transactions.transaction_id
+    obj_id = Transactions.id
 
     def base_create_dep_objs(self):
         """

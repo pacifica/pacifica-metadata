@@ -10,13 +10,12 @@ from metadata.orm.test.base import TestBase
 from metadata.orm.proposals import Proposals
 
 SAMPLE_PROPOSAL_HASH = {
-    "proposal_id": 17,
+    "_id": 17,
     "title": "My Proposal Title",
     "abstract": """
 This is my proposal that's really cool and you should accept it. ;)
 """,
     "science_theme": "Nobel Prize Winners",
-    "science_theme_id": 456,
     "proposal_type": "Blarg!",
     "submitted_date": int(mktime(datetime.now().timetuple())),
     "accepted_date": int(mktime(datetime.now().timetuple())),
@@ -30,7 +29,7 @@ class TestProposals(TestBase):
     """
     dependent_cls = []
     obj_cls = Proposals
-    obj_id = Proposals.proposal_id
+    obj_id = Proposals.id
 
     def test_proposals_hash(self):
         """

@@ -24,7 +24,7 @@ for ORM_CLS in ORM_OBJECTS:
         elastic_mapping = orm_cls.elastic_mapping()
         self.assertEqual(type(elastic_mapping), dict)
         properties = elastic_mapping['properties']
-        elastic_mapping_types = ['integer', 'string', 'date', 'boolean']
+        elastic_mapping_types = ['integer', 'string', 'date', 'boolean', 'float']
         for column in properties.keys():
             self.assertEqual(properties[column]['type'] in elastic_mapping_types, True)
     setattr(TestElastic, "test_elastic_mapping_%s"%(ORM_CLS.__name__.lower()), test_elastic_mapping)

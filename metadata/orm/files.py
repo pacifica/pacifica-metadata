@@ -15,7 +15,6 @@ class Files(CherryPyAPI):
     it came from.
     """
     #pylint: disable=too-many-instance-attributes
-    file_id = BigIntegerField(default=-1, primary_key=True)
     name = CharField(default="")
     subdir = CharField(default="")
     vtime = DateTimeField(default=datetime.now)
@@ -32,7 +31,7 @@ class Files(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(Files, Files).elastic_mapping_builder(obj)
-        obj['file_id'] = obj['transaction_id'] = obj['size'] = \
+        obj['transaction_id'] = obj['size'] = \
         {'type': 'integer'}
         obj['vtime'] = obj['ctime'] = obj['mtime'] = \
         {'type': 'date', 'format': 'epoch_second'}
@@ -45,7 +44,7 @@ class Files(CherryPyAPI):
         Converts the object to a hash
         """
         obj = super(Files, self).to_hash()
-        obj['file_id'] = int(self.file_id)
+        obj['_id'] = int(self.id)
         obj['name'] = str(self.name)
         obj['subdir'] = str(self.subdir)
         obj['vtime'] = int(mktime(self.vtime.timetuple()))
@@ -53,7 +52,7 @@ class Files(CherryPyAPI):
         obj['mtime'] = int(mktime(self.mtime.timetuple()))
         obj['verified'] = str(self.verified)
         obj['size'] = int(self.size)
-        obj['transaction_id'] = int(self.transaction.transaction_id)
+        obj['transaction_id'] = int(self.transaction.id)
         return obj
 
     def from_hash(self, obj):
@@ -61,8 +60,10 @@ class Files(CherryPyAPI):
         Converts the hash to an object
         """
         super(Files, self).from_hash(obj)
-        if 'file_id' in obj:
-            self.file_id = int(obj['file_id'])
+        if '_id' in obj:
+            # pylint: disable=invalid-name
+            self.id = int(obj['_id'])
+            # pylint: enable=invalid-name
         if 'name' in obj:
             self.name = str(obj['name'])
         if 'subdir' in obj:
@@ -79,7 +80,7 @@ class Files(CherryPyAPI):
             self.size = int(obj['size'])
         if 'transaction_id' in obj:
             self.transaction = Transactions.get(
-                Transactions.transaction_id == obj['transaction_id']
+                Transactions.id == obj['transaction_id']
             )
 
     def where_clause(self, kwargs):
@@ -88,20 +89,19 @@ class Files(CherryPyAPI):
         or select.
         """
         where_clause = super(Files, self).where_clause(kwargs)
-        if 'vtime' in kwargs:
-            kwargs['vtime'] = datetime.fromtimestamp(kwargs['vtime'])
-        if 'ctime' in kwargs:
-            kwargs['ctime'] = datetime.fromtimestamp(kwargs['ctime'])
-        if 'mtime' in kwargs:
-            kwargs['mtime'] = datetime.fromtimestamp(kwargs['mtime'])
+        for date in ['vtime', 'mtime', 'ctime']:
+            if date in kwargs:
+                kwargs[date] = datetime.fromtimestamp(kwargs[date])
         if 'verified' in kwargs:
             kwargs['verified'] = bool(kwargs['verified'])
         if 'transaction_id' in kwargs:
             kwargs['transaction_id'] = Transactions.get(
-                Transactions.transaction_id == kwargs['transaction_id']
+                Transactions.id == kwargs['transaction_id']
             )
-        for key in ['file_id', 'name', 'subdir', 'size', 'vtime', 'verified'
-                    'transaction_id']:
+        if '_id' in kwargs:
+            where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
+        for key in ['name', 'subdir', 'size', 'vtime', 'verified'
+                    'transaction_id', 'mtime', 'ctime']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Files, key), OP.EQ, kwargs[key])
         return where_clause

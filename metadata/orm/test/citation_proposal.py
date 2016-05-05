@@ -14,8 +14,8 @@ from metadata.orm.test.journals import SAMPLE_JOURNAL_HASH
 from metadata.orm.journals import Journals
 
 SAMPLE_CITATION_PROPOSAL_HASH = {
-    "proposal_id": SAMPLE_PROPOSAL_HASH['proposal_id'],
-    "citation_id": SAMPLE_CITATION_HASH['citation_id']
+    "proposal_id": SAMPLE_PROPOSAL_HASH['_id'],
+    "citation_id": SAMPLE_CITATION_HASH['_id']
 }
 
 class TestCitationProposal(TestBase):
