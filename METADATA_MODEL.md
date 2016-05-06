@@ -5,9 +5,9 @@ objects in the model.
 
 ## All The Objects
 
-| Object Name | Journals | |
-| --- | --- | --- |
+### Journals
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | impact_factor | REAL |  |
 | journal_name | VARCHAR |  |
@@ -16,9 +16,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Users | |
-| --- | --- | --- |
+### Users
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | first_name | VARCHAR |  |
 | last_name | VARCHAR |  |
@@ -27,9 +27,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Institutions | |
-| --- | --- | --- |
+### Institutions
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | association_cd | VARCHAR |  |
 | institution_name | TEXT |  |
@@ -38,9 +38,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Proposals | |
-| --- | --- | --- |
+### Proposals
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | abstract | TEXT |  |
 | accepted_date | TIMESTAMP |  |
@@ -54,9 +54,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Instruments | |
-| --- | --- | --- |
+### Instruments
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | display_name | VARCHAR |  |
 | instrument_name | VARCHAR |  |
@@ -65,9 +65,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Citations | |
-| --- | --- | --- |
+### Citations
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | abstract_text | TEXT |  |
 | article_title | TEXT |  |
@@ -82,9 +82,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Contributors | |
-| --- | --- | --- |
+### Contributors
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | dept_code | VARCHAR |  |
 | first_name | VARCHAR |  |
@@ -96,9 +96,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | InstitutionPerson | |
-| --- | --- | --- |
+### InstitutionPerson
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | institution | INTEGER | Institutions.id |
 | user | INTEGER | Users.id |
@@ -106,9 +106,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Keywords | |
-| --- | --- | --- |
+### Keywords
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | citation | INTEGER | Citations.id |
 | keyword | VARCHAR |  |
@@ -116,9 +116,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | CitationContributor | |
-| --- | --- | --- |
+### CitationContributor
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | author | INTEGER | Contributors.id |
 | author_precedence | INTEGER |  |
@@ -127,9 +127,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | ProposalInstrument | |
-| --- | --- | --- |
+### ProposalInstrument
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | hours_estimated | INTEGER |  |
 | instrument | INTEGER | Instruments.id |
@@ -138,9 +138,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | ProposalParticipant | |
-| --- | --- | --- |
+### ProposalParticipant
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | member | INTEGER | Users.id |
 | proposal | INTEGER | Proposals.id |
@@ -150,9 +150,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | CitationProposal | |
-| --- | --- | --- |
+### CitationProposal
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | citation | INTEGER | Citations.id |
 | proposal | INTEGER | Proposals.id |
@@ -160,9 +160,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Transactions | |
-| --- | --- | --- |
+### Transactions
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | submitter | INTEGER | Users.id |
 | verified | BOOLEAN |  |
@@ -170,9 +170,9 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Files | |
-| --- | --- | --- |
+### Files
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | ctime | TIMESTAMP |  |
 | mtime | TIMESTAMP |  |
@@ -186,27 +186,27 @@ objects in the model.
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Keys | |
-| --- | --- | --- |
+### Keys
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | key | VARCHAR |  |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | Values | |
-| --- | --- | --- |
+### Values
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | value | VARCHAR |  |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
 
-| Object Name | FileKeyValue | |
-| --- | --- | --- |
+### FileKeyValue
 | Column | Type | Reference |
+| --- | --- | --- |
 | id | SERIAL |  |
 | file | INTEGER | Files.id |
 | key | INTEGER | Keys.id |

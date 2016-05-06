@@ -3,9 +3,9 @@
 from metadata.orm import ORM_OBJECTS
 
 for obj_cls in ORM_OBJECTS:
-    print "| Object Name | %s | |"%(obj_cls.__name__)
-    print "| --- | --- | --- |"
+    print "### %s"%(obj_cls.__name__)
     print "| Column | Type | Reference |"
+    print "| --- | --- | --- |"
     column_tuples = []
     for obj_cls_attr in dir(obj_cls):
         if type(getattr(obj_cls, obj_cls_attr)).__module__ == 'peewee' and \
