@@ -6,9 +6,9 @@ from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.institution_person import InstitutionPerson
-from metadata.orm.test.institutions import SAMPLE_INSTITUTION_HASH
+from metadata.orm.test.institutions import SAMPLE_INSTITUTION_HASH, TestInstitutions
 from metadata.orm.institutions import Institutions
-from metadata.orm.test.users import SAMPLE_USER_HASH
+from metadata.orm.test.users import SAMPLE_USER_HASH, TestUsers
 from metadata.orm.users import Users
 
 SAMPLE_INSTITUTION_PERSON_HASH = {
@@ -20,18 +20,27 @@ class TestInstitutionPerson(TestBase):
     """
     Test the InstitutionPerson ORM object
     """
-    dependent_cls = [Users, Institutions]
     obj_cls = InstitutionPerson
     obj_id = InstitutionPerson.user
 
-    def base_create_dep_objs(self):
+    @classmethod
+    def dependent_cls(cls):
+        ret = [InstitutionPerson]
+        ret += TestUsers.dependent_cls()
+        ret += TestInstitutions.dependent_cls()
+        return ret
+
+    @classmethod
+    def base_create_dep_objs(cls):
         """
         Create all objects that FileKeyValue need.
         """
         user = Users()
+        TestUsers.base_create_dep_objs()
         user.from_hash(SAMPLE_USER_HASH)
         user.save(force_insert=True)
         inst = Institutions()
+        TestInstitutions.base_create_dep_objs()
         inst.from_hash(SAMPLE_INSTITUTION_HASH)
         inst.save(force_insert=True)
 

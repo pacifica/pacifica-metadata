@@ -6,9 +6,9 @@ from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.contributors import Contributors
-from metadata.orm.test.users import SAMPLE_USER_HASH
+from metadata.orm.test.users import SAMPLE_USER_HASH, TestUsers
 from metadata.orm.users import Users
-from metadata.orm.test.institutions import SAMPLE_INSTITUTION_HASH
+from metadata.orm.test.institutions import SAMPLE_INSTITUTION_HASH, TestInstitutions
 from metadata.orm.institutions import Institutions
 
 SAMPLE_CONTRIBUTOR_HASH = {
@@ -25,18 +25,27 @@ class TestContributors(TestBase):
     """
     Test the Institutions ORM object
     """
-    dependent_cls = [Users, Institutions]
     obj_cls = Contributors
     obj_id = Contributors.id
 
-    def base_create_dep_objs(self):
+    @classmethod
+    def dependent_cls(cls):
+        ret = [Contributors]
+        ret += TestUsers.dependent_cls()
+        ret += TestInstitutions.dependent_cls()
+        return ret
+
+    @classmethod
+    def base_create_dep_objs(cls):
         """
         Create all objects that Files depend on.
         """
         inst = Institutions()
+        TestInstitutions.base_create_dep_objs()
         inst.from_hash(SAMPLE_INSTITUTION_HASH)
         inst.save(force_insert=True)
         user = Users()
+        TestUsers.base_create_dep_objs()
         user.from_hash(SAMPLE_USER_HASH)
         user.save(force_insert=True)
 

@@ -6,15 +6,11 @@ from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.file_key_value import FileKeyValue
-from metadata.orm.test.transactions import SAMPLE_TRANSACTION_HASH
-from metadata.orm.transactions import Transactions
-from metadata.orm.test.users import SAMPLE_USER_HASH
-from metadata.orm.users import Users
-from metadata.orm.test.files import SAMPLE_FILE_HASH
+from metadata.orm.test.files import SAMPLE_FILE_HASH, TestFiles
 from metadata.orm.files import Files
-from metadata.orm.test.keys import SAMPLE_KEY_HASH
+from metadata.orm.test.keys import SAMPLE_KEY_HASH, TestKeys
 from metadata.orm.keys import Keys
-from metadata.orm.test.values import SAMPLE_VALUE_HASH
+from metadata.orm.test.values import SAMPLE_VALUE_HASH, TestValues
 from metadata.orm.values import Values
 
 SAMPLE_FILE_KEY_VALUE_HASH = {
@@ -27,27 +23,32 @@ class TestFileKeyValue(TestBase):
     """
     Test the Keys ORM object
     """
-    dependent_cls = [Users, Transactions, Files, Keys, Values]
     obj_cls = FileKeyValue
     obj_id = FileKeyValue.file
 
-    def base_create_dep_objs(self):
+    @classmethod
+    def dependent_cls(cls):
+        ret = [FileKeyValue]
+        ret += TestFiles.dependent_cls()
+        ret += TestKeys.dependent_cls()
+        ret += TestValues.dependent_cls()
+        return ret
+
+    @classmethod
+    def base_create_dep_objs(cls):
         """
         Create all objects that FileKeyValue need.
         """
-        user = Users()
-        user.from_hash(SAMPLE_USER_HASH)
-        user.save(force_insert=True)
         keys = Keys()
+        TestKeys.base_create_dep_objs()
         keys.from_hash(SAMPLE_KEY_HASH)
         keys.save(force_insert=True)
-        trans = Transactions()
-        trans.from_hash(SAMPLE_TRANSACTION_HASH)
-        trans.save(force_insert=True)
         values = Values()
+        TestValues.base_create_dep_objs()
         values.from_hash(SAMPLE_VALUE_HASH)
         values.save(force_insert=True)
         files = Files()
+        TestFiles.base_create_dep_objs()
         files.from_hash(SAMPLE_FILE_HASH)
         files.save(force_insert=True)
 

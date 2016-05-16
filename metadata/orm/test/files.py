@@ -8,10 +8,8 @@ from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.files import Files
-from metadata.orm.users import Users
-from metadata.orm.test.users import SAMPLE_USER_HASH
 from metadata.orm.transactions import Transactions
-from metadata.orm.test.transactions import SAMPLE_TRANSACTION_HASH
+from metadata.orm.test.transactions import SAMPLE_TRANSACTION_HASH, TestTransactions
 
 SAMPLE_FILE_HASH = {
     "_id": 127,
@@ -29,18 +27,20 @@ class TestFiles(TestBase):
     """
     Test the Files ORM object
     """
-    dependent_cls = [Users, Transactions]
     obj_cls = Files
     obj_id = Files.id
 
-    def base_create_dep_objs(self):
+    @classmethod
+    def dependent_cls(cls):
+        return TestTransactions.dependent_cls() + [Files]
+
+    @classmethod
+    def base_create_dep_objs(cls):
         """
         Create all objects that Files depend on.
         """
-        user = Users()
-        user.from_hash(SAMPLE_USER_HASH)
-        user.save(force_insert=True)
         trans = Transactions()
+        TestTransactions.base_create_dep_objs()
         trans.from_hash(SAMPLE_TRANSACTION_HASH)
         trans.save(force_insert=True)
 

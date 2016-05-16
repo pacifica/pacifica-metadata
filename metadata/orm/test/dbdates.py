@@ -29,11 +29,14 @@ class TestDBDates(TestBase):
     """
     Setup the test cases for the base object attributes for the ORM
     """
-    dependent_cls = []
     obj_cls = PacificaModel
     # pylint: disable=no-member
     obj_id = PacificaModel.id
     # pylint: enable=no-member
+
+    @classmethod
+    def dependent_cls(cls):
+        return [PacificaModel]
 
     def test_bad_dates_from_hash(self):
         """

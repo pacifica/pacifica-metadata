@@ -18,9 +18,12 @@ class TestUsers(TestBase):
     """
     Test the Users ORM object
     """
-    dependent_cls = []
     obj_cls = Users
     obj_id = Users.id
+
+    @classmethod
+    def dependent_cls(cls):
+        return [Users]
 
     def test_users_hash(self):
         """

@@ -6,9 +6,9 @@ from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.instrument_group import InstrumentGroup
-from metadata.orm.test.instruments import SAMPLE_INSTRUMENT_HASH
+from metadata.orm.test.instruments import SAMPLE_INSTRUMENT_HASH, TestInstruments
 from metadata.orm.instruments import Instruments
-from metadata.orm.test.groups import SAMPLE_GROUP_HASH
+from metadata.orm.test.groups import SAMPLE_GROUP_HASH, TestGroups
 from metadata.orm.groups import Groups
 
 SAMPLE_INSTRUMENT_GROUP_HASH = {
@@ -20,18 +20,27 @@ class TestInstrumentGroup(TestBase):
     """
     Test the Keys ORM object
     """
-    dependent_cls = [Instruments, Groups]
     obj_cls = InstrumentGroup
     obj_id = InstrumentGroup.instrument
 
-    def base_create_dep_objs(self):
+    @classmethod
+    def dependent_cls(cls):
+        ret = [InstrumentGroup]
+        ret += TestInstruments.dependent_cls()
+        ret += TestGroups.dependent_cls()
+        return ret
+
+    @classmethod
+    def base_create_dep_objs(cls):
         """
         Create all objects that FileKeyValue need.
         """
         groups = Groups()
+        TestGroups.base_create_dep_objs()
         groups.from_hash(SAMPLE_GROUP_HASH)
         groups.save(force_insert=True)
         inst = Instruments()
+        TestInstruments.base_create_dep_objs()
         inst.from_hash(SAMPLE_INSTRUMENT_HASH)
         inst.save(force_insert=True)
 

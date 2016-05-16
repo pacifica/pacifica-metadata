@@ -6,10 +6,8 @@ from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.keywords import Keywords
-from metadata.orm.test.citations import SAMPLE_CITATION_HASH
+from metadata.orm.test.citations import SAMPLE_CITATION_HASH, TestCitations
 from metadata.orm.citations import Citations
-from metadata.orm.test.journals import SAMPLE_JOURNAL_HASH
-from metadata.orm.journals import Journals
 
 SAMPLE_KEYWORD_HASH = {
     "_id": 142,
@@ -21,18 +19,20 @@ class TestKeywords(TestBase):
     """
     Test the InstitutionPerson ORM object
     """
-    dependent_cls = [Journals, Citations]
     obj_cls = Keywords
     obj_id = Keywords.id
 
-    def base_create_dep_objs(self):
+    @classmethod
+    def dependent_cls(cls):
+        return TestCitations.dependent_cls() + [Keywords]
+
+    @classmethod
+    def base_create_dep_objs(cls):
         """
         Create all objects that FileKeyValue need.
         """
-        journal = Journals()
-        journal.from_hash(SAMPLE_JOURNAL_HASH)
-        journal.save(force_insert=True)
         cite = Citations()
+        TestCitations.base_create_dep_objs()
         cite.from_hash(SAMPLE_CITATION_HASH)
         cite.save(force_insert=True)
 

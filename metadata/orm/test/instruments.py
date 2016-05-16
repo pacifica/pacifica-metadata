@@ -18,9 +18,12 @@ class TestInstruments(TestBase):
     """
     Test the Proposals ORM object
     """
-    dependent_cls = []
     obj_cls = Instruments
     obj_id = Instruments.id
+
+    @classmethod
+    def dependent_cls(cls):
+        return [Instruments]
 
     def test_instruments_hash(self):
         """

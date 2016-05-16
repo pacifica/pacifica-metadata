@@ -16,9 +16,12 @@ class TestKeys(TestBase):
     """
     Test the Keys ORM object
     """
-    dependent_cls = []
     obj_cls = Keys
     obj_id = Keys.id
+
+    @classmethod
+    def dependent_cls(cls):
+        return [Keys]
 
     def test_keys_hash(self):
         """

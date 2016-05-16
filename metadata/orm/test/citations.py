@@ -7,7 +7,7 @@ from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.citations import Citations
 from metadata.orm.journals import Journals
-from metadata.orm.test.journals import SAMPLE_JOURNAL_HASH
+from metadata.orm.test.journals import SAMPLE_JOURNAL_HASH, TestJournals
 
 SAMPLE_CITATION_HASH = {
     "_id": 43,
@@ -34,15 +34,20 @@ class TestCitations(TestBase):
     """
     Test the Citations ORM object
     """
-    dependent_cls = [Journals]
     obj_cls = Citations
     obj_id = Citations.id
 
-    def base_create_dep_objs(self):
+    @classmethod
+    def dependent_cls(cls):
+        return TestJournals.dependent_cls() + [Citations]
+
+    @classmethod
+    def base_create_dep_objs(cls):
         """
         Create all objects that Files depend on.
         """
         journal = Journals()
+        TestJournals.base_create_dep_objs()
         journal.from_hash(SAMPLE_JOURNAL_HASH)
         journal.save(force_insert=True)
 

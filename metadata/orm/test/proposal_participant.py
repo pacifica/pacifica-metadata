@@ -6,9 +6,9 @@ from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.proposal_participant import ProposalParticipant
-from metadata.orm.test.proposals import SAMPLE_PROPOSAL_HASH
+from metadata.orm.test.proposals import SAMPLE_PROPOSAL_HASH, TestProposals
 from metadata.orm.proposals import Proposals
-from metadata.orm.test.users import SAMPLE_USER_HASH
+from metadata.orm.test.users import SAMPLE_USER_HASH, TestUsers
 from metadata.orm.users import Users
 
 SAMPLE_PROPOSAL_PARTICIPANT_HASH = {
@@ -20,18 +20,27 @@ class TestProposalParticipant(TestBase):
     """
     Test the ProposalParticipant ORM object
     """
-    dependent_cls = [Users, Proposals]
     obj_cls = ProposalParticipant
     obj_id = ProposalParticipant.member
 
-    def base_create_dep_objs(self):
+    @classmethod
+    def dependent_cls(cls):
+        ret = [ProposalParticipant]
+        ret += TestUsers.dependent_cls()
+        ret += TestProposals.dependent_cls()
+        return ret
+
+    @classmethod
+    def base_create_dep_objs(cls):
         """
         Create all objects that FileKeyValue need.
         """
         user = Users()
+        TestUsers.base_create_dep_objs()
         user.from_hash(SAMPLE_USER_HASH)
         user.save(force_insert=True)
         prop = Proposals()
+        TestProposals.base_create_dep_objs()
         prop.from_hash(SAMPLE_PROPOSAL_HASH)
         prop.save(force_insert=True)
 

@@ -16,9 +16,12 @@ class TestValues(TestBase):
     """
     Test the Values ORM object
     """
-    dependent_cls = []
     obj_cls = Values
     obj_id = Values.id
+
+    @classmethod
+    def dependent_cls(cls):
+        return [Values]
 
     def test_values_hash(self):
         """

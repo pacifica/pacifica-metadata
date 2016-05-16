@@ -18,9 +18,12 @@ class TestJournals(TestBase):
     """
     Test the Journals ORM object
     """
-    dependent_cls = []
     obj_cls = Journals
     obj_id = Journals.id
+
+    @classmethod
+    def dependent_cls(cls):
+        return [Journals]
 
     def test_journal_hash(self):
         """

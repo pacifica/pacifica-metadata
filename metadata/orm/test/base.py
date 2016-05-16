@@ -11,13 +11,20 @@ class TestBase(TestCase):
     """
     Setup the test cases for the base object attributes for the ORM
     """
-    dependent_cls = []
     obj_cls = PacificaModel
     #pylint: disable=no-member
     obj_id = PacificaModel.id
     #pylint: enable=no-member
 
-    def base_create_dep_objs(self):
+    @classmethod
+    def dependent_cls(cls):
+        """
+        Return dependent classes
+        """
+        return []
+
+    @classmethod
+    def base_create_dep_objs(cls):
         """
         Create dependent objects
         """
@@ -43,7 +50,7 @@ class TestBase(TestCase):
         create a new hash from the new object
         check all keys in the new hash from the obj_hash passed
         """
-        with test_database(SqliteDatabase(':memory:'), self.dependent_cls + [self.obj_cls]):
+        with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             obj = self.base_create_obj(self.obj_cls, obj_hash)
             new_obj = self.obj_cls.get(self.obj_id == getattr(obj, self.obj_id.db_column))
             chk_obj_hash = new_obj.to_hash()
@@ -60,7 +67,7 @@ class TestBase(TestCase):
         get the new object using column in obj_id
         convert the object to json
         """
-        with test_database(SqliteDatabase(':memory:'), self.dependent_cls + [self.obj_cls]):
+        with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             self.assertEqual(type(json_str), str)
             self.base_create_dep_objs()
             obj = self.obj_cls()
@@ -80,7 +87,7 @@ class TestBase(TestCase):
         query a new object using that key and value in obj_hash
         compare the pulled object hash with obj_hash
         """
-        with test_database(SqliteDatabase(':memory:'), self.dependent_cls + [self.obj_cls]):
+        with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             obj = self.base_create_obj(self.obj_cls, obj_hash)
             for key in obj_hash.keys():
                 expr = obj.where_clause({key: obj_hash[key]})

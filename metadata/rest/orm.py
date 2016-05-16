@@ -2,6 +2,7 @@
 """
 Core interface for each ORM object to interface with CherryPy
 """
+from json import loads
 from datetime import datetime
 from cherrypy import request, HTTPError
 from peewee import DoesNotExist, IntegrityError
@@ -57,22 +58,27 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         request body.
         """
         print "Running PUT"
+        objs = None
         try:
-            self.from_json(request.body.read())
+            objs = loads(request.body.read())
         except ValueError, ex:
             raise HTTPError(500, str(ex))
-        self.deleted = datetime.fromtimestamp(0)
-        self.updated = datetime.now()
-        self.created = datetime.now()
-        try:
-            self.elastic_upload(self.to_hash())
-        except Exception, ex:
-            raise HTTPError(500, str(ex))
-        try:
-            self.save(force_insert=True)
-        except IntegrityError, ex:
-            self.rollback()
-            raise HTTPError(500, str(ex))
+        if isinstance(objs, dict):
+            objs = [objs]
+        for obj in objs:
+            self.from_hash(obj)
+            self.deleted = datetime.fromtimestamp(0)
+            self.updated = datetime.now()
+            self.created = datetime.now()
+            try:
+                self.elastic_upload(self.to_hash())
+            except Exception, ex:
+                raise HTTPError(500, str(ex))
+            try:
+                self.save(force_insert=True)
+            except IntegrityError, ex:
+                self.rollback()
+                raise HTTPError(500, str(ex))
 
     def DELETE(self, **kwargs):
         """

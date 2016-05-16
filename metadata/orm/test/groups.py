@@ -17,9 +17,12 @@ class TestGroups(TestBase):
     """
     Test the Groups ORM object
     """
-    dependent_cls = []
     obj_cls = Groups
     obj_id = Groups.id
+
+    @classmethod
+    def dependent_cls(cls):
+        return [Groups]
 
     def test_group_hash(self):
         """

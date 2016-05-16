@@ -27,9 +27,12 @@ class TestProposals(TestBase):
     """
     Test the Proposals ORM object
     """
-    dependent_cls = []
     obj_cls = Proposals
     obj_id = Proposals.id
+
+    @classmethod
+    def dependent_cls(cls):
+        return [Proposals]
 
     def test_proposals_hash(self):
         """
