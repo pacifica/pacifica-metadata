@@ -24,6 +24,9 @@ class TestKeywords(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Keywords object
+        """
         return TestCitations.dependent_cls() + [Keywords]
 
     @classmethod

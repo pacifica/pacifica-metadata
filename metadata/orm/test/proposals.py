@@ -32,6 +32,9 @@ class TestProposals(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Proposals object
+        """
         return [Proposals]
 
     def test_proposals_hash(self):

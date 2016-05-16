@@ -25,6 +25,9 @@ class TestCitationProposal(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the CitationProposal object
+        """
         ret = [CitationProposal]
         ret += TestCitations.dependent_cls()
         ret += TestProposals.dependent_cls()
@@ -35,10 +38,10 @@ class TestCitationProposal(TestBase):
         """
         Create all objects that FileKeyValue need.
         """
-        prop = Proposals()
+        prop1 = Proposals()
         TestProposals.base_create_dep_objs()
-        prop.from_hash(SAMPLE_PROPOSAL_HASH)
-        prop.save(force_insert=True)
+        prop1.from_hash(SAMPLE_PROPOSAL_HASH)
+        prop1.save(force_insert=True)
         cite = Citations()
         TestCitations.base_create_dep_objs()
         cite.from_hash(SAMPLE_CITATION_HASH)

@@ -25,6 +25,9 @@ class TestInstrumentGroup(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the InstrumentGroup object
+        """
         ret = [InstrumentGroup]
         ret += TestInstruments.dependent_cls()
         ret += TestGroups.dependent_cls()
@@ -33,7 +36,7 @@ class TestInstrumentGroup(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """
-        Create all objects that FileKeyValue need.
+        Create all objects that InstrumentGroup need.
         """
         groups = Groups()
         TestGroups.base_create_dep_objs()

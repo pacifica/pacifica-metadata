@@ -28,6 +28,9 @@ class TestFileKeyValue(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the FileKeyValue object
+        """
         ret = [FileKeyValue]
         ret += TestFiles.dependent_cls()
         ret += TestKeys.dependent_cls()

@@ -25,6 +25,9 @@ class TestUserGroup(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the UserGroup object
+        """
         ret = [UserGroup]
         ret += TestUsers.dependent_cls()
         ret += TestGroups.dependent_cls()
@@ -33,16 +36,16 @@ class TestUserGroup(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """
-        Create all objects that FileKeyValue need.
+        Create all objects that UserGroup need.
         """
+        member = Users()
+        TestUsers.base_create_dep_objs()
+        member.from_hash(SAMPLE_USER_HASH)
+        member.save(force_insert=True)
         groups = Groups()
         TestGroups.base_create_dep_objs()
         groups.from_hash(SAMPLE_GROUP_HASH)
         groups.save(force_insert=True)
-        user = Users()
-        TestUsers.base_create_dep_objs()
-        user.from_hash(SAMPLE_USER_HASH)
-        user.save(force_insert=True)
 
     def test_user_group_hash(self):
         """

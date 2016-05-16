@@ -25,24 +25,27 @@ class TestProposalParticipant(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the ProposalParticipant object
+        """
         ret = [ProposalParticipant]
-        ret += TestUsers.dependent_cls()
         ret += TestProposals.dependent_cls()
+        ret += TestUsers.dependent_cls()
         return ret
 
     @classmethod
     def base_create_dep_objs(cls):
         """
-        Create all objects that FileKeyValue need.
+        Create all objects that ProposalParticipant need.
         """
+        prop3 = Proposals()
+        TestProposals.base_create_dep_objs()
+        prop3.from_hash(SAMPLE_PROPOSAL_HASH)
+        prop3.save(force_insert=True)
         user = Users()
         TestUsers.base_create_dep_objs()
         user.from_hash(SAMPLE_USER_HASH)
         user.save(force_insert=True)
-        prop = Proposals()
-        TestProposals.base_create_dep_objs()
-        prop.from_hash(SAMPLE_PROPOSAL_HASH)
-        prop.save(force_insert=True)
 
     def test_proposal_participant_hash(self):
         """

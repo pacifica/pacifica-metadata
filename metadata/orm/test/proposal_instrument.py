@@ -25,6 +25,9 @@ class TestProposalInstrument(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the ProposalInstrument object
+        """
         ret = [ProposalInstrument]
         ret += TestProposals.dependent_cls()
         ret += TestInstruments.dependent_cls()
@@ -35,14 +38,14 @@ class TestProposalInstrument(TestBase):
         """
         Create all objects that FileKeyValue need.
         """
+        prop2 = Proposals()
+        TestProposals.base_create_dep_objs()
+        prop2.from_hash(SAMPLE_PROPOSAL_HASH)
+        prop2.save(force_insert=True)
         inst = Instruments()
         TestInstruments.base_create_dep_objs()
         inst.from_hash(SAMPLE_INSTRUMENT_HASH)
         inst.save(force_insert=True)
-        prop = Proposals()
-        TestProposals.base_create_dep_objs()
-        prop.from_hash(SAMPLE_PROPOSAL_HASH)
-        prop.save(force_insert=True)
 
     def test_proposal_instrument_hash(self):
         """

@@ -22,6 +22,9 @@ class TestGroups(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Groups object
+        """
         return [Groups]
 
     def test_group_hash(self):

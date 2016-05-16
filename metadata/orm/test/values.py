@@ -21,6 +21,9 @@ class TestValues(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Values object
+        """
         return [Values]
 
     def test_values_hash(self):

@@ -25,6 +25,9 @@ class TestInstrumentCustodian(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the InstrumentCustodian object
+        """
         ret = [InstrumentCustodian]
         ret += TestUsers.dependent_cls()
         ret += TestInstruments.dependent_cls()
@@ -33,16 +36,16 @@ class TestInstrumentCustodian(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """
-        Create all objects that FileKeyValue need.
+        Create all objects that InstrumentCustodian need.
         """
-        user = Users()
-        TestUsers.base_create_dep_objs()
-        user.from_hash(SAMPLE_USER_HASH)
-        user.save(force_insert=True)
         inst = Instruments()
         TestInstruments.base_create_dep_objs()
         inst.from_hash(SAMPLE_INSTRUMENT_HASH)
         inst.save(force_insert=True)
+        custodian = Users()
+        TestUsers.base_create_dep_objs()
+        custodian.from_hash(SAMPLE_USER_HASH)
+        custodian.save(force_insert=True)
 
     def test_instrument_custodian_hash(self):
         """

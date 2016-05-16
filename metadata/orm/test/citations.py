@@ -39,6 +39,9 @@ class TestCitations(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Citations object
+        """
         return TestJournals.dependent_cls() + [Citations]
 
     @classmethod

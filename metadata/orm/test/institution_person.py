@@ -25,6 +25,9 @@ class TestInstitutionPerson(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the InstitutionPerson object
+        """
         ret = [InstitutionPerson]
         ret += TestUsers.dependent_cls()
         ret += TestInstitutions.dependent_cls()
@@ -33,16 +36,16 @@ class TestInstitutionPerson(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """
-        Create all objects that FileKeyValue need.
+        Create all objects that InstitutionPerson need.
         """
-        user = Users()
-        TestUsers.base_create_dep_objs()
-        user.from_hash(SAMPLE_USER_HASH)
-        user.save(force_insert=True)
         inst = Institutions()
         TestInstitutions.base_create_dep_objs()
         inst.from_hash(SAMPLE_INSTITUTION_HASH)
         inst.save(force_insert=True)
+        user1 = Users()
+        TestUsers.base_create_dep_objs()
+        user1.from_hash(SAMPLE_USER_HASH)
+        user1.save(force_insert=True)
 
     def test_institution_person_hash(self):
         """

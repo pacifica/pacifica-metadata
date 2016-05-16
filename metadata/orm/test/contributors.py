@@ -30,9 +30,12 @@ class TestContributors(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Contributors object
+        """
         ret = [Contributors]
-        ret += TestUsers.dependent_cls()
         ret += TestInstitutions.dependent_cls()
+        ret += TestUsers.dependent_cls()
         return ret
 
     @classmethod
@@ -40,14 +43,14 @@ class TestContributors(TestBase):
         """
         Create all objects that Files depend on.
         """
-        inst = Institutions()
-        TestInstitutions.base_create_dep_objs()
-        inst.from_hash(SAMPLE_INSTITUTION_HASH)
-        inst.save(force_insert=True)
         user = Users()
         TestUsers.base_create_dep_objs()
         user.from_hash(SAMPLE_USER_HASH)
         user.save(force_insert=True)
+        inst = Institutions()
+        TestInstitutions.base_create_dep_objs()
+        inst.from_hash(SAMPLE_INSTITUTION_HASH)
+        inst.save(force_insert=True)
 
     def test_contributors_hash(self):
         """

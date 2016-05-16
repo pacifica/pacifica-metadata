@@ -23,6 +23,9 @@ class TestJournals(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Journals object
+        """
         return [Journals]
 
     def test_journal_hash(self):

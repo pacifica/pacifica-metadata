@@ -32,6 +32,9 @@ class TestFiles(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Files object
+        """
         return TestTransactions.dependent_cls() + [Files]
 
     @classmethod

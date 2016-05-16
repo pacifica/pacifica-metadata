@@ -36,6 +36,9 @@ class TestDBDates(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the base model object
+        """
         return [PacificaModel]
 
     def test_bad_dates_from_hash(self):

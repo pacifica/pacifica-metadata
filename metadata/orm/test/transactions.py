@@ -31,10 +31,13 @@ class TestTransactions(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Transactions object
+        """
         ret = [Transactions]
         ret += TestUsers.dependent_cls()
-        ret += TestProposals.dependent_cls()
         ret += TestInstruments.dependent_cls()
+        ret += TestProposals.dependent_cls()
         return ret
 
     @classmethod

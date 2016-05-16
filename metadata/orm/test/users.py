@@ -23,6 +23,9 @@ class TestUsers(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Users object
+        """
         return [Users]
 
     def test_users_hash(self):

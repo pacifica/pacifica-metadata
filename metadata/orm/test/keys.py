@@ -21,6 +21,9 @@ class TestKeys(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Keys object
+        """
         return [Keys]
 
     def test_keys_hash(self):

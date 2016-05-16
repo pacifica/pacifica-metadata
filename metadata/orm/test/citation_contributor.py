@@ -26,6 +26,9 @@ class TestCitationContributor(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the CitationContributor object
+        """
         ret = [CitationContributor]
         ret += TestContributors.dependent_cls()
         ret += TestCitations.dependent_cls()
@@ -36,10 +39,10 @@ class TestCitationContributor(TestBase):
         """
         Create all objects that Files depend on.
         """
-        cite = Citations()
+        cite1 = Citations()
         TestCitations.base_create_dep_objs()
-        cite.from_hash(SAMPLE_CITATION_HASH)
-        cite.save(force_insert=True)
+        cite1.from_hash(SAMPLE_CITATION_HASH)
+        cite1.save(force_insert=True)
         contrib = Contributors()
         TestContributors.base_create_dep_objs()
         contrib.from_hash(SAMPLE_CONTRIBUTOR_HASH)

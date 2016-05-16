@@ -23,6 +23,9 @@ class TestInstruments(TestBase):
 
     @classmethod
     def dependent_cls(cls):
+        """
+        Return dependent classes for the Instruments object
+        """
         return [Instruments]
 
     def test_instruments_hash(self):
