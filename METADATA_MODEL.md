@@ -164,6 +164,8 @@ objects in the model.
 | Column | Type | Reference |
 | --- | --- | --- |
 | id | SERIAL |  |
+| instrument | INTEGER | Instruments.id |
+| proposal | INTEGER | Proposals.id |
 | submitter | INTEGER | Users.id |
 | verified | BOOLEAN |  |
 | created | TIMESTAMP |  |
