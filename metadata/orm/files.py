@@ -89,8 +89,7 @@ class Files(CherryPyAPI):
             )
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
-        for key in ['name', 'subdir', 'size',
-                    'transaction_id', 'mtime', 'ctime']:
+        for key in ['name', 'subdir', 'size', 'mtime', 'ctime']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Files, key), OP.EQ, kwargs[key])
         return where_clause
