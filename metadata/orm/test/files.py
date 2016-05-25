@@ -18,7 +18,6 @@ SAMPLE_FILE_HASH = {
     "vtime": int(mktime(datetime.now().timetuple())),
     "mtime": int(mktime(datetime.now().timetuple())),
     "ctime": int(mktime(datetime.now().timetuple())),
-    "verified": "True",
     "size": 1234,
     "transaction_id": SAMPLE_TRANSACTION_HASH['_id']
 }

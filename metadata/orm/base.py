@@ -106,6 +106,6 @@ class PacificaModel(Model):
         where_clause = Expression(1, OP.EQ, 1)
         for date in ['deleted', 'updated', 'created']:
             if date in kwargs:
-                date_obj = datetime.fromtimestamp(kwargs[date])
+                date_obj = datetime.fromtimestamp(int(kwargs[date]))
                 where_clause &= Expression(getattr(my_class, date), OP.EQ, date_obj)
         return where_clause

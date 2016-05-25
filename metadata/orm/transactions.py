@@ -2,7 +2,7 @@
 """
 Transactions model
 """
-from peewee import ForeignKeyField, BooleanField, Expression, OP
+from peewee import ForeignKeyField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.users import Users
 from metadata.orm.proposals import Proposals
@@ -12,7 +12,6 @@ class Transactions(CherryPyAPI):
     """
     Transactions model class
     """
-    verified = BooleanField(default=False)
     submitter = ForeignKeyField(Users, related_name='transactions')
     instrument = ForeignKeyField(Instruments, related_name='transactions')
     proposal = ForeignKeyField(Proposals, related_name='transactions')
@@ -23,7 +22,6 @@ class Transactions(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(Transactions, Transactions).elastic_mapping_builder(obj)
-        obj['verified'] = {'type': 'boolean'}
         obj['submitter'] = {'type': 'integer'}
         obj['instrument'] = {'type': 'integer'}
         obj['proposal'] = {'type': 'integer'}
@@ -34,7 +32,6 @@ class Transactions(CherryPyAPI):
         """
         obj = super(Transactions, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['verified'] = str(self.verified)
         obj['submitter'] = int(self.submitter.id)
         obj['instrument'] = int(self.instrument.id)
         obj['proposal'] = int(self.proposal.id)
@@ -55,8 +52,6 @@ class Transactions(CherryPyAPI):
             self.instrument = Instruments.get(Instruments.id == obj['instrument'])
         if 'proposal' in obj:
             self.proposal = Proposals.get(Proposals.id == obj['proposal'])
-        if 'verified' in obj:
-            self.verified = bool(str(obj['verified']) == "True")
 
     def where_clause(self, kwargs):
         """
@@ -74,7 +69,4 @@ class Transactions(CherryPyAPI):
         if 'proposal' in kwargs:
             prop = Proposals.get(Proposals.id == kwargs['proposal'])
             where_clause &= Expression(Transactions.proposal, OP.EQ, prop)
-        if 'verified' in kwargs:
-            verified = bool(str(kwargs['verified']) == "True")
-            where_clause &= Expression(Transactions.verified, OP.EQ, verified)
         return where_clause

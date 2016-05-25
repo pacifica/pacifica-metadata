@@ -3,6 +3,7 @@
 CherryPy root object class
 """
 from metadata.orm import ORM_OBJECTS
+from metadata.rest.uploader import UploaderAPI
 
 # pylint: disable=too-few-public-methods
 class Root(object):
@@ -12,6 +13,7 @@ class Root(object):
     not exposed by default the base objects are exposed
     """
     exposed = False
+    uploader = UploaderAPI
 # pylint: enable=too-few-public-methods
 
 for cls in ORM_OBJECTS:

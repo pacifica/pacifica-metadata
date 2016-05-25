@@ -5,7 +5,7 @@ Contains the Files object model primary unit of metadata for Pacifica.
 from datetime import datetime
 from time import mktime
 from peewee import ForeignKeyField, CharField, BigIntegerField
-from peewee import DateTimeField, BooleanField, Expression, OP
+from peewee import DateTimeField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.transactions import Transactions
 
@@ -17,10 +17,9 @@ class Files(CherryPyAPI):
     #pylint: disable=too-many-instance-attributes
     name = CharField(default="")
     subdir = CharField(default="")
-    vtime = DateTimeField(default=datetime.now)
+    vtime = DateTimeField(default=datetime.now) # may not be needed nothing gets uploaded invalid.
     ctime = DateTimeField(default=datetime.now)
     mtime = DateTimeField(default=datetime.now)
-    verified = BooleanField(default=False)
     size = BigIntegerField(default=-1)
     transaction = ForeignKeyField(Transactions, related_name='files')
     #pylint: enable=too-many-instance-attributes
@@ -37,7 +36,6 @@ class Files(CherryPyAPI):
         {'type': 'date', 'format': 'epoch_second'}
         obj['name'] = obj['subdir'] = \
         {'type': 'string'}
-        obj['verified'] = {'type': 'boolean'}
 
     def to_hash(self):
         """
@@ -50,7 +48,6 @@ class Files(CherryPyAPI):
         obj['vtime'] = int(mktime(self.vtime.timetuple()))
         obj['ctime'] = int(mktime(self.ctime.timetuple()))
         obj['mtime'] = int(mktime(self.mtime.timetuple()))
-        obj['verified'] = str(self.verified)
         obj['size'] = int(self.size)
         obj['transaction_id'] = int(self.transaction.id)
         return obj
@@ -74,8 +71,6 @@ class Files(CherryPyAPI):
             self.ctime = datetime.fromtimestamp(int(obj['ctime']))
         if 'mtime' in obj:
             self.mtime = datetime.fromtimestamp(int(obj['mtime']))
-        if 'verified' in obj:
-            self.verified = bool(obj['verified'])
         if 'size' in obj:
             self.size = int(obj['size'])
         if 'transaction_id' in obj:
@@ -92,15 +87,13 @@ class Files(CherryPyAPI):
         for date in ['vtime', 'mtime', 'ctime']:
             if date in kwargs:
                 kwargs[date] = datetime.fromtimestamp(kwargs[date])
-        if 'verified' in kwargs:
-            kwargs['verified'] = bool(kwargs['verified'])
         if 'transaction_id' in kwargs:
             kwargs['transaction_id'] = Transactions.get(
                 Transactions.id == kwargs['transaction_id']
             )
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
-        for key in ['name', 'subdir', 'size', 'vtime', 'verified'
+        for key in ['name', 'subdir', 'size', 'vtime'
                     'transaction_id', 'mtime', 'ctime']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Files, key), OP.EQ, kwargs[key])

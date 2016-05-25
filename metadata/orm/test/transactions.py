@@ -16,7 +16,6 @@ from metadata.orm.instruments import Instruments
 
 SAMPLE_TRANSACTION_HASH = {
     "_id": 127,
-    "verified": "True",
     "submitter": SAMPLE_SUBMITTER_HASH['_id'],
     "proposal": SAMPLE_PROPOSAL_HASH['_id'],
     "instrument": SAMPLE_INSTRUMENT_HASH['_id']

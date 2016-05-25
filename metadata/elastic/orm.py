@@ -26,7 +26,7 @@ class ElasticAPI(object):
             curl.setopt(CUSTOMREQUEST, 'DELETE')
             curl.perform()
             curl_http_code = curl.getinfo(HTTP_CODE)
-            if curl_http_code != 200:
+            if int(curl_http_code)/100 != 2:
                 raise Exception("upload_obj: %s\n"%(curl_http_code))
         except error:
             raise Exception("cURL operations failed during upload: %s" % curl.errstr())
@@ -36,11 +36,13 @@ class ElasticAPI(object):
         """
         upload the object for the class to elastic search.
         """
+        obj_id = obj['_id']
+        del obj['_id']
         obj_str = dumps(obj)
         obj_len = len(obj_str)
         obj_io = StringIO(obj_str)
         class_name = cls.__name__
-        es_obj_url = "%s/%s/%s"%(ES_INDEX_URL, class_name, str(obj['_id']))
+        es_obj_url = "%s/%s/%s"%(ES_INDEX_URL, class_name, str(obj_id))
         try:
             curl = Curl()
             curl.setopt(URL, es_obj_url.encode('utf-8'))
@@ -50,7 +52,7 @@ class ElasticAPI(object):
             curl.setopt(INFILESIZE_LARGE, obj_len)
             curl.perform()
             curl_http_code = curl.getinfo(HTTP_CODE)
-            if curl_http_code != 200:
+            if int(curl_http_code)/100 != 2:
                 raise Exception("upload_obj: %s\n"%(curl_http_code))
         except error:
             raise Exception("cURL operations failed during upload: %s" % curl.errstr())
@@ -77,7 +79,7 @@ class ElasticAPI(object):
             curl.setopt(INFILESIZE_LARGE, es_mapping_len)
             curl.perform()
             curl_http_code = curl.getinfo(HTTP_CODE)
-            if curl_http_code != 200:
+            if int(curl_http_code)/100 != 2:
                 raise Exception("create_elastic_mapping: %s\n"%(curl_http_code))
         except error:
             raise Exception("cURL operations failed during upload: %s" % curl.errstr())
