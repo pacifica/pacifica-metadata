@@ -17,7 +17,6 @@ class Files(CherryPyAPI):
     #pylint: disable=too-many-instance-attributes
     name = CharField(default="")
     subdir = CharField(default="")
-    vtime = DateTimeField(default=datetime.now) # may not be needed nothing gets uploaded invalid.
     ctime = DateTimeField(default=datetime.now)
     mtime = DateTimeField(default=datetime.now)
     size = BigIntegerField(default=-1)
@@ -32,7 +31,7 @@ class Files(CherryPyAPI):
         super(Files, Files).elastic_mapping_builder(obj)
         obj['transaction_id'] = obj['size'] = \
         {'type': 'integer'}
-        obj['vtime'] = obj['ctime'] = obj['mtime'] = \
+        obj['ctime'] = obj['mtime'] = \
         {'type': 'date', 'format': 'epoch_second'}
         obj['name'] = obj['subdir'] = \
         {'type': 'string'}
@@ -45,7 +44,6 @@ class Files(CherryPyAPI):
         obj['_id'] = int(self.id)
         obj['name'] = str(self.name)
         obj['subdir'] = str(self.subdir)
-        obj['vtime'] = int(mktime(self.vtime.timetuple()))
         obj['ctime'] = int(mktime(self.ctime.timetuple()))
         obj['mtime'] = int(mktime(self.mtime.timetuple()))
         obj['size'] = int(self.size)
@@ -65,8 +63,6 @@ class Files(CherryPyAPI):
             self.name = str(obj['name'])
         if 'subdir' in obj:
             self.subdir = str(obj['subdir'])
-        if 'vtime' in obj:
-            self.vtime = datetime.fromtimestamp(int(obj['vtime']))
         if 'ctime' in obj:
             self.ctime = datetime.fromtimestamp(int(obj['ctime']))
         if 'mtime' in obj:
@@ -84,7 +80,7 @@ class Files(CherryPyAPI):
         or select.
         """
         where_clause = super(Files, self).where_clause(kwargs)
-        for date in ['vtime', 'mtime', 'ctime']:
+        for date in ['mtime', 'ctime']:
             if date in kwargs:
                 kwargs[date] = datetime.fromtimestamp(kwargs[date])
         if 'transaction_id' in kwargs:
@@ -93,7 +89,7 @@ class Files(CherryPyAPI):
             )
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
-        for key in ['name', 'subdir', 'size', 'vtime'
+        for key in ['name', 'subdir', 'size',
                     'transaction_id', 'mtime', 'ctime']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Files, key), OP.EQ, kwargs[key])

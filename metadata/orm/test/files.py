@@ -15,7 +15,6 @@ SAMPLE_FILE_HASH = {
     "_id": 127,
     "name": "test.txt",
     "subdir": "a/b",
-    "vtime": int(mktime(datetime.now().timetuple())),
     "mtime": int(mktime(datetime.now().timetuple())),
     "ctime": int(mktime(datetime.now().timetuple())),
     "size": 1234,
