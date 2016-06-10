@@ -40,7 +40,7 @@ To create an object issue an HTTP PUT request.
 
 ```
 {
-  "person_id": 127,
+  "_id": 127,
   "first_name": "John",
   "last_name": "Doe",
   "network_id": "guest"
@@ -57,7 +57,7 @@ curl -X PUT -T foo.json http://localhost:8080/users
 To get the object just created issue an HTTP GET request.
 
 ```
-curl http://localhost:8080/users?person_id=127
+curl http://localhost:8080/users?_id=127
 {
   "updated": 1459204793,
   "last_name": "Doe",
@@ -65,7 +65,7 @@ curl http://localhost:8080/users?person_id=127
   "deleted": 0,
   "first_name": "John",
   "network_id": "guest",
-  "person_id": 127
+  "_id": 127
 }
 ```
 
@@ -80,7 +80,7 @@ curl http://localhost:8080/users?last_name=Doe&first_name=John
   "deleted": 0,
   "first_name": "John",
   "network_id": "guest",
-  "person_id": 127
+  "_id": 127
 }
 ```
 
@@ -109,7 +109,7 @@ Get the object to make sure it stuck.
   "deleted": 0,
   "first_name": "John",
   "network_id": "jdoe",
-  "person_id": 127
+  "_id": 127
 }
 ```
 
@@ -120,14 +120,14 @@ POST happened.
 
 To delete the object issue an HTTP DELETE request.
 ```
-curl -X DELETE 'http://localhost:8121/users?person_id=127'
+curl -X DELETE 'http://localhost:8121/users?_id=127'
 ```
 
 *Notice* the deleted field is set on the object but the object isn't 
 really deleted.
 
 ```
-curl http://localhost:8121/users?person_id=127
+curl http://localhost:8121/users?_id=127
 {
   "updated": 1459205143,
   "last_name": "Doe",
@@ -135,7 +135,7 @@ curl http://localhost:8121/users?person_id=127
   "deleted": 1459205341,
   "first_name": "John",
   "network_id": "jdoe",
-  "person_id": 127
+  "_id": 127
 }
 ```
 
