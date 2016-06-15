@@ -25,6 +25,7 @@ from metadata.orm.keys import Keys
 from metadata.orm.values import Values
 from metadata.orm.transactions import Transactions
 from metadata.orm.file_key_value import FileKeyValue
+from metadata.orm.trans_key_value import TransactionKeyValue
 from metadata.elastic import create_elastic_index, try_es_connect
 
 DATABASE_CONNECT_ATTEMPTS = 10
@@ -48,7 +49,8 @@ ORM_OBJECTS = [
     Files,
     Keys,
     Values,
-    FileKeyValue
+    FileKeyValue,
+    TransactionKeyValue
 ]
 
 def try_db_connect(attempts=0):

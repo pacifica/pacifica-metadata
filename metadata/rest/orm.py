@@ -85,6 +85,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         except DoesNotExist, ex:
             raise HTTPError(404, str(ex))
         for obj in objs:
+            # also set updated
             obj.deleted = datetime.now()
             try:
                 self.elastic_delete(obj.to_hash()['_id'])
@@ -96,7 +97,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                 obj.rollback()
                 raise HTTPError(500, str(ex))
 
-    # CherryPy requires these named methods.
+    # CherryPy requires these named methods
+    # Add HEAD (basically Get without returning body
     # pylint: disable=invalid-name
     def GET(self, **kwargs):
         """
