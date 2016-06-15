@@ -167,7 +167,6 @@ objects in the model.
 | instrument | INTEGER | Instruments.id |
 | proposal | INTEGER | Proposals.id |
 | submitter | INTEGER | Users.id |
-| verified | BOOLEAN |  |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -182,8 +181,6 @@ objects in the model.
 | size | BIGINT |  |
 | subdir | VARCHAR |  |
 | transaction | INTEGER | Transactions.id |
-| verified | BOOLEAN |  |
-| vtime | TIMESTAMP |  |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -212,6 +209,17 @@ objects in the model.
 | id | SERIAL |  |
 | file | INTEGER | Files.id |
 | key | INTEGER | Keys.id |
+| value | INTEGER | Values.id |
+| created | TIMESTAMP |  |
+| deleted | TIMESTAMP |  |
+| updated | TIMESTAMP |  |
+
+### TransactionKeyValue
+| Column | Type | Reference |
+| --- | --- | --- |
+| id | SERIAL |  |
+| key | INTEGER | Keys.id |
+| transaction | INTEGER | Transactions.id |
 | value | INTEGER | Values.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
