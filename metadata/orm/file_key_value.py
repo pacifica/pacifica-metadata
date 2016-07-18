@@ -76,4 +76,3 @@ class FileKeyValue(CherryPyAPI):
             value = Values.get(Values.id == kwargs['value_id'])
             where_clause &= Expression(FileKeyValue.value, OP.EQ, value)
         return where_clause
-

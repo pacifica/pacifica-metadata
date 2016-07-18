@@ -76,4 +76,3 @@ class TransactionKeyValue(CherryPyAPI):
             value = Values.get(Values.id == kwargs['value_id'])
             where_clause &= Expression(TransactionKeyValue.value, OP.EQ, value)
         return where_clause
-

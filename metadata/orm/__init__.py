@@ -79,4 +79,3 @@ def create_tables():
             obj.create_table()
             obj.create_elastic_mapping()
     DB.close()
-

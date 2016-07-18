@@ -102,4 +102,3 @@ class ElasticAPI(object):
         cls.elastic_mapping_builder(obj)
         ret['properties'] = obj
         return ret
-

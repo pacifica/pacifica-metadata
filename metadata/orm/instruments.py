@@ -60,4 +60,3 @@ class Instruments(CherryPyAPI):
             if key in kwargs:
                 where_clause &= Expression(getattr(Instruments, key), OP.EQ, kwargs[key])
         return where_clause
-

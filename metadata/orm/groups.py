@@ -56,4 +56,3 @@ class Groups(CherryPyAPI):
             if key in kwargs:
                 where_clause &= Expression(getattr(Groups, key), OP.EQ, kwargs[key])
         return where_clause
-

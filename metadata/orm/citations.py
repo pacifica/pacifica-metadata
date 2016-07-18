@@ -94,4 +94,3 @@ class Citations(CherryPyAPI):
             if key in kwargs:
                 where_clause &= Expression(getattr(Citations, key), OP.EQ, kwargs[key])
         return where_clause
-

@@ -60,4 +60,3 @@ class Institutions(CherryPyAPI):
             if key in kwargs:
                 where_clause &= Expression(getattr(Institutions, key), OP.EQ, kwargs[key])
         return where_clause
-

@@ -60,4 +60,3 @@ class Users(CherryPyAPI):
             if key in kwargs:
                 where_clause &= Expression(getattr(Users, key), OP.EQ, kwargs[key])
         return where_clause
-

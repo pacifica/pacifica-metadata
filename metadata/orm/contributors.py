@@ -81,5 +81,3 @@ class Contributors(CherryPyAPI):
             if key in kwargs:
                 where_clause &= Expression(getattr(Contributors, key), OP.EQ, kwargs[key])
         return where_clause
-
-

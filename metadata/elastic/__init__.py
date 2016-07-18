@@ -49,4 +49,3 @@ def try_es_connect(attempts=0):
             try_es_connect(attempts)
         else:
             raise ex
-

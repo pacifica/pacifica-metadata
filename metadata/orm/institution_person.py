@@ -67,4 +67,3 @@ class InstitutionPerson(CherryPyAPI):
             institution = Institutions.get(Institutions.id == kwargs['institution_id'])
             where_clause &= Expression(InstitutionPerson.institution, OP.EQ, institution)
         return where_clause
-
