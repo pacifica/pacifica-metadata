@@ -176,6 +176,7 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | ctime | TIMESTAMP |  |
+| mimetype | VARCHAR |  |
 | mtime | TIMESTAMP |  |
 | name | VARCHAR |  |
 | size | BIGINT |  |

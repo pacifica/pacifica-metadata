@@ -21,6 +21,7 @@ class Files(CherryPyAPI):
     mtime = DateTimeField(default=datetime.now)
     size = BigIntegerField(default=-1)
     transaction = ForeignKeyField(Transactions, related_name='files')
+    mimetype = CharField(default="")
     #pylint: enable=too-many-instance-attributes
 
     @staticmethod
@@ -33,7 +34,7 @@ class Files(CherryPyAPI):
         {'type': 'integer'}
         obj['ctime'] = obj['mtime'] = \
         {'type': 'date', 'format': 'epoch_second'}
-        obj['name'] = obj['subdir'] = \
+        obj['name'] = obj['subdir'] = obj['mimetype'] = \
         {'type': 'string'}
 
     def to_hash(self):
@@ -44,6 +45,7 @@ class Files(CherryPyAPI):
         obj['_id'] = int(self.id)
         obj['name'] = str(self.name)
         obj['subdir'] = str(self.subdir)
+        obj['mimetype'] = str(self.mimetype)
         obj['ctime'] = int(mktime(self.ctime.timetuple()))
         obj['mtime'] = int(mktime(self.mtime.timetuple()))
         obj['size'] = int(self.size)
@@ -63,6 +65,8 @@ class Files(CherryPyAPI):
             self.name = str(obj['name'])
         if 'subdir' in obj:
             self.subdir = str(obj['subdir'])
+        if 'mimetype' in obj:
+            self.mimetype = str(obj['mimetype'])
         if 'ctime' in obj:
             self.ctime = datetime.fromtimestamp(int(obj['ctime']))
         if 'mtime' in obj:
@@ -89,7 +93,7 @@ class Files(CherryPyAPI):
             )
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
-        for key in ['name', 'subdir', 'size', 'mtime', 'ctime']:
+        for key in ['name', 'subdir', 'mimetype', 'size', 'mtime', 'ctime']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Files, key), OP.EQ, kwargs[key])
         return where_clause
