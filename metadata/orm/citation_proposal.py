@@ -31,17 +31,17 @@ class CitationProposal(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(CitationProposal, CitationProposal).elastic_mapping_builder(obj)
-        obj['citation_id'] = obj['proposal_id'] = \
-        {'type': 'integer'}
+        obj['citation_id'] = {'type': 'integer'}
+        obj['proposal_id'] = {'type': 'string'}
 
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(CitationProposal, self).to_hash()
-        obj['_id'] = index_hash(int(self.citation.id), int(self.proposal.id))
+        obj['_id'] = index_hash(int(self.citation.id), str(self.proposal.id))
         obj['citation_id'] = int(self.citation.id)
-        obj['proposal_id'] = int(self.proposal.id)
+        obj['proposal_id'] = str(self.proposal.id)
         return obj
 
     def from_hash(self, obj):

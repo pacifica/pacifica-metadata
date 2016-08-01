@@ -4,7 +4,7 @@ Elastic search core class to convert db object.
 """
 from StringIO import StringIO
 from json import dumps
-from pycurl import Curl, URL, READFUNCTION, UPLOAD, CUSTOMREQUEST
+from pycurl import Curl, URL, READFUNCTION, UPLOAD, CUSTOMREQUEST, WRITEFUNCTION
 from pycurl import INFILESIZE_LARGE, HTTP_CODE, error, PUT
 
 from metadata.elastic import ES_INDEX_URL
@@ -14,11 +14,12 @@ class ElasticAPI(object):
     Elastic search conversion and interface methods.
     """
     @classmethod
-    def elastic_delete(cls, obj_id):
+    def elastic_delete(cls, obj):
         """
         delete the object for the class in elastic search.
         """
-        class_name = cls.__name__
+        class_name = obj.__class__.__name__
+        obj_id = obj.id
         es_obj_url = "%s/%s/%s"%(ES_INDEX_URL, class_name, str(obj_id))
         try:
             curl = Curl()
@@ -36,18 +37,22 @@ class ElasticAPI(object):
         """
         upload the object for the class to elastic search.
         """
+        class_name = obj.__class__.__name__
+        obj = obj.to_hash()
         obj_id = obj['_id']
         del obj['_id']
         obj_str = dumps(obj)
         obj_len = len(obj_str)
         obj_io = StringIO(obj_str)
-        class_name = cls.__name__
         es_obj_url = "%s/%s/%s"%(ES_INDEX_URL, class_name, str(obj_id))
         try:
             curl = Curl()
             curl.setopt(URL, es_obj_url.encode('utf-8'))
             curl.setopt(PUT, 1)
             curl.setopt(UPLOAD, 1)
+            # pylint: disable=unnecessary-lambda
+            curl.setopt(WRITEFUNCTION, lambda bytes: len(bytes))
+            # pylint: enable=unnecessary-lambda
             curl.setopt(READFUNCTION, obj_io.read)
             curl.setopt(INFILESIZE_LARGE, obj_len)
             curl.perform()
@@ -90,7 +95,7 @@ class ElasticAPI(object):
         Build elastic mapping properties hash from object.
         """
         obj['created'] = obj['updated'] = obj['deleted'] = \
-        {'type': 'date', 'format': 'epoch_second'}
+        {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
 
     @classmethod
     def elastic_mapping(cls):

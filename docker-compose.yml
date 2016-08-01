@@ -1,6 +1,10 @@
 elasticdb:
-  image: elasticsearch
+  build: .
+  dockerfile: Dockerfile.elastic
   container_name: elasticdb
+  ports:
+    - 9200:9200
+    - 9300:9300
 
 metadatadb:
   image: postgres
@@ -9,6 +13,8 @@ metadatadb:
     POSTGRES_PASSWORD: password
     POSTGRES_DB: pacifica_metadata
     POSTGRES_USER: metadata
+  ports:
+    - 5432:5432
 
 metadataserver:
   container_name: metadataserver

@@ -2,7 +2,7 @@
 """
 Proposal instrument relationship
 """
-from peewee import ForeignKeyField, IntegerField, Expression, OP, CompositeKey
+from peewee import ForeignKeyField, Expression, OP, CompositeKey
 from metadata.orm.utils import index_hash
 from metadata.orm.proposals import Proposals
 from metadata.orm.instruments import Instruments
@@ -15,7 +15,6 @@ class ProposalInstrument(CherryPyAPI):
     """
     instrument = ForeignKeyField(Instruments, related_name='proposals')
     proposal = ForeignKeyField(Proposals, related_name='instruments')
-    hours_estimated = IntegerField(default=-1)
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
@@ -32,17 +31,17 @@ class ProposalInstrument(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(ProposalInstrument, ProposalInstrument).elastic_mapping_builder(obj)
-        obj['instrument_id'] = obj['proposal_id'] = obj['hours_estimated'] = \
-        {'type': 'integer'}
+        obj['instrument_id'] = {'type': 'integer'}
+        obj['proposal_id'] = {'type': 'string'}
 
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(ProposalInstrument, self).to_hash()
-        obj['_id'] = index_hash(int(self.proposal.id), int(self.instrument.id))
+        obj['_id'] = index_hash(str(self.proposal.id), int(self.instrument.id))
         obj['instrument_id'] = int(self.instrument.id)
-        obj['proposal_id'] = int(self.proposal.id)
+        obj['proposal_id'] = str(self.proposal.id)
         return obj
 
     def from_hash(self, obj):

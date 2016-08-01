@@ -4,3 +4,6 @@ peewee
 cherrypy
 pylint
 pycurl
+python-dateutil
+coverage
+pysqlite

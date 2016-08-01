@@ -21,7 +21,7 @@ class TestInstitutionPerson(TestBase):
     Test the InstitutionPerson ORM object
     """
     obj_cls = InstitutionPerson
-    obj_id = InstitutionPerson.user
+    obj_id = InstitutionPerson.person
 
     @classmethod
     def dependent_cls(cls):

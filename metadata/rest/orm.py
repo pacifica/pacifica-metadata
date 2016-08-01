@@ -8,6 +8,7 @@ from cherrypy import request, HTTPError
 from peewee import DoesNotExist, IntegrityError
 from metadata.orm.base import PacificaModel
 from metadata.elastic.orm import ElasticAPI
+from metadata.orm.utils import datetime_now_nomicrosecond
 
 class CherryPyAPI(PacificaModel, ElasticAPI):
     """
@@ -39,15 +40,42 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                 obj.from_json(update_json)
             except ValueError, ex:
                 raise HTTPError(500, str(ex))
-            obj.updated = datetime.now()
+            obj.updated = datetime_now_nomicrosecond()
             try:
-                self.elastic_upload(obj.to_hash())
+                self.elastic_upload(obj)
             except Exception, ex:
                 raise HTTPError(500, str(ex))
             try:
                 obj.save()
             except IntegrityError, ex:
                 obj.rollback()
+                raise HTTPError(500, str(ex))
+
+    def _set_or_create(self, insert_json):
+        """
+        Set or create the object if it doesn't already exist
+        """
+        objs = None
+        try:
+            objs = loads(insert_json)
+        except ValueError, ex:
+            raise HTTPError(500, str(ex))
+        if isinstance(objs, dict):
+            objs = [objs]
+        for obj in objs:
+            self.from_hash(obj)
+            try:
+                self.save(force_insert=True)
+                self.created = datetime_now_nomicrosecond()
+                self.save()
+            except IntegrityError, ex:
+                self.rollback()
+            self.deleted = datetime.fromtimestamp(0)
+            self.updated = datetime_now_nomicrosecond()
+            self.save()
+            try:
+                self.elastic_upload(self)
+            except Exception, ex:
                 raise HTTPError(500, str(ex))
 
     def _insert(self, insert_json):
@@ -64,16 +92,16 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         for obj in objs:
             self.from_hash(obj)
             self.deleted = datetime.fromtimestamp(0)
-            self.updated = datetime.now()
-            self.created = datetime.now()
-            try:
-                self.elastic_upload(self.to_hash())
-            except Exception, ex:
-                raise HTTPError(500, str(ex))
+            self.updated = datetime_now_nomicrosecond()
+            self.created = datetime_now_nomicrosecond()
             try:
                 self.save(force_insert=True)
             except IntegrityError, ex:
                 self.rollback()
+                raise HTTPError(500, str(ex))
+            try:
+                self.elastic_upload(self)
+            except Exception, ex:
                 raise HTTPError(500, str(ex))
 
     def _delete(self, **kwargs):
@@ -86,7 +114,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             raise HTTPError(404, str(ex))
         for obj in objs:
             # also set updated
-            obj.deleted = datetime.now()
+            obj.deleted = datetime_now_nomicrosecond()
             try:
                 self.elastic_delete(obj.to_hash()['_id'])
             except Exception, ex:

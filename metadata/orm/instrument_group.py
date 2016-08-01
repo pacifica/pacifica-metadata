@@ -4,11 +4,12 @@ InstrumentGroup links Groups and Instruments and objects.
 """
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.utils import index_hash
-from metadata.orm.base import DB, PacificaModel
+from metadata.orm.base import DB
+from metadata.rest.orm import CherryPyAPI
 from metadata.orm.groups import Groups
 from metadata.orm.instruments import Instruments
 
-class InstrumentGroup(PacificaModel):
+class InstrumentGroup(CherryPyAPI):
     """
     InstrumentGroup attributes are foreign keys.
     """

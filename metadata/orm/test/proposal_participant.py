@@ -21,7 +21,7 @@ class TestProposalParticipant(TestBase):
     Test the ProposalParticipant ORM object
     """
     obj_cls = ProposalParticipant
-    obj_id = ProposalParticipant.member
+    obj_id = ProposalParticipant.person
 
     @classmethod
     def dependent_cls(cls):

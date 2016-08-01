@@ -16,10 +16,12 @@ for obj_cls in ORM_OBJECTS:
     print "| --- | --- | --- |"
     column_tuples = []
     for obj_cls_attr in dir(obj_cls):
-        if type(getattr(obj_cls, obj_cls_attr)).__module__ == 'peewee' and \
+        if type(getattr(obj_cls, obj_cls_attr)).__name__ == 'ExtendDateTimeField' or \
+           type(getattr(obj_cls, obj_cls_attr)).__name__ == 'ExtendDateField' or \
+           (type(getattr(obj_cls, obj_cls_attr)).__module__ == 'peewee' and \
            obj_cls_attr != '_meta' and \
            type(getattr(obj_cls, obj_cls_attr)).__name__ != 'ReverseRelationDescriptor' and \
-           type(getattr(obj_cls, obj_cls_attr)).__name__ != 'CompositeKey':
+           type(getattr(obj_cls, obj_cls_attr)).__name__ != 'CompositeKey'):
             column_name = obj_cls_attr
             column_type = getattr(obj_cls, obj_cls_attr).get_column_type()
             points_to = ""

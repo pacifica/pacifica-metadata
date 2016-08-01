@@ -11,7 +11,8 @@ class Users(CherryPyAPI):
     """
     first_name = CharField(default="")
     last_name = CharField(default="")
-    network_id = CharField(default="")
+    network_id = CharField(null=True)
+    email_address = CharField(default="")
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -27,10 +28,11 @@ class Users(CherryPyAPI):
         Convert the object to a hash
         """
         obj = super(Users, self).to_hash()
-        obj['_id'] = self.id
+        obj['_id'] = int(self.id)
         obj['first_name'] = self.first_name
         obj['last_name'] = self.last_name
-        obj['network_id'] = self.network_id
+        obj['network_id'] = self.network_id.lower() if self.network_id is not None else None
+        obj['email_address'] = self.email_address
         return obj
 
     def from_hash(self, obj):
@@ -48,6 +50,8 @@ class Users(CherryPyAPI):
             self.last_name = obj['last_name']
         if 'network_id' in obj:
             self.network_id = obj['network_id']
+        if 'email_address' in obj:
+            self.email_address = obj['email_address']
 
     def where_clause(self, kwargs):
         """

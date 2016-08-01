@@ -28,6 +28,8 @@ from metadata.orm.test.keywords import TestKeywords
 from metadata.orm.test.groups import TestGroups
 from metadata.orm.test.user_group import TestUserGroup
 from metadata.orm.test.instrument_group import TestInstrumentGroup
+from metadata.elastic.test.elastic import TestElastic
+from metadata.orm.test.utils import TestUtils
 #pylint: enable=unused-import
 
 if __name__ == '__main__':

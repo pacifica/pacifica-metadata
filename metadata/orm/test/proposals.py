@@ -3,24 +3,24 @@
 Test the proposals ORM object
 """
 from datetime import datetime
-from time import mktime
 from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.proposals import Proposals
 
 SAMPLE_PROPOSAL_HASH = {
-    "_id": 17,
+    "_id": "17a",
     "title": "My Proposal Title",
     "abstract": """
 This is my proposal that's really cool and you should accept it. ;)
 """,
     "science_theme": "Nobel Prize Winners",
     "proposal_type": "Blarg!",
-    "submitted_date": int(mktime(datetime.now().timetuple())),
-    "accepted_date": int(mktime(datetime.now().timetuple())),
-    "actual_start_date": int(mktime(datetime.now().timetuple())),
-    "actual_end_date": int(mktime(datetime.now().timetuple()))
+    "submitted_date": datetime.now().replace(microsecond=0).isoformat(),
+    "accepted_date": datetime.now().date().isoformat(),
+    "actual_start_date": datetime.now().date().isoformat(),
+    "actual_end_date": datetime.now().date().isoformat(),
+    "closed_date": datetime.now().date().isoformat()
 }
 
 class TestProposals(TestBase):

@@ -13,7 +13,7 @@ class InstitutionPerson(CherryPyAPI):
     """
     Relates persons and institution objects.
     """
-    user = ForeignKeyField(Users, related_name='institutions')
+    person = ForeignKeyField(Users, related_name='institutions')
     institution = ForeignKeyField(Institutions, related_name='users')
 
     # pylint: disable=too-few-public-methods
@@ -22,7 +22,7 @@ class InstitutionPerson(CherryPyAPI):
         PeeWee meta class contains the database and the primary key.
         """
         database = DB
-        primary_key = CompositeKey('user', 'institution')
+        primary_key = CompositeKey('person', 'institution')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
@@ -38,8 +38,8 @@ class InstitutionPerson(CherryPyAPI):
         Converts the object to a hash
         """
         obj = super(InstitutionPerson, self).to_hash()
-        obj['_id'] = index_hash(int(self.user.id), int(self.institution.id))
-        obj['person_id'] = int(self.user.id)
+        obj['_id'] = index_hash(int(self.person.id), int(self.institution.id))
+        obj['person_id'] = int(self.person.id)
         obj['institution_id'] = int(self.institution.id)
         return obj
 
@@ -49,7 +49,7 @@ class InstitutionPerson(CherryPyAPI):
         """
         super(InstitutionPerson, self).from_hash(obj)
         if 'person_id' in obj:
-            self.user = Users.get(Users.id == obj['person_id'])
+            self.person = Users.get(Users.id == obj['person_id'])
         if 'institution_id' in obj:
             self.institution = Institutions.get(
                 Institutions.id == obj['institution_id']
@@ -62,7 +62,7 @@ class InstitutionPerson(CherryPyAPI):
         where_clause = super(InstitutionPerson, self).where_clause(kwargs)
         if 'person_id' in kwargs:
             person = Users.get(Users.id == kwargs['person_id'])
-            where_clause &= Expression(InstitutionPerson.user, OP.EQ, person)
+            where_clause &= Expression(InstitutionPerson.person, OP.EQ, person)
         if 'institution_id' in kwargs:
             institution = Institutions.get(Institutions.id == kwargs['institution_id'])
             where_clause &= Expression(InstitutionPerson.institution, OP.EQ, institution)

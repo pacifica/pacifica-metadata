@@ -20,6 +20,7 @@ objects in the model.
 | Column | Type | Reference |
 | --- | --- | --- |
 | id | SERIAL |  |
+| email_address | VARCHAR |  |
 | first_name | VARCHAR |  |
 | last_name | VARCHAR |  |
 | network_id | VARCHAR |  |
@@ -33,7 +34,7 @@ objects in the model.
 | id | SERIAL |  |
 | association_cd | VARCHAR |  |
 | institution_name | TEXT |  |
-| is_foreign | INTEGER |  |
+| is_foreign | BOOLEAN |  |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -41,11 +42,12 @@ objects in the model.
 ### Proposals
 | Column | Type | Reference |
 | --- | --- | --- |
-| id | SERIAL |  |
+| id | VARCHAR |  |
 | abstract | TEXT |  |
-| accepted_date | TIMESTAMP |  |
-| actual_end_date | TIMESTAMP |  |
-| actual_start_date | TIMESTAMP |  |
+| accepted_date | DATE |  |
+| actual_end_date | DATE |  |
+| actual_start_date | DATE |  |
+| closed_date | DATE |  |
 | proposal_type | VARCHAR |  |
 | science_theme | VARCHAR |  |
 | submitted_date | TIMESTAMP |  |
@@ -58,6 +60,7 @@ objects in the model.
 | Column | Type | Reference |
 | --- | --- | --- |
 | id | SERIAL |  |
+| active | BOOLEAN |  |
 | display_name | VARCHAR |  |
 | instrument_name | VARCHAR |  |
 | name_short | VARCHAR |  |
@@ -101,7 +104,7 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | institution | INTEGER | Institutions.id |
-| user | INTEGER | Users.id |
+| person | INTEGER | Users.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -131,9 +134,8 @@ objects in the model.
 | Column | Type | Reference |
 | --- | --- | --- |
 | id | SERIAL |  |
-| hours_estimated | INTEGER |  |
 | instrument | INTEGER | Instruments.id |
-| proposal | INTEGER | Proposals.id |
+| proposal | VARCHAR | Proposals.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -142,8 +144,8 @@ objects in the model.
 | Column | Type | Reference |
 | --- | --- | --- |
 | id | SERIAL |  |
-| member | INTEGER | Users.id |
-| proposal | INTEGER | Proposals.id |
+| person | INTEGER | Users.id |
+| proposal | VARCHAR | Proposals.id |
 | proposal_author_sw | VARCHAR |  |
 | proposal_co_author_sw | VARCHAR |  |
 | created | TIMESTAMP |  |
@@ -155,7 +157,7 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | citation | INTEGER | Citations.id |
-| proposal | INTEGER | Proposals.id |
+| proposal | VARCHAR | Proposals.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -165,7 +167,7 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | instrument | INTEGER | Instruments.id |
-| proposal | INTEGER | Proposals.id |
+| proposal | VARCHAR | Proposals.id |
 | submitter | INTEGER | Users.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
@@ -222,6 +224,36 @@ objects in the model.
 | key | INTEGER | Keys.id |
 | transaction | INTEGER | Transactions.id |
 | value | INTEGER | Values.id |
+| created | TIMESTAMP |  |
+| deleted | TIMESTAMP |  |
+| updated | TIMESTAMP |  |
+
+### Groups
+| Column | Type | Reference |
+| --- | --- | --- |
+| id | SERIAL |  |
+| group_name | VARCHAR |  |
+| is_admin | BOOLEAN |  |
+| created | TIMESTAMP |  |
+| deleted | TIMESTAMP |  |
+| updated | TIMESTAMP |  |
+
+### UserGroup
+| Column | Type | Reference |
+| --- | --- | --- |
+| id | SERIAL |  |
+| group | INTEGER | Groups.id |
+| person | INTEGER | Users.id |
+| created | TIMESTAMP |  |
+| deleted | TIMESTAMP |  |
+| updated | TIMESTAMP |  |
+
+### InstrumentGroup
+| Column | Type | Reference |
+| --- | --- | --- |
+| id | SERIAL |  |
+| group | INTEGER | Groups.id |
+| instrument | INTEGER | Instruments.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |

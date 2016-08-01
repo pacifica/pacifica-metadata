@@ -21,7 +21,7 @@ class TestUserGroup(TestBase):
     Test the Keys ORM object
     """
     obj_cls = UserGroup
-    obj_id = UserGroup.user
+    obj_id = UserGroup.person
 
     @classmethod
     def dependent_cls(cls):

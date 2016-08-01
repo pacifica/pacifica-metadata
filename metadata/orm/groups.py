@@ -36,10 +36,10 @@ class Groups(CherryPyAPI):
         Convert the hash into the object.
         """
         super(Groups, self).from_hash(obj)
+        # pylint: disable=invalid-name
         if '_id' in obj:
-            # pylint: disable=invalid-name
             self.id = int(obj['_id'])
-            # pylint: enable=invalid-name
+        # pylint: enable=invalid-name
         if 'group_name' in obj:
             self.group_name = str(obj['group_name'])
         if 'is_admin' in obj:

@@ -2,24 +2,26 @@
 """
 Proposals data model
 """
-from datetime import datetime
-from time import mktime
-from peewee import TextField, CharField, DateTimeField, Expression, OP
+from peewee import TextField, CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
+from metadata.orm.utils import ExtendDateTimeField, ExtendDateField
+from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
 
 # pylint: disable=too-many-instance-attributes
 class Proposals(CherryPyAPI):
     """
     Proposals data model
     """
+    id = CharField(primary_key=True)
     title = TextField(default="")
     abstract = TextField(default="")
-    science_theme = CharField(default="")
+    science_theme = CharField(null=True)
     proposal_type = CharField(default="")
-    submitted_date = DateTimeField(default=datetime.now)
-    accepted_date = DateTimeField(default=datetime.now)
-    actual_start_date = DateTimeField(default=datetime.now)
-    actual_end_date = DateTimeField(default=datetime.now)
+    submitted_date = ExtendDateTimeField(default=datetime_now_nomicrosecond)
+    accepted_date = ExtendDateField(null=True)
+    actual_start_date = ExtendDateField(null=True)
+    actual_end_date = ExtendDateField(null=True)
+    closed_date = ExtendDateField(null=True)
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -29,23 +31,33 @@ class Proposals(CherryPyAPI):
         super(Proposals, Proposals).elastic_mapping_builder(obj)
         obj['title'] = obj['abstract'] = obj['science_theme'] = obj['proposal_type'] = \
         {'type': 'string'}
-        obj['submitted_date'] = obj['accepted_date'] = obj['actual_start_date'] = \
-        obj['actual_end_date'] = {'type': 'date', 'format': 'epoch_second'}
+
+        obj['submitted_date'] = \
+        {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
+
+        obj['actual_start_date'] = obj['accepted_date'] = \
+        obj['actual_end_date'] = obj['closed_date'] = \
+        {'type': 'date', 'format': "yyyy-mm-dd"}
 
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(Proposals, self).to_hash()
-        obj['_id'] = int(self.id)
-        obj['title'] = str(self.title)
-        obj['abstract'] = str(self.abstract)
-        obj['science_theme'] = str(self.science_theme)
-        obj['proposal_type'] = str(self.proposal_type)
-        obj['submitted_date'] = int(mktime(self.submitted_date.timetuple()))
-        obj['accepted_date'] = int(mktime(self.accepted_date.timetuple()))
-        obj['actual_start_date'] = int(mktime(self.actual_start_date.timetuple()))
-        obj['actual_end_date'] = int(mktime(self.actual_end_date.timetuple()))
+        obj['_id'] = unicode(self.id)
+        obj['title'] = unicode(self.title)
+        obj['abstract'] = unicode(self.abstract)
+        obj['science_theme'] = unicode(self.science_theme)
+        obj['proposal_type'] = unicode(self.proposal_type)
+        obj['submitted_date'] = self.submitted_date.isoformat()
+        obj['actual_start_date'] = self.actual_start_date.isoformat() \
+        if self.actual_start_date is not None else None
+        obj['accepted_date'] = self.accepted_date.isoformat() \
+        if self.accepted_date is not None else None
+        obj['actual_end_date'] = self.actual_end_date.isoformat() \
+        if self.actual_end_date is not None else None
+        obj['closed_date'] = self.closed_date.isoformat() \
+        if self.closed_date is not None else None
         return obj
 
     def from_hash(self, obj):
@@ -53,36 +65,37 @@ class Proposals(CherryPyAPI):
         Converts the hash to the object
         """
         super(Proposals, self).from_hash(obj)
+        # pylint: disable=invalid-name
         if '_id' in obj:
-            # pylint: disable=invalid-name
-            self.id = int(obj['_id'])
-            # pylint: enable=invalid-name
+            self.id = unicode(obj['_id'])
+        # pylint: enable=invalid-name
         if 'title' in obj:
-            self.title = str(obj['title'])
+            self.title = unicode(obj['title'])
         if 'abstract' in obj:
-            self.abstract = str(obj['abstract'])
+            self.abstract = unicode(obj['abstract'])
         if 'science_theme' in obj:
-            self.science_theme = str(obj['science_theme'])
+            self.science_theme = unicode(obj['science_theme'])
         if 'proposal_type' in obj:
-            self.proposal_type = str(obj['proposal_type'])
-        if 'submitted_date' in obj:
-            self.submitted_date = datetime.fromtimestamp(int(obj['submitted_date']))
-        if 'accepted_date' in obj:
-            self.accepted_date = datetime.fromtimestamp(int(obj['accepted_date']))
-        if 'actual_start_date' in obj:
-            self.actual_start_date = datetime.fromtimestamp(int(obj['actual_start_date']))
-        if 'actual_end_date' in obj:
-            self.actual_end_date = datetime.fromtimestamp(int(obj['actual_end_date']))
+            self.proposal_type = unicode(obj['proposal_type'])
+        self._set_datetime_part('submitted_date', obj)
+        self._set_date_part('accepted_date', obj)
+        self._set_date_part('actual_start_date', obj)
+        self._set_date_part('actual_end_date', obj)
+        self._set_date_part('closed_date', obj)
 
     def where_clause(self, kwargs):
         """
         PeeWee specific where clause used for search.
         """
         where_clause = super(Proposals, self).where_clause(kwargs)
-        for date_key in ['submitted_date', 'accepted_date',
+        for date_key in ['accepted_date',
                          'actual_start_date', 'actual_end_date']:
             if date_key in kwargs:
-                date_obj = datetime.fromtimestamp(kwargs[date_key])
+                date_obj = date_converts(kwargs[date_key])
+                where_clause &= Expression(getattr(Proposals, date_key), OP.EQ, date_obj)
+        for date_key in ['submitted_date']:
+            if date_key in kwargs:
+                date_obj = datetime_converts(kwargs[date_key])
                 where_clause &= Expression(getattr(Proposals, date_key), OP.EQ, date_obj)
         if '_id' in kwargs:
             where_clause &= Expression(Proposals.id, OP.EQ, kwargs['_id'])

@@ -12,8 +12,8 @@ class UserGroup(CherryPyAPI):
     """
     UserGroup attributes are foreign keys.
     """
-    user = ForeignKeyField(Users, related_name='groups')
-    group = ForeignKeyField(Groups, related_name='user_members')
+    person = ForeignKeyField(Users, related_name='groups')
+    group = ForeignKeyField(Groups, related_name='members')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
@@ -21,7 +21,7 @@ class UserGroup(CherryPyAPI):
         PeeWee meta class contains the database and the primary key.
         """
         database = DB
-        primary_key = CompositeKey('user', 'group')
+        primary_key = CompositeKey('person', 'group')
     # pylint: enable=too-few-public-methods
 
     def to_hash(self):
@@ -29,7 +29,7 @@ class UserGroup(CherryPyAPI):
         Converts the object to a hash
         """
         obj = super(UserGroup, self).to_hash()
-        obj['person_id'] = int(self.user.id)
+        obj['person_id'] = int(self.person.id)
         obj['group_id'] = int(self.group.id)
         return obj
 
@@ -39,7 +39,7 @@ class UserGroup(CherryPyAPI):
         """
         super(UserGroup, self).from_hash(obj)
         if 'person_id' in obj:
-            self.user = Users.get(Users.id == obj['person_id'])
+            self.person = Users.get(Users.id == obj['person_id'])
         if 'group_id' in obj:
             self.group = Groups.get(Groups.id == obj['group_id'])
 
@@ -50,7 +50,7 @@ class UserGroup(CherryPyAPI):
         where_clause = super(UserGroup, self).where_clause(kwargs)
         if 'person_id' in kwargs:
             user = Users.get(Users.id == kwargs['person_id'])
-            where_clause &= Expression(UserGroup.user, OP.EQ, user)
+            where_clause &= Expression(UserGroup.person, OP.EQ, user)
         if 'group_id' in kwargs:
             group = Groups.get(Groups.id == kwargs['group_id'])
             where_clause &= Expression(UserGroup.group, OP.EQ, group)

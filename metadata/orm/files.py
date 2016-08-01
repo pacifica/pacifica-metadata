@@ -5,9 +5,10 @@ Contains the Files object model primary unit of metadata for Pacifica.
 from datetime import datetime
 from time import mktime
 from peewee import ForeignKeyField, CharField, BigIntegerField
-from peewee import DateTimeField, Expression, OP
+from peewee import Expression, OP
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.transactions import Transactions
+from metadata.orm.utils import datetime_now_nomicrosecond, ExtendDateTimeField
 
 class Files(CherryPyAPI):
     """
@@ -17,8 +18,8 @@ class Files(CherryPyAPI):
     #pylint: disable=too-many-instance-attributes
     name = CharField(default="")
     subdir = CharField(default="")
-    ctime = DateTimeField(default=datetime.now)
-    mtime = DateTimeField(default=datetime.now)
+    ctime = ExtendDateTimeField(default=datetime_now_nomicrosecond)
+    mtime = ExtendDateTimeField(default=datetime_now_nomicrosecond)
     size = BigIntegerField(default=-1)
     transaction = ForeignKeyField(Transactions, related_name='files')
     mimetype = CharField(default="")
@@ -33,7 +34,7 @@ class Files(CherryPyAPI):
         obj['transaction_id'] = obj['size'] = \
         {'type': 'integer'}
         obj['ctime'] = obj['mtime'] = \
-        {'type': 'date', 'format': 'epoch_second'}
+        {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
         obj['name'] = obj['subdir'] = obj['mimetype'] = \
         {'type': 'string'}
 

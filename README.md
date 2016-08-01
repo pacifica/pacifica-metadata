@@ -15,6 +15,12 @@ themselves.
 docker pull pacifica/metadata
 ```
 
+### The Docker Compose Way
+
+```
+docker-compose up
+```
+
 ### The Manual Way
 
 Install the dependencies using pip (or some other similar python way).

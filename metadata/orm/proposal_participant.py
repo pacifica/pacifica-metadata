@@ -13,8 +13,8 @@ class ProposalParticipant(CherryPyAPI):
     """
     Relates proposals and users objects.
     """
-    member = ForeignKeyField(Users, related_name='proposals')
-    proposal = ForeignKeyField(Proposals, related_name='members')
+    person = ForeignKeyField(Users, related_name='proposals')
+    proposal = ForeignKeyField(Proposals, related_name='users')
     proposal_author_sw = CharField(default="")
     proposal_co_author_sw = CharField(default="")
 
@@ -24,7 +24,7 @@ class ProposalParticipant(CherryPyAPI):
         PeeWee meta class contains the database and the primary key.
         """
         database = DB
-        primary_key = CompositeKey('member', 'proposal')
+        primary_key = CompositeKey('person', 'proposal')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
@@ -33,17 +33,18 @@ class ProposalParticipant(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(ProposalParticipant, ProposalParticipant).elastic_mapping_builder(obj)
-        obj['person_id'] = obj['proposal_id'] = {'type': 'integer'}
-        obj['proposal_author_sw'] = obj['proposal_co_author_sw'] = {'type': 'string'}
+        obj['person_id'] = {'type': 'integer'}
+        obj['proposal_author_sw'] = obj['proposal_co_author_sw'] = \
+        obj['proposal_id'] = {'type': 'string'}
 
     def to_hash(self):
         """
         Converts the object to a hash
         """
         obj = super(ProposalParticipant, self).to_hash()
-        obj['_id'] = index_hash(int(self.proposal.id), int(self.member.id))
-        obj['person_id'] = int(self.member.id)
-        obj['proposal_id'] = int(self.proposal.id)
+        obj['_id'] = index_hash(str(self.proposal.id), int(self.person.id))
+        obj['person_id'] = int(self.person.id)
+        obj['proposal_id'] = str(self.proposal.id)
         return obj
 
     def from_hash(self, obj):
@@ -52,7 +53,7 @@ class ProposalParticipant(CherryPyAPI):
         """
         super(ProposalParticipant, self).from_hash(obj)
         if 'person_id' in obj:
-            self.member = Users.get(Users.id == obj['person_id'])
+            self.person = Users.get(Users.id == obj['person_id'])
         if 'proposal_id' in obj:
             self.proposal = Proposals.get(Proposals.id == obj['proposal_id'])
 
@@ -63,7 +64,7 @@ class ProposalParticipant(CherryPyAPI):
         where_clause = super(ProposalParticipant, self).where_clause(kwargs)
         if 'person_id' in kwargs:
             member = Users.get(Users.id == kwargs['person_id'])
-            where_clause &= Expression(ProposalParticipant.member, OP.EQ, member)
+            where_clause &= Expression(ProposalParticipant.person, OP.EQ, member)
         if 'proposal_id' in kwargs:
             proposal = Proposals.get(Proposals.id == kwargs['proposal_id'])
             where_clause &= Expression(ProposalParticipant.proposal, OP.EQ, proposal)

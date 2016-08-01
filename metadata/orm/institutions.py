@@ -2,7 +2,7 @@
 """
 Describes an institution and its attributes.
 """
-from peewee import IntegerField, TextField, CharField, Expression, OP
+from peewee import BooleanField, TextField, CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
 
 class Institutions(CherryPyAPI):
@@ -11,7 +11,7 @@ class Institutions(CherryPyAPI):
     """
     institution_name = TextField(default="")
     association_cd = CharField(default="UNK")
-    is_foreign = IntegerField(default=0)
+    is_foreign = BooleanField(default=False)
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -28,7 +28,7 @@ class Institutions(CherryPyAPI):
         """
         obj = super(Institutions, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['institution_name'] = str(self.institution_name)
+        obj['institution_name'] = unicode(self.institution_name)
         obj['association_cd'] = str(self.association_cd)
         obj['is_foreign'] = bool(self.is_foreign)
         return obj
@@ -38,12 +38,12 @@ class Institutions(CherryPyAPI):
         Convert the hash into the object.
         """
         super(Institutions, self).from_hash(obj)
+        # pylint: disable=invalid-name
         if '_id' in obj:
-            # pylint: disable=invalid-name
             self.id = int(obj['_id'])
-            # pylint: enable=invalid-name
+        # pylint: enable=invalid-name
         if 'institution_name' in obj:
-            self.institution_name = str(obj['institution_name'])
+            self.institution_name = unicode(obj['institution_name'])
         if 'association_cd' in obj:
             self.association_cd = str(obj['association_cd'])
         if 'is_foreign' in obj:

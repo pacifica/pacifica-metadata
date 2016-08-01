@@ -2,6 +2,7 @@
 """
 Base testing module implements the temporary database to be used.
 """
+from datetime import datetime
 from unittest import TestCase, main
 from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
@@ -36,8 +37,13 @@ class TestBase(TestCase):
         """
         self.base_create_dep_objs()
         obj = cls()
+        if not 'updated' in obj_hash:
+            change_date_chk = datetime.now()
+            obj.updated = change_date_chk
         obj.from_hash(obj_hash)
         obj.save(force_insert=True)
+        if not 'updated' in obj_hash:
+            self.assertEqual(obj.last_change_date(), unicode(change_date_chk.isoformat(' ')))
         return obj
 
     def base_test_hash(self, obj_hash):
@@ -52,6 +58,7 @@ class TestBase(TestCase):
         """
         with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             obj = self.base_create_obj(self.obj_cls, obj_hash)
+            self.assertTrue(isinstance(obj.get_primary_keys(), list))
             new_obj = self.obj_cls.get(self.obj_id == getattr(obj, self.obj_id.db_column))
             chk_obj_hash = new_obj.to_hash()
             self.assertEqual('_id' in chk_obj_hash, True)
