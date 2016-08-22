@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Test the file_key_values ORM object
 """
@@ -12,7 +13,15 @@ from metadata.orm.citations import Citations
 SAMPLE_KEYWORD_HASH = {
     "_id": 142,
     "citation_id": SAMPLE_CITATION_HASH['_id'],
-    "keyword": "halitosis"
+    "keyword": "halitosis",
+    'encoding': 'UTF8'
+}
+
+SAMPLE_UNICODE_KEYWORD_HASH = {
+    "_id": 143,
+    "citation_id": SAMPLE_CITATION_HASH['_id'],
+    "keyword": u"blargééééé",
+    'encoding': 'UTF8'
 }
 
 class TestKeywords(TestBase):
@@ -45,6 +54,12 @@ class TestKeywords(TestBase):
         """
         self.base_test_hash(SAMPLE_KEYWORD_HASH)
 
+    def test_unicode_keywords_hash(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_test_hash(SAMPLE_UNICODE_KEYWORD_HASH)
+
     def test_keywords_json(self):
         """
         Test the hash portion using base object method.
@@ -56,6 +71,12 @@ class TestKeywords(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_KEYWORD_HASH)
+
+    def test_unicode_keywords_where(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause(SAMPLE_UNICODE_KEYWORD_HASH)
 
 if __name__ == '__main__':
     main()

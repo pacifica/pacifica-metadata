@@ -21,6 +21,7 @@ class Citations(CherryPyAPI):
     xml_text = TextField(default="")
     release_authorization_id = CharField(default="")
     doi_reference = CharField(default="")
+    encoding = CharField(default="UTF8")
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -32,7 +33,7 @@ class Citations(CherryPyAPI):
         obj['journal_issue'] = {'type': 'integer'}
         obj['article_title'] = obj['abstract_text'] = obj['xml_text'] = \
         obj['page_range'] = obj['doi_reference'] = obj['release_authorization_id'] = \
-        {'type': 'string'}
+        obj['encoding'] = {'type': 'string'}
 
     def to_hash(self):
         """
@@ -40,15 +41,16 @@ class Citations(CherryPyAPI):
         """
         obj = super(Citations, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['article_title'] = str(self.article_title)
-        obj['abstract_text'] = str(self.abstract_text)
-        obj['xml_text'] = str(self.xml_text)
+        obj['article_title'] = unicode(self.article_title)
+        obj['abstract_text'] = unicode(self.abstract_text)
+        obj['xml_text'] = unicode(self.xml_text)
         obj['journal_id'] = int(self.journal.id)
         obj['journal_volume'] = int(self.journal_volume)
         obj['journal_issue'] = int(self.journal_issue)
         obj['page_range'] = str(self.page_range)
         obj['doi_reference'] = str(self.doi_reference)
         obj['release_authorization_id'] = str(self.release_authorization_id)
+        obj['encoding'] = str(self.encoding)
         return obj
 
     def from_hash(self, obj):
@@ -61,7 +63,7 @@ class Citations(CherryPyAPI):
             self.id = int(obj['_id'])
             # pylint: enable=invalid-name
         if 'article_title' in obj:
-            self.article_title = str(obj['article_title'])
+            self.article_title = unicode(obj['article_title'])
         if 'journal_id' in obj:
             self.journal = Journals.get(Journals.id == int(obj['journal_id']))
         if 'journal_volume' in obj:
@@ -73,11 +75,13 @@ class Citations(CherryPyAPI):
         if 'doi_reference' in obj:
             self.doi_reference = str(obj['doi_reference'])
         if 'xml_text' in obj:
-            self.xml_text = str(obj['xml_text'])
+            self.xml_text = unicode(obj['xml_text'])
         if 'release_authorization_id' in obj:
             self.release_authorization_id = str(obj['release_authorization_id'])
         if 'abstract_text' in obj:
-            self.abstract_text = str(obj['abstract_text'])
+            self.abstract_text = unicode(obj['abstract_text'])
+        if 'encoding' in obj:
+            self.encoding = str(obj['encoding'])
 
     def where_clause(self, kwargs):
         """
@@ -90,7 +94,7 @@ class Citations(CherryPyAPI):
         if '_id' in kwargs:
             where_clause &= Expression(Citations.id, OP.EQ, int(kwargs['_id']))
         for key in ['article_title', 'journal_volume', 'journal_issue', 'page_range',
-                    'doi_reference']:
+                    'doi_reference', 'encoding']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Citations, key), OP.EQ, kwargs[key])
         return where_clause

@@ -23,6 +23,7 @@ class Files(CherryPyAPI):
     size = BigIntegerField(default=-1)
     transaction = ForeignKeyField(Transactions, related_name='files')
     mimetype = CharField(default="")
+    encoding = CharField(default="UTF8")
     #pylint: enable=too-many-instance-attributes
 
     @staticmethod
@@ -36,7 +37,7 @@ class Files(CherryPyAPI):
         obj['ctime'] = obj['mtime'] = \
         {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
         obj['name'] = obj['subdir'] = obj['mimetype'] = \
-        {'type': 'string'}
+        obj['encoding'] = {'type': 'string'}
 
     def to_hash(self):
         """
@@ -44,13 +45,14 @@ class Files(CherryPyAPI):
         """
         obj = super(Files, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['name'] = str(self.name)
-        obj['subdir'] = str(self.subdir)
+        obj['name'] = unicode(self.name)
+        obj['subdir'] = unicode(self.subdir)
         obj['mimetype'] = str(self.mimetype)
         obj['ctime'] = int(mktime(self.ctime.timetuple()))
         obj['mtime'] = int(mktime(self.mtime.timetuple()))
         obj['size'] = int(self.size)
         obj['transaction_id'] = int(self.transaction.id)
+        obj['encoding'] = str(self.encoding)
         return obj
 
     def from_hash(self, obj):
@@ -63,9 +65,9 @@ class Files(CherryPyAPI):
             self.id = int(obj['_id'])
             # pylint: enable=invalid-name
         if 'name' in obj:
-            self.name = str(obj['name'])
+            self.name = unicode(obj['name'])
         if 'subdir' in obj:
-            self.subdir = str(obj['subdir'])
+            self.subdir = unicode(obj['subdir'])
         if 'mimetype' in obj:
             self.mimetype = str(obj['mimetype'])
         if 'ctime' in obj:
@@ -78,6 +80,8 @@ class Files(CherryPyAPI):
             self.transaction = Transactions.get(
                 Transactions.id == obj['transaction_id']
             )
+        if 'encoding' in obj:
+            self.encoding = str(obj['encoding'])
 
     def where_clause(self, kwargs):
         """
@@ -94,7 +98,7 @@ class Files(CherryPyAPI):
             )
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
-        for key in ['name', 'subdir', 'mimetype', 'size', 'mtime', 'ctime']:
+        for key in ['name', 'subdir', 'mimetype', 'size', 'mtime', 'ctime', 'encoding']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Files, key), OP.EQ, kwargs[key])
         return where_clause

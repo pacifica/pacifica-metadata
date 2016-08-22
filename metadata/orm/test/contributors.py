@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Test the contributors ORM object
 """
@@ -19,6 +20,17 @@ SAMPLE_CONTRIBUTOR_HASH = {
     "last_name": "Doe",
     "dept_code": "Ecology",
     "institution_id": SAMPLE_INSTITUTION_HASH['_id']
+}
+
+SAMPLE_UNICODE_CONTRIBUTOR_HASH = {
+    "_id": 195,
+    "person_id": SAMPLE_USER_HASH['_id'],
+    "first_name": u'Jéhn',
+    "middle_initial": u"Fé",
+    "last_name": u"Doé",
+    "dept_code": u"Ecologéy",
+    "institution_id": SAMPLE_INSTITUTION_HASH['_id'],
+    "encoding": "UTF8"
 }
 
 class TestContributors(TestBase):
@@ -58,6 +70,12 @@ class TestContributors(TestBase):
         """
         self.base_test_hash(SAMPLE_CONTRIBUTOR_HASH)
 
+    def test_unicode_contributors_hash(self):
+        """
+        Test the unicode hash using base object method.
+        """
+        self.base_test_hash(SAMPLE_UNICODE_CONTRIBUTOR_HASH)
+
     def test_contributors_json(self):
         """
         Test the hash portion using base object method.
@@ -69,6 +87,12 @@ class TestContributors(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_CONTRIBUTOR_HASH)
+
+    def test_unicode_contributors_where(self):
+        """
+        Test the unicode hash using base object method.
+        """
+        self.base_where_clause(SAMPLE_UNICODE_CONTRIBUTOR_HASH)
 
 if __name__ == '__main__':
     main()

@@ -7,6 +7,7 @@ from metadata.orm.users import Users
 from metadata.orm.institutions import Institutions
 from metadata.rest.orm import CherryPyAPI
 
+#pylint: disable=too-many-instance-attributes
 class Contributors(CherryPyAPI):
     """
     Contributors object and associated fields.
@@ -17,6 +18,7 @@ class Contributors(CherryPyAPI):
     last_name = CharField(default="")
     dept_code = CharField(default="")
     institution = ForeignKeyField(Institutions, related_name='contributors')
+    encoding = CharField(default="UTF8")
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -26,7 +28,7 @@ class Contributors(CherryPyAPI):
         super(Contributors, Contributors).elastic_mapping_builder(obj)
         obj['person_id'] = obj['institution_id'] = {'type': 'integer'}
         obj['first_name'] = obj['middle_initial'] = obj['last_name'] = \
-        obj['dept_code'] = {'type': 'string'}
+        obj['dept_code'] = obj['encoding'] = {'type': 'string'}
 
     def to_hash(self):
         """
@@ -34,12 +36,13 @@ class Contributors(CherryPyAPI):
         """
         obj = super(Contributors, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['first_name'] = str(self.first_name)
-        obj['middle_initial'] = str(self.middle_initial)
-        obj['last_name'] = str(self.last_name)
+        obj['first_name'] = unicode(self.first_name)
+        obj['middle_initial'] = unicode(self.middle_initial)
+        obj['last_name'] = unicode(self.last_name)
         obj['person_id'] = int(self.person.id)
-        obj['dept_code'] = str(self.dept_code)
+        obj['dept_code'] = unicode(self.dept_code)
         obj['institution_id'] = int(self.institution.id)
+        obj['encoding'] = str(self.encoding)
         return obj
 
     def from_hash(self, obj):
@@ -52,18 +55,20 @@ class Contributors(CherryPyAPI):
             self.id = int(obj['_id'])
             # pylint: enable=invalid-name
         if 'first_name' in obj:
-            self.first_name = str(obj['first_name'])
+            self.first_name = unicode(obj['first_name'])
         if 'middle_initial' in obj:
-            self.middle_initial = str(obj['middle_initial'])
+            self.middle_initial = unicode(obj['middle_initial'])
         if 'last_name' in obj:
-            self.last_name = str(obj['last_name'])
+            self.last_name = unicode(obj['last_name'])
         if 'person_id' in obj:
             self.person = Users.get(Users.id == int(obj['person_id']))
         if 'dept_code' in obj:
-            self.dept_code = str(obj['dept_code'])
+            self.dept_code = unicode(obj['dept_code'])
         if 'institution_id' in obj:
             inst_bool = Institutions.id == int(obj['institution_id'])
             self.institution = Institutions.get(inst_bool)
+        if 'encoding' in obj:
+            self.encoding = str(obj['encoding'])
 
     def where_clause(self, kwargs):
         """
@@ -76,7 +81,7 @@ class Contributors(CherryPyAPI):
         if 'institution_id' in kwargs:
             inst = Institutions.get(Institutions.id == kwargs['institution_id'])
             where_clause &= Expression(Contributors.institution, OP.EQ, inst)
-        for key in ['author_id', 'first_name', 'last_name',
+        for key in ['author_id', 'first_name', 'last_name', 'encoding'
                     'middle_initial', 'dept_code']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Contributors, key), OP.EQ, kwargs[key])

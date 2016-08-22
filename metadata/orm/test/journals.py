@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Test the journals ORM object
 """
@@ -10,6 +11,13 @@ from metadata.orm.journals import Journals
 SAMPLE_JOURNAL_HASH = {
     "_id": 45,
     "journal_name": "Northern Yukon Master Workworking",
+    "impact_factor": 10.0,
+    "website_url": "http://www.ehwoodworkers.ca"
+}
+
+SAMPLE_UNICODE_JOURNAL_HASH = {
+    "_id": 45,
+    "journal_name": u"Northern Yukon Mastér Workworking",
     "impact_factor": 10.0,
     "website_url": "http://www.ehwoodworkers.ca"
 }
@@ -34,6 +42,12 @@ class TestJournals(TestBase):
         """
         self.base_test_hash(SAMPLE_JOURNAL_HASH)
 
+    def test_unicode_journal_hash(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_test_hash(SAMPLE_UNICODE_JOURNAL_HASH)
+
     def test_journal_json(self):
         """
         Test the hash portion using base object method.
@@ -45,6 +59,12 @@ class TestJournals(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_JOURNAL_HASH)
+
+    def test_unicode_journal_where(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause(SAMPLE_UNICODE_JOURNAL_HASH)
 
 if __name__ == '__main__':
     main()

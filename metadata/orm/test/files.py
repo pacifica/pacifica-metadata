@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Test the files ORM object
 """
@@ -19,7 +20,20 @@ SAMPLE_FILE_HASH = {
     "mtime": int(mktime(datetime.now().timetuple())),
     "ctime": int(mktime(datetime.now().timetuple())),
     "size": 1234,
-    "transaction_id": SAMPLE_TRANSACTION_HASH['_id']
+    "transaction_id": SAMPLE_TRANSACTION_HASH['_id'],
+    "encoding": "UTF8"
+}
+
+SAMPLE_UNICODE_FILE_HASH = {
+    "_id": 127,
+    "name": u'abcdé.txt',
+    "subdir": u'abcdé/b',
+    "mimetype": "text/plain",
+    "mtime": int(mktime(datetime.now().timetuple())),
+    "ctime": int(mktime(datetime.now().timetuple())),
+    "size": 1234,
+    "transaction_id": SAMPLE_TRANSACTION_HASH['_id'],
+    "encoding": "UTF8"
 }
 
 class TestFiles(TestBase):
@@ -46,6 +60,12 @@ class TestFiles(TestBase):
         trans.from_hash(SAMPLE_TRANSACTION_HASH)
         trans.save(force_insert=True)
 
+    def test_unicode_files_hash(self):
+        """
+        Test the unicode hash using base object method.
+        """
+        self.base_test_hash(SAMPLE_UNICODE_FILE_HASH)
+
     def test_files_hash(self):
         """
         Test the hash portion using base object method.
@@ -63,6 +83,12 @@ class TestFiles(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_FILE_HASH)
+
+    def test_unicode_files_where(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause(SAMPLE_UNICODE_FILE_HASH)
 
 if __name__ == '__main__':
     main()

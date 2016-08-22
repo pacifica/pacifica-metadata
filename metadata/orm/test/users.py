@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Test the keys ORM object
 """
@@ -11,7 +12,18 @@ SAMPLE_USER_HASH = {
     "_id": 127,
     "first_name": "John",
     "last_name": "Doe",
-    "network_id": "guest"
+    "network_id": "guest",
+    'email_address': 'jdoe@example.com',
+    'encoding': 'UTF8'
+}
+
+SAMPLE_UNICODE_USER_HASH = {
+    "_id": 127,
+    "first_name": u"Téd",
+    "last_name": u"Doé",
+    "network_id": u"guést",
+    'email_address': u'tdoé@example.com',
+    'encoding': 'UTF8'
 }
 
 class TestUsers(TestBase):
@@ -34,6 +46,12 @@ class TestUsers(TestBase):
         """
         self.base_test_hash(SAMPLE_USER_HASH)
 
+    def test_unicode_users_hash(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_test_hash(SAMPLE_UNICODE_USER_HASH)
+
     def test_users_json(self):
         """
         Test the hash portion using base object method.
@@ -45,6 +63,12 @@ class TestUsers(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_USER_HASH)
+
+    def test_unicode_users_where(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause(SAMPLE_UNICODE_USER_HASH)
 
 if __name__ == '__main__':
     main()

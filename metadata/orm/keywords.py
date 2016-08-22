@@ -12,6 +12,7 @@ class Keywords(CherryPyAPI):
     """
     citation = ForeignKeyField(Citations, related_name='keywords')
     keyword = CharField(default="")
+    encoding = CharField(default="UTF8")
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -20,7 +21,7 @@ class Keywords(CherryPyAPI):
         """
         super(Keywords, Keywords).elastic_mapping_builder(obj)
         obj['citation_id'] = {'type': 'integer'}
-        obj['keyword'] = {'type': 'string'}
+        obj['keyword'] = obj['encoding'] = {'type': 'string'}
 
     def to_hash(self):
         """
@@ -28,7 +29,8 @@ class Keywords(CherryPyAPI):
         """
         obj = super(Keywords, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['keyword'] = str(self.keyword)
+        obj['keyword'] = unicode(self.keyword)
+        obj['encoding'] = str(self.encoding)
         obj['citation_id'] = int(self.citation.id)
         return obj
 
@@ -42,7 +44,9 @@ class Keywords(CherryPyAPI):
             self.id = obj['_id']
             # pylint: enable=invalid-name
         if 'keyword' in obj:
-            self.keyword = obj['keyword']
+            self.keyword = unicode(obj['keyword'])
+        if 'encoding' in obj:
+            self.encoding = str(obj['encoding'])
         if 'citation_id' in obj:
             self.citation = Citations.get(Citations.id == obj['citation_id'])
 
@@ -56,6 +60,8 @@ class Keywords(CherryPyAPI):
             where_clause &= Expression(Keywords.citation, OP.EQ, citation)
         if '_id' in kwargs:
             where_clause &= Expression(Keywords.id, OP.EQ, kwargs['_id'])
+        if 'encoding' in kwargs:
+            where_clause &= Expression(Keywords.encoding, OP.EQ, kwargs['encoding'])
         if 'keyword' in kwargs:
             where_clause &= Expression(Keywords.keyword, OP.EQ, kwargs['keyword'])
         return where_clause

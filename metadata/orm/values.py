@@ -10,6 +10,7 @@ class Values(CherryPyAPI):
     Values model class for metadata
     """
     value = CharField(default="")
+    encoding = CharField(default="UTF8")
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -17,7 +18,7 @@ class Values(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(Values, Values).elastic_mapping_builder(obj)
-        obj['value'] = {'type': 'string'}
+        obj['value'] = obj['encoding'] = {'type': 'string'}
 
     def to_hash(self):
         """
@@ -25,7 +26,8 @@ class Values(CherryPyAPI):
         """
         obj = super(Values, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['value'] = str(self.value)
+        obj['value'] = unicode(self.value)
+        obj['encoding'] = str(self.encoding)
         return obj
 
     def from_hash(self, obj):
@@ -38,7 +40,9 @@ class Values(CherryPyAPI):
             self.id = obj['_id']
             # pylint: enable=invalid-name
         if 'value' in obj:
-            self.value = obj['value']
+            self.value = unicode(obj['value'])
+        if 'encoding' in obj:
+            self.encoding = str(obj['encoding'])
 
     def where_clause(self, kwargs):
         """
@@ -49,4 +53,6 @@ class Values(CherryPyAPI):
             where_clause &= Expression(Values.id, OP.EQ, kwargs['_id'])
         if 'value' in kwargs:
             where_clause &= Expression(Values.value, OP.EQ, kwargs['value'])
+        if 'encoding' in kwargs:
+            where_clause &= Expression(Values.encoding, OP.EQ, kwargs['encoding'])
         return where_clause

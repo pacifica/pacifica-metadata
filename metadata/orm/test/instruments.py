@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Test the proposals ORM object
 """
@@ -11,7 +12,16 @@ SAMPLE_INSTRUMENT_HASH = {
     "_id": 1234,
     "instrument_name": "My Really Long Winded Instrument Name",
     "display_name": "My Instrument Name",
-    "name_short": "Instrument"
+    "name_short": "Instrument",
+    'encoding': 'UTF8'
+}
+
+SAMPLE_UNICODE_INSTRUMENT_HASH = {
+    "_id": 1234,
+    "instrument_name": u"My Really Long Winded Instrumént Name",
+    "display_name": u"My Instrument Namé",
+    "name_short": u"Instrumént",
+    'encoding': 'UTF8'
 }
 
 class TestInstruments(TestBase):
@@ -34,6 +44,12 @@ class TestInstruments(TestBase):
         """
         self.base_test_hash(SAMPLE_INSTRUMENT_HASH)
 
+    def test_unicode_instruments_hash(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_test_hash(SAMPLE_UNICODE_INSTRUMENT_HASH)
+
     def test_instruments_json(self):
         """
         Test the hash portion using base object method.
@@ -45,6 +61,12 @@ class TestInstruments(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_INSTRUMENT_HASH)
+
+    def test_unicode_instruments_where(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause(SAMPLE_UNICODE_INSTRUMENT_HASH)
 
 if __name__ == '__main__':
     main()

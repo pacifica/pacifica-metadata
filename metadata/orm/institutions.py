@@ -12,6 +12,7 @@ class Institutions(CherryPyAPI):
     institution_name = TextField(default="")
     association_cd = CharField(default="UNK")
     is_foreign = BooleanField(default=False)
+    encoding = CharField(default="UTF8")
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -19,7 +20,8 @@ class Institutions(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(Institutions, Institutions).elastic_mapping_builder(obj)
-        obj['institution_name'] = obj['association_cd'] = {'type': 'string'}
+        obj['institution_name'] = obj['association_cd'] = \
+        obj['encoding'] = {'type': 'string'}
         obj['is_foreign'] = {'type': 'boolean'}
 
     def to_hash(self):
@@ -31,6 +33,7 @@ class Institutions(CherryPyAPI):
         obj['institution_name'] = unicode(self.institution_name)
         obj['association_cd'] = str(self.association_cd)
         obj['is_foreign'] = bool(self.is_foreign)
+        obj['encoding'] = str(self.encoding)
         return obj
 
     def from_hash(self, obj):
@@ -48,6 +51,8 @@ class Institutions(CherryPyAPI):
             self.association_cd = str(obj['association_cd'])
         if 'is_foreign' in obj:
             self.is_foreign = bool(obj['is_foreign'])
+        if 'encoding' in obj:
+            self.encoding = str(obj['encoding'])
 
     def where_clause(self, kwargs):
         """
@@ -56,7 +61,7 @@ class Institutions(CherryPyAPI):
         where_clause = super(Institutions, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Institutions.id, OP.EQ, kwargs['_id'])
-        for key in ['institution_name', 'is_foreign', 'association_cd']:
+        for key in ['institution_name', 'is_foreign', 'association_cd', 'encoding']:
             if key in kwargs:
                 where_clause &= Expression(getattr(Institutions, key), OP.EQ, kwargs[key])
         return where_clause

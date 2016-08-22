@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Test the citations ORM object
 """
@@ -24,6 +25,27 @@ northern Yukon.
     "xml_text": """<?xml version="1.0" encoding="UTF-8" ?>
 <article>
   <abstract>blah blah blah</abstract>
+</article>
+""",
+    "release_authorization_id": "Released",
+    "doi_reference": "doi:10.1037/rmh0000008"
+}
+
+SAMPLE_UNICODE_CITATION_HASH = {
+    "_id": 43,
+    "article_title": u'abcdé',
+    "journal_id": SAMPLE_JOURNAL_HASH['_id'],
+    "journal_volume": 43,
+    "journal_issue": 42,
+    "page_range": "34-45",
+    "abstract_text": u"""
+This is a very long abstract about the uniqué applications of Dove-
+Tail joints during a recent construction of a wonderful log cabin in
+northern Yukon.
+""",
+    "xml_text": u"""<?xml version="1.0" encoding="UTF-8" ?>
+<article>
+  <abstract>bléh bléh bléh</abstract>
 </article>
 """,
     "release_authorization_id": "Released",
@@ -60,6 +82,12 @@ class TestCitations(TestBase):
         """
         self.base_test_hash(SAMPLE_CITATION_HASH)
 
+    def test_unicode_citations_hash(self):
+        """
+        Test the unicode hash base object method.
+        """
+        self.base_test_hash(SAMPLE_UNICODE_CITATION_HASH)
+
     def test_citations_json(self):
         """
         Test the hash portion using base object method.
@@ -71,6 +99,12 @@ class TestCitations(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_CITATION_HASH)
+
+    def test_unicode_citations_where(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause(SAMPLE_UNICODE_CITATION_HASH)
 
 if __name__ == '__main__':
     main()
