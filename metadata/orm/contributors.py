@@ -54,16 +54,11 @@ class Contributors(CherryPyAPI):
             # pylint: disable=invalid-name
             self.id = int(obj['_id'])
             # pylint: enable=invalid-name
-        if 'first_name' in obj:
-            self.first_name = unicode(obj['first_name'])
-        if 'middle_initial' in obj:
-            self.middle_initial = unicode(obj['middle_initial'])
-        if 'last_name' in obj:
-            self.last_name = unicode(obj['last_name'])
+        for attr in ['first_name', 'middle_initial', 'last_name', 'dept_code']:
+            if attr in obj:
+                setattr(self, attr, unicode(obj[attr]))
         if 'person_id' in obj:
             self.person = Users.get(Users.id == int(obj['person_id']))
-        if 'dept_code' in obj:
-            self.dept_code = unicode(obj['dept_code'])
         if 'institution_id' in obj:
             inst_bool = Institutions.id == int(obj['institution_id'])
             self.institution = Institutions.get(inst_bool)

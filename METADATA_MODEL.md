@@ -25,6 +25,7 @@ objects in the model.
 | encoding | VARCHAR |  |
 | first_name | VARCHAR |  |
 | last_name | VARCHAR |  |
+| middle_initial | VARCHAR |  |
 | network_id | VARCHAR |  |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |

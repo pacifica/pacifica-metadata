@@ -11,6 +11,7 @@ from metadata.orm.users import Users
 SAMPLE_USER_HASH = {
     "_id": 127,
     "first_name": "John",
+    "middle_initial": "G",
     "last_name": "Doe",
     "network_id": "guest",
     'email_address': 'jdoe@example.com',
@@ -20,6 +21,7 @@ SAMPLE_USER_HASH = {
 SAMPLE_UNICODE_USER_HASH = {
     "_id": 127,
     "first_name": u"Téd",
+    "middle_initial": u"é",
     "last_name": u"Doé",
     "network_id": u"guést",
     'email_address': u'tdoé@example.com',
