@@ -29,6 +29,8 @@ for obj_cls in ORM_OBJECTS:
                 points_to_class = getattr(obj_cls, obj_cls_attr).to_field.model_class.__name__
                 points_to_column = getattr(obj_cls, obj_cls_attr).to_field.name
                 points_to = "%s.%s"%(points_to_class, points_to_column)
+                if column_name.endswith('_id'):
+                    continue
             column_tuples.append((column_name, column_type, points_to))
     def column_cmp(a, b):
         if a[0] == 'id' and b[0] == 'id':

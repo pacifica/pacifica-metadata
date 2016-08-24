@@ -83,7 +83,6 @@ objects in the model.
 | doi_reference | VARCHAR |  |
 | encoding | VARCHAR |  |
 | journal | INTEGER | Journals.id |
-| journal_id | INTEGER | Journals.id |
 | journal_issue | INTEGER |  |
 | journal_volume | INTEGER |  |
 | page_range | VARCHAR |  |
@@ -101,11 +100,9 @@ objects in the model.
 | encoding | VARCHAR |  |
 | first_name | VARCHAR |  |
 | institution | INTEGER | Institutions.id |
-| institution_id | INTEGER | Institutions.id |
 | last_name | VARCHAR |  |
 | middle_initial | VARCHAR |  |
 | person | INTEGER | Users.id |
-| person_id | INTEGER | Users.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -115,9 +112,7 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | institution | INTEGER | Institutions.id |
-| institution_id | INTEGER | Institutions.id |
 | person | INTEGER | Users.id |
-| person_id | INTEGER | Users.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -127,7 +122,6 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | citation | INTEGER | Citations.id |
-| citation_id | INTEGER | Citations.id |
 | encoding | VARCHAR |  |
 | keyword | VARCHAR |  |
 | created | TIMESTAMP |  |
@@ -139,10 +133,8 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | author | INTEGER | Contributors.id |
-| author_id | INTEGER | Contributors.id |
 | author_precedence | INTEGER |  |
 | citation | INTEGER | Citations.id |
-| citation_id | INTEGER | Citations.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -152,9 +144,7 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | instrument | INTEGER | Instruments.id |
-| instrument_id | INTEGER | Instruments.id |
 | proposal | VARCHAR | Proposals.id |
-| proposal_id | VARCHAR | Proposals.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -164,11 +154,9 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | person | INTEGER | Users.id |
-| person_id | INTEGER | Users.id |
 | proposal | VARCHAR | Proposals.id |
 | proposal_author_sw | VARCHAR |  |
 | proposal_co_author_sw | VARCHAR |  |
-| proposal_id | VARCHAR | Proposals.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -178,9 +166,7 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | citation | INTEGER | Citations.id |
-| citation_id | INTEGER | Citations.id |
 | proposal | VARCHAR | Proposals.id |
-| proposal_id | VARCHAR | Proposals.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -190,11 +176,8 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | instrument | INTEGER | Instruments.id |
-| instrument_id | INTEGER | Instruments.id |
 | proposal | VARCHAR | Proposals.id |
-| proposal_id | VARCHAR | Proposals.id |
 | submitter | INTEGER | Users.id |
-| submitter_id | INTEGER | Users.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -211,7 +194,6 @@ objects in the model.
 | size | BIGINT |  |
 | subdir | VARCHAR |  |
 | transaction | INTEGER | Transactions.id |
-| transaction_id | INTEGER | Transactions.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -240,11 +222,8 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | file | INTEGER | Files.id |
-| file_id | INTEGER | Files.id |
 | key | INTEGER | Keys.id |
-| key_id | INTEGER | Keys.id |
 | value | INTEGER | Values.id |
-| value_id | INTEGER | Values.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -254,11 +233,8 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | key | INTEGER | Keys.id |
-| key_id | INTEGER | Keys.id |
 | transaction | INTEGER | Transactions.id |
-| transaction_id | INTEGER | Transactions.id |
 | value | INTEGER | Values.id |
-| value_id | INTEGER | Values.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -279,9 +255,7 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | group | INTEGER | Groups.id |
-| group_id | INTEGER | Groups.id |
 | person | INTEGER | Users.id |
-| person_id | INTEGER | Users.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -291,9 +265,7 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | group | INTEGER | Groups.id |
-| group_id | INTEGER | Groups.id |
 | instrument | INTEGER | Instruments.id |
-| instrument_id | INTEGER | Instruments.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
