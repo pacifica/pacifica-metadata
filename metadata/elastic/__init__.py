@@ -21,6 +21,12 @@ def create_elastic_index():
     try:
         curl = Curl()
         curl.setopt(URL, ES_INDEX_URL.encode('utf-8'))
+        curl.perform()
+        curl_http_code = curl.getinfo(HTTP_CODE)
+        if curl_http_code == 200:
+            return
+        curl = Curl()
+        curl.setopt(URL, ES_INDEX_URL.encode('utf-8'))
         curl.setopt(PUT, 1)
         curl.perform()
         curl_http_code = curl.getinfo(HTTP_CODE)
