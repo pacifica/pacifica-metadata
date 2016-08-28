@@ -1,4 +1,6 @@
 MySQL-python
+requests
+httpretty
 psycopg2
 peewee
 cherrypy

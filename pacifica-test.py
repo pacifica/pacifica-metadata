@@ -30,6 +30,7 @@ from metadata.orm.test.user_group import TestUserGroup
 from metadata.orm.test.instrument_group import TestInstrumentGroup
 from metadata.elastic.test.elastic import TestElastic
 from metadata.orm.test.utils import TestUtils
+from metadata.test_client import TestClient
 #pylint: enable=unused-import
 
 if __name__ == '__main__':
