@@ -2,7 +2,7 @@
 """
 Test the elastic mapping class methods.
 """
-from unittest import TestCase, main
+from unittest import TestCase
 from metadata.orm import ORM_OBJECTS
 
 # pylint: disable=too-few-public-methods
@@ -28,6 +28,3 @@ for ORM_CLS in ORM_OBJECTS:
         for column in properties.keys():
             self.assertEqual(properties[column]['type'] in elastic_mapping_types, True)
     setattr(TestElastic, "test_elastic_mapping_%s"%(ORM_CLS.__name__.lower()), test_elastic_mapping)
-
-if __name__ == '__main__':
-    main()

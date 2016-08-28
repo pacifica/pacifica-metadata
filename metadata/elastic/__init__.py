@@ -4,7 +4,7 @@ Elastic search orm classes and utilities.
 """
 from os import getenv
 from time import sleep
-from pycurl import Curl, URL, PUT, HTTP_CODE, error
+import requests
 
 ELASTIC_CONNECT_ATTEMPTS = 10
 ELASTIC_WAIT = 1
@@ -18,34 +18,21 @@ def create_elastic_index():
     """
     Create the elastic search index for all our data
     """
-    try:
-        curl = Curl()
-        curl.setopt(URL, ES_INDEX_URL.encode('utf-8'))
-        curl.perform()
-        curl_http_code = curl.getinfo(HTTP_CODE)
-        if curl_http_code == 200:
-            return
-        curl = Curl()
-        curl.setopt(URL, ES_INDEX_URL.encode('utf-8'))
-        curl.setopt(PUT, 1)
-        curl.perform()
-        curl_http_code = curl.getinfo(HTTP_CODE)
-        if curl_http_code != 200:
-            raise Exception("create_elastic_index: %s\n"%(curl_http_code))
-    except error:
-        raise Exception("cURL operations failed during upload: %s" % curl.errstr())
+    ret = requests.get(ES_INDEX_URL.encode('utf-8'))
+    if ret.status_code == 200:
+        return
+    ret = requests.put(ES_INDEX_URL.encode('utf-8'))
+    if ret.status_code != 200:
+        raise Exception("create_elastic_index: %s\n"%(ret.status_code))
 
 def try_es_connect(attempts=0):
     """
     Recursively try to connect to elasticsearch.
     """
     try:
-        curl = Curl()
-        curl.setopt(URL, ES_STATUS_URL.encode('utf-8'))
-        curl.perform()
-        curl_http_code = curl.getinfo(HTTP_CODE)
-        if curl_http_code != 200:
-            raise Exception("create_elastic_index: %s\n"%(curl_http_code))
+        ret = requests.get(ES_STATUS_URL.encode('utf-8'))
+        if ret.status_code != 200:
+            raise Exception("try_es_connect: %s\n"%(ret.status_code))
     # pylint: disable=broad-except
     except Exception, ex:
         # pylint: enable=broad-except
