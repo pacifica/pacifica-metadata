@@ -8,6 +8,23 @@ from metadata.rest.orm import CherryPyAPI
 class Users(CherryPyAPI):
     """
     Users data model object
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | first_name        | first name of the user/person       |
+        +-------------------+-------------------------------------+
+        | middle_initial    | middle initial of the user/person   |
+        +-------------------+-------------------------------------+
+        | last_name         | last name of the user/person        |
+        +-------------------+-------------------------------------+
+        | network_id        | computer account of the user/person |
+        +-------------------+-------------------------------------+
+        | email_address     | user/person email address           |
+        +-------------------+-------------------------------------+
+        | encoding          | encoding for the other attrs        |
+        +-------------------+-------------------------------------+
     """
     first_name = CharField(default="")
     middle_initial = CharField(default="")

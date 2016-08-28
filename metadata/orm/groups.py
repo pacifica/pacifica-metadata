@@ -8,6 +8,17 @@ from metadata.rest.orm import CherryPyAPI
 class Groups(CherryPyAPI):
     """
     Groups model and associated fields.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | group_name        | name of the group                   |
+        +-------------------+-------------------------------------+
+        | is_admin          | does the group has admin abilities  |
+        +-------------------+-------------------------------------+
+        | author_precedence | encoding for the group_name         |
+        +-------------------+-------------------------------------+
     """
     group_name = CharField(default="")
     is_admin = BooleanField(default=False)

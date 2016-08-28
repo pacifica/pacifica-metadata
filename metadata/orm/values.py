@@ -8,6 +8,15 @@ from metadata.rest.orm import CherryPyAPI
 class Values(CherryPyAPI):
     """
     Values model class for metadata
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | value             | generic value for some metadata     |
+        +-------------------+-------------------------------------+
+        | encoding          | language encoding of the value      |
+        +-------------------+-------------------------------------+
     """
     value = CharField(default="")
     encoding = CharField(default="UTF8")

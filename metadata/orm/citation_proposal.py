@@ -12,6 +12,15 @@ from metadata.rest.orm import CherryPyAPI
 class CitationProposal(CherryPyAPI):
     """
     Relates citations with proposals
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | citation          | Link to the Citation model          |
+        +-------------------+-------------------------------------+
+        | proposal          | Link to the Proposal model          |
+        +-------------------+-------------------------------------+
     """
     citation = ForeignKeyField(Citations, related_name='propoasls')
     proposal = ForeignKeyField(Proposals, related_name='citations')

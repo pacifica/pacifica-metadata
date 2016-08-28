@@ -11,6 +11,31 @@ from metadata.rest.orm import CherryPyAPI
 class Contributors(CherryPyAPI):
     """
     Contributors object and associated fields.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | person            | Link to the User model              |
+        +-------------------+-------------------------------------+
+        | institution       | Link to the Institution model       |
+        +-------------------+-------------------------------------+
+        | first_name        | Users first name as it appears in   |
+        |                   | the citation                        |
+        +-------------------+-------------------------------------+
+        | middle_initial    | Users middle initial as it appears  |
+        |                   | in the citation                     |
+        +-------------------+-------------------------------------+
+        | last_name         | Users last name as it appears in    |
+        |                   | the citation                        |
+        +-------------------+-------------------------------------+
+        | dept_code         | Department of the institution the   |
+        |                   | User was a member of at the time of |
+        |                   | the citation                        |
+        +-------------------+-------------------------------------+
+        | encoding          | Language encoding of the attributes |
+        |                   | above                               |
+        +-------------------+-------------------------------------+
     """
     person = ForeignKeyField(Users, related_name='contributions')
     first_name = CharField(default="")

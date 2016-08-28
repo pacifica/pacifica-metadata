@@ -8,8 +8,18 @@ from metadata.rest.orm import CherryPyAPI
 class Keys(CherryPyAPI):
     """
     Keys model class for metadata
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | key               | generic metadata key                |
+        +-------------------+-------------------------------------+
+        | encoding          | encoding for the key                |
+        +-------------------+-------------------------------------+
     """
     key = CharField(default="")
+    encoding = CharField(default="UTF8")
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -17,7 +27,7 @@ class Keys(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(Keys, Keys).elastic_mapping_builder(obj)
-        obj['key'] = {'type': 'string'}
+        obj['key'] = obj['encoding'] = {'type': 'string'}
 
     def to_hash(self):
         """
@@ -25,7 +35,8 @@ class Keys(CherryPyAPI):
         """
         obj = super(Keys, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['key'] = str(self.key)
+        obj['key'] = unicode(self.key)
+        obj['encoding'] = str(self.encoding)
         return obj
 
     def from_hash(self, obj):
@@ -38,7 +49,9 @@ class Keys(CherryPyAPI):
             self.id = obj['_id']
             # pylint: enable=invalid-name
         if 'key' in obj:
-            self.key = obj['key']
+            self.key = unicode(obj['key'])
+        if 'encoding' in obj:
+            self.encoding = str(obj['encoding'])
 
     def where_clause(self, kwargs):
         """
@@ -49,4 +62,6 @@ class Keys(CherryPyAPI):
             where_clause &= Expression(Keys.id, OP.EQ, kwargs['_id'])
         if 'key' in kwargs:
             where_clause &= Expression(Keys.key, OP.EQ, kwargs['key'])
+        if 'encoding' in kwargs:
+            where_clause &= Expression(Keys.encoding, OP.EQ, kwargs['encoding'])
         return where_clause

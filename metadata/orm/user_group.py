@@ -11,6 +11,15 @@ from metadata.orm.users import Users
 class UserGroup(CherryPyAPI):
     """
     UserGroup attributes are foreign keys.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | person            | Link to the Users model             |
+        +-------------------+-------------------------------------+
+        | group             | Link to the Groups model            |
+        +-------------------+-------------------------------------+
     """
     person = ForeignKeyField(Users, related_name='groups')
     group = ForeignKeyField(Groups, related_name='members')

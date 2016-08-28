@@ -8,6 +8,21 @@ from metadata.rest.orm import CherryPyAPI
 class Instruments(CherryPyAPI):
     """
     Instrument and associated fields.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | display_name      | Long display string for web sites   |
+        +-------------------+-------------------------------------+
+        | instrument_name   | Machine parsable display name       |
+        +-------------------+-------------------------------------+
+        | name_short        | Short version used in lists         |
+        +-------------------+-------------------------------------+
+        | active            | whether the instrument is active    |
+        +-------------------+-------------------------------------+
+        | encoding          | encoding for the various name attrs |
+        +-------------------+-------------------------------------+
     """
     display_name = CharField(default="")
     instrument_name = CharField(default="")

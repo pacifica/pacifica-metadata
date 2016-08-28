@@ -2,7 +2,7 @@
 """
 Proposal person relationship
 """
-from peewee import ForeignKeyField, CharField, Expression, OP, CompositeKey
+from peewee import ForeignKeyField, Expression, OP, CompositeKey
 from metadata.orm.utils import index_hash
 from metadata.orm.proposals import Proposals
 from metadata.orm.users import Users
@@ -12,11 +12,18 @@ from metadata.rest.orm import CherryPyAPI
 class ProposalParticipant(CherryPyAPI):
     """
     Relates proposals and users objects.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | person            | Link to the Users model             |
+        +-------------------+-------------------------------------+
+        | proposal          | Link to the Proposals model         |
+        +-------------------+-------------------------------------+
     """
     person = ForeignKeyField(Users, related_name='proposals')
     proposal = ForeignKeyField(Proposals, related_name='users')
-    proposal_author_sw = CharField(default="")
-    proposal_co_author_sw = CharField(default="")
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
@@ -34,7 +41,6 @@ class ProposalParticipant(CherryPyAPI):
         """
         super(ProposalParticipant, ProposalParticipant).elastic_mapping_builder(obj)
         obj['person_id'] = {'type': 'integer'}
-        obj['proposal_author_sw'] = obj['proposal_co_author_sw'] = \
         obj['proposal_id'] = {'type': 'string'}
 
     def to_hash(self):

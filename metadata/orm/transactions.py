@@ -11,6 +11,17 @@ from metadata.orm.instruments import Instruments
 class Transactions(CherryPyAPI):
     """
     Transactions model class
+
+    Attributes:
+        +-------------------+--------------------------------------+
+        | Name              | Description                          |
+        +===================+======================================+
+        | submitter         | User who submitted the transaction   |
+        +-------------------+--------------------------------------+
+        | instrument        | Instrument the transaction came from |
+        +-------------------+--------------------------------------+
+        | proposal          | Proposal the transaction is for      |
+        +-------------------+--------------------------------------+
     """
     submitter = ForeignKeyField(Users, related_name='transactions')
     instrument = ForeignKeyField(Instruments, related_name='transactions')

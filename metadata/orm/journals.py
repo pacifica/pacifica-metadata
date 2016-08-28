@@ -8,6 +8,19 @@ from metadata.rest.orm import CherryPyAPI
 class Journals(CherryPyAPI):
     """
     Journal model and associated fields.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | journal_name      | name of the journal                 |
+        +-------------------+-------------------------------------+
+        | author            | impact factor of the journal        |
+        +-------------------+-------------------------------------+
+        | website_url       | website for the journal (optional)  |
+        +-------------------+-------------------------------------+
+        | encoding          | language encoding for the name      |
+        +-------------------+-------------------------------------+
     """
     journal_name = CharField(default="")
     impact_factor = FloatField(default=-1.0)

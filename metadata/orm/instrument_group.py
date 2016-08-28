@@ -12,6 +12,15 @@ from metadata.orm.instruments import Instruments
 class InstrumentGroup(CherryPyAPI):
     """
     InstrumentGroup attributes are foreign keys.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | instrument        | Link to the Instrument model        |
+        +-------------------+-------------------------------------+
+        | group             | Link to the Group model             |
+        +-------------------+-------------------------------------+
     """
     instrument = ForeignKeyField(Instruments, related_name='groups')
     group = ForeignKeyField(Groups, related_name='instrument_members')

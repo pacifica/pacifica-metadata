@@ -12,6 +12,17 @@ from metadata.rest.orm import CherryPyAPI
 class CitationContributor(CherryPyAPI):
     """
     CitationsContributors data model
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | citation          | Link to the Citation model          |
+        +-------------------+-------------------------------------+
+        | author            | Link to the Contributor model       |
+        +-------------------+-------------------------------------+
+        | author_precedence | Order of the Author in the Citation |
+        +-------------------+-------------------------------------+
     """
     citation = ForeignKeyField(Citations, related_name='authors')
     author = ForeignKeyField(Contributors, related_name='citations')

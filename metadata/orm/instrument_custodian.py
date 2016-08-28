@@ -11,6 +11,15 @@ from metadata.orm.base import DB, PacificaModel
 class InstrumentCustodian(PacificaModel):
     """
     Relates proposals and instrument objects.
+
+    Attributes:
+        +------------+--------------------------------------------+
+        | Name       | Description                                |
+        +============+============================================+
+        | instrument | Link to the Instrument model               |
+        +------------+--------------------------------------------+
+        | custodian  | User who is responsible for the instrument |
+        +------------+--------------------------------------------+
     """
     instrument = ForeignKeyField(Instruments, related_name='custodians')
     custodian = ForeignKeyField(Users, related_name='instruments')

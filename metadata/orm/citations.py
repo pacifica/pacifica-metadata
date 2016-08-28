@@ -11,6 +11,35 @@ from metadata.rest.orm import CherryPyAPI
 class Citations(CherryPyAPI):
     """
     Citations model tracks metadata for a journal article.
+
+    Attributes:
+        +--------------------------+-----------------------------------------+
+        | Name                     | Description                             |
+        +==========================+=========================================+
+        | article_title            | The title of the article                |
+        +--------------------------+-----------------------------------------+
+        | journal                  | Link to the journal it was published in |
+        +--------------------------+-----------------------------------------+
+        | journal_volume           | Journal volume for the publication      |
+        +--------------------------+-----------------------------------------+
+        | journal_issue            | Journal issue for the publication       |
+        +--------------------------+-----------------------------------------+
+        | page_range               | Pages in issue/volume was the article   |
+        +--------------------------+-----------------------------------------+
+        | abstract_text            | Abstract from the article in the        |
+        |                          | journal                                 |
+        +--------------------------+-----------------------------------------+
+        | xml_text                 | xml blob for the citation               |
+        +--------------------------+-----------------------------------------+
+        | release_authorization_id | External link to authorization metadata |
+        |                          | about the released article              |
+        +--------------------------+-----------------------------------------+
+        | doi_reference            | Digital Object Identifier for the       |
+        |                          | citation                                |
+        +--------------------------+-----------------------------------------+
+        | encoding                 | Language this metadata is in not the    |
+        |                          | article itself                          |
+        +-------------------+------------------------------------------------+
     """
     article_title = TextField(default="")
     journal = ForeignKeyField(Journals, related_name='citations')

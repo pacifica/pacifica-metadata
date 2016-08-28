@@ -12,6 +12,15 @@ from metadata.rest.orm import CherryPyAPI
 class InstitutionPerson(CherryPyAPI):
     """
     Relates persons and institution objects.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | person            | Link to the Users model             |
+        +-------------------+-------------------------------------+
+        | institution       | Link to the Institutions model      |
+        +-------------------+-------------------------------------+
     """
     person = ForeignKeyField(Users, related_name='institutions')
     institution = ForeignKeyField(Institutions, related_name='users')

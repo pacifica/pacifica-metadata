@@ -9,6 +9,17 @@ from metadata.orm.citations import Citations
 class Keywords(CherryPyAPI):
     """
     Keywords Model
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | citation          | Link to the Citation model          |
+        +-------------------+-------------------------------------+
+        | keyword           | keyword in the citation             |
+        +-------------------+-------------------------------------+
+        | encoding          | encoding of the keyword             |
+        +-------------------+-------------------------------------+
     """
     citation = ForeignKeyField(Citations, related_name='keywords')
     keyword = CharField(default="")

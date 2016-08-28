@@ -39,6 +39,17 @@ and deleting these objects in from a web service layer.
 class PacificaModel(Model):
     """
     Basic fields for an object within the model
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | created           | When was the object created         |
+        +-------------------+-------------------------------------+
+        | updated           | When was the object last changed    |
+        +-------------------+-------------------------------------+
+        | deleted           | When was the object deleted         |
+        +-------------------+-------------------------------------+
     """
     # this is peewee specific need to disable this check
     # pylint: disable=invalid-name

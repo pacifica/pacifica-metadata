@@ -13,6 +13,17 @@ from metadata.rest.orm import CherryPyAPI
 class TransactionKeyValue(CherryPyAPI):
     """
     TransactionKeyValue attributes are foreign keys.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | transaction       | Link to the Transactions model      |
+        +-------------------+-------------------------------------+
+        | key               | Link to the Keys model              |
+        +-------------------+-------------------------------------+
+        | value             | Link to the Values model            |
+        +-------------------+-------------------------------------+
     """
     transaction = ForeignKeyField(Transactions, related_name='metadata')
     key = ForeignKeyField(Keys, related_name='trans_links')

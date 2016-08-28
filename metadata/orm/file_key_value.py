@@ -13,6 +13,17 @@ from metadata.rest.orm import CherryPyAPI
 class FileKeyValue(CherryPyAPI):
     """
     FileKeyValue attributes are foreign keys.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | file              | Link to the File model              |
+        +-------------------+-------------------------------------+
+        | key               | Link to the Key model               |
+        +-------------------+-------------------------------------+
+        | value             | Link to the Value model             |
+        +-------------------+-------------------------------------+
     """
     file = ForeignKeyField(Files, related_name='metadata')
     key = ForeignKeyField(Keys, related_name='file_links')

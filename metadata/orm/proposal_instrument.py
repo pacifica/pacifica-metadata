@@ -12,6 +12,15 @@ from metadata.rest.orm import CherryPyAPI
 class ProposalInstrument(CherryPyAPI):
     """
     Relates proposals and instrument objects.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | instrument        | Link to the Instrument model        |
+        +-------------------+-------------------------------------+
+        | proposal          | Link to the Proposal model          |
+        +-------------------+-------------------------------------+
     """
     instrument = ForeignKeyField(Instruments, related_name='proposals')
     proposal = ForeignKeyField(Proposals, related_name='instruments')

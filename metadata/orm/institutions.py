@@ -8,6 +8,19 @@ from metadata.rest.orm import CherryPyAPI
 class Institutions(CherryPyAPI):
     """
     Institution model scribes an institute.
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | institution_name  | Name of the institution             |
+        +-------------------+-------------------------------------+
+        | association_cd    | Type of institution (TBD)           |
+        +-------------------+-------------------------------------+
+        | is_foreign        | Is the institution foreign or not   |
+        +-------------------+-------------------------------------+
+        | encoding          | Any encoding for the name           |
+        +-------------------+-------------------------------------+
     """
     institution_name = TextField(default="")
     association_cd = CharField(default="UNK")

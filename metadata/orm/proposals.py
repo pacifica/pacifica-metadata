@@ -11,6 +11,31 @@ from metadata.orm.utils import datetime_converts, date_converts, datetime_now_no
 class Proposals(CherryPyAPI):
     """
     Proposals data model
+
+    Attributes:
+        +-------------------+-------------------------------------+
+        | Name              | Description                         |
+        +===================+=====================================+
+        | title             | Title of the proposal               |
+        +-------------------+-------------------------------------+
+        | abstract          | Long abstract of the proposal       |
+        +-------------------+-------------------------------------+
+        | science_theme     | science group or theme assigned to  |
+        +-------------------+-------------------------------------+
+        | proposal_type     | kind or type of proposal            |
+        +-------------------+-------------------------------------+
+        | submitted_date    | date proposal entered the system    |
+        +-------------------+-------------------------------------+
+        | accepted_date     | date proposal was accepted          |
+        +-------------------+-------------------------------------+
+        | actual_start_date | date the proposal was started       |
+        +-------------------+-------------------------------------+
+        | actual_end_date   | date the proposal was ended         |
+        +-------------------+-------------------------------------+
+        | closed_date       | date the proposal was terminated    |
+        +-------------------+-------------------------------------+
+        | encoding          | encoding of the other text attrs    |
+        +-------------------+-------------------------------------+
     """
     id = CharField(primary_key=True)
     title = TextField(default="")

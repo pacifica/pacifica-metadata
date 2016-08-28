@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Test the keys ORM object
 """
@@ -9,7 +10,14 @@ from metadata.orm.keys import Keys
 
 SAMPLE_KEY_HASH = {
     "_id": 127,
-    "key": "proposal"
+    "key": "proposal",
+    "encoding": "UTF8"
+}
+
+SAMPLE_UNICODE_KEY_HASH = {
+    "_id": 127,
+    "key": u"proposalé",
+    "encoding": "UTF8"
 }
 
 class TestKeys(TestBase):
@@ -32,6 +40,12 @@ class TestKeys(TestBase):
         """
         self.base_test_hash(SAMPLE_KEY_HASH)
 
+    def test_unicode_keys_hash(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_test_hash(SAMPLE_UNICODE_KEY_HASH)
+
     def test_keys_json(self):
         """
         Test the hash portion using base object method.
@@ -43,6 +57,12 @@ class TestKeys(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_KEY_HASH)
+
+    def test_unicode_keys_where(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause(SAMPLE_UNICODE_KEY_HASH)
 
 if __name__ == '__main__':
     main()

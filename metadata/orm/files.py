@@ -10,12 +10,33 @@ from metadata.rest.orm import CherryPyAPI
 from metadata.orm.transactions import Transactions
 from metadata.orm.utils import datetime_now_nomicrosecond, ExtendDateTimeField
 
+#pylint: disable=too-many-instance-attributes
 class Files(CherryPyAPI):
     """
     Files metadata contains various attributes describing a file and where
     it came from.
+
+    Attributes:
+        +-------------+-------------------------------------------+
+        | Name        | Description                               |
+        +=============+===========================================+
+        | name        | Name of the file                          |
+        +-------------+-------------------------------------------+
+        | subdir      | Subdirectory the file is in               |
+        +-------------+-------------------------------------------+
+        | ctime       | Creation time for the file                |
+        +-------------+-------------------------------------------+
+        | mtime       | User modified time for the file           |
+        +-------------+-------------------------------------------+
+        | size        | Size of the file in bytes                 |
+        +-------------+-------------------------------------------+
+        | transaction | Link to the transaction model             |
+        +-------------+-------------------------------------------+
+        | mimetype    | mimetype of the file, if any              |
+        +-------------+-------------------------------------------+
+        | encoding    | encoding in the file name or subdir field |
+        +-------------+-------------------------------------------+
     """
-    #pylint: disable=too-many-instance-attributes
     name = CharField(default="")
     subdir = CharField(default="")
     ctime = ExtendDateTimeField(default=datetime_now_nomicrosecond)
@@ -24,7 +45,6 @@ class Files(CherryPyAPI):
     transaction = ForeignKeyField(Transactions, related_name='files')
     mimetype = CharField(default="")
     encoding = CharField(default="UTF8")
-    #pylint: enable=too-many-instance-attributes
 
     @staticmethod
     def elastic_mapping_builder(obj):
