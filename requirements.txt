@@ -7,4 +7,5 @@ cherrypy
 pylint
 python-dateutil
 coverage
+codeclimate-test-reporter
 pysqlite
