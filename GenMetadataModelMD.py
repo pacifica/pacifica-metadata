@@ -1,5 +1,9 @@
 #!/usr/bin/python
-
+"""
+This script is used to generate the METADATA_MODEL.md file and automatically
+walks the metadata orm objects searching for PeeWee attributes and populating
+tables...
+"""
 from metadata.orm import ORM_OBJECTS
 
 print """# The Pacifica Metadata Model
@@ -16,6 +20,8 @@ for obj_cls in ORM_OBJECTS:
     print "| --- | --- | --- |"
     column_tuples = []
     for obj_cls_attr in dir(obj_cls):
+        # pylint: disable=too-many-boolean-expressions
+        # introspection is hard...
         if type(getattr(obj_cls, obj_cls_attr)).__name__ == 'ExtendDateTimeField' or \
            type(getattr(obj_cls, obj_cls_attr)).__name__ == 'ExtendDateField' or \
            (type(getattr(obj_cls, obj_cls_attr)).__module__ == 'peewee' and \
@@ -32,7 +38,14 @@ for obj_cls in ORM_OBJECTS:
                 if column_name.endswith('_id'):
                     continue
             column_tuples.append((column_name, column_type, points_to))
+    # pylint: disable=invalid-name
+    # pylint: disable=too-many-return-statements
     def column_cmp(a, b):
+        """
+        This is complicated but it needs to be for sorting the attributes...
+        the ID field is always first
+        then anything else besides 'created', 'deleted', 'updated'
+        """
         if a[0] == 'id' and b[0] == 'id':
             return 0
         if a[0] == 'id':
@@ -47,6 +60,9 @@ for obj_cls in ORM_OBJECTS:
         if b[0] in common_dates:
             return -1
         return a[0] < b[0]
+    # pylint: enable=too-many-return-statements
+    # pylint: enable=invalid-name
+
     for column in sorted(column_tuples, cmp=column_cmp):
         print "| %s | %s | %s |"%column
     print ""
