@@ -29,6 +29,9 @@ from metadata.orm.trans_key_value import TransactionKeyValue
 from metadata.orm.groups import Groups
 from metadata.orm.user_group import UserGroup
 from metadata.orm.instrument_group import InstrumentGroup
+from metadata.orm.analytical_tools import AnalyticalTools
+from metadata.orm.atool_proposal import AToolProposal
+from metadata.orm.atool_transaction import AToolTransaction
 from metadata.elastic import create_elastic_index, try_es_connect
 
 DATABASE_CONNECT_ATTEMPTS = 10
@@ -56,7 +59,10 @@ ORM_OBJECTS = [
     TransactionKeyValue,
     Groups,
     UserGroup,
-    InstrumentGroup
+    InstrumentGroup,
+    AnalyticalTools,
+    AToolProposal,
+    AToolTransaction
 ]
 
 def try_db_connect(attempts=0):

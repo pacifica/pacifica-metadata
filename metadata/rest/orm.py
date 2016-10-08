@@ -30,7 +30,6 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """
         Internal update method for an object.
         """
-        print kwargs
         try:
             objs = self.select().where(self.where_clause(kwargs))
         except DoesNotExist, ex:

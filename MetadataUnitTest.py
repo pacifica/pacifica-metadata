@@ -28,6 +28,9 @@ from metadata.orm.test.keywords import TestKeywords
 from metadata.orm.test.groups import TestGroups
 from metadata.orm.test.user_group import TestUserGroup
 from metadata.orm.test.instrument_group import TestInstrumentGroup
+from metadata.orm.test.analytical_tools import TestAnalyticalTools
+from metadata.orm.test.atool_proposal import TestAToolProposal
+from metadata.orm.test.atool_transaction import TestAToolTransaction
 from metadata.elastic.test.elastic import TestElastic
 from metadata.elastic.test.base import TestElasticUtils
 from metadata.elastic.test.api import TestElasticAPI
