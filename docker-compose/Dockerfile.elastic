@@ -1,0 +1,6 @@
+# Pull base image.
+FROM elasticsearch
+
+# Install HEAD plugin
+RUN ./bin/plugin install mobz/elasticsearch-head
+CMD ["-Des.discovery.zen.ping.unicast.hosts=elasticmaster", "-Des.discovery.zen.ping.multicast.enabled=false"]

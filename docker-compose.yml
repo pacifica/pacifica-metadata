@@ -1,27 +1,53 @@
-elasticdb:
-  build: .
-  dockerfile: Dockerfile.elastic
-  container_name: elasticdb
-  ports:
-    - 9200:9200
-    - 9300:9300
+version: '2'
+services:
+  elasticmaster:
+    build:
+      context: .
+      dockerfile: docker-compose/Dockerfile.elastic
+    container_name: elasticmaster
 
-metadatadb:
-  image: postgres
-  container_name: metadatadb
-  environment:
-    POSTGRES_PASSWORD: password
-    POSTGRES_DB: pacifica_metadata
-    POSTGRES_USER: metadata
-  ports:
-    - 5432:5432
+  elasticslave:
+    build:
+      context: .
+      dockerfile: docker-compose/Dockerfile.elastic
+    links:
+     - elasticmaster
+    environment:
+      UNICAST_HOST: elasticmaster
+      EXCLUDE_PORTS: 9300
 
-metadataserver:
-  container_name: metadataserver
-  build: .
-  dockerfile: Dockerfile
-  links:
-    - metadatadb:postgres
-    - elasticdb:elasticdb
-  ports:
-    - 8121:8080
+  elasticlb:
+    image: dockercloud/haproxy
+    links:
+      - elasticslave:elasticslave
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9200:80
+
+  metadatadb:
+    image: postgres
+    container_name: metadatadb
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: pacifica_metadata
+      POSTGRES_USER: metadata
+    ports:
+      - 5432:5432
+
+  metadataserver:
+    build: .
+    container_name: metadataserver
+    links:
+      - metadatadb:postgres
+      - elasticmaster
+      - elasticlb
+    ports:
+      - 8121:8080
+    environment:
+      ELASTICDB_PORT: tcp://elasticmaster:9200
+      POSTGRES_ENV_POSTGRES_DB: pacifica_metadata
+      POSTGRES_ENV_POSTGRES_USER: metadata
+      POSTGRES_PORT_5432_TCP_ADDR: postgres
+      POSTGRES_PORT_5432_TCP_PORT: 5432
+      POSTGRES_ENV_POSTGRES_PASSWORD: password
