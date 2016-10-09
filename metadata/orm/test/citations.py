@@ -3,7 +3,6 @@
 """
 Test the citations ORM object
 """
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.citations import Citations
@@ -49,7 +48,8 @@ northern Yukon.
 </article>
 """,
     "release_authorization_id": "Released",
-    "doi_reference": "doi:10.1037/rmh0000008"
+    "doi_reference": "doi:10.1037/rmh0000008",
+    "encoding": "UTF-8"
 }
 
 class TestCitations(TestBase):
@@ -105,6 +105,3 @@ class TestCitations(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_UNICODE_CITATION_HASH)
-
-if __name__ == '__main__':
-    main()

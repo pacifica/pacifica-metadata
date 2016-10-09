@@ -3,7 +3,6 @@
 """
 Test the keys ORM object
 """
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.values import Values
@@ -63,6 +62,3 @@ class TestValues(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_UNICODE_VALUE_HASH)
-
-if __name__ == '__main__':
-    main()

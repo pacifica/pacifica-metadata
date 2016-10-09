@@ -5,7 +5,6 @@ Base testing module implements the temporary database to be used.
 from datetime import datetime
 from time import mktime
 from json import dumps
-from unittest import main
 from metadata.orm.base import PacificaModel
 from metadata.orm.test.base import TestBase
 
@@ -92,5 +91,8 @@ class TestDBDates(TestBase):
         """
         self.base_where_clause(SAMPLE_REP_HASH)
 
-if __name__ == '__main__':
-    main()
+    def test_testbase_dependent_cls(self):
+        """
+        blah
+        """
+        self.assertEqual(super(TestDBDates, self).dependent_cls(), None)

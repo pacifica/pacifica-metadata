@@ -4,7 +4,6 @@
 Test the proposals ORM object
 """
 from datetime import datetime
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.proposals import Proposals
@@ -84,6 +83,3 @@ class TestProposals(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_UNICODE_PROPOSAL_HASH)
-
-if __name__ == '__main__':
-    main()

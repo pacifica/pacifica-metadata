@@ -3,7 +3,6 @@
 """
 Test the journals ORM object
 """
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.journals import Journals
@@ -19,7 +18,8 @@ SAMPLE_UNICODE_JOURNAL_HASH = {
     "_id": 45,
     "journal_name": u"Northern Yukon Mastér Workworking",
     "impact_factor": 10.0,
-    "website_url": "http://www.ehwoodworkers.ca"
+    "website_url": "http://www.ehwoodworkers.ca",
+    "encoding": "UTF-8"
 }
 
 class TestJournals(TestBase):
@@ -65,6 +65,3 @@ class TestJournals(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_UNICODE_JOURNAL_HASH)
-
-if __name__ == '__main__':
-    main()

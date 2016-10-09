@@ -6,9 +6,10 @@ from peewee import ForeignKeyField, Expression, OP, CompositeKey
 from metadata.orm.utils import index_hash
 from metadata.orm.users import Users
 from metadata.orm.instruments import Instruments
-from metadata.orm.base import DB, PacificaModel
+from metadata.orm.base import DB
+from metadata.rest.orm import CherryPyAPI
 
-class InstrumentCustodian(PacificaModel):
+class InstrumentCustodian(CherryPyAPI):
     """
     Relates proposals and instrument objects.
 

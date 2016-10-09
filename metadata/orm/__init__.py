@@ -12,6 +12,7 @@ from metadata.orm.contributors import Contributors
 from metadata.orm.institution_person import InstitutionPerson
 from metadata.orm.institutions import Institutions
 from metadata.orm.instruments import Instruments
+from metadata.orm.instrument_custodian import InstrumentCustodian
 from metadata.orm.journals import Journals
 from metadata.orm.keywords import Keywords
 from metadata.orm.citation_contributor import CitationContributor
@@ -43,6 +44,7 @@ ORM_OBJECTS = [
     Institutions,
     Proposals,
     Instruments,
+    InstrumentCustodian,
     Citations,
     Contributors,
     InstitutionPerson,

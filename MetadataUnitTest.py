@@ -35,7 +35,9 @@ from metadata.elastic.test.elastic import TestElastic
 from metadata.elastic.test.base import TestElasticUtils
 from metadata.elastic.test.api import TestElasticAPI
 from metadata.orm.test.utils import TestUtils
+from metadata.orm.test.connect import TestConnections
 from metadata.test_client import TestClient
+from metadata.rest.test.orm import TestCherryPyAPI
 #pylint: enable=unused-import
 
 if __name__ == '__main__':

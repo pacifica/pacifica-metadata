@@ -20,20 +20,14 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """
         Internal select method.
         """
-        try:
-            objs = self.select().where(self.where_clause(kwargs))
-        except DoesNotExist, ex:
-            raise HTTPError(404, str(ex))
+        objs = self.select().where(self.where_clause(kwargs))
         return dumps([obj.to_hash() for obj in objs])
 
     def _update(self, update_json, **kwargs):
         """
         Internal update method for an object.
         """
-        try:
-            objs = self.select().where(self.where_clause(kwargs))
-        except DoesNotExist, ex:
-            raise HTTPError(404, str(ex))
+        objs = self.select().where(self.where_clause(kwargs))
         for obj in objs:
             try:
                 obj.from_json(update_json)

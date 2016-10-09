@@ -3,7 +3,6 @@
 """
 Test the file_key_values ORM object
 """
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.keywords import Keywords
@@ -77,6 +76,3 @@ class TestKeywords(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_UNICODE_KEYWORD_HASH)
-
-if __name__ == '__main__':
-    main()

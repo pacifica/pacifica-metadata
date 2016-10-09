@@ -3,7 +3,6 @@
 """
 Test the keys ORM object
 """
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.users import Users
@@ -13,7 +12,6 @@ SAMPLE_USER_HASH = {
     "first_name": "John",
     "middle_initial": "G",
     "last_name": "Doe",
-    "network_id": "guest",
     'email_address': 'jdoe@example.com',
     'encoding': 'UTF8'
 }
@@ -71,6 +69,3 @@ class TestUsers(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_UNICODE_USER_HASH)
-
-if __name__ == '__main__':
-    main()

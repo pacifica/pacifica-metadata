@@ -5,7 +5,6 @@ Test the files ORM object
 """
 from datetime import datetime
 from time import mktime
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.files import Files
@@ -89,6 +88,3 @@ class TestFiles(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_UNICODE_FILE_HASH)
-
-if __name__ == '__main__':
-    main()

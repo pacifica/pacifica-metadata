@@ -15,11 +15,11 @@ from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
 
 # Primary PeeWee database connection object constant
-DB = pgdb(getenv('POSTGRES_ENV_POSTGRES_DB'),
-          user=getenv('POSTGRES_ENV_POSTGRES_USER'),
-          password=getenv('POSTGRES_ENV_POSTGRES_PASSWORD'),
-          host=getenv('POSTGRES_PORT_5432_TCP_ADDR'),
-          port=getenv('POSTGRES_PORT_5432_TCP_PORT'))
+DB = pgdb(getenv('POSTGRES_ENV_POSTGRES_DB', 'pacifica_metadata'),
+          user=getenv('POSTGRES_ENV_POSTGRES_USER', 'pacifica'),
+          password=getenv('POSTGRES_ENV_POSTGRES_PASSWORD', 'pacifica'),
+          host=getenv('POSTGRES_PORT_5432_TCP_ADDR', 'localhost'),
+          port=int(getenv('POSTGRES_PORT_5432_TCP_PORT', 5432)))
 
 DEFAULT_ELASTIC_ENDPOINT = getenv('ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
@@ -110,6 +110,8 @@ class PacificaModel(Model):
         """
         Converts the json string into the current object.
         """
+        if not isinstance(loads(json_str), dict):
+            raise ValueError('json_str not dict')
         self.from_hash(loads(json_str))
 
     def to_json(self):

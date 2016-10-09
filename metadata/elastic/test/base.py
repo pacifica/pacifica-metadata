@@ -37,8 +37,7 @@ class TestElasticUtils(TestCase):
         }
         httpretty.register_uri(httpretty.GET, "http://127.0.0.1:9200/pacifica",
                                body=dumps(response_body),
-                               content_type="application/json",
-                               status=404)
+                               content_type="application/json", status=404)
         httpretty.register_uri(httpretty.PUT, "http://127.0.0.1:9200/pacifica",
                                body=dumps(created_body),
                                content_type="application/json")
@@ -50,6 +49,7 @@ class TestElasticUtils(TestCase):
         """
         Test the create elastic index
         """
+        hit_exception = False
         response_body = {}
         created_body = {
             "status": "ERROR"
@@ -66,9 +66,11 @@ class TestElasticUtils(TestCase):
         try:
             create_elastic_index()
         except Exception, ex:
+            hit_exception = True
             self.assertEqual(httpretty.last_request().method, "PUT")
             self.assertEqual(str(ex), "create_elastic_index: 500\n")
         #pylint: enable=broad-except
+        self.assertTrue(hit_exception)
 
     @httpretty.activate
     def test_elastic_connect(self):
@@ -87,6 +89,7 @@ class TestElasticUtils(TestCase):
         """
         Test the create elastic index
         """
+        hit_exception = False
         httpretty.register_uri(httpretty.GET, "http://127.0.0.1:9200/_stats",
                                body="Trying to connect",
                                status=404)
@@ -94,6 +97,8 @@ class TestElasticUtils(TestCase):
         try:
             try_es_connect()
         except Exception, ex:
+            hit_exception = True
             self.assertEqual(httpretty.last_request().method, "GET")
             self.assertEqual(str(ex), "try_es_connect: 404\n")
         #pylint: enable=broad-except
+        self.assertTrue(hit_exception)

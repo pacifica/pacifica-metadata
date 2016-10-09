@@ -2,7 +2,6 @@
 """
 Test the user_group ORM object
 """
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.user_group import UserGroup
@@ -64,6 +63,3 @@ class TestUserGroup(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_USER_GROUP_HASH)
-
-if __name__ == '__main__':
-    main()

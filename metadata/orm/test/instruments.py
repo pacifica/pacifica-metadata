@@ -3,7 +3,6 @@
 """
 Test the proposals ORM object
 """
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.instruments import Instruments
@@ -13,6 +12,7 @@ SAMPLE_INSTRUMENT_HASH = {
     "instrument_name": "My Really Long Winded Instrument Name",
     "display_name": "My Instrument Name",
     "name_short": "Instrument",
+    "active": True,
     'encoding': 'UTF8'
 }
 
@@ -67,6 +67,3 @@ class TestInstruments(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_UNICODE_INSTRUMENT_HASH)
-
-if __name__ == '__main__':
-    main()

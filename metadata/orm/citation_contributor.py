@@ -77,7 +77,7 @@ class CitationContributor(CherryPyAPI):
         if 'citation_id' in kwargs:
             citation = Citations.get(Citations.id == kwargs['citation_id'])
             where_clause &= Expression(CitationContributor.citation, OP.EQ, citation)
-        if 'person_id' in kwargs:
+        if 'author_id' in kwargs:
             author = Contributors.get(Contributors.id == kwargs['author_id'])
             where_clause &= Expression(CitationContributor.author, OP.EQ, author)
         if 'author_precedence' in kwargs:

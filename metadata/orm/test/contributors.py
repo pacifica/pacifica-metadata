@@ -3,7 +3,6 @@
 """
 Test the contributors ORM object
 """
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.contributors import Contributors
@@ -93,6 +92,3 @@ class TestContributors(TestBase):
         Test the unicode hash using base object method.
         """
         self.base_where_clause(SAMPLE_UNICODE_CONTRIBUTOR_HASH)
-
-if __name__ == '__main__':
-    main()

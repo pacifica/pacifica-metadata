@@ -2,7 +2,6 @@
 """
 Test the atool_proposal ORM object
 """
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.atool_proposal import AToolProposal
@@ -64,6 +63,3 @@ class TestAToolProposal(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_TOOL_PROPOSAL_HASH)
-
-if __name__ == '__main__':
-    main()

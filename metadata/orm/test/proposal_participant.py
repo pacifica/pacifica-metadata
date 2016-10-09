@@ -2,7 +2,6 @@
 """
 Test the file_key_values ORM object
 """
-from unittest import main
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.proposal_participant import ProposalParticipant
@@ -64,6 +63,3 @@ class TestProposalParticipant(TestBase):
         Test the hash portion using base object method.
         """
         self.base_where_clause(SAMPLE_PROPOSAL_PARTICIPANT_HASH)
-
-if __name__ == '__main__':
-    main()

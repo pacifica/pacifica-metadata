@@ -2,7 +2,7 @@
 """
 Test the metadata.orm.utils methods
 """
-from unittest import TestCase, main
+from unittest import TestCase
 from datetime import datetime, date
 from metadata.orm.utils import index_hash, datetime_converts, date_converts
 
@@ -49,6 +49,3 @@ class TestUtils(TestCase):
         str_date = '2016-07-05'
         self.assertEqual(date_converts(uni_date), chk_date)
         self.assertEqual(date_converts(str_date), chk_date)
-
-if __name__ == '__main__':
-    main()
