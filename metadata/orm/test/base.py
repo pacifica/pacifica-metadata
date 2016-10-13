@@ -58,7 +58,6 @@ class TestBase(TestCase):
         """
         with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             obj = self.base_create_obj(self.obj_cls, obj_hash)
-            self.assertTrue(isinstance(obj.get_primary_keys(), list))
             new_obj = self.obj_cls.get(self.obj_id == getattr(obj, self.obj_id.db_column))
             chk_obj_hash = new_obj.to_hash()
             self.assertEqual('_id' in chk_obj_hash, True)

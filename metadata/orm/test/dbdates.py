@@ -56,6 +56,10 @@ class TestDBDates(TestBase):
             self.base_test_hash(SAMPLE_BAD_HASH)
         except ValueError, ex:
             self.assertEqual(str(ex), exception_str)
+        try:
+            self.base_test_json('["foo"]')
+        except ValueError, ex:
+            self.assertEqual(str(ex), 'json_str not dict')
 
     def test_zero_dates_from_hash(self):
         """

@@ -2,6 +2,8 @@
 """
 Test all the objects
 """
+from os import getenv
+import logging
 from unittest import main
 #pylint: disable=unused-import
 from metadata.orm.test.users import TestUsers
@@ -31,14 +33,19 @@ from metadata.orm.test.instrument_group import TestInstrumentGroup
 from metadata.orm.test.analytical_tools import TestAnalyticalTools
 from metadata.orm.test.atool_proposal import TestAToolProposal
 from metadata.orm.test.atool_transaction import TestAToolTransaction
+from metadata.orm.test.utils import TestUtils
+from metadata.orm.test.connect import TestConnections
+from metadata.orm.test.available_hash_list import TestKeysHashList
 from metadata.elastic.test.elastic import TestElastic
 from metadata.elastic.test.base import TestElasticUtils
 from metadata.elastic.test.api import TestElasticAPI
-from metadata.orm.test.utils import TestUtils
-from metadata.orm.test.connect import TestConnections
 from metadata.test_client import TestClient
 from metadata.rest.test.orm import TestCherryPyAPI
 #pylint: enable=unused-import
 
 if __name__ == '__main__':
+    if getenv('PEEWEE_SQL_DEBUG', False):
+        LOGGER = logging.getLogger('peewee')
+        LOGGER.setLevel(logging.DEBUG)
+        LOGGER.addHandler(logging.StreamHandler())
     main()

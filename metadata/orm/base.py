@@ -9,7 +9,7 @@ from os import getenv
 from json import dumps, loads
 
 from peewee import PostgresqlDatabase as pgdb
-from peewee import Model, Expression, OP, PrimaryKeyField, fn, RawQuery, CompositeKey
+from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey
 
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
@@ -151,29 +151,14 @@ class PacificaModel(Model):
         """
         Need to figure out more about what this does...
         """
-        keys = cls.get_primary_keys()
-        # pylint: disable=no-member
-        table = cls._meta.db_table
-        # pylint: enable=no-member
-        db_keys = {}
-        for key in keys:
-            # pylint: disable=no-member
-            if len(cls._meta.rel) > 0:
-                rel_mod = cls._meta.rel.get(key)
-                db_keys[key] = rel_mod.db_column
-            else:
-                db_keys[key] = key
-            # pylint: enable=no-member
-
         hash_list = []
         hash_dict = {}
-        sql = "SELECT {0} FROM {1}".format(",".join(db_keys.values()), table)
-        all_keys_query = RawQuery(cls, sql, None).dicts()
+        all_keys_query = cls.select(*[getattr(cls, key) for key in cls.get_primary_keys()]).dicts()
         for obj in all_keys_query.execute():
             inst_key = index_hash(*obj.values())
             hash_list.append(inst_key)
             entry = {
-                'key_list': {db_keys.get(key): obj[key] for key in db_keys.keys()},
+                'key_list': obj,
                 'index_hash': inst_key
             }
             hash_dict[inst_key] = entry
