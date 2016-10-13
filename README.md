@@ -3,6 +3,9 @@
 [![Code Climate](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata/badges/gpa.svg)](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata)
 [![Test Coverage](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata/badges/coverage.svg)](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata/coverage)
 [![Issue Count](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata/badges/issue_count.svg)](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata)
+[![Docker Stars](https://img.shields.io/docker/stars/pacifica/metadata.svg?maxAge=2592000)](https://hub.docker.com/r/pacifica/metadata)
+[![Docker Pulls](https://img.shields.io/docker/pulls/pacifica/metadata.svg?maxAge=2592000)](https://hub.docker.com/r/pacifica/metadata)
+[![Docker Automated build](https://img.shields.io/docker/automated/pacifica/metadata.svg?maxAge=2592000)](https://hub.docker.com/r/pacifica/metadata)
 
 This is the pacifica metadata API.
 
