@@ -5,6 +5,8 @@ Base testing module implements the temporary database to be used.
 from datetime import datetime
 from time import mktime
 from json import dumps
+from peewee import SqliteDatabase
+from playhouse.test_utils import test_database
 from metadata.orm.base import PacificaModel
 from metadata.orm.test.base import TestBase
 
@@ -16,12 +18,12 @@ SAMPLE_ZERO_ISO_HASH = {
 SAMPLE_ZERO_HASH = {
     'created': 0,
     'updated': 0,
-    'deleted': 0
+    'deleted': None
 }
 SAMPLE_REP_HASH = {
     'created': datetime.now().replace(microsecond=0).isoformat(),
     'updated': datetime.now().replace(microsecond=0).isoformat(),
-    'deleted': '1969-12-31T16:00:00'
+    'deleted': None
 }
 SAMPLE_BAD_HASH = {
     'created': 'blarg',
@@ -96,3 +98,26 @@ class TestDBDates(TestBase):
         blah
         """
         self.assertEqual(super(TestDBDates, self).dependent_cls(), None)
+
+    def test_null_dates_and_query(self):
+        """
+        Test method to check that null deleted dates work
+        """
+        where_hash_null = {
+            "deleted": None
+        }
+        where_hash_not_null = {
+            "deleted": SAMPLE_ZERO_ISO_HASH['deleted']
+        }
+        with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
+            self.base_create_obj(PacificaModel, SAMPLE_REP_HASH)
+            self.base_create_obj(PacificaModel, SAMPLE_ZERO_ISO_HASH)
+            third_obj = PacificaModel()
+            expr = third_obj.where_clause(where_hash_null)
+            null_chk_obj = third_obj.get(expr)
+            chk_obj_hash = null_chk_obj.to_hash()
+            self.assertTrue(chk_obj_hash['deleted'] is None)
+            expr = third_obj.where_clause(where_hash_not_null)
+            not_null_chk_obj = third_obj.get(expr)
+            chk_obj_hash = not_null_chk_obj.to_hash()
+            self.assertFalse(chk_obj_hash['deleted'] is None)

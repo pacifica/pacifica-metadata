@@ -3,7 +3,6 @@
 Core interface for each ORM object to interface with CherryPy
 """
 from json import loads, dumps
-from datetime import datetime
 from cherrypy import request, HTTPError
 from peewee import DoesNotExist, IntegrityError
 from metadata.orm.base import PacificaModel
@@ -63,7 +62,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                 self.save()
             except IntegrityError, ex:
                 self.rollback()
-            self.deleted = datetime.fromtimestamp(0)
+            self.deleted = None
             self.updated = datetime_now_nomicrosecond()
             self.save()
             try:
@@ -84,7 +83,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             objs = [objs]
         for obj in objs:
             self.from_hash(obj)
-            self.deleted = datetime.fromtimestamp(0)
+            self.deleted = None
             self.updated = datetime_now_nomicrosecond()
             self.created = datetime_now_nomicrosecond()
             try:
