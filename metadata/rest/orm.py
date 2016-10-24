@@ -19,7 +19,12 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """
         Internal select method.
         """
-        objs = self.select().where(self.where_clause(kwargs))
+        primary_keys = [getattr(self, key) for key in self.get_primary_keys()]
+        objs = (self.select()
+                .where(self.where_clause(kwargs))
+                .order_by(*primary_keys))
+        if 'page_number' in kwargs and 'items_per_page' in kwargs:
+            objs = objs.paginate(kwargs['page_number'], kwargs['items_per_page'])
         return dumps([obj.to_hash() for obj in objs])
 
     def _update(self, update_json, **kwargs):
