@@ -60,7 +60,7 @@ class TestBase(TestCase):
             obj = self.base_create_obj(self.obj_cls, obj_hash)
             new_obj = self.obj_cls.get(self.obj_id == getattr(obj, self.obj_id.db_column))
             chk_obj_hash = new_obj.to_hash()
-            self.assertEqual('_id' in chk_obj_hash, True)
+            self.assertTrue('_id' in chk_obj_hash)
             for key in obj_hash.keys():
                 self.assertEqual(chk_obj_hash[key], obj_hash[key])
 
@@ -83,6 +83,25 @@ class TestBase(TestCase):
             chk_obj_json = new_obj.to_json()
             self.assertEqual(type(chk_obj_json), str)
 
+    @staticmethod
+    def base_where_clause_search(obj, kwargs):
+        """
+        use kwargs as options to where clause to search for obj and return
+        """
+        expr = obj.where_clause(kwargs)
+        return obj.select().where(expr)
+
+    def base_where_clause_search_expr(self, obj_hash, **kwargs):
+        """
+        Search for a objects on single search parameters
+        """
+        with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
+            obj = self.base_create_obj(self.obj_cls, obj_hash)
+            chk_obj = self.base_where_clause_search(obj, kwargs)[0]
+            chk_obj_hash = chk_obj.to_hash()
+            for key in obj_hash.keys():
+                self.assertEqual(chk_obj_hash[key], obj_hash[key])
+
     def base_where_clause(self, obj_hash):
         """
         Base where clause checking
@@ -96,8 +115,7 @@ class TestBase(TestCase):
         with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             obj = self.base_create_obj(self.obj_cls, obj_hash)
             for key in obj_hash.keys():
-                expr = obj.where_clause({key: obj_hash[key]})
-                new_obj = obj.get(expr)
-                chk_obj_hash = new_obj.to_hash()
+                chk_obj = self.base_where_clause_search(obj, {key: obj_hash[key]})[0]
+                chk_obj_hash = chk_obj.to_hash()
                 for key in obj_hash.keys():
                     self.assertEqual(chk_obj_hash[key], obj_hash[key])

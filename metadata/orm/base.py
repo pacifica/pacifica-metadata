@@ -9,7 +9,7 @@ from os import getenv
 from json import dumps, loads
 
 from peewee import PostgresqlDatabase as pgdb
-from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey
+from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause
 
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
@@ -120,6 +120,20 @@ class PacificaModel(Model):
         """
         return dumps(self.to_hash())
 
+    @staticmethod
+    def _date_operator_compare(date, kwargs, dt_converts=datetime_converts):
+        if "%s_operator"%(date) in kwargs:
+            date_oper = getattr(OP, kwargs["%s_operator"%(date)])
+        else:
+            date_oper = OP.EQ
+        if date_oper == OP.BETWEEN:
+            date_obj_min = dt_converts(kwargs[date][0])
+            date_obj_max = dt_converts(kwargs[date][1])
+            date_obj = Clause(date_obj_min, R('AND'), date_obj_max)
+        else:
+            date_obj = dt_converts(kwargs[date])
+        return (date_obj, date_oper)
+
     def where_clause(self, kwargs):
         """
         PeeWee specific extension meant to be passed to a PeeWee get
@@ -135,8 +149,8 @@ class PacificaModel(Model):
                 where_clause &= Expression(getattr(my_class, 'deleted'), OP.EQ, date_obj)
         for date in ['updated', 'created']:
             if date in kwargs:
-                date_obj = datetime_converts(kwargs[date])
-                where_clause &= Expression(getattr(my_class, date), OP.EQ, date_obj)
+                date_obj, date_oper = self._date_operator_compare(date, kwargs)
+                where_clause &= Expression(getattr(my_class, date), date_oper, date_obj)
         return where_clause
 
     @classmethod

@@ -2,7 +2,7 @@
 """
 Base testing module implements the temporary database to be used.
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import mktime
 from json import dumps
 from peewee import SqliteDatabase
@@ -102,6 +102,32 @@ class TestDBDates(TestBase):
         blah
         """
         self.assertEqual(super(TestDBDates, self).dependent_cls(), None)
+
+    def test_dates_range(self):
+        """
+        Test date ranges using operators
+        """
+        with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
+            self.base_create_obj(PacificaModel, SAMPLE_REP_HASH)
+            self.base_create_obj(PacificaModel, SAMPLE_ZERO_ISO_HASH)
+            third_obj = PacificaModel()
+            date_check_max = datetime.now()+timedelta(minutes=2)
+            date_check_min = datetime.now()-timedelta(minutes=2)
+            search_expr = {
+                'created': date_check_max.replace(microsecond=0).isoformat(),
+                'created_operator': 'LT'
+            }
+            objs = self.base_where_clause_search(third_obj, search_expr)
+            self.assertEqual(len(objs), 2)
+            search_expr = {
+                'created': [
+                    date_check_min.replace(microsecond=0).isoformat(),
+                    date_check_max.replace(microsecond=0).isoformat()
+                ],
+                'created_operator': 'BETWEEN'
+            }
+            objs = self.base_where_clause_search(third_obj, search_expr)
+            self.assertEqual(len(objs), 1)
 
     def test_null_dates_and_query(self):
         """

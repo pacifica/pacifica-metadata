@@ -51,6 +51,16 @@ class TestValues(TestBase):
         """
         self.base_test_json(dumps(SAMPLE_VALUE_HASH))
 
+    def test_key_search_expr(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause_search_expr(
+            SAMPLE_UNICODE_VALUE_HASH,
+            value_operator='ILIKE',
+            value=u'%é%'
+        )
+
     def test_values_where(self):
         """
         Test the hash portion using base object method.

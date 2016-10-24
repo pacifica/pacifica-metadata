@@ -71,8 +71,10 @@ class Keywords(CherryPyAPI):
             where_clause &= Expression(Keywords.citation, OP.EQ, citation)
         if '_id' in kwargs:
             where_clause &= Expression(Keywords.id, OP.EQ, kwargs['_id'])
-        if 'encoding' in kwargs:
-            where_clause &= Expression(Keywords.encoding, OP.EQ, kwargs['encoding'])
-        if 'keyword' in kwargs:
-            where_clause &= Expression(Keywords.keyword, OP.EQ, kwargs['keyword'])
+        for key in ['keyword', 'encoding']:
+            if key in kwargs:
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Keywords, key), key_oper, kwargs[key])
         return where_clause

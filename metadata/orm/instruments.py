@@ -15,7 +15,7 @@ class Instruments(CherryPyAPI):
         +===================+=====================================+
         | display_name      | Long display string for web sites   |
         +-------------------+-------------------------------------+
-        | instrument_name   | Machine parsable display name       |
+        | name              | Machine parsable display name       |
         +-------------------+-------------------------------------+
         | name_short        | Short version used in lists         |
         +-------------------+-------------------------------------+
@@ -25,7 +25,7 @@ class Instruments(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
     display_name = CharField(default="")
-    instrument_name = CharField(default="")
+    name = CharField(default="")
     name_short = CharField(default="")
     active = BooleanField(default=False)
     encoding = CharField(default="UTF8")
@@ -36,7 +36,7 @@ class Instruments(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(Instruments, Instruments).elastic_mapping_builder(obj)
-        obj['display_name'] = obj['instrument_name'] = obj['name_short'] = \
+        obj['display_name'] = obj['name'] = obj['name_short'] = \
         obj['encoding'] = {'type': 'string'}
 
     def to_hash(self):
@@ -45,7 +45,7 @@ class Instruments(CherryPyAPI):
         """
         obj = super(Instruments, self).to_hash()
         obj['_id'] = self.id
-        obj['instrument_name'] = unicode(self.instrument_name)
+        obj['name'] = unicode(self.name)
         obj['display_name'] = unicode(self.display_name)
         obj['name_short'] = unicode(self.name_short)
         obj['active'] = bool(self.active)
@@ -61,8 +61,8 @@ class Instruments(CherryPyAPI):
         if '_id' in obj:
             self.id = int(obj['_id'])
         # pylint: enable=invalid-name
-        if 'instrument_name' in obj:
-            self.instrument_name = unicode(obj['instrument_name'])
+        if 'name' in obj:
+            self.name = unicode(obj['name'])
         if 'display_name' in obj:
             self.display_name = unicode(obj['display_name'])
         if 'name_short' in obj:
@@ -79,8 +79,11 @@ class Instruments(CherryPyAPI):
         where_clause = super(Instruments, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Instruments.id, OP.EQ, kwargs['_id'])
-        for key in ['instrument_name', 'display_name', 'name_short', 'active',
+        for key in ['name', 'display_name', 'name_short', 'active',
                     'encoding']:
             if key in kwargs:
-                where_clause &= Expression(getattr(Instruments, key), OP.EQ, kwargs[key])
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Instruments, key), key_oper, kwargs[key])
         return where_clause

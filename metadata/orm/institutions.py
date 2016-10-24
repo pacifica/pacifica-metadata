@@ -13,7 +13,7 @@ class Institutions(CherryPyAPI):
         +-------------------+-------------------------------------+
         | Name              | Description                         |
         +===================+=====================================+
-        | institution_name  | Name of the institution             |
+        | name              | Name of the institution             |
         +-------------------+-------------------------------------+
         | association_cd    | Type of institution (TBD)           |
         +-------------------+-------------------------------------+
@@ -22,7 +22,7 @@ class Institutions(CherryPyAPI):
         | encoding          | Any encoding for the name           |
         +-------------------+-------------------------------------+
     """
-    institution_name = TextField(default="")
+    name = TextField(default="")
     association_cd = CharField(default="UNK")
     is_foreign = BooleanField(default=False)
     encoding = CharField(default="UTF8")
@@ -33,7 +33,7 @@ class Institutions(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(Institutions, Institutions).elastic_mapping_builder(obj)
-        obj['institution_name'] = obj['association_cd'] = \
+        obj['name'] = obj['association_cd'] = \
         obj['encoding'] = {'type': 'string'}
         obj['is_foreign'] = {'type': 'boolean'}
 
@@ -43,7 +43,7 @@ class Institutions(CherryPyAPI):
         """
         obj = super(Institutions, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['institution_name'] = unicode(self.institution_name)
+        obj['name'] = unicode(self.name)
         obj['association_cd'] = str(self.association_cd)
         obj['is_foreign'] = bool(self.is_foreign)
         obj['encoding'] = str(self.encoding)
@@ -58,8 +58,8 @@ class Institutions(CherryPyAPI):
         if '_id' in obj:
             self.id = int(obj['_id'])
         # pylint: enable=invalid-name
-        if 'institution_name' in obj:
-            self.institution_name = unicode(obj['institution_name'])
+        if 'name' in obj:
+            self.name = unicode(obj['name'])
         if 'association_cd' in obj:
             self.association_cd = str(obj['association_cd'])
         if 'is_foreign' in obj:
@@ -74,7 +74,10 @@ class Institutions(CherryPyAPI):
         where_clause = super(Institutions, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Institutions.id, OP.EQ, kwargs['_id'])
-        for key in ['institution_name', 'is_foreign', 'association_cd', 'encoding']:
+        for key in ['name', 'is_foreign', 'association_cd', 'encoding']:
             if key in kwargs:
-                where_clause &= Expression(getattr(Institutions, key), OP.EQ, kwargs[key])
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Institutions, key), key_oper, kwargs[key])
         return where_clause

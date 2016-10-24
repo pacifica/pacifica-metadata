@@ -9,14 +9,14 @@ from metadata.orm.journals import Journals
 
 SAMPLE_JOURNAL_HASH = {
     "_id": 45,
-    "journal_name": "Northern Yukon Master Workworking",
+    "name": "Northern Yukon Master Workworking",
     "impact_factor": 10.0,
     "website_url": "http://www.ehwoodworkers.ca"
 }
 
 SAMPLE_UNICODE_JOURNAL_HASH = {
     "_id": 45,
-    "journal_name": u"Northern Yukon Mastér Workworking",
+    "name": u"Northern Yukon Mastér Workworking",
     "impact_factor": 10.0,
     "website_url": "http://www.ehwoodworkers.ca",
     "encoding": "UTF-8"
@@ -53,6 +53,21 @@ class TestJournals(TestBase):
         Test the hash portion using base object method.
         """
         self.base_test_json(dumps(SAMPLE_JOURNAL_HASH))
+
+    def test_journals_search_expr(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause_search_expr(
+            SAMPLE_UNICODE_JOURNAL_HASH,
+            name_operator='ILIKE',
+            name=u'%é%'
+        )
+        self.base_where_clause_search_expr(
+            SAMPLE_JOURNAL_HASH,
+            impact_factor_operator='GT',
+            impact_factor=9.5
+        )
 
     def test_journal_where(self):
         """

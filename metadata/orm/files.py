@@ -109,16 +109,20 @@ class Files(CherryPyAPI):
         or select.
         """
         where_clause = super(Files, self).where_clause(kwargs)
-        for date in ['mtime', 'ctime']:
-            if date in kwargs:
-                kwargs[date] = datetime.fromtimestamp(kwargs[date])
         if 'transaction_id' in kwargs:
             kwargs['transaction_id'] = Transactions.get(
                 Transactions.id == kwargs['transaction_id']
             )
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
-        for key in ['name', 'subdir', 'mimetype', 'size', 'mtime', 'ctime', 'encoding']:
+        for date in ['mtime', 'ctime']:
+            if date in kwargs:
+                date_obj, date_oper = self._date_operator_compare(date, kwargs)
+                where_clause &= Expression(getattr(Files, date), date_oper, date_obj)
+        for key in ['name', 'subdir', 'mimetype', 'size', 'encoding']:
             if key in kwargs:
-                where_clause &= Expression(getattr(Files, key), OP.EQ, kwargs[key])
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Files, key), key_oper, kwargs[key])
         return where_clause

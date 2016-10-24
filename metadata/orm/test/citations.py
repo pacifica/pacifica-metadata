@@ -27,7 +27,7 @@ northern Yukon.
 </article>
 """,
     "release_authorization_id": "Released",
-    "doi_reference": "doi:10.1037/rmh0000008"
+    "doi_reference": "doi:10.1002/0470841559.ch1"
 }
 
 SAMPLE_UNICODE_CITATION_HASH = {
@@ -93,6 +93,21 @@ class TestCitations(TestBase):
         Test the hash portion using base object method.
         """
         self.base_test_json(dumps(SAMPLE_CITATION_HASH))
+
+    def test_citations_search_expr(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause_search_expr(
+            SAMPLE_CITATION_HASH,
+            article_title_operator='ILIKE',
+            article_title='%Dove%'
+        )
+        self.base_where_clause_search_expr(
+            SAMPLE_CITATION_HASH,
+            abstract_operator='ILIKE',
+            abstract='%joints%'
+        )
 
     def test_citations_where(self):
         """

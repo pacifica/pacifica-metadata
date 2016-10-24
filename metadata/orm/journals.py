@@ -13,7 +13,7 @@ class Journals(CherryPyAPI):
         +-------------------+-------------------------------------+
         | Name              | Description                         |
         +===================+=====================================+
-        | journal_name      | name of the journal                 |
+        | name              | name of the journal                 |
         +-------------------+-------------------------------------+
         | author            | impact factor of the journal        |
         +-------------------+-------------------------------------+
@@ -22,7 +22,7 @@ class Journals(CherryPyAPI):
         | encoding          | language encoding for the name      |
         +-------------------+-------------------------------------+
     """
-    journal_name = CharField(default="")
+    name = CharField(default="")
     impact_factor = FloatField(default=-1.0)
     website_url = CharField(default="")
     encoding = CharField(default="UTF8")
@@ -33,7 +33,7 @@ class Journals(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(Journals, Journals).elastic_mapping_builder(obj)
-        obj['journal_name'] = obj['website_url'] = obj['encoding'] = {'type': 'string'}
+        obj['name'] = obj['website_url'] = obj['encoding'] = {'type': 'string'}
         obj['impact_factor'] = {'type': 'float'}
 
     def to_hash(self):
@@ -42,7 +42,7 @@ class Journals(CherryPyAPI):
         """
         obj = super(Journals, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['journal_name'] = unicode(self.journal_name)
+        obj['name'] = unicode(self.name)
         obj['impact_factor'] = float(self.impact_factor)
         obj['website_url'] = str(self.website_url)
         obj['encoding'] = str(self.encoding)
@@ -57,8 +57,8 @@ class Journals(CherryPyAPI):
             # pylint: disable=invalid-name
             self.id = int(obj['_id'])
             # pylint: enable=invalid-name
-        if 'journal_name' in obj:
-            self.journal_name = unicode(obj['journal_name'])
+        if 'name' in obj:
+            self.name = unicode(obj['name'])
         if 'impact_factor' in obj:
             self.impact_factor = float(obj['impact_factor'])
         if 'website_url' in obj:
@@ -73,7 +73,10 @@ class Journals(CherryPyAPI):
         where_clause = super(Journals, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Journals.id, OP.EQ, kwargs['_id'])
-        for key in ['journal_name', 'impact_factor', 'website_url', 'encoding']:
+        for key in ['name', 'impact_factor', 'website_url', 'encoding']:
             if key in kwargs:
-                where_clause &= Expression(getattr(Journals, key), OP.EQ, kwargs[key])
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Journals, key), key_oper, kwargs[key])
         return where_clause

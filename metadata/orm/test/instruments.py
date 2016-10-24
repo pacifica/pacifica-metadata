@@ -9,7 +9,7 @@ from metadata.orm.instruments import Instruments
 
 SAMPLE_INSTRUMENT_HASH = {
     "_id": 1234,
-    "instrument_name": "My Really Long Winded Instrument Name",
+    "name": "My Really Long Winded Instrument Name",
     "display_name": "My Instrument Name",
     "name_short": "Instrument",
     "active": True,
@@ -18,7 +18,7 @@ SAMPLE_INSTRUMENT_HASH = {
 
 SAMPLE_UNICODE_INSTRUMENT_HASH = {
     "_id": 1234,
-    "instrument_name": u"My Really Long Winded Instrumént Name",
+    "name": u"My Really Long Winded Instrumént Name",
     "display_name": u"My Instrument Namé",
     "name_short": u"Instrumént",
     'encoding': 'UTF8'
@@ -55,6 +55,21 @@ class TestInstruments(TestBase):
         Test the hash portion using base object method.
         """
         self.base_test_json(dumps(SAMPLE_INSTRUMENT_HASH))
+
+    def test_instruments_search_expr(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause_search_expr(
+            SAMPLE_UNICODE_INSTRUMENT_HASH,
+            name_operator='ILIKE',
+            name=u'%é%'
+        )
+        self.base_where_clause_search_expr(
+            SAMPLE_INSTRUMENT_HASH,
+            name_operator='ILIKE',
+            name='My%'
+        )
 
     def test_instruments_where(self):
         """

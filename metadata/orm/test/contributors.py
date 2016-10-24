@@ -81,6 +81,21 @@ class TestContributors(TestBase):
         """
         self.base_test_json(dumps(SAMPLE_CONTRIBUTOR_HASH))
 
+    def test_contributors_search_expr(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause_search_expr(
+            SAMPLE_UNICODE_CONTRIBUTOR_HASH,
+            first_name_operator='ILIKE',
+            first_name=u'%é%'
+        )
+        self.base_where_clause_search_expr(
+            SAMPLE_UNICODE_CONTRIBUTOR_HASH,
+            last_name_operator='ILIKE',
+            last_name='Do%'
+        )
+
     def test_contributors_where(self):
         """
         Test the hash portion using base object method.

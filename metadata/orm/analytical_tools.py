@@ -61,7 +61,10 @@ class AnalyticalTools(CherryPyAPI):
         if '_id' in kwargs:
             where_clause &= Expression(AnalyticalTools.id, OP.EQ, kwargs['_id'])
         if 'name' in kwargs:
-            where_clause &= Expression(AnalyticalTools.name, OP.EQ, kwargs['name'])
+            name_oper = OP.EQ
+            if 'name_operator' in kwargs:
+                name_oper = getattr(OP, kwargs['name_operator'])
+            where_clause &= Expression(AnalyticalTools.name, name_oper, kwargs['name'])
         if 'encoding' in kwargs:
             where_clause &= Expression(AnalyticalTools.encoding, OP.EQ, kwargs['encoding'])
         return where_clause

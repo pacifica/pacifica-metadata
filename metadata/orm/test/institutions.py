@@ -9,7 +9,7 @@ from metadata.orm.institutions import Institutions
 
 SAMPLE_INSTITUTION_HASH = {
     "_id": 127,
-    "institution_name": "STFU",
+    "name": "STFU",
     "association_cd": "UNK",
     "is_foreign": 1,
     'encoding': 'UTF8'
@@ -17,7 +17,7 @@ SAMPLE_INSTITUTION_HASH = {
 
 SAMPLE_UNICODE_INSTITUTION_HASH = {
     "_id": 127,
-    "institution_name": u"STFUé",
+    "name": u'STFUé',
     "association_cd": "UNK",
     "is_foreign": 1,
     'encoding': 'UTF8'
@@ -54,6 +54,21 @@ class TestInstitutions(TestBase):
         Test the hash portion using base object method.
         """
         self.base_test_json(dumps(SAMPLE_INSTITUTION_HASH))
+
+    def test_institutions_search_expr(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause_search_expr(
+            SAMPLE_UNICODE_INSTITUTION_HASH,
+            name_operator='ILIKE',
+            name=u'%é%'
+        )
+        self.base_where_clause_search_expr(
+            SAMPLE_INSTITUTION_HASH,
+            name_operator='ILIKE',
+            name='ST%'
+        )
 
     def test_institutions_where(self):
         """

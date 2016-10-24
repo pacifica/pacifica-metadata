@@ -9,14 +9,14 @@ from metadata.orm.groups import Groups
 
 SAMPLE_GROUP_HASH = {
     "_id": 10,
-    "group_name": "Custodians",
+    "name": "Custodians",
     "is_admin": True,
     "encoding": "UTF8"
 }
 
 SAMPLE_UNICODE_GROUP_HASH = {
     "_id": 11,
-    "group_name": u"Bléh",
+    "name": u"Bléh",
     "is_admin": False,
     "encoding": "UTF8"
 }
@@ -52,6 +52,16 @@ class TestGroups(TestBase):
         Test the hash portion using base object method.
         """
         self.base_test_json(dumps(SAMPLE_GROUP_HASH))
+
+    def test_group_search_expr(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause_search_expr(
+            SAMPLE_UNICODE_GROUP_HASH,
+            name_operator='ILIKE',
+            name=u'%é%'
+        )
 
     def test_group_where(self):
         """

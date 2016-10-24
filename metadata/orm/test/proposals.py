@@ -72,6 +72,21 @@ class TestProposals(TestBase):
         """
         self.base_test_json(dumps(SAMPLE_PROPOSAL_HASH))
 
+    def test_proposals_search_expr(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause_search_expr(
+            SAMPLE_UNICODE_PROPOSAL_HASH,
+            title_operator='ILIKE',
+            title=u'%é%'
+        )
+        self.base_where_clause_search_expr(
+            SAMPLE_PROPOSAL_HASH,
+            abstract_operator='ILIKE',
+            abstract='%This%'
+        )
+
     def test_proposals_where(self):
         """
         Test the hash portion using base object method.

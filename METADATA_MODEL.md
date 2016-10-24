@@ -11,7 +11,7 @@ objects in the model.
 | id | SERIAL |  |
 | encoding | VARCHAR |  |
 | impact_factor | REAL |  |
-| journal_name | VARCHAR |  |
+| name | VARCHAR |  |
 | website_url | VARCHAR |  |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
@@ -37,8 +37,8 @@ objects in the model.
 | id | SERIAL |  |
 | association_cd | VARCHAR |  |
 | encoding | VARCHAR |  |
-| institution_name | TEXT |  |
 | is_foreign | BOOLEAN |  |
+| name | TEXT |  |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -68,8 +68,18 @@ objects in the model.
 | active | BOOLEAN |  |
 | display_name | VARCHAR |  |
 | encoding | VARCHAR |  |
-| instrument_name | VARCHAR |  |
+| name | VARCHAR |  |
 | name_short | VARCHAR |  |
+| created | TIMESTAMP |  |
+| deleted | TIMESTAMP |  |
+| updated | TIMESTAMP |  |
+
+### InstrumentCustodian
+| Column | Type | Reference |
+| --- | --- | --- |
+| id | SERIAL |  |
+| custodian | INTEGER | Users.id |
+| instrument | INTEGER | Instruments.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
@@ -243,8 +253,8 @@ objects in the model.
 | --- | --- | --- |
 | id | SERIAL |  |
 | encoding | VARCHAR |  |
-| group_name | VARCHAR |  |
 | is_admin | BOOLEAN |  |
+| name | VARCHAR |  |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |

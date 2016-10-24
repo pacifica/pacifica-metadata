@@ -91,26 +91,18 @@ class Citations(CherryPyAPI):
             # pylint: disable=invalid-name
             self.id = int(obj['_id'])
             # pylint: enable=invalid-name
-        if 'article_title' in obj:
-            self.article_title = unicode(obj['article_title'])
         if 'journal_id' in obj:
             self.journal = Journals.get(Journals.id == int(obj['journal_id']))
-        if 'journal_volume' in obj:
-            self.journal_volume = int(obj['journal_volume'])
-        if 'journal_issue' in obj:
-            self.journal_issue = int(obj['journal_issue'])
-        if 'page_range' in obj:
-            self.page_range = str(obj['page_range'])
-        if 'doi_reference' in obj:
-            self.doi_reference = str(obj['doi_reference'])
-        if 'xml_text' in obj:
-            self.xml_text = unicode(obj['xml_text'])
-        if 'release_authorization_id' in obj:
-            self.release_authorization_id = str(obj['release_authorization_id'])
-        if 'abstract_text' in obj:
-            self.abstract_text = unicode(obj['abstract_text'])
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+        for key in ['journal_volume', 'journal_issue']:
+            if key in obj:
+                setattr(self, key, int(obj[key]))
+        for key in ['page_range', 'release_authorization_id', 'encoding',
+                    'doi_reference']:
+            if key in obj:
+                setattr(self, key, str(obj[key]))
+        for key in ['article_title', 'xml_text', 'abstract_text']:
+            if key in obj:
+                setattr(self, key, unicode(obj[key]))
 
     def where_clause(self, kwargs):
         """
@@ -125,5 +117,8 @@ class Citations(CherryPyAPI):
         for key in ['article_title', 'journal_volume', 'journal_issue', 'page_range',
                     'doi_reference', 'encoding']:
             if key in kwargs:
-                where_clause &= Expression(getattr(Citations, key), OP.EQ, kwargs[key])
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Citations, key), key_oper, kwargs[key])
         return where_clause

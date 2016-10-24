@@ -5,7 +5,7 @@ Proposals data model
 from peewee import TextField, CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.utils import ExtendDateTimeField, ExtendDateField
-from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
+from metadata.orm.utils import date_converts, datetime_now_nomicrosecond
 
 # pylint: disable=too-many-instance-attributes
 class Proposals(CherryPyAPI):
@@ -120,15 +120,18 @@ class Proposals(CherryPyAPI):
         for date_key in ['accepted_date',
                          'actual_start_date', 'actual_end_date']:
             if date_key in kwargs:
-                date_obj = date_converts(kwargs[date_key])
-                where_clause &= Expression(getattr(Proposals, date_key), OP.EQ, date_obj)
+                date_obj, date_oper = self._date_operator_compare(date_key, kwargs, date_converts)
+                where_clause &= Expression(getattr(Proposals, date_key), date_oper, date_obj)
         for date_key in ['submitted_date']:
             if date_key in kwargs:
-                date_obj = datetime_converts(kwargs[date_key])
-                where_clause &= Expression(getattr(Proposals, date_key), OP.EQ, date_obj)
+                date_obj, date_oper = self._date_operator_compare(date_key, kwargs)
+                where_clause &= Expression(getattr(Proposals, date_key), date_oper, date_obj)
         if '_id' in kwargs:
             where_clause &= Expression(Proposals.id, OP.EQ, kwargs['_id'])
         for key in ['title', 'abstract', 'science_theme', 'proposal_type', 'encoding']:
             if key in kwargs:
-                where_clause &= Expression(getattr(Proposals, key), OP.EQ, kwargs[key])
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Proposals, key), key_oper, kwargs[key])
         return where_clause

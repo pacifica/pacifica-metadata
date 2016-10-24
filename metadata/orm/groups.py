@@ -13,14 +13,14 @@ class Groups(CherryPyAPI):
         +-------------------+-------------------------------------+
         | Name              | Description                         |
         +===================+=====================================+
-        | group_name        | name of the group                   |
+        | name              | name of the group                   |
         +-------------------+-------------------------------------+
         | is_admin          | does the group has admin abilities  |
         +-------------------+-------------------------------------+
-        | author_precedence | encoding for the group_name         |
+        | encoding          | encoding for the group name         |
         +-------------------+-------------------------------------+
     """
-    group_name = CharField(default="")
+    name = CharField(default="")
     is_admin = BooleanField(default=False)
     encoding = CharField(default="UTF8")
 
@@ -30,7 +30,7 @@ class Groups(CherryPyAPI):
         Build the elasticsearch mapping bits
         """
         super(Groups, Groups).elastic_mapping_builder(obj)
-        obj['group_name'] = obj['encoding'] = {'type': 'string'}
+        obj['name'] = obj['encoding'] = {'type': 'string'}
         obj['is_admin'] = {'type': 'boolean'}
 
     def to_hash(self):
@@ -39,7 +39,7 @@ class Groups(CherryPyAPI):
         """
         obj = super(Groups, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['group_name'] = unicode(self.group_name)
+        obj['name'] = unicode(self.name)
         obj['encoding'] = str(self.encoding)
         obj['is_admin'] = bool(self.is_admin)
         return obj
@@ -53,8 +53,8 @@ class Groups(CherryPyAPI):
         if '_id' in obj:
             self.id = int(obj['_id'])
         # pylint: enable=invalid-name
-        if 'group_name' in obj:
-            self.group_name = unicode(obj['group_name'])
+        if 'name' in obj:
+            self.name = unicode(obj['name'])
         if 'encoding' in obj:
             self.encoding = str(obj['encoding'])
         if 'is_admin' in obj:
@@ -67,7 +67,10 @@ class Groups(CherryPyAPI):
         where_clause = super(Groups, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Groups.id, OP.EQ, kwargs['_id'])
-        for key in ['group_name', 'is_admin', 'encoding']:
+        for key in ['name', 'is_admin', 'encoding']:
             if key in kwargs:
-                where_clause &= Expression(getattr(Groups, key), OP.EQ, kwargs[key])
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Groups, key), key_oper, kwargs[key])
         return where_clause

@@ -60,8 +60,10 @@ class Values(CherryPyAPI):
         where_clause = super(Values, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Values.id, OP.EQ, kwargs['_id'])
-        if 'value' in kwargs:
-            where_clause &= Expression(Values.value, OP.EQ, kwargs['value'])
-        if 'encoding' in kwargs:
-            where_clause &= Expression(Values.encoding, OP.EQ, kwargs['encoding'])
+        for key in ['value', 'encoding']:
+            if key in kwargs:
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Values, key), key_oper, kwargs[key])
         return where_clause

@@ -3,7 +3,7 @@
 """
 Test the files ORM object
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import mktime
 from json import dumps
 from metadata.orm.test.base import TestBase
@@ -76,6 +76,22 @@ class TestFiles(TestBase):
         Test the hash portion using base object method.
         """
         self.base_test_json(dumps(SAMPLE_FILE_HASH))
+
+    def test_files_search_expr(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause_search_expr(
+            SAMPLE_UNICODE_FILE_HASH,
+            name_operator='ILIKE',
+            name=u'%é%'
+        )
+        date_time_chk = datetime.now()-timedelta(minutes=10)
+        self.base_where_clause_search_expr(
+            SAMPLE_FILE_HASH,
+            mtime_operator='GT',
+            mtime=date_time_chk.replace(microsecond=0).isoformat()
+        )
 
     def test_files_where(self):
         """

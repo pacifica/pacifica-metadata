@@ -65,6 +65,16 @@ class TestKeywords(TestBase):
         """
         self.base_test_json(dumps(SAMPLE_KEYWORD_HASH))
 
+    def test_keywords_search_expr(self):
+        """
+        Test the hash portion using base object method.
+        """
+        self.base_where_clause_search_expr(
+            SAMPLE_UNICODE_KEYWORD_HASH,
+            keyword_operator='ILIKE',
+            keyword=u'%é%'
+        )
+
     def test_keywords_where(self):
         """
         Test the hash portion using base object method.

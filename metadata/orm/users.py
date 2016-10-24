@@ -84,5 +84,8 @@ class Users(CherryPyAPI):
         for key in ['first_name', 'middle_initial', 'last_name', 'network_id',
                     'encoding', 'email_address']:
             if key in kwargs:
-                where_clause &= Expression(getattr(Users, key), OP.EQ, kwargs[key])
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Users, key), key_oper, kwargs[key])
         return where_clause

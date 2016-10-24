@@ -104,5 +104,8 @@ class Contributors(CherryPyAPI):
         for key in ['author_id', 'first_name', 'last_name', 'encoding'
                     'middle_initial', 'dept_code']:
             if key in kwargs:
-                where_clause &= Expression(getattr(Contributors, key), OP.EQ, kwargs[key])
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Contributors, key), key_oper, kwargs[key])
         return where_clause
