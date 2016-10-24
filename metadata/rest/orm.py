@@ -20,11 +20,6 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         Internal select method.
         """
         primary_keys = [getattr(self.__class__, key) for key in self.get_primary_keys()]
-        print '=========================='
-        print self.get_primary_keys()
-        print '=========================='
-        print primary_keys
-        print '=========================='
         objs = (self.select()
                 .where(self.where_clause(kwargs))
                 .order_by(*primary_keys))
