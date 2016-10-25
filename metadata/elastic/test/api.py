@@ -20,14 +20,15 @@ class TestElasticAPI(TestCase):
             '_id': 127,
             u'foo': u'bar'
         }
-        url = "http://127.0.0.1:9200/pacifica/ElasticAPI/127/_create"
+        url = "http://127.0.0.1:9200/pacifica/ElasticAPI/127"
         obj = ElasticAPI()
         obj.id = 127
         setattr(obj, 'to_hash', lambda: obj_hash)
         response_body = {
             "status": "uploaded!"
         }
-        httpretty.register_uri(httpretty.PUT, url,
+        httpretty.register_uri(httpretty.HEAD, url, status=404)
+        httpretty.register_uri(httpretty.PUT, '%s/_create'%(url),
                                body=dumps(response_body),
                                content_type="application/json")
         ElasticAPI.elastic_upload(obj)
@@ -48,23 +49,18 @@ class TestElasticAPI(TestCase):
             '_id': 127,
             u'foo': u'bar'
         }
-        url = "http://127.0.0.1:9200/pacifica/ElasticAPI/127/_create"
+        url = "http://127.0.0.1:9200/pacifica/ElasticAPI/127"
         obj = ElasticAPI()
         obj.id = 127
         setattr(obj, 'to_hash', lambda: obj_hash)
-        response_body = {
-            "status": "failed!"
-        }
-        httpretty.register_uri(httpretty.PUT, url,
-                               body=dumps(response_body),
-                               content_type="application/json",
+        httpretty.register_uri(httpretty.HEAD, url,
                                status=500)
         #pylint: disable=broad-except
         try:
             ElasticAPI.elastic_upload(obj)
         except Exception, ex:
-            self.assertEqual(httpretty.last_request().method, "PUT")
-            self.assertEqual(str(ex), 'TransportError(500, u\'%s\')'%(dumps(response_body)))
+            self.assertEqual(httpretty.last_request().method, "HEAD")
+            self.assertEqual(str(ex), 'TransportError(500, u\'\')')
         #pylint: enable=broad-except
 
     @httpretty.activate

@@ -30,7 +30,10 @@ class ElasticAPI(object):
         obj_id = obj['_id']
         del obj['_id']
         esclient = Elasticsearch([ELASTIC_ENDPOINT])
-        esclient.create(ELASTIC_INDEX, class_name, obj_id, obj)
+        if esclient.exists(ELASTIC_INDEX, class_name, obj_id):
+            esclient.update(ELASTIC_INDEX, class_name, obj_id, obj)
+        else:
+            esclient.create(ELASTIC_INDEX, class_name, obj_id, obj)
 
     @classmethod
     def create_elastic_mapping(cls):

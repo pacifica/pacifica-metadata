@@ -42,11 +42,12 @@ class TestCherryPyAPI(TestCase):
         test the select method of CherryPyAPI
         """
         test_obj = Keys()
-        url = "http://127.0.0.1:9200/pacifica/Keys/%s/_create"%(SAMPLE_KEY_HASH['_id'])
+        url = "http://127.0.0.1:9200/pacifica/Keys/%s"%(SAMPLE_KEY_HASH['_id'])
         response_body = {
             "status": "uploaded Keys!"
         }
-        httpretty.register_uri(httpretty.PUT, url,
+        httpretty.register_uri(httpretty.HEAD, url, status=200)
+        httpretty.register_uri(httpretty.POST, '%s/_update'%(url),
                                body=dumps(response_body),
                                content_type="application/json")
         with test_database(SqliteDatabase(':memory:'), [Keys]):
@@ -57,7 +58,7 @@ class TestCherryPyAPI(TestCase):
             # pylint: disable=protected-access
             test_obj._update(dumps(test_update), id=SAMPLE_KEY_HASH['_id'])
             # pylint: enable=protected-access
-            self.assertEqual(httpretty.last_request().method, "PUT")
+            self.assertEqual(httpretty.last_request().method, "POST")
 
     def test_select(self):
         """
