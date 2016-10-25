@@ -48,7 +48,7 @@ class TestConnections(TestCase):
                                content_type="application/json")
         for orm_cls in ORM_OBJECTS:
             class_name = orm_cls.__name__
-            es_url = "http://127.0.0.1:9200/pacifica"
+            es_url = "http://127.0.0.1:9200"
             es_mapping_url = "%s/_mapping/%s"%(es_url, class_name)
             httpretty.register_uri(httpretty.PUT, es_mapping_url,
                                    body=dumps(created_body),

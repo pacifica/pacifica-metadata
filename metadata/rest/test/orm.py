@@ -42,7 +42,7 @@ class TestCherryPyAPI(TestCase):
         test the select method of CherryPyAPI
         """
         test_obj = Keys()
-        url = "http://127.0.0.1:9200/pacifica/Keys/%s"%(SAMPLE_KEY_HASH['_id'])
+        url = "http://127.0.0.1:9200/pacifica/Keys/%s/_create"%(SAMPLE_KEY_HASH['_id'])
         response_body = {
             "status": "uploaded Keys!"
         }

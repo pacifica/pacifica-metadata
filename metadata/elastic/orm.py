@@ -2,10 +2,9 @@
 """
 Elastic search core class to convert db object.
 """
-from json import dumps
-import requests
+from elasticsearch import Elasticsearch
 
-from metadata.elastic import ES_INDEX_URL
+from metadata.elastic import ELASTIC_ENDPOINT, ELASTIC_INDEX
 
 class ElasticAPI(object):
     """
@@ -18,10 +17,8 @@ class ElasticAPI(object):
         """
         class_name = obj.__class__.__name__
         obj_id = obj.id
-        es_obj_url = "%s/%s/%s"%(ES_INDEX_URL, class_name, str(obj_id))
-        ret = requests.delete(es_obj_url.encode('utf-8'))
-        if int(ret.status_code)/100 != 2:
-            raise Exception("elastic_delete_obj: %s\n"%(ret.status_code))
+        esclient = Elasticsearch([ELASTIC_ENDPOINT])
+        esclient.delete(ELASTIC_INDEX, class_name, obj_id)
 
     @classmethod
     def elastic_upload(cls, obj):
@@ -32,10 +29,8 @@ class ElasticAPI(object):
         obj = obj.to_hash()
         obj_id = obj['_id']
         del obj['_id']
-        es_obj_url = "%s/%s/%s"%(ES_INDEX_URL, class_name, str(obj_id))
-        ret = requests.put(es_obj_url, data=dumps(obj))
-        if int(ret.status_code)/100 != 2:
-            raise Exception("upload_obj: %s\n"%(ret.status_code))
+        esclient = Elasticsearch([ELASTIC_ENDPOINT])
+        esclient.create(ELASTIC_INDEX, class_name, obj_id, obj)
 
     @classmethod
     def create_elastic_mapping(cls):
@@ -45,12 +40,9 @@ class ElasticAPI(object):
         PUT /{index}/_mapping/{type}
         { body }
         """
-        es_mapping_str = dumps(cls.elastic_mapping())
         class_name = cls.__name__
-        es_mapping_url = "%s/_mapping/%s"%(ES_INDEX_URL, class_name)
-        ret = requests.put(es_mapping_url.encode('utf-8'), data=es_mapping_str)
-        if int(ret.status_code)/100 != 2:
-            raise Exception("create_elastic_mapping: %s\n"%(ret.status_code))
+        esclient = Elasticsearch([ELASTIC_ENDPOINT])
+        esclient.indices.put_mapping(class_name, cls.elastic_mapping())
 
     @staticmethod
     def elastic_mapping_builder(obj):

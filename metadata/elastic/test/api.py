@@ -20,7 +20,7 @@ class TestElasticAPI(TestCase):
             '_id': 127,
             u'foo': u'bar'
         }
-        url = "http://127.0.0.1:9200/pacifica/ElasticAPI/127"
+        url = "http://127.0.0.1:9200/pacifica/ElasticAPI/127/_create"
         obj = ElasticAPI()
         obj.id = 127
         setattr(obj, 'to_hash', lambda: obj_hash)
@@ -48,7 +48,7 @@ class TestElasticAPI(TestCase):
             '_id': 127,
             u'foo': u'bar'
         }
-        url = "http://127.0.0.1:9200/pacifica/ElasticAPI/127"
+        url = "http://127.0.0.1:9200/pacifica/ElasticAPI/127/_create"
         obj = ElasticAPI()
         obj.id = 127
         setattr(obj, 'to_hash', lambda: obj_hash)
@@ -64,7 +64,7 @@ class TestElasticAPI(TestCase):
             ElasticAPI.elastic_upload(obj)
         except Exception, ex:
             self.assertEqual(httpretty.last_request().method, "PUT")
-            self.assertEqual(str(ex), "upload_obj: 500\n")
+            self.assertEqual(str(ex), 'TransportError(500, u\'%s\')'%(dumps(response_body)))
         #pylint: enable=broad-except
 
     @httpretty.activate
@@ -104,7 +104,7 @@ class TestElasticAPI(TestCase):
             ElasticAPI.elastic_delete(obj)
         except Exception, ex:
             self.assertEqual(httpretty.last_request().method, "DELETE")
-            self.assertEqual(str(ex), "elastic_delete_obj: 500\n")
+            self.assertEqual(str(ex), 'TransportError(500, u\'%s\')'%(dumps(response_body)))
         #pylint: enable=broad-except
 
     @httpretty.activate
@@ -112,7 +112,7 @@ class TestElasticAPI(TestCase):
         """
         Test the elastic_mapping class method
         """
-        url = "http://127.0.0.1:9200/pacifica/_mapping/ElasticAPI"
+        url = "http://127.0.0.1:9200/_mapping/ElasticAPI"
         obj = ElasticAPI()
         obj.id = 127
         response_body = {
@@ -129,7 +129,7 @@ class TestElasticAPI(TestCase):
         """
         Test the elastic mapping class method failed upload
         """
-        url = "http://127.0.0.1:9200/pacifica/_mapping/ElasticAPI"
+        url = "http://127.0.0.1:9200/_mapping/ElasticAPI"
         obj = ElasticAPI()
         obj.id = 127
         response_body = {
@@ -144,5 +144,5 @@ class TestElasticAPI(TestCase):
             ElasticAPI.create_elastic_mapping()
         except Exception, ex:
             self.assertEqual(httpretty.last_request().method, "PUT")
-            self.assertEqual(str(ex), "create_elastic_mapping: 500\n")
+            self.assertEqual(str(ex), 'TransportError(500, u\'%s\')'%(dumps(response_body)))
         #pylint: enable=broad-except
