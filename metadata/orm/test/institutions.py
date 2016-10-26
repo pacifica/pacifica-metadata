@@ -11,7 +11,7 @@ SAMPLE_INSTITUTION_HASH = {
     "_id": 127,
     "name": "STFU",
     "association_cd": "UNK",
-    "is_foreign": 1,
+    "is_foreign": True,
     'encoding': 'UTF8'
 }
 
@@ -19,7 +19,7 @@ SAMPLE_UNICODE_INSTITUTION_HASH = {
     "_id": 127,
     "name": u'STFUé',
     "association_cd": "UNK",
-    "is_foreign": 1,
+    "is_foreign": False,
     'encoding': 'UTF8'
 }
 

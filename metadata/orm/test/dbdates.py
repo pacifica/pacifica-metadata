@@ -151,3 +151,13 @@ class TestDBDates(TestBase):
             not_null_chk_obj = third_obj.get(expr)
             chk_obj_hash = not_null_chk_obj.to_hash()
             self.assertFalse(chk_obj_hash['deleted'] is None)
+
+    def test_bool_translate(self):
+        """
+        Test the bool translate method
+        """
+        # pylint: disable=protected-access
+        self.assertTrue(PacificaModel._bool_translate(True))
+        self.assertFalse(PacificaModel._bool_translate('False'))
+        self.assertFalse(PacificaModel._bool_translate('false'))
+        # pylint: enable=protected-access

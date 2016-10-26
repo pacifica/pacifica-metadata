@@ -121,6 +121,18 @@ class PacificaModel(Model):
         return dumps(self.to_hash())
 
     @staticmethod
+    def _bool_translate(thing):
+        """
+        Translate the thing into a boolean
+        """
+        ret = bool(thing)
+        if thing == 'False':
+            ret = False
+        elif thing == 'false':
+            ret = False
+        return ret
+
+    @staticmethod
     def _date_operator_compare(date, kwargs, dt_converts=datetime_converts):
         if "%s_operator"%(date) in kwargs:
             date_oper = getattr(OP, kwargs["%s_operator"%(date)])

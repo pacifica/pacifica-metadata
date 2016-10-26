@@ -63,7 +63,7 @@ class Institutions(CherryPyAPI):
         if 'association_cd' in obj:
             self.association_cd = str(obj['association_cd'])
         if 'is_foreign' in obj:
-            self.is_foreign = bool(obj['is_foreign'])
+            self.is_foreign = self._bool_translate((obj['is_foreign']))
         if 'encoding' in obj:
             self.encoding = str(obj['encoding'])
 
@@ -74,6 +74,8 @@ class Institutions(CherryPyAPI):
         where_clause = super(Institutions, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Institutions.id, OP.EQ, kwargs['_id'])
+        if 'is_foreign' in kwargs:
+            kwargs['is_foreign'] = self._bool_translate(kwargs['is_foreign'])
         for key in ['name', 'is_foreign', 'association_cd', 'encoding']:
             if key in kwargs:
                 key_oper = OP.EQ

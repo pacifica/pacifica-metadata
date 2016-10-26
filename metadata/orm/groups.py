@@ -58,7 +58,7 @@ class Groups(CherryPyAPI):
         if 'encoding' in obj:
             self.encoding = str(obj['encoding'])
         if 'is_admin' in obj:
-            self.is_admin = bool(obj['is_admin'])
+            self.is_admin = self._bool_translate(obj['is_admin'])
 
     def where_clause(self, kwargs):
         """
@@ -67,6 +67,8 @@ class Groups(CherryPyAPI):
         where_clause = super(Groups, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Groups.id, OP.EQ, kwargs['_id'])
+        if 'is_admin' in kwargs:
+            kwargs['is_admin'] = self._bool_translate(kwargs['is_admin'])
         for key in ['name', 'is_admin', 'encoding']:
             if key in kwargs:
                 key_oper = OP.EQ

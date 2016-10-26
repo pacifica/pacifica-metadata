@@ -68,7 +68,7 @@ class Instruments(CherryPyAPI):
         if 'name_short' in obj:
             self.name_short = unicode(obj['name_short'])
         if 'active' in obj:
-            self.active = bool(obj['active'])
+            self.active = self._bool_translate(obj['active'])
         if 'encoding' in obj:
             self.encoding = str(obj['encoding'])
 
@@ -79,6 +79,8 @@ class Instruments(CherryPyAPI):
         where_clause = super(Instruments, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Instruments.id, OP.EQ, kwargs['_id'])
+        if 'active' in kwargs:
+            kwargs['active'] = self._bool_translate(kwargs['active'])
         for key in ['name', 'display_name', 'name_short', 'active',
                     'encoding']:
             if key in kwargs:
