@@ -31,7 +31,7 @@ class ElasticAPI(object):
         del obj['_id']
         esclient = Elasticsearch([ELASTIC_ENDPOINT])
         if esclient.exists(ELASTIC_INDEX, class_name, obj_id):
-            esclient.update(ELASTIC_INDEX, class_name, obj_id, obj)
+            esclient.update(ELASTIC_INDEX, class_name, obj_id, {'doc': obj})
         else:
             esclient.create(ELASTIC_INDEX, class_name, obj_id, obj)
 
