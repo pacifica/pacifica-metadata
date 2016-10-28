@@ -92,40 +92,44 @@ class Proposals(CherryPyAPI):
         Converts the hash to the object
         """
         super(Proposals, self).from_hash(obj)
-        # pylint: disable=invalid-name
-        if '_id' in obj:
-            self.id = unicode(obj['_id'])
-        # pylint: enable=invalid-name
-        if 'title' in obj:
-            self.title = unicode(obj['title'])
-        if 'abstract' in obj:
-            self.abstract = unicode(obj['abstract'])
-        if 'science_theme' in obj:
-            self.science_theme = unicode(obj['science_theme'])
-        if 'proposal_type' in obj:
-            self.proposal_type = unicode(obj['proposal_type'])
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+        self._set_only_if('_id', obj, 'id', lambda: unicode(obj['_id']))
+        self._set_only_if('title', obj, 'title', lambda: unicode(obj['title']))
+        self._set_only_if('abstract', obj, 'abstract', lambda: unicode(obj['abstract']))
+        self._set_only_if('science_theme', obj, 'science_theme',
+                          lambda: unicode(obj['science_theme'])
+                         )
+        self._set_only_if('proposal_type', obj, 'proposal_type',
+                          lambda: unicode(obj['proposal_type'])
+                         )
+        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
         self._set_datetime_part('submitted_date', obj)
         self._set_date_part('accepted_date', obj)
         self._set_date_part('actual_start_date', obj)
         self._set_date_part('actual_end_date', obj)
         self._set_date_part('closed_date', obj)
 
+    def _where_date_clause(self, where_clause, kwargs):
+        date_keys = ['accepted_date', 'actual_start_date', 'actual_end_date']
+        for date_key in date_keys:
+            if date_key in kwargs:
+                date_obj, date_oper = self._date_operator_compare(date_key, kwargs, date_converts)
+                where_clause &= Expression(getattr(Proposals, date_key), date_oper, date_obj)
+        return where_clause
+
+    def _where_datetime_clause(self, where_clause, kwargs):
+        for date_key in ['submitted_date']:
+            if date_key in kwargs:
+                date_obj, date_oper = self._date_operator_compare(date_key, kwargs)
+                where_clause &= Expression(getattr(Proposals, date_key), date_oper, date_obj)
+        return where_clause
+
     def where_clause(self, kwargs):
         """
         PeeWee specific where clause used for search.
         """
         where_clause = super(Proposals, self).where_clause(kwargs)
-        for date_key in ['accepted_date',
-                         'actual_start_date', 'actual_end_date']:
-            if date_key in kwargs:
-                date_obj, date_oper = self._date_operator_compare(date_key, kwargs, date_converts)
-                where_clause &= Expression(getattr(Proposals, date_key), date_oper, date_obj)
-        for date_key in ['submitted_date']:
-            if date_key in kwargs:
-                date_obj, date_oper = self._date_operator_compare(date_key, kwargs)
-                where_clause &= Expression(getattr(Proposals, date_key), date_oper, date_obj)
+        where_clause = self._where_date_clause(where_clause, kwargs)
+        where_clause = self._where_datetime_clause(where_clause, kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Proposals.id, OP.EQ, kwargs['_id'])
         for key in ['title', 'abstract', 'science_theme', 'proposal_type', 'encoding']:

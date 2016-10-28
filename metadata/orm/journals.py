@@ -53,18 +53,15 @@ class Journals(CherryPyAPI):
         Convert the hash into the object.
         """
         super(Journals, self).from_hash(obj)
-        if '_id' in obj:
-            # pylint: disable=invalid-name
-            self.id = int(obj['_id'])
-            # pylint: enable=invalid-name
-        if 'name' in obj:
-            self.name = unicode(obj['name'])
-        if 'impact_factor' in obj:
-            self.impact_factor = float(obj['impact_factor'])
-        if 'website_url' in obj:
-            self.website_url = str(obj['website_url'])
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
+        self._set_only_if('name', obj, 'name', lambda: unicode(obj['name']))
+        self._set_only_if('impact_factor', obj, 'impact_factor',
+                          lambda: float(obj['impact_factor'])
+                         )
+        self._set_only_if('website_url', obj, 'website_url',
+                          lambda: str(obj['website_url'])
+                         )
+        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
 
     def where_clause(self, kwargs):
         """

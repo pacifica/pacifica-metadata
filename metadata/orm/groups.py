@@ -60,6 +60,16 @@ class Groups(CherryPyAPI):
         if 'is_admin' in obj:
             self.is_admin = self._bool_translate(obj['is_admin'])
 
+    @staticmethod
+    def _where_attr_clause(where_clause, kwargs):
+        for key in ['name', 'is_admin', 'encoding']:
+            if key in kwargs:
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Groups, key), key_oper, kwargs[key])
+        return where_clause
+
     def where_clause(self, kwargs):
         """
         PeeWee specific where clause used for search.
@@ -69,10 +79,4 @@ class Groups(CherryPyAPI):
             where_clause &= Expression(Groups.id, OP.EQ, kwargs['_id'])
         if 'is_admin' in kwargs:
             kwargs['is_admin'] = self._bool_translate(kwargs['is_admin'])
-        for key in ['name', 'is_admin', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if "%s_operator"%(key) in kwargs:
-                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
-                where_clause &= Expression(getattr(Groups, key), key_oper, kwargs[key])
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs)

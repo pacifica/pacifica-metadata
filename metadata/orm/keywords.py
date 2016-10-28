@@ -61,6 +61,16 @@ class Keywords(CherryPyAPI):
         if 'citation_id' in obj:
             self.citation = Citations.get(Citations.id == obj['citation_id'])
 
+    @staticmethod
+    def _where_attr_clause(where_clause, kwargs):
+        for key in ['keyword', 'encoding']:
+            if key in kwargs:
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Keywords, key), key_oper, kwargs[key])
+        return where_clause
+
     def where_clause(self, kwargs):
         """
         Where clause for the various elements.
@@ -71,10 +81,4 @@ class Keywords(CherryPyAPI):
             where_clause &= Expression(Keywords.citation, OP.EQ, citation)
         if '_id' in kwargs:
             where_clause &= Expression(Keywords.id, OP.EQ, kwargs['_id'])
-        for key in ['keyword', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if "%s_operator"%(key) in kwargs:
-                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
-                where_clause &= Expression(getattr(Keywords, key), key_oper, kwargs[key])
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs)

@@ -64,9 +64,11 @@ class Contributors(CherryPyAPI):
         obj['first_name'] = unicode(self.first_name)
         obj['middle_initial'] = unicode(self.middle_initial)
         obj['last_name'] = unicode(self.last_name)
-        obj['person_id'] = int(self.person.id)
         obj['dept_code'] = unicode(self.dept_code)
+        # pylint: disable=no-member
+        obj['person_id'] = int(self.person.id)
         obj['institution_id'] = int(self.institution.id)
+        # pylint: enable=no-member
         obj['encoding'] = str(self.encoding)
         return obj
 
@@ -75,20 +77,27 @@ class Contributors(CherryPyAPI):
         Convert the hash into the object fields.
         """
         super(Contributors, self).from_hash(obj)
-        if '_id' in obj:
-            # pylint: disable=invalid-name
-            self.id = int(obj['_id'])
-            # pylint: enable=invalid-name
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
         for attr in ['first_name', 'middle_initial', 'last_name', 'dept_code']:
-            if attr in obj:
-                setattr(self, attr, unicode(obj[attr]))
-        if 'person_id' in obj:
-            self.person = Users.get(Users.id == int(obj['person_id']))
-        if 'institution_id' in obj:
-            inst_bool = Institutions.id == int(obj['institution_id'])
-            self.institution = Institutions.get(inst_bool)
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+            self._set_only_if(attr, obj, attr, lambda k=attr: unicode(obj[k]))
+        self._set_only_if('person_id', obj, 'person',
+                          lambda: Users.get(Users.id == int(obj['person_id']))
+                         )
+        self._set_only_if('institution_id', obj, 'institution',
+                          lambda: Institutions.get(Institutions.id == int(obj['institution_id']))
+                         )
+        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
+
+    @staticmethod
+    def _where_attr_clause(where_clause, kwargs):
+        for key in ['author_id', 'first_name', 'last_name', 'encoding'
+                    'middle_initial', 'dept_code']:
+            if key in kwargs:
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Contributors, key), key_oper, kwargs[key])
+        return where_clause
 
     def where_clause(self, kwargs):
         """
@@ -101,11 +110,4 @@ class Contributors(CherryPyAPI):
         if 'institution_id' in kwargs:
             inst = Institutions.get(Institutions.id == kwargs['institution_id'])
             where_clause &= Expression(Contributors.institution, OP.EQ, inst)
-        for key in ['author_id', 'first_name', 'last_name', 'encoding'
-                    'middle_initial', 'dept_code']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if "%s_operator"%(key) in kwargs:
-                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
-                where_clause &= Expression(getattr(Contributors, key), key_oper, kwargs[key])
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs)

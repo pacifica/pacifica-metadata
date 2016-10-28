@@ -73,7 +73,9 @@ class Citations(CherryPyAPI):
         obj['article_title'] = unicode(self.article_title)
         obj['abstract_text'] = unicode(self.abstract_text)
         obj['xml_text'] = unicode(self.xml_text)
+        # pylint: disable=no-member
         obj['journal_id'] = int(self.journal.id)
+        # pylint: enable=no-member
         obj['journal_volume'] = int(self.journal_volume)
         obj['journal_issue'] = int(self.journal_issue)
         obj['page_range'] = str(self.page_range)
@@ -87,22 +89,28 @@ class Citations(CherryPyAPI):
         Converts the object into the citation object fields.
         """
         super(Citations, self).from_hash(obj)
-        if '_id' in obj:
-            # pylint: disable=invalid-name
-            self.id = int(obj['_id'])
-            # pylint: enable=invalid-name
-        if 'journal_id' in obj:
-            self.journal = Journals.get(Journals.id == int(obj['journal_id']))
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
+        self._set_only_if('journal_id', obj, 'journal',
+                          lambda: Journals.get(Journals.id == int(obj['journal_id']))
+                         )
         for key in ['journal_volume', 'journal_issue']:
-            if key in obj:
-                setattr(self, key, int(obj[key]))
+            self._set_only_if(key, obj, key, lambda k=key: int(obj[k]))
         for key in ['page_range', 'release_authorization_id', 'encoding',
                     'doi_reference']:
-            if key in obj:
-                setattr(self, key, str(obj[key]))
+            self._set_only_if(key, obj, key, lambda k=key: str(obj[k]))
         for key in ['article_title', 'xml_text', 'abstract_text']:
-            if key in obj:
-                setattr(self, key, unicode(obj[key]))
+            self._set_only_if(key, obj, key, lambda k=key: unicode(obj[k]))
+
+    @staticmethod
+    def _where_attr_clause(where_clause, kwargs):
+        for key in ['article_title', 'journal_volume', 'journal_issue', 'page_range',
+                    'doi_reference', 'encoding']:
+            if key in kwargs:
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Citations, key), key_oper, kwargs[key])
+        return where_clause
 
     def where_clause(self, kwargs):
         """
@@ -114,11 +122,4 @@ class Citations(CherryPyAPI):
             where_clause &= Expression(Citations.journal, OP.EQ, journal)
         if '_id' in kwargs:
             where_clause &= Expression(Citations.id, OP.EQ, int(kwargs['_id']))
-        for key in ['article_title', 'journal_volume', 'journal_issue', 'page_range',
-                    'doi_reference', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if "%s_operator"%(key) in kwargs:
-                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
-                where_clause &= Expression(getattr(Citations, key), key_oper, kwargs[key])
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs)

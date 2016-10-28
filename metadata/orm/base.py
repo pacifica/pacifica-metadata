@@ -74,6 +74,16 @@ class PacificaModel(Model):
         """
         self._meta.database.rollback()
 
+    def _set_only_if(self, key, obj, dest_attr, func):
+        if key in obj:
+            setattr(self, dest_attr, func())
+
+    def _set_date_part(self, date_part, obj):
+        self._set_only_if(date_part, obj, date_part, lambda: date_converts(obj[date_part]))
+
+    def _set_datetime_part(self, time_part, obj):
+        self._set_only_if(time_part, obj, time_part, lambda: datetime_converts(obj[time_part]))
+
     def to_hash(self):
         """
         Converts the base object fields into serializable attributes
@@ -85,17 +95,6 @@ class PacificaModel(Model):
         obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         return obj
-
-    def _set_date_part(self, date_part, obj):
-        if date_part in obj:
-            setattr(self, date_part, date_converts(obj[date_part]))
-
-    def _set_datetime_part(self, time_part, obj):
-        """
-        do more consistent type checking
-        """
-        if time_part in obj:
-            setattr(self, time_part, datetime_converts(obj[time_part]))
 
     def from_hash(self, obj):
         """

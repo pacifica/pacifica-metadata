@@ -57,20 +57,29 @@ class Instruments(CherryPyAPI):
         Convert the hash into the object.
         """
         super(Instruments, self).from_hash(obj)
-        # pylint: disable=invalid-name
-        if '_id' in obj:
-            self.id = int(obj['_id'])
-        # pylint: enable=invalid-name
-        if 'name' in obj:
-            self.name = unicode(obj['name'])
-        if 'display_name' in obj:
-            self.display_name = unicode(obj['display_name'])
-        if 'name_short' in obj:
-            self.name_short = unicode(obj['name_short'])
-        if 'active' in obj:
-            self.active = self._bool_translate(obj['active'])
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
+        self._set_only_if('name', obj, 'name', lambda: unicode(obj['name']))
+        self._set_only_if('display_name', obj, 'display_name',
+                          lambda: unicode(obj['display_name'])
+                         )
+        self._set_only_if('name_short', obj, 'name_short',
+                          lambda: unicode(obj['name_short'])
+                         )
+        self._set_only_if('active', obj, 'active',
+                          lambda: self._bool_translate(obj['active'])
+                         )
+        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
+
+    @staticmethod
+    def _where_attr_clause(where_clause, kwargs):
+        for key in ['name', 'display_name', 'name_short', 'active',
+                    'encoding']:
+            if key in kwargs:
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Instruments, key), key_oper, kwargs[key])
+        return where_clause
 
     def where_clause(self, kwargs):
         """
@@ -81,11 +90,4 @@ class Instruments(CherryPyAPI):
             where_clause &= Expression(Instruments.id, OP.EQ, kwargs['_id'])
         if 'active' in kwargs:
             kwargs['active'] = self._bool_translate(kwargs['active'])
-        for key in ['name', 'display_name', 'name_short', 'active',
-                    'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if "%s_operator"%(key) in kwargs:
-                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
-                where_clause &= Expression(getattr(Instruments, key), key_oper, kwargs[key])
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs)

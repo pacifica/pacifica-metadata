@@ -68,10 +68,12 @@ class Files(CherryPyAPI):
         obj['name'] = unicode(self.name)
         obj['subdir'] = unicode(self.subdir)
         obj['mimetype'] = str(self.mimetype)
+        # pylint: disable=no-member
         obj['ctime'] = int(mktime(self.ctime.timetuple()))
         obj['mtime'] = int(mktime(self.mtime.timetuple()))
-        obj['size'] = int(self.size)
         obj['transaction_id'] = int(self.transaction.id)
+        # pylint: enable=no-member
+        obj['size'] = int(self.size)
         obj['encoding'] = str(self.encoding)
         return obj
 
@@ -80,28 +82,35 @@ class Files(CherryPyAPI):
         Converts the hash to an object
         """
         super(Files, self).from_hash(obj)
-        if '_id' in obj:
-            # pylint: disable=invalid-name
-            self.id = int(obj['_id'])
-            # pylint: enable=invalid-name
-        if 'name' in obj:
-            self.name = unicode(obj['name'])
-        if 'subdir' in obj:
-            self.subdir = unicode(obj['subdir'])
-        if 'mimetype' in obj:
-            self.mimetype = str(obj['mimetype'])
-        if 'ctime' in obj:
-            self.ctime = datetime.fromtimestamp(int(obj['ctime']))
-        if 'mtime' in obj:
-            self.mtime = datetime.fromtimestamp(int(obj['mtime']))
-        if 'size' in obj:
-            self.size = int(obj['size'])
-        if 'transaction_id' in obj:
-            self.transaction = Transactions.get(
-                Transactions.id == obj['transaction_id']
-            )
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
+        self._set_only_if('name', obj, 'name', lambda: unicode(obj['name']))
+        self._set_only_if('subdir', obj, 'subdir', lambda: unicode(obj['subdir']))
+        self._set_only_if('mimetype', obj, 'mimetype', lambda: str(obj['mimetype']))
+        self._set_only_if('ctime', obj, 'ctime', lambda: datetime.fromtimestamp(int(obj['ctime'])))
+        self._set_only_if('mtime', obj, 'mtime', lambda: datetime.fromtimestamp(int(obj['mtime'])))
+        self._set_only_if('size', obj, 'size', lambda: int(obj['size']))
+        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
+        trans_func = lambda: Transactions.get(
+            Transactions.id == obj['transaction_id']
+        )
+        self._set_only_if('transaction_id', obj, 'transaction', trans_func)
+
+    def _where_date_clause(self, where_clause, kwargs):
+        for date in ['mtime', 'ctime']:
+            if date in kwargs:
+                date_obj, date_oper = self._date_operator_compare(date, kwargs)
+                where_clause &= Expression(getattr(Files, date), date_oper, date_obj)
+        return where_clause
+
+    @staticmethod
+    def _where_attr_clause(where_clause, kwargs):
+        for key in ['name', 'subdir', 'mimetype', 'size', 'encoding']:
+            if key in kwargs:
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Files, key), key_oper, kwargs[key])
+        return where_clause
 
     def where_clause(self, kwargs):
         """
@@ -115,14 +124,6 @@ class Files(CherryPyAPI):
             )
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
-        for date in ['mtime', 'ctime']:
-            if date in kwargs:
-                date_obj, date_oper = self._date_operator_compare(date, kwargs)
-                where_clause &= Expression(getattr(Files, date), date_oper, date_obj)
-        for key in ['name', 'subdir', 'mimetype', 'size', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if "%s_operator"%(key) in kwargs:
-                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
-                where_clause &= Expression(getattr(Files, key), key_oper, kwargs[key])
+        where_clause = self._where_date_clause(where_clause, kwargs)
+        where_clause = self._where_attr_clause(where_clause, kwargs)
         return where_clause

@@ -10,3 +10,4 @@ coverage
 codeclimate-test-reporter
 pysqlite
 elasticsearch
+radon

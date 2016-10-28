@@ -54,18 +54,25 @@ class Institutions(CherryPyAPI):
         Convert the hash into the object.
         """
         super(Institutions, self).from_hash(obj)
-        # pylint: disable=invalid-name
-        if '_id' in obj:
-            self.id = int(obj['_id'])
-        # pylint: enable=invalid-name
-        if 'name' in obj:
-            self.name = unicode(obj['name'])
-        if 'association_cd' in obj:
-            self.association_cd = str(obj['association_cd'])
-        if 'is_foreign' in obj:
-            self.is_foreign = self._bool_translate((obj['is_foreign']))
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
+        self._set_only_if('name', obj, 'name', lambda: unicode(obj['name']))
+        self._set_only_if('association_cd', obj, 'association_cd',
+                          lambda: str(obj['association_cd'])
+                         )
+        self._set_only_if('is_foreign', obj, 'is_foreign',
+                          lambda: self._bool_translate((obj['is_foreign']))
+                         )
+        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
+
+    @staticmethod
+    def _where_attr_clause(where_clause, kwargs):
+        for key in ['name', 'is_foreign', 'association_cd', 'encoding']:
+            if key in kwargs:
+                key_oper = OP.EQ
+                if "%s_operator"%(key) in kwargs:
+                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                where_clause &= Expression(getattr(Institutions, key), key_oper, kwargs[key])
+        return where_clause
 
     def where_clause(self, kwargs):
         """
@@ -76,10 +83,4 @@ class Institutions(CherryPyAPI):
             where_clause &= Expression(Institutions.id, OP.EQ, kwargs['_id'])
         if 'is_foreign' in kwargs:
             kwargs['is_foreign'] = self._bool_translate(kwargs['is_foreign'])
-        for key in ['name', 'is_foreign', 'association_cd', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if "%s_operator"%(key) in kwargs:
-                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
-                where_clause &= Expression(getattr(Institutions, key), key_oper, kwargs[key])
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs)
