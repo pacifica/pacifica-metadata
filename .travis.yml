@@ -4,5 +4,23 @@ services:
 language: python
 python:
  - 2.7
-install: "pip install -r requirements.txt"
-script: bash -xe ./travis/static-analysis.sh && bash -xe ./travis/unit-tests.sh && bash -xe ./travis/test-deploy.sh
+ - pypy
+ - 3.5
+
+matrix:
+  allow_failures:
+    - env: RUN_DEPLOY=true
+  fast_finish: true
+  exclude:
+    - python: 3.5
+  include:
+    - python: 3.5
+      env: RUN_LINTS=true
+    - python: 2.7
+      env: RUN_LINTS=true
+    - python: 2.7
+      env: RUN_DEPLOY=true
+cache: pip
+
+before_install: bash -xe travis/before-install.sh
+script: bash -xe travis/test-script.sh

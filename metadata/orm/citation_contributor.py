@@ -1,7 +1,5 @@
 #!/usr/bin/python
-"""
-CitationContributor links citations and their authors.
-"""
+"""CitationContributor links citations and their authors."""
 from peewee import IntegerField, ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.utils import index_hash
 from metadata.orm.base import DB
@@ -9,9 +7,10 @@ from metadata.orm.citations import Citations
 from metadata.orm.contributors import Contributors
 from metadata.rest.orm import CherryPyAPI
 
+
 class CitationContributor(CherryPyAPI):
     """
-    CitationsContributors data model
+    CitationsContributors data model.
 
     Attributes:
         +-------------------+-------------------------------------+
@@ -24,32 +23,28 @@ class CitationContributor(CherryPyAPI):
         | author_precedence | Order of the Author in the Citation |
         +-------------------+-------------------------------------+
     """
+
     citation = ForeignKeyField(Citations, related_name='authors')
     author = ForeignKeyField(Contributors, related_name='citations')
     author_precedence = IntegerField(default=1)
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
-        """
-        PeeWee meta class contains database and primary keys.
-        """
+        """PeeWee meta class contains database and primary keys."""
+
         database = DB
         primary_key = CompositeKey('citation', 'author')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
     def elastic_mapping_builder(obj):
-        """
-        Build the elasticsearch mapping bits
-        """
+        """Build the elasticsearch mapping bits."""
         super(CitationContributor, CitationContributor).elastic_mapping_builder(obj)
         obj['citation_id'] = obj['author_id'] = obj['author_precedence'] = \
-        {'type': 'integer'}
+            {'type': 'integer'}
 
     def to_hash(self):
-        """
-        Converts the object to a hash
-        """
+        """Convert the object to a hash."""
         obj = super(CitationContributor, self).to_hash()
         obj['_id'] = index_hash(int(self.citation.id), int(self.author.id))
         obj['citation_id'] = int(self.citation.id)
@@ -58,9 +53,7 @@ class CitationContributor(CherryPyAPI):
         return obj
 
     def from_hash(self, obj):
-        """
-        Converts the hash into the object
-        """
+        """Convert the hash into the object."""
         super(CitationContributor, self).from_hash(obj)
         if 'citation_id' in obj:
             self.citation = Citations.get(Citations.id == obj['citation_id'])
@@ -70,9 +63,7 @@ class CitationContributor(CherryPyAPI):
             self.author_precedence = int(obj['author_precedence'])
 
     def where_clause(self, kwargs):
-        """
-        Where clause for the various elements.
-        """
+        """Where clause for the various elements."""
         where_clause = super(CitationContributor, self).where_clause(kwargs)
         if 'citation_id' in kwargs:
             citation = Citations.get(Citations.id == kwargs['citation_id'])

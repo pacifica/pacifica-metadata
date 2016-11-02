@@ -1,16 +1,15 @@
 #!/usr/bin/python
-"""
-Transactions model
-"""
+"""Transactions model."""
 from peewee import ForeignKeyField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.users import Users
 from metadata.orm.proposals import Proposals
 from metadata.orm.instruments import Instruments
 
+
 class Transactions(CherryPyAPI):
     """
-    Transactions model class
+    Transactions model class.
 
     Attributes:
         +-------------------+--------------------------------------+
@@ -23,24 +22,21 @@ class Transactions(CherryPyAPI):
         | proposal          | Proposal the transaction is for      |
         +-------------------+--------------------------------------+
     """
+
     submitter = ForeignKeyField(Users, related_name='transactions')
     instrument = ForeignKeyField(Instruments, related_name='transactions')
     proposal = ForeignKeyField(Proposals, related_name='transactions')
 
     @staticmethod
     def elastic_mapping_builder(obj):
-        """
-        Build the elasticsearch mapping bits
-        """
+        """Build the elasticsearch mapping bits."""
         super(Transactions, Transactions).elastic_mapping_builder(obj)
         obj['submitter'] = {'type': 'integer'}
         obj['instrument'] = {'type': 'integer'}
         obj['proposal'] = {'type': 'string'}
 
     def to_hash(self):
-        """
-        Converts the object to a hash
-        """
+        """Convert the object to a hash."""
         obj = super(Transactions, self).to_hash()
         obj['_id'] = int(self.id)
         obj['submitter'] = int(self.submitter.id)
@@ -49,9 +45,7 @@ class Transactions(CherryPyAPI):
         return obj
 
     def from_hash(self, obj):
-        """
-        Converts the hash into the object
-        """
+        """Convert the hash into the object."""
         super(Transactions, self).from_hash(obj)
         if '_id' in obj:
             # pylint: disable=invalid-name
@@ -65,9 +59,7 @@ class Transactions(CherryPyAPI):
             self.proposal = Proposals.get(Proposals.id == obj['proposal'])
 
     def where_clause(self, kwargs):
-        """
-        Where clause for the various elements.
-        """
+        """Where clause for the various elements."""
         where_clause = super(Transactions, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Transactions.id, OP.EQ, kwargs['_id'])

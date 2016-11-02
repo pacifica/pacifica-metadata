@@ -125,7 +125,7 @@ Get the object to make sure it stuck.
 }
 ```
 
-*Notice* the updated field did change to the current time when the 
+*Notice* the updated field did change to the current time when the
 POST happened.
 
 ### Delete the Object
@@ -135,7 +135,7 @@ To delete the object issue an HTTP DELETE request.
 curl -X DELETE 'http://localhost:8121/users?_id=127'
 ```
 
-*Notice* the deleted field is set on the object but the object isn't 
+*Notice* the deleted field is set on the object but the object isn't
 really deleted.
 
 ```

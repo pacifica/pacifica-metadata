@@ -1,12 +1,11 @@
 #!/usr/bin/python
-"""
-UserGroup links Groups and Users and objects.
-"""
+"""UserGroup links Groups and Users and objects."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.base import DB
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.groups import Groups
 from metadata.orm.users import Users
+
 
 class UserGroup(CherryPyAPI):
     """
@@ -21,31 +20,27 @@ class UserGroup(CherryPyAPI):
         | group             | Link to the Groups model            |
         +-------------------+-------------------------------------+
     """
+
     person = ForeignKeyField(Users, related_name='groups')
     group = ForeignKeyField(Groups, related_name='members')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
-        """
-        PeeWee meta class contains the database and the primary key.
-        """
+        """PeeWee meta class contains the database and the primary key."""
+
         database = DB
         primary_key = CompositeKey('person', 'group')
     # pylint: enable=too-few-public-methods
 
     def to_hash(self):
-        """
-        Converts the object to a hash
-        """
+        """Convert the object to a hash."""
         obj = super(UserGroup, self).to_hash()
         obj['person_id'] = int(self.person.id)
         obj['group_id'] = int(self.group.id)
         return obj
 
     def from_hash(self, obj):
-        """
-        Converts the hash into the object
-        """
+        """Convert the hash into the object."""
         super(UserGroup, self).from_hash(obj)
         if 'person_id' in obj:
             self.person = Users.get(Users.id == obj['person_id'])
@@ -53,9 +48,7 @@ class UserGroup(CherryPyAPI):
             self.group = Groups.get(Groups.id == obj['group_id'])
 
     def where_clause(self, kwargs):
-        """
-        Where clause for the various elements.
-        """
+        """Where clause for the various elements."""
         where_clause = super(UserGroup, self).where_clause(kwargs)
         if 'person_id' in kwargs:
             user = Users.get(Users.id == kwargs['person_id'])

@@ -1,13 +1,12 @@
 #!/usr/bin/python
-"""
-TransactionKeyValue links Transactions and Keys and Values objects.
-"""
+"""TransactionKeyValue links Transactions and Keys and Values objects."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.base import DB
 from metadata.orm.utils import index_hash
 from metadata.orm.transactions import Transactions
 from metadata.orm.analytical_tools import AnalyticalTools
 from metadata.rest.orm import CherryPyAPI
+
 
 class AToolTransaction(CherryPyAPI):
     """
@@ -22,31 +21,27 @@ class AToolTransaction(CherryPyAPI):
         | analytical_tool   | Link to the AnalyticalTools model   |
         +-------------------+-------------------------------------+
     """
+
     transaction = ForeignKeyField(Transactions, related_name='atools')
     analytical_tool = ForeignKeyField(AnalyticalTools, related_name='transactions')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
-        """
-        PeeWee meta class contains the database and the primary key.
-        """
+        """PeeWee meta class contains the database and the primary key."""
+
         database = DB
         primary_key = CompositeKey('analytical_tool', 'transaction')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
     def elastic_mapping_builder(obj):
-        """
-        Build the elasticsearch mapping bits
-        """
+        """Build the elasticsearch mapping bits."""
         super(AToolTransaction, AToolTransaction).elastic_mapping_builder(obj)
         obj['transaction_id'] = {'type': 'integer'}
         obj['analytical_tool_id'] = {'type': 'integer'}
 
     def to_hash(self):
-        """
-        Converts the object to a hash
-        """
+        """Convert the object to a hash."""
         obj = super(AToolTransaction, self).to_hash()
         obj['_id'] = index_hash(int(self.transaction.id),
                                 int(self.analytical_tool.id))
@@ -55,9 +50,7 @@ class AToolTransaction(CherryPyAPI):
         return obj
 
     def from_hash(self, obj):
-        """
-        Converts the hash into the object
-        """
+        """Convert the hash into the object."""
         super(AToolTransaction, self).from_hash(obj)
         if 'analytical_tool_id' in obj:
             self.analytical_tool = AnalyticalTools.get(
@@ -67,9 +60,7 @@ class AToolTransaction(CherryPyAPI):
             self.transaction = Transactions.get(Transactions.id == obj['transaction_id'])
 
     def where_clause(self, kwargs):
-        """
-        Where clause for the various elements.
-        """
+        """Where clause for the various elements."""
         where_clause = super(AToolTransaction, self).where_clause(kwargs)
         if 'analytical_tool_id' in kwargs:
             atool = AnalyticalTools.get(AnalyticalTools.id == kwargs['analytical_tool_id'])

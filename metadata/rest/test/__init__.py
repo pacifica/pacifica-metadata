@@ -1,4 +1,2 @@
 #!/usr/bin/python
-"""
-Test the REST interfaces
-"""
+"""Test the REST interfaces."""

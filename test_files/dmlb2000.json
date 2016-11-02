@@ -1,7 +1,7 @@
 {
-    "last_name": "Brown Jr",
-    "first_name": "David",
-    "network_id": "dmlb2001",
-    "email_address": "david.brown@pnnl.gov",
-    "_id": 10
+  "_id": 10,
+  "email_address": "david.brown@pnnl.gov",
+  "first_name": "David",
+  "last_name": "Brown Jr",
+  "network_id": "dmlb2001"
 }

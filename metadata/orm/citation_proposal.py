@@ -1,7 +1,5 @@
 #!/usr/bin/python
-"""
-Citation proposal relationship
-"""
+"""Citation proposal relationship."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.utils import index_hash
 from metadata.orm.proposals import Proposals
@@ -9,9 +7,10 @@ from metadata.orm.citations import Citations
 from metadata.orm.base import DB
 from metadata.rest.orm import CherryPyAPI
 
+
 class CitationProposal(CherryPyAPI):
     """
-    Relates citations with proposals
+    Relates citations with proposals.
 
     Attributes:
         +-------------------+-------------------------------------+
@@ -22,31 +21,27 @@ class CitationProposal(CherryPyAPI):
         | proposal          | Link to the Proposal model          |
         +-------------------+-------------------------------------+
     """
+
     citation = ForeignKeyField(Citations, related_name='propoasls')
     proposal = ForeignKeyField(Proposals, related_name='citations')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
-        """
-        PeeWee meta class contains the database and the primary key.
-        """
+        """PeeWee meta class contains the database and the primary key."""
+
         database = DB
         primary_key = CompositeKey('citation', 'proposal')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
     def elastic_mapping_builder(obj):
-        """
-        Build the elasticsearch mapping bits
-        """
+        """Build the elasticsearch mapping bits."""
         super(CitationProposal, CitationProposal).elastic_mapping_builder(obj)
         obj['citation_id'] = {'type': 'integer'}
         obj['proposal_id'] = {'type': 'string'}
 
     def to_hash(self):
-        """
-        Converts the object to a hash
-        """
+        """Convert the object to a hash."""
         obj = super(CitationProposal, self).to_hash()
         obj['_id'] = index_hash(int(self.citation.id), str(self.proposal.id))
         obj['citation_id'] = int(self.citation.id)
@@ -54,9 +49,7 @@ class CitationProposal(CherryPyAPI):
         return obj
 
     def from_hash(self, obj):
-        """
-        Converts the hash into the object
-        """
+        """Convert the hash into the object."""
         super(CitationProposal, self).from_hash(obj)
         if 'citation_id' in obj:
             self.citation = Citations.get(Citations.id == obj['citation_id'])
@@ -64,9 +57,7 @@ class CitationProposal(CherryPyAPI):
             self.proposal = Proposals.get(Proposals.id == obj['proposal_id'])
 
     def where_clause(self, kwargs):
-        """
-        Where clause for the various elements.
-        """
+        """Where clause for the various elements."""
         where_clause = super(CitationProposal, self).where_clause(kwargs)
         if 'citation_id' in kwargs:
             citation = Citations.get(Citations.id == kwargs['citation_id'])

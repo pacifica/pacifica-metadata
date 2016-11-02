@@ -1,10 +1,10 @@
 #!/usr/bin/python
-"""
-Citations model for tracking journal articles.
-"""
+"""Citations model for tracking journal articles."""
 from peewee import IntegerField, TextField, CharField, ForeignKeyField, Expression, OP
 from metadata.orm.journals import Journals
 from metadata.rest.orm import CherryPyAPI
+from metadata.orm.utils import unicode_type
+
 
 # Citations has too many attributes...
 # pylint: disable=too-many-instance-attributes
@@ -41,38 +41,35 @@ class Citations(CherryPyAPI):
         |                          | article itself                          |
         +-------------------+------------------------------------------------+
     """
-    article_title = TextField(default="")
+
+    article_title = TextField(default='')
     journal = ForeignKeyField(Journals, related_name='citations')
     journal_volume = IntegerField(default=-1)
     journal_issue = IntegerField(default=-1)
-    page_range = CharField(default="")
-    abstract_text = TextField(default="")
-    xml_text = TextField(default="")
-    release_authorization_id = CharField(default="")
-    doi_reference = CharField(default="")
-    encoding = CharField(default="UTF8")
+    page_range = CharField(default='')
+    abstract_text = TextField(default='')
+    xml_text = TextField(default='')
+    release_authorization_id = CharField(default='')
+    doi_reference = CharField(default='')
+    encoding = CharField(default='UTF8')
 
     @staticmethod
     def elastic_mapping_builder(obj):
-        """
-        Build the elasticsearch mapping bits
-        """
+        """Build the elasticsearch mapping bits."""
         super(Citations, Citations).elastic_mapping_builder(obj)
         obj['journal_id'] = obj['journal_volume'] = \
-        obj['journal_issue'] = {'type': 'integer'}
+            obj['journal_issue'] = {'type': 'integer'}
         obj['article_title'] = obj['abstract_text'] = obj['xml_text'] = \
-        obj['page_range'] = obj['doi_reference'] = obj['release_authorization_id'] = \
-        obj['encoding'] = {'type': 'string'}
+            obj['page_range'] = obj['doi_reference'] = obj['release_authorization_id'] = \
+            obj['encoding'] = {'type': 'string'}
 
     def to_hash(self):
-        """
-        Convert the citation fields to a serializable hash.
-        """
+        """Convert the citation fields to a serializable hash."""
         obj = super(Citations, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['article_title'] = unicode(self.article_title)
-        obj['abstract_text'] = unicode(self.abstract_text)
-        obj['xml_text'] = unicode(self.xml_text)
+        obj['article_title'] = unicode_type(self.article_title)
+        obj['abstract_text'] = unicode_type(self.abstract_text)
+        obj['xml_text'] = unicode_type(self.xml_text)
         # pylint: disable=no-member
         obj['journal_id'] = int(self.journal.id)
         # pylint: enable=no-member
@@ -85,21 +82,18 @@ class Citations(CherryPyAPI):
         return obj
 
     def from_hash(self, obj):
-        """
-        Converts the object into the citation object fields.
-        """
+        """Convert the object into the citation object fields."""
         super(Citations, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
         self._set_only_if('journal_id', obj, 'journal',
-                          lambda: Journals.get(Journals.id == int(obj['journal_id']))
-                         )
+                          lambda: Journals.get(Journals.id == int(obj['journal_id'])))
         for key in ['journal_volume', 'journal_issue']:
             self._set_only_if(key, obj, key, lambda k=key: int(obj[k]))
         for key in ['page_range', 'release_authorization_id', 'encoding',
                     'doi_reference']:
             self._set_only_if(key, obj, key, lambda k=key: str(obj[k]))
         for key in ['article_title', 'xml_text', 'abstract_text']:
-            self._set_only_if(key, obj, key, lambda k=key: unicode(obj[k]))
+            self._set_only_if(key, obj, key, lambda k=key: unicode_type(obj[k]))
 
     @staticmethod
     def _where_attr_clause(where_clause, kwargs):
@@ -107,15 +101,13 @@ class Citations(CherryPyAPI):
                     'doi_reference', 'encoding']:
             if key in kwargs:
                 key_oper = OP.EQ
-                if "%s_operator"%(key) in kwargs:
-                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                if '{0}_operator'.format(key) in kwargs:
+                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)])
                 where_clause &= Expression(getattr(Citations, key), key_oper, kwargs[key])
         return where_clause
 
     def where_clause(self, kwargs):
-        """
-        Generate the PeeWee where clause used in searching.
-        """
+        """Generate the PeeWee where clause used in searching."""
         where_clause = super(Citations, self).where_clause(kwargs)
         if 'journal_id' in kwargs:
             journal = Journals.get(Journals.id == int(kwargs['journal_id']))

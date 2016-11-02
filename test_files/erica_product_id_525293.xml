@@ -6,129 +6,129 @@
 
 <!-- Second Transform Time: 0 seconds -->
 <Report>
-	<Parameters>
-		<Application>PNNL ERICA Reporting Services</Application>
-		<product_cd>Products</product_cd>
-		<product_id>525293</product_id>
-		<RetrievalTimeStamp>12/30/2015 4:33:42 PM</RetrievalTimeStamp>
-		<ProductCount>1</ProductCount>
-	</Parameters>
-	<ProductList>
-		<Product dbid="525293" code="JRN" OSTIAnnouncement="Y" ChangeBy="D3J680" ChangeDate="12/09/2015" ChangeSort="2015-12-09" Year="2015" Order1="2" Order2="1" Order3="1" Order4="2">
-			<Status Code="C">COMPLETED</Status>
-			<Date sort="2015-11-06">11/06/2015</Date>
-			<Title>Hierarchically structured catalysts for cascade and selective steam reforming/hydrodeoxygenation reactions</Title>
-			<Type>Journal Article</Type>
-			<Description>We report a hierarchically structured catalyst with steam reforming and hydrodeoxygenation functionalities being deposited in the micropores and macropores, respectively. The catalyst is highly efficient to upgrade the pyrolysis vapors of pine forest product residual, resulting in a dramatically decreased acid content and increased hydrocarbon yield without external H2 supply.</Description>
-			<Keywords>Catalysts; hydrodeoxygenation; micropores; macropores</Keywords>
-			<Comments>corrected author list, added vol/issue/page, 12/09/2015 - mfl</Comments>
-			<IntellectualProperty>N</IntellectualProperty>
-			<InvitedAuthor>N</InvitedAuthor>
-			<PublicationInfo>
-				<LimitedDistribution>N</LimitedDistribution>
-				<PNNLClearance>
-					<Status>Published</Status>
-					<StatusDate sort="2015-09-29">09/29/2015</StatusDate>
-					<Number>PNNL-SA-114345</Number>
-					<History>
-						<ClearanceChange Code="CLR">
-							<Status>Cleared</Status>
-							<Precedence>4</Precedence>
-							<Date sort="2015-11-06">11/06/2015</Date>
-						</ClearanceChange>
-						<ClearanceChange Code="PUB">
-							<Status>Published</Status>
-							<Precedence>1</Precedence>
-							<Date sort="2015-09-29">09/29/2015</Date>
-						</ClearanceChange>
-					</History>
-				</PNNLClearance>
-				<Publication>
-					<JournalName PublicationID="43">Chemical Communications</JournalName>
-					<Volume>51</Volume>
-					<Issue>93</Issue>
-					<Pages>16617-16620</Pages>
-					<DigitalOID>10.1039/C5CC07244A </DigitalOID>
-					<ChapterName>Hierarchically structured catalysts for cascade and selective steam reforming/hydrodeoxygenation reactions</ChapterName>
-					<Year>2015</Year>
-					<CoverArticle>N</CoverArticle>
-					<PeerReviewed>Y</PeerReviewed>
-				</Publication>
-			</PublicationInfo>
-			<UserFlag>
-				<ArmUser>N</ArmUser>
-				<EmslUser>Y</EmslUser>
-				<RPLUser>N</RPLUser>
-				<AldUser>N</AldUser>
-			</UserFlag>
-			<ResponsibleAuthor dbid="1641398">Kovarik, Libor</ResponsibleAuthor>
-			<ContributorOrderedList>
-				<Contributor precedence="1" dbflag="H" dbid="9859645" effDate="2015-11-06T15:50:00">
-					<FirstName>Junming</FirstName>
-					<FirstInitial>J</FirstInitial>
-					<LastName>Sun</LastName>
-					<Institution>WASHINGTON STATE UNIV</Institution>
-				</Contributor>
-				<Contributor precedence="2" dbflag="H" dbid="0402148" effDate="2015-11-06T15:50:06">
-					<FirstName>Ayman</FirstName>
-					<FirstInitial>A</FirstInitial>
-					<MiddleInitial>M</MiddleInitial>
-					<LastName>Karim</LastName>
-					<Institution>BATTELLE (PACIFIC NW LAB)</Institution>
-				</Contributor>
-				<Contributor precedence="3" dbflag="H" dbid="0102123" costCode="D9H47" deptCode="PE1161" deptID="118038" effDate="2015-11-06T15:50:00">
-					<FirstName>Xiaohong</FirstName>
-					<FirstInitial>X</FirstInitial>
-					<MiddleInitial>S</MiddleInitial>
-					<LastName>Li</LastName>
-					<Institution>BATTELLE (PACIFIC NW LAB)</Institution>
-				</Contributor>
-				<Contributor precedence="4" dbflag="H" dbid="3564830" effDate="2015-11-06T15:50:00">
-					<FirstName>James</FirstName>
-					<FirstInitial>J</FirstInitial>
-					<MiddleInitial>E</MiddleInitial>
-					<LastName>Rainbolt</LastName>
-					<Institution>BATTELLE (PACIFIC NW LAB)</Institution>
-				</Contributor>
-				<Contributor precedence="5" dbflag="H" dbid="1641398" costCode="D7G32J" deptCode="PW416" deptID="143032" effDate="2015-11-06T15:50:00">
-					<FirstName>Libor</FirstName>
-					<FirstInitial>L</FirstInitial>
-					<LastName>Kovarik</LastName>
-					<Institution>BATTELLE (PACIFIC NW LAB)</Institution>
-				</Contributor>
-				<Contributor precedence="6" dbflag="H" dbid="9242225" costCode="D7E52" deptCode="PF440" deptID="115042" effDate="2015-11-06T15:50:00">
-					<FirstName>Yongsoon</FirstName>
-					<FirstInitial>Y</FirstInitial>
-					<LastName>Shin</LastName>
-					<Institution>BATTELLE (PACIFIC NW LAB)</Institution>
-				</Contributor>
-				<Contributor precedence="7" dbflag="H" dbid="5435537" effDate="2015-11-06T15:50:00">
-					<FirstName>Yong</FirstName>
-					<FirstInitial>Y</FirstInitial>
-					<LastName>Wang</LastName>
-					<Institution>BATTELLE (PACIFIC NW LAB)</Institution>
-				</Contributor>
-			</ContributorOrderedList>
-			<ProjectList>
-				<Project DOEContract="Y">
-					<Number>22142</Number>
-					<Title>22142 - The William R. Wiley Environmental Molecular Science</Title>
-					<ProductLine Code="0062">Environmental Molecular Sciences Laboratory</ProductLine>
-					<BrNo>KP1704020</BrNo>
-				</Project>
-			</ProjectList>
-			<RelationshipList>
-				<Relationship GroupCode="FAC">
-					<Name>EMSL</Name>
-					<NameDesc>EMSL Use</NameDesc>
-					<ProposalID>47660</ProposalID>
-					<ProposalTitle>Development of Catalysts for the Selective Convers</ProposalTitle>
-					<ProposalIdSource>EMSL User/Proposal ID</ProposalIdSource>
-					<ProposalNameHelp>EMSL Use Help</ProposalNameHelp>
-				</Relationship>
-			</RelationshipList>
-		</Product>
-	</ProductList>
+    <Parameters>
+        <Application>PNNL ERICA Reporting Services</Application>
+        <product_cd>Products</product_cd>
+        <product_id>525293</product_id>
+        <RetrievalTimeStamp>12/30/2015 4:33:42 PM</RetrievalTimeStamp>
+        <ProductCount>1</ProductCount>
+    </Parameters>
+    <ProductList>
+        <Product dbid="525293" code="JRN" OSTIAnnouncement="Y" ChangeBy="D3J680" ChangeDate="12/09/2015" ChangeSort="2015-12-09" Year="2015" Order1="2" Order2="1" Order3="1" Order4="2">
+            <Status Code="C">COMPLETED</Status>
+            <Date sort="2015-11-06">11/06/2015</Date>
+            <Title>Hierarchically structured catalysts for cascade and selective steam reforming/hydrodeoxygenation reactions</Title>
+            <Type>Journal Article</Type>
+            <Description>We report a hierarchically structured catalyst with steam reforming and hydrodeoxygenation functionalities being deposited in the micropores and macropores, respectively. The catalyst is highly efficient to upgrade the pyrolysis vapors of pine forest product residual, resulting in a dramatically decreased acid content and increased hydrocarbon yield without external H2 supply.</Description>
+            <Keywords>Catalysts; hydrodeoxygenation; micropores; macropores</Keywords>
+            <Comments>corrected author list, added vol/issue/page, 12/09/2015 - mfl</Comments>
+            <IntellectualProperty>N</IntellectualProperty>
+            <InvitedAuthor>N</InvitedAuthor>
+            <PublicationInfo>
+                <LimitedDistribution>N</LimitedDistribution>
+                <PNNLClearance>
+                    <Status>Published</Status>
+                    <StatusDate sort="2015-09-29">09/29/2015</StatusDate>
+                    <Number>PNNL-SA-114345</Number>
+                    <History>
+                        <ClearanceChange Code="CLR">
+                            <Status>Cleared</Status>
+                            <Precedence>4</Precedence>
+                            <Date sort="2015-11-06">11/06/2015</Date>
+                        </ClearanceChange>
+                        <ClearanceChange Code="PUB">
+                            <Status>Published</Status>
+                            <Precedence>1</Precedence>
+                            <Date sort="2015-09-29">09/29/2015</Date>
+                        </ClearanceChange>
+                    </History>
+                </PNNLClearance>
+                <Publication>
+                    <JournalName PublicationID="43">Chemical Communications</JournalName>
+                    <Volume>51</Volume>
+                    <Issue>93</Issue>
+                    <Pages>16617-16620</Pages>
+                    <DigitalOID>10.1039/C5CC07244A </DigitalOID>
+                    <ChapterName>Hierarchically structured catalysts for cascade and selective steam reforming/hydrodeoxygenation reactions</ChapterName>
+                    <Year>2015</Year>
+                    <CoverArticle>N</CoverArticle>
+                    <PeerReviewed>Y</PeerReviewed>
+                </Publication>
+            </PublicationInfo>
+            <UserFlag>
+                <ArmUser>N</ArmUser>
+                <EmslUser>Y</EmslUser>
+                <RPLUser>N</RPLUser>
+                <AldUser>N</AldUser>
+            </UserFlag>
+            <ResponsibleAuthor dbid="1641398">Kovarik, Libor</ResponsibleAuthor>
+            <ContributorOrderedList>
+                <Contributor precedence="1" dbflag="H" dbid="9859645" effDate="2015-11-06T15:50:00">
+                    <FirstName>Junming</FirstName>
+                    <FirstInitial>J</FirstInitial>
+                    <LastName>Sun</LastName>
+                    <Institution>WASHINGTON STATE UNIV</Institution>
+                </Contributor>
+                <Contributor precedence="2" dbflag="H" dbid="0402148" effDate="2015-11-06T15:50:06">
+                    <FirstName>Ayman</FirstName>
+                    <FirstInitial>A</FirstInitial>
+                    <MiddleInitial>M</MiddleInitial>
+                    <LastName>Karim</LastName>
+                    <Institution>BATTELLE (PACIFIC NW LAB)</Institution>
+                </Contributor>
+                <Contributor precedence="3" dbflag="H" dbid="0102123" costCode="D9H47" deptCode="PE1161" deptID="118038" effDate="2015-11-06T15:50:00">
+                    <FirstName>Xiaohong</FirstName>
+                    <FirstInitial>X</FirstInitial>
+                    <MiddleInitial>S</MiddleInitial>
+                    <LastName>Li</LastName>
+                    <Institution>BATTELLE (PACIFIC NW LAB)</Institution>
+                </Contributor>
+                <Contributor precedence="4" dbflag="H" dbid="3564830" effDate="2015-11-06T15:50:00">
+                    <FirstName>James</FirstName>
+                    <FirstInitial>J</FirstInitial>
+                    <MiddleInitial>E</MiddleInitial>
+                    <LastName>Rainbolt</LastName>
+                    <Institution>BATTELLE (PACIFIC NW LAB)</Institution>
+                </Contributor>
+                <Contributor precedence="5" dbflag="H" dbid="1641398" costCode="D7G32J" deptCode="PW416" deptID="143032" effDate="2015-11-06T15:50:00">
+                    <FirstName>Libor</FirstName>
+                    <FirstInitial>L</FirstInitial>
+                    <LastName>Kovarik</LastName>
+                    <Institution>BATTELLE (PACIFIC NW LAB)</Institution>
+                </Contributor>
+                <Contributor precedence="6" dbflag="H" dbid="9242225" costCode="D7E52" deptCode="PF440" deptID="115042" effDate="2015-11-06T15:50:00">
+                    <FirstName>Yongsoon</FirstName>
+                    <FirstInitial>Y</FirstInitial>
+                    <LastName>Shin</LastName>
+                    <Institution>BATTELLE (PACIFIC NW LAB)</Institution>
+                </Contributor>
+                <Contributor precedence="7" dbflag="H" dbid="5435537" effDate="2015-11-06T15:50:00">
+                    <FirstName>Yong</FirstName>
+                    <FirstInitial>Y</FirstInitial>
+                    <LastName>Wang</LastName>
+                    <Institution>BATTELLE (PACIFIC NW LAB)</Institution>
+                </Contributor>
+            </ContributorOrderedList>
+            <ProjectList>
+                <Project DOEContract="Y">
+                    <Number>22142</Number>
+                    <Title>22142 - The William R. Wiley Environmental Molecular Science</Title>
+                    <ProductLine Code="0062">Environmental Molecular Sciences Laboratory</ProductLine>
+                    <BrNo>KP1704020</BrNo>
+                </Project>
+            </ProjectList>
+            <RelationshipList>
+                <Relationship GroupCode="FAC">
+                    <Name>EMSL</Name>
+                    <NameDesc>EMSL Use</NameDesc>
+                    <ProposalID>47660</ProposalID>
+                    <ProposalTitle>Development of Catalysts for the Selective Convers</ProposalTitle>
+                    <ProposalIdSource>EMSL User/Proposal ID</ProposalIdSource>
+                    <ProposalNameHelp>EMSL Use Help</ProposalNameHelp>
+                </Relationship>
+            </RelationshipList>
+        </Product>
+    </ProductList>
 </Report>
 
 <!-- Total Processing time: 0 seconds -->

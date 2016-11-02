@@ -1,13 +1,13 @@
 #!/usr/bin/python
-"""
-Contributors model describes an author to a journal article.
-"""
+"""Contributors model describes an author to a journal article."""
 from peewee import CharField, ForeignKeyField, Expression, OP
 from metadata.orm.users import Users
 from metadata.orm.institutions import Institutions
 from metadata.rest.orm import CherryPyAPI
+from metadata.orm.utils import unicode_type
 
-#pylint: disable=too-many-instance-attributes
+
+# pylint: disable=too-many-instance-attributes
 class Contributors(CherryPyAPI):
     """
     Contributors object and associated fields.
@@ -37,34 +37,31 @@ class Contributors(CherryPyAPI):
         |                   | above                               |
         +-------------------+-------------------------------------+
     """
+
     person = ForeignKeyField(Users, related_name='contributions')
-    first_name = CharField(default="")
-    middle_initial = CharField(default="")
-    last_name = CharField(default="")
-    dept_code = CharField(default="")
+    first_name = CharField(default='')
+    middle_initial = CharField(default='')
+    last_name = CharField(default='')
+    dept_code = CharField(default='')
     institution = ForeignKeyField(Institutions, related_name='contributors')
-    encoding = CharField(default="UTF8")
+    encoding = CharField(default='UTF8')
 
     @staticmethod
     def elastic_mapping_builder(obj):
-        """
-        Build the elasticsearch mapping bits
-        """
+        """Build the elasticsearch mapping bits."""
         super(Contributors, Contributors).elastic_mapping_builder(obj)
         obj['person_id'] = obj['institution_id'] = {'type': 'integer'}
         obj['first_name'] = obj['middle_initial'] = obj['last_name'] = \
-        obj['dept_code'] = obj['encoding'] = {'type': 'string'}
+            obj['dept_code'] = obj['encoding'] = {'type': 'string'}
 
     def to_hash(self):
-        """
-        Convert the object fields into a serializable hash.
-        """
+        """Convert the object fields into a serializable hash."""
         obj = super(Contributors, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['first_name'] = unicode(self.first_name)
-        obj['middle_initial'] = unicode(self.middle_initial)
-        obj['last_name'] = unicode(self.last_name)
-        obj['dept_code'] = unicode(self.dept_code)
+        obj['first_name'] = unicode_type(self.first_name)
+        obj['middle_initial'] = unicode_type(self.middle_initial)
+        obj['last_name'] = unicode_type(self.last_name)
+        obj['dept_code'] = unicode_type(self.dept_code)
         # pylint: disable=no-member
         obj['person_id'] = int(self.person.id)
         obj['institution_id'] = int(self.institution.id)
@@ -73,19 +70,15 @@ class Contributors(CherryPyAPI):
         return obj
 
     def from_hash(self, obj):
-        """
-        Convert the hash into the object fields.
-        """
+        """Convert the hash into the object fields."""
         super(Contributors, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
         for attr in ['first_name', 'middle_initial', 'last_name', 'dept_code']:
-            self._set_only_if(attr, obj, attr, lambda k=attr: unicode(obj[k]))
+            self._set_only_if(attr, obj, attr, lambda k=attr: unicode_type(obj[k]))
         self._set_only_if('person_id', obj, 'person',
-                          lambda: Users.get(Users.id == int(obj['person_id']))
-                         )
+                          lambda: Users.get(Users.id == int(obj['person_id'])))
         self._set_only_if('institution_id', obj, 'institution',
-                          lambda: Institutions.get(Institutions.id == int(obj['institution_id']))
-                         )
+                          lambda: Institutions.get(Institutions.id == int(obj['institution_id'])))
         self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
 
     @staticmethod
@@ -94,15 +87,13 @@ class Contributors(CherryPyAPI):
                     'middle_initial', 'dept_code']:
             if key in kwargs:
                 key_oper = OP.EQ
-                if "%s_operator"%(key) in kwargs:
-                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                if '{0}_operator'.format(key) in kwargs:
+                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)])
                 where_clause &= Expression(getattr(Contributors, key), key_oper, kwargs[key])
         return where_clause
 
     def where_clause(self, kwargs):
-        """
-        Generate the PeeWee where clause used in searching.
-        """
+        """Generate the PeeWee where clause used in searching."""
         where_clause = super(Contributors, self).where_clause(kwargs)
         if 'person_id' in kwargs:
             user = Users.get(Users.id == kwargs['person_id'])

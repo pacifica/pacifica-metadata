@@ -1,7 +1,5 @@
 #!/usr/bin/python
-"""
-Contains the Files object model primary unit of metadata for Pacifica.
-"""
+"""Contains the Files object model primary unit of metadata for Pacifica."""
 from datetime import datetime
 from time import mktime
 from peewee import ForeignKeyField, CharField, BigIntegerField
@@ -9,11 +7,15 @@ from peewee import Expression, OP
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.transactions import Transactions
 from metadata.orm.utils import datetime_now_nomicrosecond, ExtendDateTimeField
+from metadata.orm.utils import unicode_type
 
-#pylint: disable=too-many-instance-attributes
+
+# pylint: disable=too-many-instance-attributes
 class Files(CherryPyAPI):
     """
-    Files metadata contains various attributes describing a file and where
+    Files metadata.
+
+    This object contains various attributes describing a file and where
     it came from.
 
     Attributes:
@@ -37,36 +39,33 @@ class Files(CherryPyAPI):
         | encoding    | encoding in the file name or subdir field |
         +-------------+-------------------------------------------+
     """
-    name = CharField(default="")
-    subdir = CharField(default="")
+
+    name = CharField(default='')
+    subdir = CharField(default='')
     ctime = ExtendDateTimeField(default=datetime_now_nomicrosecond)
     mtime = ExtendDateTimeField(default=datetime_now_nomicrosecond)
     size = BigIntegerField(default=-1)
     transaction = ForeignKeyField(Transactions, related_name='files')
-    mimetype = CharField(default="")
-    encoding = CharField(default="UTF8")
+    mimetype = CharField(default='')
+    encoding = CharField(default='UTF8')
 
     @staticmethod
     def elastic_mapping_builder(obj):
-        """
-        Build the elasticsearch mapping bits
-        """
+        """Build the elasticsearch mapping bits."""
         super(Files, Files).elastic_mapping_builder(obj)
         obj['transaction_id'] = obj['size'] = \
-        {'type': 'integer'}
+            {'type': 'integer'}
         obj['ctime'] = obj['mtime'] = \
-        {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
+            {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
         obj['name'] = obj['subdir'] = obj['mimetype'] = \
-        obj['encoding'] = {'type': 'string'}
+            obj['encoding'] = {'type': 'string'}
 
     def to_hash(self):
-        """
-        Converts the object to a hash
-        """
+        """Convert the object to a hash."""
         obj = super(Files, self).to_hash()
         obj['_id'] = int(self.id)
-        obj['name'] = unicode(self.name)
-        obj['subdir'] = unicode(self.subdir)
+        obj['name'] = unicode_type(self.name)
+        obj['subdir'] = unicode_type(self.subdir)
         obj['mimetype'] = str(self.mimetype)
         # pylint: disable=no-member
         obj['ctime'] = int(mktime(self.ctime.timetuple()))
@@ -78,21 +77,20 @@ class Files(CherryPyAPI):
         return obj
 
     def from_hash(self, obj):
-        """
-        Converts the hash to an object
-        """
+        """Convert the hash to an object."""
         super(Files, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
-        self._set_only_if('name', obj, 'name', lambda: unicode(obj['name']))
-        self._set_only_if('subdir', obj, 'subdir', lambda: unicode(obj['subdir']))
+        self._set_only_if('name', obj, 'name', lambda: unicode_type(obj['name']))
+        self._set_only_if('subdir', obj, 'subdir', lambda: unicode_type(obj['subdir']))
         self._set_only_if('mimetype', obj, 'mimetype', lambda: str(obj['mimetype']))
         self._set_only_if('ctime', obj, 'ctime', lambda: datetime.fromtimestamp(int(obj['ctime'])))
         self._set_only_if('mtime', obj, 'mtime', lambda: datetime.fromtimestamp(int(obj['mtime'])))
         self._set_only_if('size', obj, 'size', lambda: int(obj['size']))
         self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
-        trans_func = lambda: Transactions.get(
-            Transactions.id == obj['transaction_id']
-        )
+
+        def trans_func():
+            """Return the transaction for the obj id."""
+            return Transactions.get(Transactions.id == obj['transaction_id'])
         self._set_only_if('transaction_id', obj, 'transaction', trans_func)
 
     def _where_date_clause(self, where_clause, kwargs):
@@ -107,16 +105,13 @@ class Files(CherryPyAPI):
         for key in ['name', 'subdir', 'mimetype', 'size', 'encoding']:
             if key in kwargs:
                 key_oper = OP.EQ
-                if "%s_operator"%(key) in kwargs:
-                    key_oper = getattr(OP, kwargs["%s_operator"%(key)])
+                if '{0}_operator'.format(key) in kwargs:
+                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)])
                 where_clause &= Expression(getattr(Files, key), key_oper, kwargs[key])
         return where_clause
 
     def where_clause(self, kwargs):
-        """
-        PeeWee specific extension meant to be passed to a PeeWee get
-        or select.
-        """
+        """PeeWee specific where expression."""
         where_clause = super(Files, self).where_clause(kwargs)
         if 'transaction_id' in kwargs:
             kwargs['transaction_id'] = Transactions.get(

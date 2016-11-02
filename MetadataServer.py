@@ -1,7 +1,5 @@
 #!/usr/bin/python
-"""
-Main metadata server script
-"""
+"""Main metadata server script."""
 from wsgiref.simple_server import make_server
 import cherrypy
 from metadata.rest.root import Root

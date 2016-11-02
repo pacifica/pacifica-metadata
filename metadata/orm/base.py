@@ -1,9 +1,18 @@
 #!/usr/bin/python
 """
-Pacifica Metadata ORM Base Class
+Pacifica Metadata ORM Base Class.
 
 This class implements the basic functionality needed for all
 metadata objects in the metadata model for Pacifica.
+
+PacificaModel.
+
+Base class inherits from the PeeWee ORM Model class to create
+required fields by all objects and serialization methods for
+the base fields.
+
+There are also CherryPy methods for creating, updating, getting
+and deleting these objects in from a web service layer.
 """
 from os import getenv
 from json import dumps, loads
@@ -24,21 +33,10 @@ DB = pgdb(getenv('POSTGRES_ENV_POSTGRES_DB', 'pacifica_metadata'),
 DEFAULT_ELASTIC_ENDPOINT = getenv('ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 
-"""
-PacificaModel
-
-Base class inherits from the PeeWee ORM Model class to create
-required fields by all objects and serialization methods for
-the base fields.
-
-There are also CherryPy methods for creating, updating, getting
-and deleting these objects in from a web service layer.
-"""
-
 
 class PacificaModel(Model):
     """
-    Basic fields for an object within the model
+    Basic fields for an object within the model.
 
     Attributes:
         +-------------------+-------------------------------------+
@@ -51,6 +49,7 @@ class PacificaModel(Model):
         | deleted           | When was the object deleted         |
         +-------------------+-------------------------------------+
     """
+
     # this is peewee specific need to disable this check
     # pylint: disable=invalid-name
     id = PrimaryKeyField()
@@ -61,17 +60,14 @@ class PacificaModel(Model):
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
-        """
-        PeeWee meta class contains the db connection.
-        """
+        """PeeWee meta class contains the db connection."""
+
         database = DB
         only_save_dirty = True
     # pylint: enable=too-few-public-methods
 
     def rollback(self):
-        """
-        Reconnect to the database on errors.
-        """
+        """Reconnect to the database on errors."""
         self._meta.database.rollback()
 
     def _set_only_if(self, key, obj, dest_attr, func):
@@ -85,10 +81,7 @@ class PacificaModel(Model):
         self._set_only_if(time_part, obj, time_part, lambda: datetime_converts(obj[time_part]))
 
     def to_hash(self):
-        """
-        Converts the base object fields into serializable attributes
-        in a hash.
-        """
+        """Convert the base object fields into serializable attributes in a hash."""
         obj = {}
         obj['created'] = self.created.isoformat()
         obj['updated'] = self.updated.isoformat()
@@ -97,33 +90,24 @@ class PacificaModel(Model):
         return obj
 
     def from_hash(self, obj):
-        """
-        Converts the hash objects into object fields if they are
-        present.
-        """
+        """Convert the hash objects into object fields if they are present."""
         self._set_datetime_part('created', obj)
         self._set_datetime_part('updated', obj)
         self._set_datetime_part('deleted', obj)
 
     def from_json(self, json_str):
-        """
-        Converts the json string into the current object.
-        """
+        """Convert the json string into the current object."""
         if not isinstance(loads(json_str), dict):
             raise ValueError('json_str not dict')
         self.from_hash(loads(json_str))
 
     def to_json(self):
-        """
-        Converts the object into a json object.
-        """
+        """Convert the object into a json object."""
         return dumps(self.to_hash())
 
     @staticmethod
     def _bool_translate(thing):
-        """
-        Translate the thing into a boolean
-        """
+        """Translate the thing into a boolean."""
         ret = bool(thing)
         if thing == 'False':
             ret = False
@@ -133,8 +117,8 @@ class PacificaModel(Model):
 
     @staticmethod
     def _date_operator_compare(date, kwargs, dt_converts=datetime_converts):
-        if "%s_operator"%(date) in kwargs:
-            date_oper = getattr(OP, kwargs["%s_operator"%(date)])
+        if '{0}_operator'.format(date) in kwargs:
+            date_oper = getattr(OP, kwargs['{0}_operator'.format(date)])
         else:
             date_oper = OP.EQ
         if date_oper == OP.BETWEEN:
@@ -146,10 +130,7 @@ class PacificaModel(Model):
         return (date_obj, date_oper)
 
     def where_clause(self, kwargs):
-        """
-        PeeWee specific extension meant to be passed to a PeeWee get
-        or select.
-        """
+        """PeeWee specific extension meant to be passed to a PeeWee get or select."""
         my_class = self.__class__
         where_clause = Expression(1, OP.EQ, 1)
         if 'deleted' in kwargs:
@@ -166,15 +147,16 @@ class PacificaModel(Model):
 
     @classmethod
     def last_change_date(cls):
-        """
-        Find the last changed date for the object
-        """
+        """Find the last changed date for the object."""
         return cls.select(fn.Max(cls.updated)).scalar()
 
     @classmethod
     def available_hash_list(cls):
         """
-        Need to figure out more about what this does...
+        Generate a hashable structure of all keys and values of keys.
+
+        This structure allows for easy evaluation of updates or current vs old data
+        for any object in the database.
         """
         hash_list = []
         hash_dict = {}
@@ -191,9 +173,7 @@ class PacificaModel(Model):
 
     @classmethod
     def get_primary_keys(cls):
-        """
-        Return the primary keys for the object
-        """
+        """Return the primary keys for the object."""
         # pylint: disable=no-member
         primary_key = cls._meta.primary_key
         if isinstance(primary_key, CompositeKey) and len(cls._meta.rel) > 0:

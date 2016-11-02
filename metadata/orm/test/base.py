@@ -1,54 +1,47 @@
 #!/usr/bin/python
-"""
-Base testing module implements the temporary database to be used.
-"""
+"""Base testing module implements the temporary database to be used."""
 from datetime import datetime
 from unittest import TestCase
 from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
 from metadata.orm.base import PacificaModel
+from metadata.orm.utils import unicode_type
+
 
 class TestBase(TestCase):
-    """
-    Setup the test cases for the base object attributes for the ORM
-    """
+    """Setup the test cases for the base object attributes for the ORM."""
+
     obj_cls = PacificaModel
-    #pylint: disable=no-member
+    # pylint: disable=no-member
     obj_id = PacificaModel.id
-    #pylint: enable=no-member
+    # pylint: enable=no-member
 
     @classmethod
     def dependent_cls(cls):
-        """
-        Return dependent classes
-        """
+        """Return dependent classes."""
         pass
 
     @classmethod
     def base_create_dep_objs(cls):
-        """
-        Create dependent objects
-        """
+        """Create dependent objects."""
         pass
 
     def base_create_obj(self, cls, obj_hash):
-        """
-        Create obj based on the class given.
-        """
+        """Create obj based on the class given."""
         self.base_create_dep_objs()
         obj = cls()
-        if not 'updated' in obj_hash:
+        if 'updated' not in obj_hash:
             change_date_chk = datetime.now()
             obj.updated = change_date_chk
         obj.from_hash(obj_hash)
         obj.save(force_insert=True)
-        if not 'updated' in obj_hash:
-            self.assertEqual(obj.last_change_date(), unicode(change_date_chk.isoformat(' ')))
+        if 'updated' not in obj_hash:
+            self.assertEqual(obj.last_change_date(), unicode_type(change_date_chk.isoformat(' ')))
         return obj
 
     def base_test_hash(self, obj_hash):
         """
-        Base hash test
+        Base hash test.
 
         create a new object out of the hash
         save the object to the DB
@@ -66,7 +59,7 @@ class TestBase(TestCase):
 
     def base_test_json(self, json_str):
         """
-        Base test json
+        Base test json.
 
         pass the json string to the objects from_json method
         save the object to the DB
@@ -85,16 +78,12 @@ class TestBase(TestCase):
 
     @staticmethod
     def base_where_clause_search(obj, kwargs):
-        """
-        use kwargs as options to where clause to search for obj and return
-        """
+        """Use kwargs as options to where clause to search for obj and return."""
         expr = obj.where_clause(kwargs)
         return obj.select().where(expr)
 
     def base_where_clause_search_expr(self, obj_hash, **kwargs):
-        """
-        Search for a objects on single search parameters
-        """
+        """Search for a objects on single search parameters."""
         with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             obj = self.base_create_obj(self.obj_cls, obj_hash)
             chk_obj = self.base_where_clause_search(obj, kwargs)[0]
@@ -104,7 +93,7 @@ class TestBase(TestCase):
 
     def base_where_clause(self, obj_hash):
         """
-        Base where clause checking
+        Base where clause checking.
 
         create a new object from the obj_hash
         save it to the database

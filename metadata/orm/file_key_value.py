@@ -1,7 +1,5 @@
 #!/usr/bin/python
-"""
-FileKeyValue links Files and Keys and Values objects.
-"""
+"""FileKeyValue links Files and Keys and Values objects."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.base import DB
 from metadata.orm.utils import index_hash
@@ -9,6 +7,7 @@ from metadata.orm.files import Files
 from metadata.orm.values import Values
 from metadata.orm.keys import Keys
 from metadata.rest.orm import CherryPyAPI
+
 
 class FileKeyValue(CherryPyAPI):
     """
@@ -25,32 +24,28 @@ class FileKeyValue(CherryPyAPI):
         | value             | Link to the Value model             |
         +-------------------+-------------------------------------+
     """
+
     file = ForeignKeyField(Files, related_name='metadata')
     key = ForeignKeyField(Keys, related_name='file_links')
     value = ForeignKeyField(Values, related_name='file_links')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
-        """
-        PeeWee meta class contains the database and the primary key.
-        """
+        """PeeWee meta class contains the database and the primary key."""
+
         database = DB
         primary_key = CompositeKey('file', 'key', 'value')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
     def elastic_mapping_builder(obj):
-        """
-        Build the elasticsearch mapping bits
-        """
+        """Build the elasticsearch mapping bits."""
         super(FileKeyValue, FileKeyValue).elastic_mapping_builder(obj)
         obj['file_id'] = obj['key_id'] = obj['value_id'] = \
-        {'type': 'integer'}
+            {'type': 'integer'}
 
     def to_hash(self):
-        """
-        Converts the object to a hash
-        """
+        """Convert the object to a hash."""
         obj = super(FileKeyValue, self).to_hash()
         obj['_id'] = index_hash(int(self.key.id),
                                 int(self.file.id),
@@ -61,9 +56,7 @@ class FileKeyValue(CherryPyAPI):
         return obj
 
     def from_hash(self, obj):
-        """
-        Converts the hash into the object
-        """
+        """Convert the hash into the object."""
         super(FileKeyValue, self).from_hash(obj)
         if 'file_id' in obj:
             self.file = Files.get(Files.id == obj['file_id'])
@@ -73,9 +66,7 @@ class FileKeyValue(CherryPyAPI):
             self.value = Values.get(Values.id == obj['value_id'])
 
     def where_clause(self, kwargs):
-        """
-        Where clause for the various elements.
-        """
+        """Where clause for the various elements."""
         where_clause = super(FileKeyValue, self).where_clause(kwargs)
         if 'file_id' in kwargs:
             file_ = Files.get(Files.id == kwargs['file_id'])

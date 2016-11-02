@@ -1,12 +1,14 @@
 #!/usr/bin/python
 """
-Core module loads all model objects and contains global operations
+Core modules.
+
+This loads all model objects and contains global operations
 on those objects.
 """
 from time import sleep
 from peewee import OperationalError
+from metadata.elastic import create_elastic_index, try_es_connect
 from metadata.orm.base import DB
-from metadata.orm.base import ELASTIC_ENDPOINT
 from metadata.orm.citations import Citations
 from metadata.orm.contributors import Contributors
 from metadata.orm.institution_person import InstitutionPerson
@@ -33,7 +35,6 @@ from metadata.orm.instrument_group import InstrumentGroup
 from metadata.orm.analytical_tools import AnalyticalTools
 from metadata.orm.atool_proposal import AToolProposal
 from metadata.orm.atool_transaction import AToolTransaction
-from metadata.elastic import create_elastic_index, try_es_connect
 
 DATABASE_CONNECT_ATTEMPTS = 10
 DATABASE_WAIT = 1
@@ -67,13 +68,12 @@ ORM_OBJECTS = [
     AToolTransaction
 ]
 
+
 def try_db_connect(attempts=0):
-    """
-    Recursively try to connect to the database.
-    """
+    """Recursively try to connect to the database."""
     try:
         DB.connect()
-    except OperationalError, ex:
+    except OperationalError as ex:
         if attempts < DATABASE_CONNECT_ATTEMPTS:
             sleep(DATABASE_WAIT)
             attempts += 1
@@ -81,10 +81,9 @@ def try_db_connect(attempts=0):
         else:
             raise ex
 
+
 def create_tables():
-    """
-    Create the tables for the objects if they exist.
-    """
+    """Create the tables for the objects if they exist."""
     try_db_connect()
     try_es_connect()
     create_elastic_index()

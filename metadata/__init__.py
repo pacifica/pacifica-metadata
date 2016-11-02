@@ -1,4 +1,2 @@
 #!/usr/bin/python
-"""
-Metadata Module
-"""
+"""Metadata Module."""
