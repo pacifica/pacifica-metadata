@@ -8,18 +8,18 @@ python:
  - 3.5
 
 matrix:
-  allow_failures:
-    - env: RUN_DEPLOY=true
-  fast_finish: true
   exclude:
     - python: 3.5
+    - python: pypy
   include:
     - python: 3.5
       env: RUN_LINTS=true
     - python: 2.7
       env: RUN_LINTS=true
     - python: 2.7
-      env: RUN_DEPLOY=true
+      env: RUN_TESTS=true
+    - python: pypy
+      env: RUN_TESTS=true
 cache: pip
 
 before_install: bash -xe travis/before-install.sh
