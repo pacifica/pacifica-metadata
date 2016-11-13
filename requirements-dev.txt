@@ -5,6 +5,7 @@ elasticsearch
 httpretty
 peewee
 pylint
+pytest
 python-dateutil
 radon
 requests
