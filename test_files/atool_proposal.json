@@ -1,0 +1,10 @@
+[
+  {
+    "analytical_tool_id": 1234,
+    "proposal_id": "1234a"
+  },
+  {
+    "analytical_tool_id": 1235,
+    "proposal_id": "1234b"
+  }
+]

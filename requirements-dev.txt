@@ -1,0 +1,10 @@
+cherrypy
+codeclimate-test-reporter
+coverage
+elasticsearch
+httpretty
+peewee
+pylint
+python-dateutil
+radon
+requests

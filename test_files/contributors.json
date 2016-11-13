@@ -1,0 +1,11 @@
+[
+  {
+    "_id": 100,
+    "dept_code": "Computer Science",
+    "first_name": "David",
+    "institution_id": 47,
+    "last_name": "Brown Jr.",
+    "middle_initial": "ML",
+    "person_id": 10
+  }
+]

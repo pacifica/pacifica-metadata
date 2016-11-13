@@ -1,0 +1,17 @@
+[
+  {
+    "_id": 0,
+    "is_admin": true,
+    "name": "admin"
+  },
+  {
+    "_id": 1000,
+    "is_admin": false,
+    "name": "users"
+  },
+  {
+    "_id": 1001,
+    "is_admin": false,
+    "name": "NMR Instruments"
+  }
+]

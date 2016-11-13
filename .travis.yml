@@ -23,4 +23,5 @@ matrix:
 cache: pip
 
 before_install: bash -xe travis/before-install.sh
+install: pip install -r requirements-dev.txt
 script: bash -xe travis/test-script.sh

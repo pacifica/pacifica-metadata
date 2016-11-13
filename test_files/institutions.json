@@ -1,0 +1,14 @@
+[
+  {
+    "_id": 48,
+    "association_cd": "academy",
+    "is_foreign": false,
+    "name": "Washington State University"
+  },
+  {
+    "_id": 47,
+    "association_cd": "academy",
+    "is_foreign": false,
+    "name": "University of Washington"
+  }
+]

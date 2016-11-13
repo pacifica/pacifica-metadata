@@ -1,0 +1,14 @@
+[
+  {
+    "_id": 987,
+    "abstract_text": "We consider linear and branched polymers driven through narrow and patterned channels by imposing a Poiseuille flow on the ambient solvent. We establish, by means of scaling arguments, that the translocation probability of dendrimers through the pore is independent of the number of monomers and that it takes place above a viscosity-dependent critical external current. When the channel walls are smooth, the translocation times of linear and branched polymers with the same monomer number are very similar. However, for walls that are decorated with attractive patches, dramatic differences show up: whereas a dendrimer successively docks at the patches and \u201cwalks\u201d from one to the next, being carried away by the solventflow, linear chains spread themselves along the channel wall without achieving translocation within simulation times. Our findings are relevant for, e.g., drug delivery through dendritic carrier molecules in capillary arterioles.",
+    "article_title": "Flow-induced polymer translocation through narrow and patterned channels.",
+    "doi_reference": "10.1063/1.3466918",
+    "journal_id": 27,
+    "journal_issue": 7,
+    "journal_volume": 133,
+    "page_range": "",
+    "release_authorization_id": "Released",
+    "xml_text": ""
+  }
+]

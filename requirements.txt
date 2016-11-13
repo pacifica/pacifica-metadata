@@ -1,10 +1,6 @@
 cherrypy
-codeclimate-test-reporter
-coverage
 elasticsearch
-httpretty
 peewee
-pylint
+psycopg2
 python-dateutil
-radon
 requests
