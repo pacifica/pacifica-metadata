@@ -20,3 +20,4 @@ if [ "$RUN_LINTS" = "true" ]; then
 else
   pip install codeclimate-test-reporter coverage nose pytest
 fi
+sudo service postgresql stop

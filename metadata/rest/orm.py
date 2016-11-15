@@ -2,7 +2,7 @@
 """Core interface for each ORM object to interface with CherryPy."""
 from json import loads, dumps
 from cherrypy import request, HTTPError
-from peewee import DoesNotExist, IntegrityError
+from peewee import IntegrityError
 from metadata.orm.base import PacificaModel
 from metadata.elastic.orm import ElasticAPI
 from metadata.orm.utils import datetime_now_nomicrosecond
@@ -22,7 +22,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                 .where(self.where_clause(kwargs))
                 .order_by(*primary_keys))
         if 'page_number' in kwargs and 'items_per_page' in kwargs:
-            objs = objs.paginate(kwargs['page_number'], kwargs['items_per_page'])
+            objs = objs.paginate(int(kwargs['page_number']), int(kwargs['items_per_page']))
         return dumps([obj.to_hash() for obj in objs])
 
     def _update(self, update_json, **kwargs):
@@ -35,14 +35,11 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                 raise HTTPError(500, str(ex))
             obj.updated = datetime_now_nomicrosecond()
             try:
-                self.elastic_upload(obj)
-            except Exception as ex:
-                raise HTTPError(500, str(ex))
-            try:
                 obj.save()
-            except IntegrityError as ex:
+            except IntegrityError as ex:  # pragma no cover
                 obj.rollback()
                 raise HTTPError(500, str(ex))
+            self.elastic_upload(obj)
 
     def _set_or_create(self, insert_json):
         """Set or create the object if it doesn't already exist."""
@@ -64,10 +61,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             self.deleted = None
             self.updated = datetime_now_nomicrosecond()
             self.save()
-            try:
-                self.elastic_upload(self)
-            except Exception as ex:
-                raise HTTPError(500, str(ex))
+            self.elastic_upload(self)
 
     def _insert(self, insert_json):
         """Insert object from json into the system."""
@@ -85,32 +79,17 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             self.created = datetime_now_nomicrosecond()
             try:
                 self.save(force_insert=True)
-            except IntegrityError as ex:
+            except IntegrityError as ex:  # pragma no cover
                 self.rollback()
                 raise HTTPError(500, str(ex))
-            try:
-                self.elastic_upload(self)
-            except Exception as ex:
-                raise HTTPError(500, str(ex))
+            self.elastic_upload(self)
 
     def _delete(self, **kwargs):
         """Internal delete object method."""
-        try:
-            objs = self.select().where(self.where_clause(kwargs))
-        except DoesNotExist as ex:
-            raise HTTPError(404, str(ex))
-        for obj in objs:
-            # also set updated
-            obj.deleted = datetime_now_nomicrosecond()
-            try:
-                self.elastic_delete(obj.to_hash()['_id'])
-            except Exception as ex:
-                raise HTTPError(500, str(ex))
-            try:
-                obj.save()
-            except IntegrityError as ex:
-                obj.rollback()
-                raise HTTPError(500, str(ex))
+        update_hash = {
+            'deleted': datetime_now_nomicrosecond().isoformat()
+        }
+        self._update(dumps(update_hash), **kwargs)
 
     # CherryPy requires these named methods
     # Add HEAD (basically Get without returning body

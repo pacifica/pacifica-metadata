@@ -1,7 +1,5 @@
 #!/usr/bin/python
 """Contains the Files object model primary unit of metadata for Pacifica."""
-from datetime import datetime
-from time import mktime
 from peewee import ForeignKeyField, CharField, BigIntegerField
 from peewee import Expression, OP
 from metadata.rest.orm import CherryPyAPI
@@ -68,8 +66,8 @@ class Files(CherryPyAPI):
         obj['subdir'] = unicode_type(self.subdir)
         obj['mimetype'] = str(self.mimetype)
         # pylint: disable=no-member
-        obj['ctime'] = int(mktime(self.ctime.timetuple()))
-        obj['mtime'] = int(mktime(self.mtime.timetuple()))
+        obj['ctime'] = self.ctime.isoformat()
+        obj['mtime'] = self.mtime.isoformat()
         obj['transaction_id'] = int(self.transaction.id)
         # pylint: enable=no-member
         obj['size'] = int(self.size)
@@ -83,8 +81,8 @@ class Files(CherryPyAPI):
         self._set_only_if('name', obj, 'name', lambda: unicode_type(obj['name']))
         self._set_only_if('subdir', obj, 'subdir', lambda: unicode_type(obj['subdir']))
         self._set_only_if('mimetype', obj, 'mimetype', lambda: str(obj['mimetype']))
-        self._set_only_if('ctime', obj, 'ctime', lambda: datetime.fromtimestamp(int(obj['ctime'])))
-        self._set_only_if('mtime', obj, 'mtime', lambda: datetime.fromtimestamp(int(obj['mtime'])))
+        self._set_datetime_part('ctime', obj)
+        self._set_datetime_part('mtime', obj)
         self._set_only_if('size', obj, 'size', lambda: int(obj['size']))
         self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
 

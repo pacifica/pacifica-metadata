@@ -5,6 +5,7 @@ from time import mktime
 from json import dumps
 from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
+from metadata.orm.utils import datetime_now_nomicrosecond
 from metadata.orm.base import PacificaModel
 from metadata.orm.test.base import TestBase
 
@@ -19,13 +20,13 @@ SAMPLE_ZERO_HASH = {
     'deleted': None
 }
 SAMPLE_REP_HASH = {
-    'created': datetime.now().replace(microsecond=0).isoformat(),
-    'updated': datetime.now().replace(microsecond=0).isoformat(),
+    'created': datetime_now_nomicrosecond().isoformat(),
+    'updated': datetime_now_nomicrosecond().isoformat(),
     'deleted': None
 }
 SAMPLE_BAD_HASH = {
     'created': 'blarg',
-    'updated': int(mktime(datetime.now().timetuple())),
+    'updated': int(mktime(datetime.utcnow().timetuple())),
     'deleted': None
 }
 
@@ -89,8 +90,8 @@ class TestDBDates(TestBase):
             self.base_create_obj(PacificaModel, SAMPLE_REP_HASH)
             self.base_create_obj(PacificaModel, SAMPLE_ZERO_ISO_HASH)
             third_obj = PacificaModel()
-            date_check_max = datetime.now()+timedelta(minutes=2)
-            date_check_min = datetime.now()-timedelta(minutes=2)
+            date_check_max = datetime.utcnow()+timedelta(minutes=2)
+            date_check_min = datetime.utcnow()-timedelta(minutes=2)
             search_expr = {
                 'created': date_check_max.replace(microsecond=0).isoformat(),
                 'created_operator': 'LT'

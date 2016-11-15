@@ -1,9 +1,12 @@
 cherrypy
 codeclimate-test-reporter
 coverage
+docker-py
 elasticsearch
 httpretty
+nose
 peewee
+psycopg2
 pylint
 pytest
 python-dateutil

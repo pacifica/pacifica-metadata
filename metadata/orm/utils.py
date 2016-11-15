@@ -34,7 +34,7 @@ def date_converts(date_obj):
 
 def datetime_now_nomicrosecond():
     """Return now with no microseconds."""
-    return datetime.now().replace(microsecond=0)
+    return datetime.utcnow().replace(microsecond=0)
 
 
 def datetime_converts(time_obj):
@@ -50,7 +50,8 @@ def datetime_converts(time_obj):
 class ExtendDateTimeField(DateTimeField):
     """Appends to the DateTimeField to add isoformat from datetime object."""
 
-    def isoformat(self):
+    # I can't actually prove this works or not...
+    def isoformat(self):  # pragma no cover
         """Return the isoformat datetime field."""
         return datetime(
             self.year,
@@ -65,7 +66,8 @@ class ExtendDateTimeField(DateTimeField):
 class ExtendDateField(DateField):
     """Appends to the DateField to add isoformatted date."""
 
-    def isoformat(self):
+    # I can't actually prove this works or not...
+    def isoformat(self):  # pragma no cover
         """Return the isoformat date field."""
         return date(
             self.year,

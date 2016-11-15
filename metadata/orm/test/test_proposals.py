@@ -3,6 +3,7 @@
 """Test the proposals ORM object."""
 from datetime import datetime
 from json import dumps
+from metadata.orm.utils import datetime_now_nomicrosecond
 from metadata.orm.test.base import TestBase
 from metadata.orm.proposals import Proposals
 
@@ -15,11 +16,11 @@ This is my proposal that's really cool and you should accept it. ;)
     'science_theme': 'Nobel Prize Winners',
     'proposal_type': 'Blarg!',
     'encoding': 'UTF8',
-    'submitted_date': datetime.now().replace(microsecond=0).isoformat(),
-    'accepted_date': datetime.now().date().isoformat(),
-    'actual_start_date': datetime.now().date().isoformat(),
-    'actual_end_date': datetime.now().date().isoformat(),
-    'closed_date': datetime.now().date().isoformat()
+    'submitted_date': datetime_now_nomicrosecond().isoformat(),
+    'accepted_date': datetime.utcnow().date().isoformat(),
+    'actual_start_date': datetime.utcnow().date().isoformat(),
+    'actual_end_date': datetime.utcnow().date().isoformat(),
+    'closed_date': datetime.utcnow().date().isoformat()
 }
 
 SAMPLE_UNICODE_PROPOSAL_HASH = {
@@ -31,11 +32,11 @@ This is my proposal that's réally cool and you should accept it. ;)
     'science_theme': u'Nobél Prize Winners',
     'proposal_type': u'Blarg!é',
     'encoding': 'UTF8',
-    'submitted_date': datetime.now().replace(microsecond=0).isoformat(),
-    'accepted_date': datetime.now().date().isoformat(),
-    'actual_start_date': datetime.now().date().isoformat(),
-    'actual_end_date': datetime.now().date().isoformat(),
-    'closed_date': datetime.now().date().isoformat()
+    'submitted_date': datetime_now_nomicrosecond().isoformat(),
+    'accepted_date': datetime.utcnow().date().isoformat(),
+    'actual_start_date': datetime.utcnow().date().isoformat(),
+    'actual_end_date': datetime.utcnow().date().isoformat(),
+    'closed_date': datetime.utcnow().date().isoformat()
 }
 
 

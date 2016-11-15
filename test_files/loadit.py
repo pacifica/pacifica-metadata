@@ -2,28 +2,29 @@
 """This is used to generically load the test data."""
 from os import getenv
 from os.path import dirname, realpath, join
+from json import loads
 from metadata.client import PMClient
 
 
 def main():
     """Main method for loading the test data."""
-    mdclient = PMClient(getenv('METADATA_URL', 'http://localhost:8121'))
+    mdclient = PMClient(getenv('METADATA_URL', 'http://127.0.0.1:8121'))
     test_data_dir = dirname(realpath(__file__))
     object_order = [
         'analytical_tools',
         'journals',
         'citations',
         'institutions',
+        'users',
         'contributors',
+        'proposals',
+        'instruments',
+        'transactions',
         'files',
         'groups',
-        'instruments',
         'keys',
         'keywords',
-        'proposals',
-        'users',
         'values',
-        'transactions',
         'atool_transaction',
         'citation_contributor',
         'citation_proposal',
@@ -37,7 +38,8 @@ def main():
         'user_group'
     ]
     for obj in object_order:
-        mdclient.create(obj, open('{0}.json'.format(join(test_data_dir, obj))).read())
+        mdclient.create(obj, loads(open('{0}.json'.format(join(test_data_dir, obj))).read()))
+
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,5 @@
 # Pull base image.
-FROM elasticsearch
+FROM elasticsearch:2.4
 
 # Install HEAD plugin
 RUN ./bin/plugin install mobz/elasticsearch-head

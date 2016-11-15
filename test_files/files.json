@@ -1,12 +1,12 @@
 [
   {
     "_id": 103,
-    "ctime": "Sat Nov 12 21:38:21 PST 2016",
+    "ctime": "Sat Nov 12 21:38:21 2016",
     "mimetype": "text/plain",
-    "mtime": "Sat Nov 12 21:38:21 PST 2016",
+    "mtime": "Sat Nov 12 21:38:21 2016",
     "name": "foo.txt",
     "size": 123,
     "subdir": "a/b",
-    "transaction_id": 68
+    "transaction_id": 67
   }
 ]

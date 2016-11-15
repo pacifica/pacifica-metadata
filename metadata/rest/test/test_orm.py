@@ -1,66 +1,180 @@
 #!/usr/bin/python
 """Test the ORM interface CherryPyAPI."""
-from unittest import TestCase
 from json import loads, dumps
-from peewee import SqliteDatabase
-from playhouse.test_utils import test_database
-import httpretty
-from cherrypy import HTTPError
+import logging
+import requests
+import cherrypy
+from cherrypy.test import helper
+from test_files.loadit import main
+from docker import Client
+from metadata.rest.root import Root
 from metadata.orm.keys import Keys
-from metadata.orm.test.test_keys import SAMPLE_KEY_HASH
+from metadata.orm import create_tables
 
 
-class TestCherryPyAPI(TestCase):
+class TestCherryPyAPI(helper.CPWebCase):
     """Test the CherryPyAPI class."""
 
-    def test_update_invalid_json(self):
-        """Test _update with invalid json."""
-        test_obj = Keys()
-        with test_database(SqliteDatabase(':memory:'), [Keys]):
-            hit_exception = False
-            test_obj.from_hash(SAMPLE_KEY_HASH)
-            test_obj.save(force_insert=True)
-            try:
-                invalid_json = 'foo'
-                # pylint: disable=protected-access
-                test_obj._update(invalid_json, id=SAMPLE_KEY_HASH['_id'])
-                # pylint: enable=protected-access
-            except HTTPError as ex:
-                hit_exception = True
-                self.assertEqual(ex.code, 500)
-            self.assertTrue(hit_exception)
+    PORT = 8121
+    HOST = '127.0.0.1'
+    url = 'http://{0}:{1}'.format(HOST, PORT)
+    headers = {'content-type': 'application/json'}
+    es_container_id = None
+    cli = Client()
 
-    @httpretty.activate
-    def test_update(self):
-        """Test the select method of CherryPyAPI."""
-        test_obj = Keys()
-        url = 'http://127.0.0.1:9200/pacifica/Keys/{0}'.format(SAMPLE_KEY_HASH['_id'])
-        response_body = {
-            'status': 'uploaded Keys!'
-        }
-        httpretty.register_uri(httpretty.HEAD, url, status=200)
-        httpretty.register_uri(httpretty.POST, '{0}/_update'.format(url),
-                               body=dumps(response_body),
-                               content_type='application/json')
-        with test_database(SqliteDatabase(':memory:'), [Keys]):
-            test_obj.from_hash(SAMPLE_KEY_HASH)
-            test_obj.save(force_insert=True)
-            test_update = SAMPLE_KEY_HASH
-            test_update['key'] = 'foo'
-            # pylint: disable=protected-access
-            test_obj._update(dumps(test_update), id=SAMPLE_KEY_HASH['_id'])
-            # pylint: enable=protected-access
-            self.assertEqual(httpretty.last_request().method, 'POST')
+    # we don't care about covering the testing code
+    @classmethod
+    def docker_pull(cls, image):  # pragma no cover
+        """Docker pull the command does more than the docker pull method in python."""
+        images = {}
+        for data in cls.cli.pull(image, stream=True):
+            data = data.strip()
+            done = False
+            for line in data.split('\n'):
+                line = loads(line)
+                if 'id' not in line:
+                    if 'Image is up to date' in line['status']:
+                        done = True
+                else:
+                    images[line['id']] = line
+            if done:
+                break
+            done = True
+            for value in images.values():
+                if 'Pull complete' not in value['status']:
+                    done = False
+            if done:
+                break
 
-    def test_select(self):
-        """Test the select method of CherryPyAPI."""
-        test_obj = Keys()
-        with test_database(SqliteDatabase(':memory:'), [Keys]):
-            test_obj.from_hash(SAMPLE_KEY_HASH)
-            test_obj.save(force_insert=True)
-            # pylint: disable=protected-access
-            data = loads(test_obj._select(id=SAMPLE_KEY_HASH['_id']))
-            # pylint: enable=protected-access
-            self.assertEqual(len(data), 1)
-            for key, value in SAMPLE_KEY_HASH.items():
-                self.assertEqual(data[0][key], value)
+    @classmethod
+    def start_elasticsearch_docker(cls):
+        """Start the elasticsearch node via docker."""
+        cls.docker_pull('elasticsearch:2.4')
+        container_id = cls.cli.create_container(
+            image='elasticsearch:2.4',
+            ports=[9200],
+            host_config=cls.cli.create_host_config(
+                port_bindings={
+                    9200: ('127.0.0.1', 9200)
+                }
+            )
+        )
+        cls.cli.start(container_id['Id'])
+        cls.es_container_id = container_id['Id']
+
+    @classmethod
+    def start_postgres_docker(cls):
+        """Start the postgres server via docker."""
+        cls.docker_pull('postgres:latest')
+        container_id = cls.cli.create_container(
+            image='postgres:latest',
+            ports=[5432],
+            environment={
+                'POSTGRES_PASSWORD': 'pacifica',
+                'POSTGRES_DB': 'pacifica_metadata',
+                'POSTGRES_USER': 'pacifica'
+            },
+            host_config=cls.cli.create_host_config(
+                port_bindings={
+                    5432: ('127.0.0.1', 5432)
+                }
+            )
+        )
+        cls.cli.start(container_id['Id'])
+        cls.pg_container_id = container_id['Id']
+
+    @classmethod
+    def stop_elasticsearch_docker(cls):
+        """Stop and blow away the elasticsearch docker container."""
+        cls.cli.stop(cls.es_container_id)
+        cls.cli.remove_container(cls.es_container_id)
+        cls.es_container_id = None
+
+    @classmethod
+    def stop_postgres_docker(cls):
+        """Stop and blow away the postgres docker container."""
+        cls.cli.stop(cls.pg_container_id)
+        cls.cli.remove_container(cls.pg_container_id)
+        cls.pg_container_id = None
+
+    @classmethod
+    def setup_server(cls):
+        """Start the cherrypy server."""
+        logger = logging.getLogger('peewee')
+        logger.setLevel(logging.DEBUG)
+        logger.addHandler(logging.StreamHandler())
+        cls.start_postgres_docker()
+        cls.start_elasticsearch_docker()
+        create_tables()
+        cherrypy.config.update('server.conf')
+        cherrypy.tree.mount(Root(), '/', 'server.conf')
+
+    @classmethod
+    def teardown_class(cls):
+        """Tear down the services required by the server."""
+        super(TestCherryPyAPI, cls).teardown_class()
+        cls.stop_elasticsearch_docker()
+        cls.stop_postgres_docker()
+
+    def test_methods(self):
+        """Test the PUT (insert) method."""
+        main()
+        req = requests.get('{0}/keys?page_number=1&items_per_page=1'.format(self.url))
+        self.assertEqual(req.status_code, 200)
+        keys = loads(req.content)
+        self.assertEqual(len(keys), 1)
+        set_hash = {'key': 'Break Keys'}
+
+        req = requests.post('{0}/keys'.format(self.url), data=dumps(set_hash), headers=self.headers)
+        self.assertEqual(req.status_code, 200)
+        req = requests.get('{0}/keys'.format(self.url))
+        self.assertEqual(req.status_code, 200)
+        keys = loads(req.content)
+        self.assertEqual(len(keys), 2)
+        for key in keys:
+            self.assertEqual(key['key'], 'Break Keys')
+
+        req = requests.get('{0}/keys'.format(self.url))
+        self.assertEqual(req.status_code, 200)
+        keys = loads(req.content)
+        self.assertEqual(len(keys), 2)
+
+        # update a forign key to something that isn't there
+        req = requests.post('{0}/file_key_value?file_id=103'.format(self.url),
+                            data='{"key_id": 107}', headers=self.headers)
+        self.assertEqual(req.status_code, 500)
+        req = requests.put('{0}/file_key_value'.format(self.url),
+                           data='{"key_id": 107, "file_id": 103, "value_id": 103}',
+                           headers=self.headers)
+        self.assertEqual(req.status_code, 500)
+
+        # just try invalid json
+        req = requests.post('{0}/keys'.format(self.url), data='{ some bad json}', headers=self.headers)
+        self.assertEqual(req.status_code, 500)
+        req = requests.put('{0}/keys'.format(self.url), data='{ some bad json}', headers=self.headers)
+        self.assertEqual(req.status_code, 500)
+
+        # insert one item
+        req = requests.put('{0}/keys'.format(self.url), data=dumps({'_id': 1, 'key': 'blarg'}), headers=self.headers)
+        self.assertEqual(req.status_code, 200)
+
+        # delete the item I just put in
+        req = requests.delete('{0}/keys?key=blarg'.format(self.url))
+        self.assertEqual(req.status_code, 200)
+
+    def test_set_or_create(self):
+        """Test the internal set or create method."""
+        key = '{"_id": 4096, "key": "bigger"}'
+        obj = Keys()
+        # pylint: disable=protected-access
+        obj._set_or_create(key)
+        keys = '[{"_id": 4097, "key": "blah"}]'
+        obj._set_or_create(keys)
+        obj._set_or_create(key)
+        hit_exception = False
+        try:
+            obj._set_or_create('{ bad json }')
+        except cherrypy.HTTPError:
+            hit_exception = True
+        self.assertTrue(hit_exception)
+        # pylint: enable=protected-access

@@ -16,6 +16,7 @@ class Root(object):
     uploader = UploaderAPI
 # pylint: enable=too-few-public-methods
 
+
 for cls in ORM_OBJECTS:
     # this is based on the module name being something like metadata.orm.BLAH
     obj_loc = cls.__module__.split('.')[2]

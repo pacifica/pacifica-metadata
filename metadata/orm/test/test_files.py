@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """Test the files ORM object."""
 from datetime import datetime, timedelta
-from time import mktime
 from json import dumps
+from metadata.orm.utils import datetime_now_nomicrosecond
 from metadata.orm.test.base import TestBase
 from metadata.orm.files import Files
 from metadata.orm.transactions import Transactions
@@ -14,8 +14,8 @@ SAMPLE_FILE_HASH = {
     'name': 'test.txt',
     'subdir': 'a/b',
     'mimetype': 'text/plain',
-    'mtime': int(mktime(datetime.now().timetuple())),
-    'ctime': int(mktime(datetime.now().timetuple())),
+    'mtime': datetime_now_nomicrosecond().isoformat(),
+    'ctime': datetime_now_nomicrosecond().isoformat(),
     'size': 1234,
     'transaction_id': SAMPLE_TRANSACTION_HASH['_id'],
     'encoding': 'UTF8'
@@ -26,8 +26,8 @@ SAMPLE_UNICODE_FILE_HASH = {
     'name': u'abcdé.txt',
     'subdir': u'abcdé/b',
     'mimetype': 'text/plain',
-    'mtime': int(mktime(datetime.now().timetuple())),
-    'ctime': int(mktime(datetime.now().timetuple())),
+    'mtime': datetime_now_nomicrosecond().isoformat(),
+    'ctime': datetime_now_nomicrosecond().isoformat(),
     'size': 1234,
     'transaction_id': SAMPLE_TRANSACTION_HASH['_id'],
     'encoding': 'UTF8'
@@ -72,7 +72,7 @@ class TestFiles(TestBase):
             name_operator='ILIKE',
             name=u'%é%'
         )
-        date_time_chk = datetime.now()-timedelta(minutes=10)
+        date_time_chk = datetime.utcnow()-timedelta(minutes=10)
         self.base_where_clause_search_expr(
             SAMPLE_FILE_HASH,
             mtime_operator='GT',

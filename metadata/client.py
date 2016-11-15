@@ -17,13 +17,15 @@ class PMClient(object):
     This class provides client API to connect to the metadata service
     """
 
+    headers = {'content-type': 'application/json'}
+
     def __init__(self, url):
         """Constructor takes the url to the endpoint."""
         self.url = url
 
     def create(self, cls_type, set_hash):
         """Create the object of type based on hash."""
-        ret = requests.put('{0}/{1}'.format(self.url, cls_type), data=dumps(set_hash))
+        ret = requests.put('{0}/{1}'.format(self.url, cls_type), data=dumps(set_hash), headers=self.headers)
         if ret.status_code / 100 == 2:
             return True
         elif ret.status_code / 100 == 5:
@@ -38,7 +40,10 @@ class PMClient(object):
         Update object of type returned from query_hash and
         set the values in set_hash
         """
-        ret = requests.post('{0}/{1}'.format(self.url, cls_type), params=query_hash, data=dumps(set_hash))
+        ret = requests.post('{0}/{1}'.format(self.url, cls_type),
+                            params=query_hash,
+                            data=dumps(set_hash),
+                            headers=self.headers)
         if ret.status_code / 100 == 2:
             return True
         if ret.status_code / 100 == 4:

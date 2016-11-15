@@ -29,9 +29,9 @@ services:
     image: postgres
     container_name: metadatadb
     environment:
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: pacifica
       POSTGRES_DB: pacifica_metadata
-      POSTGRES_USER: metadata
+      POSTGRES_USER: pacifica
     ports:
       - 5432:5432
 
@@ -47,7 +47,7 @@ services:
     environment:
       ELASTICDB_PORT: tcp://elasticmaster:9200
       POSTGRES_ENV_POSTGRES_DB: pacifica_metadata
-      POSTGRES_ENV_POSTGRES_USER: metadata
+      POSTGRES_ENV_POSTGRES_USER: pacifica
       POSTGRES_PORT_5432_TCP_ADDR: postgres
       POSTGRES_PORT_5432_TCP_PORT: 5432
-      POSTGRES_ENV_POSTGRES_PASSWORD: password
+      POSTGRES_ENV_POSTGRES_PASSWORD: pacifica

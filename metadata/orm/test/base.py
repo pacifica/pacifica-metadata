@@ -31,7 +31,7 @@ class TestBase(TestCase):
         self.base_create_dep_objs()
         obj = cls()
         if 'updated' not in obj_hash:
-            change_date_chk = datetime.now()
+            change_date_chk = datetime.utcnow()
             obj.updated = change_date_chk
         obj.from_hash(obj_hash)
         obj.save(force_insert=True)

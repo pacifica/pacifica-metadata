@@ -1,5 +1,5 @@
 -   repo: git://github.com/pre-commit/pre-commit-hooks
-    sha: 4ef03c4223ad322c7adaa6c6c0efb26b57df3b71
+    sha: 7539d8bd1a00a3c1bfd34cdb606d3a6372e83469
     hooks:
     -   id: trailing-whitespace
     -   id: flake8
@@ -27,7 +27,6 @@
     hooks:
     -   id: pep257
 -   repo: git://github.com/Lucas-C/pre-commit-hooks
-    sha: 3b296326393ad9130469e1df921e912d31e67fe1
+    sha: c25201a00e6b0514370501050cf2a8538ac12270
     hooks:
     -   id: remove-tabs
-    -   id: forbid-html-img-without-alt-text

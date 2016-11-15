@@ -13,7 +13,7 @@ class UploaderAPI(CherryPyAPI):
 
     # CherryPy requires these named methods.
     # pylint: disable=invalid-name
-    def PUT(self):
+    def PUT(self):  # pragma no cover
         """Sample doc string to put data to the server."""
         try:
             json = loads(request.body.read())

@@ -4,8 +4,8 @@ from os import getenv
 from time import sleep
 import requests
 
-ELASTIC_CONNECT_ATTEMPTS = 10
-ELASTIC_WAIT = 1
+ELASTIC_CONNECT_ATTEMPTS = 40
+ELASTIC_WAIT = 3
 DEFAULT_ELASTIC_ENDPOINT = getenv('ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 ELASTIC_INDEX = 'pacifica'

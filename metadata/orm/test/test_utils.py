@@ -2,7 +2,7 @@
 """Test the metadata.orm.utils methods."""
 from unittest import TestCase
 from datetime import datetime, date
-from metadata.orm.utils import index_hash, datetime_converts, date_converts
+from metadata.orm.utils import index_hash, datetime_converts, date_converts, datetime_now_nomicrosecond
 
 
 class TestUtils(TestCase):
@@ -23,7 +23,7 @@ class TestUtils(TestCase):
         3. an epoch style int
         """
         self.assertEqual(datetime_converts(0), datetime.fromtimestamp(0))
-        now_chk = datetime.now().replace(microsecond=0)
+        now_chk = datetime_now_nomicrosecond()
         self.assertEqual(datetime_converts(now_chk), now_chk)
         chk_date = datetime(2016, 7, 5, 9, 22, 12)
         uni_date = u'2016-07-05T09:22:12'
@@ -40,7 +40,7 @@ class TestUtils(TestCase):
         3. an epoch style int
         """
         self.assertEqual(date_converts(0), datetime.fromtimestamp(0).date())
-        now_chk = datetime.now().date()
+        now_chk = datetime.utcnow().date()
         self.assertEqual(date_converts(now_chk), now_chk)
         chk_date = date(2016, 7, 5)
         uni_date = u'2016-07-05'
