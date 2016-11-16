@@ -1,5 +1,6 @@
 #!/usr/bin/python
 """Test the ORM interface CherryPyAPI."""
+from time import time
 from json import loads, dumps
 import logging
 import requests
@@ -161,6 +162,23 @@ class TestCherryPyAPI(helper.CPWebCase):
         # delete the item I just put in
         req = requests.delete('{0}/keys?key=blarg'.format(self.url))
         self.assertEqual(req.status_code, 200)
+
+    def test_perf_of_large_insert(self):
+        """Create 10000 records of Values and try to insert them."""
+        values = []
+        for j in range(0, 10):
+            values.append([])
+            for i in range(0, 1000):
+                values[j].append({'_id': 20000 + i + (j * 1000), 'value': 'Value {0}'.format(i + (j * 1000))})
+        txt_dumps = []
+        for trans in values:
+            txt_dumps.append(dumps(trans))
+        start_time = time()
+        for txt_trans in txt_dumps:
+            req = requests.put('{0}/values'.format(self.url), data=txt_trans, headers=self.headers)
+            self.assertEqual(req.status_code, 200)
+        end_time = time()
+        self.assertTrue(end_time - start_time < 120)
 
     def test_set_or_create(self):
         """Test the internal set or create method."""
