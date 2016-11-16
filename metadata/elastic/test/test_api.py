@@ -18,21 +18,32 @@ class TestElasticAPI(TestCase):
             u'foo': u'bar'
         }
         url = 'http://127.0.0.1:9200/pacifica/ElasticAPI/127'
-        obj = ElasticAPI()
-        obj.id = 127
-        setattr(obj, 'to_hash', lambda: obj_hash)
         response_body = {
-            'status': 'uploaded!'
+            'took': 1,
+            'errors': False,
+            'items': [
+                {
+                    'index': {
+                        '_index': 'pacifica',
+                        '_type': 'ElasticAPI',
+                        '_id': '127',
+                        '_version': 1,
+                        'result': 'created',
+                        'forced_refresh': False,
+                        'status': 201
+                    }
+                }
+            ]
         }
         httpretty.register_uri(httpretty.HEAD, url, status=404)
-        httpretty.register_uri(httpretty.PUT, '{0}/_create'.format(url),
+        httpretty.register_uri(httpretty.POST, 'http://127.0.0.1:9200/_bulk',
                                body=dumps(response_body),
                                content_type='application/json')
-        ElasticAPI.elastic_upload(obj)
-        self.assertEqual(httpretty.last_request().method, 'PUT')
+        ElasticAPI.elastic_upload([obj_hash])
+        self.assertEqual(httpretty.last_request().method, 'POST')
         sent_body = httpretty.last_request().parsed_body
         self.assertTrue(isinstance(sent_body, unicode_type))
-        sent_body = loads(sent_body)
+        sent_body = loads(sent_body.split('\n')[1])
         self.assertTrue('_id' not in sent_body)
         for key, value in sent_body.iteritems():
             self.assertEqual(value, obj_hash[key])
@@ -45,14 +56,11 @@ class TestElasticAPI(TestCase):
             u'foo': u'bar'
         }
         url = 'http://127.0.0.1:9200/pacifica/ElasticAPI/127'
-        obj = ElasticAPI()
-        obj.id = 127
-        setattr(obj, 'to_hash', lambda: obj_hash)
         httpretty.register_uri(httpretty.HEAD, url,
                                status=500)
         # pylint: disable=broad-except
         try:
-            ElasticAPI.elastic_upload(obj)
+            ElasticAPI.elastic_upload([obj_hash])
         except Exception as ex:
             self.assertEqual(httpretty.last_request().method, 'HEAD')
             self.assertEqual(str(ex), 'TransportError(500, u\'\')')

@@ -15,11 +15,11 @@ class TestElasticUtils(TestCase):
         response_body = {
             'status': 'created!'
         }
-        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/pacifica',
+        httpretty.register_uri(httpretty.PUT, 'http://127.0.0.1:9200/pacifica',
                                body=dumps(response_body),
                                content_type='application/json')
         create_elastic_index()
-        self.assertEqual(httpretty.last_request().method, 'GET')
+        self.assertEqual(httpretty.last_request().method, 'PUT')
 
     @httpretty.activate
     def test_create_elastic_index(self):
@@ -59,7 +59,7 @@ class TestElasticUtils(TestCase):
         except Exception as ex:
             hit_exception = True
             self.assertEqual(httpretty.last_request().method, 'PUT')
-            self.assertEqual(str(ex), 'create_elastic_index: 500\n')
+            self.assertEqual(str(ex), 'TransportError(500, u\'{"status": "ERROR"}\')')
         # pylint: enable=broad-except
         self.assertTrue(hit_exception)
 
@@ -67,7 +67,7 @@ class TestElasticUtils(TestCase):
     def test_elastic_connect(self):
         """Test the create elastic index."""
         response_body = {}
-        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_stats',
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/',
                                body=dumps(response_body),
                                content_type='application/json')
         try_es_connect()
@@ -77,7 +77,7 @@ class TestElasticUtils(TestCase):
     def test_error_es_connect(self):
         """Test the create elastic index."""
         hit_exception = False
-        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_stats',
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/',
                                body='Trying to connect',
                                status=404)
         # pylint: disable=broad-except
@@ -86,6 +86,6 @@ class TestElasticUtils(TestCase):
         except Exception as ex:
             hit_exception = True
             self.assertEqual(httpretty.last_request().method, 'GET')
-            self.assertEqual(str(ex), 'try_es_connect: 404\n')
+            self.assertEqual(str(ex), 'TransportError(404, u\'Trying to connect\')')
         # pylint: enable=broad-except
         self.assertTrue(hit_exception)

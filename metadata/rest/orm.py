@@ -28,6 +28,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
     def _update(self, update_json, **kwargs):
         """Internal update method for an object."""
         objs = self.select().where(self.where_clause(kwargs))
+        complete_objs = []
         for obj in objs:
             try:
                 obj.from_json(update_json)
@@ -39,7 +40,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             except IntegrityError as ex:  # pragma no cover
                 obj.rollback()
                 raise HTTPError(500, str(ex))
-            self.elastic_upload(obj)
+            complete_objs.append(obj.to_hash())
+        self.elastic_upload(complete_objs)
 
     def _set_or_create(self, insert_json):
         """Set or create the object if it doesn't already exist."""
@@ -50,18 +52,19 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             raise HTTPError(500, str(ex))
         if isinstance(objs, dict):
             objs = [objs]
+        complete_objs = []
         for obj in objs:
             self.from_hash(obj)
             try:
                 self.save(force_insert=True)
                 self.created = datetime_now_nomicrosecond()
-                self.save()
             except IntegrityError as ex:
                 self.rollback()
             self.deleted = None
             self.updated = datetime_now_nomicrosecond()
             self.save()
-            self.elastic_upload(self)
+            complete_objs.append(self.to_hash())
+        self.elastic_upload(complete_objs)
 
     def _insert(self, insert_json):
         """Insert object from json into the system."""
@@ -72,6 +75,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             raise HTTPError(500, str(ex))
         if isinstance(objs, dict):
             objs = [objs]
+        es_objs = []
         for obj in objs:
             self.from_hash(obj)
             self.deleted = None
@@ -82,7 +86,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             except IntegrityError as ex:  # pragma no cover
                 self.rollback()
                 raise HTTPError(500, str(ex))
-            self.elastic_upload(self)
+            es_objs.append(self.to_hash())
+        self.elastic_upload(es_objs)
 
     def _delete(self, **kwargs):
         """Internal delete object method."""

@@ -31,7 +31,7 @@ class TestConnections(TestCase):
         create_elastic_index and try_db_connect
         """
         status_body = {}
-        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_stats',
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/',
                                body=dumps(status_body),
                                content_type='application/json')
         notfound_body = {}
