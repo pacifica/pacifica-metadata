@@ -38,7 +38,7 @@ class Transactions(CherryPyAPI):
     def to_hash(self):
         """Convert the object to a hash."""
         obj = super(Transactions, self).to_hash()
-        obj['_id'] = int(self.id)
+        obj['_id'] = int(self.id) if self.id is not None else obj['_id']
         obj['submitter'] = int(self.submitter.id)
         obj['instrument'] = int(self.instrument.id)
         obj['proposal'] = str(self.proposal.id)

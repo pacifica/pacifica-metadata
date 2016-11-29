@@ -37,14 +37,14 @@ class InstrumentCustodian(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(InstrumentCustodian, InstrumentCustodian).elastic_mapping_builder(obj)
-        obj['instrument_id'] = obj['person_id'] = {'type': 'integer'}
+        obj['instrument_id'] = obj['custodian_id'] = {'type': 'integer'}
 
     def to_hash(self):
         """Convert the object to a hash."""
         obj = super(InstrumentCustodian, self).to_hash()
         obj['_id'] = index_hash(int(self.custodian.id), int(self.instrument.id))
         obj['instrument_id'] = int(self.instrument.id)
-        obj['person_id'] = int(self.custodian.id)
+        obj['custodian_id'] = int(self.custodian.id)
         return obj
 
     def from_hash(self, obj):
@@ -52,8 +52,8 @@ class InstrumentCustodian(CherryPyAPI):
         super(InstrumentCustodian, self).from_hash(obj)
         if 'instrument_id' in obj:
             self.instrument = Instruments.get(Instruments.id == obj['instrument_id'])
-        if 'person_id' in obj:
-            self.custodian = Users.get(Users.id == obj['person_id'])
+        if 'custodian_id' in obj:
+            self.custodian = Users.get(Users.id == obj['custodian_id'])
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
@@ -61,7 +61,7 @@ class InstrumentCustodian(CherryPyAPI):
         if 'instrument_id' in kwargs:
             instrument = Instruments.get(Instruments.id == kwargs['instrument_id'])
             where_clause &= Expression(InstrumentCustodian.instrument, OP.EQ, instrument)
-        if 'person_id' in kwargs:
-            user = Users.get(Users.id == kwargs['person_id'])
+        if 'custodian_id' in kwargs:
+            user = Users.get(Users.id == kwargs['custodian_id'])
             where_clause &= Expression(InstrumentCustodian.custodian, OP.EQ, user)
         return where_clause

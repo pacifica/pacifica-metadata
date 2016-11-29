@@ -9,7 +9,7 @@ from metadata.orm.test.test_users import SAMPLE_USER_HASH, TestUsers
 from metadata.orm.users import Users
 
 SAMPLE_INSTRUMENT_CUSTODIAN_HASH = {
-    'person_id': SAMPLE_USER_HASH['_id'],
+    'custodian_id': SAMPLE_USER_HASH['_id'],
     'instrument_id': SAMPLE_INSTRUMENT_HASH['_id']
 }
 

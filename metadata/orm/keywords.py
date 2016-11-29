@@ -36,7 +36,8 @@ class Keywords(CherryPyAPI):
     def to_hash(self):
         """Convert the object to a hash."""
         obj = super(Keywords, self).to_hash()
-        obj['_id'] = int(self.id)
+
+        obj['_id'] = int(self.id) if self.id is not None else obj['_id']
         obj['keyword'] = unicode_type(self.keyword)
         obj['encoding'] = str(self.encoding)
         obj['citation_id'] = int(self.citation.id)

@@ -30,7 +30,8 @@ DB = pgdb(getenv('POSTGRES_ENV_POSTGRES_DB', 'pacifica_metadata'),
           host=getenv('POSTGRES_PORT_5432_TCP_ADDR', 'localhost'),
           port=int(getenv('POSTGRES_PORT_5432_TCP_PORT', 5432)))
 
-DEFAULT_ELASTIC_ENDPOINT = getenv('ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
+DEFAULT_ELASTIC_ENDPOINT = getenv(
+    'ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 
 
@@ -68,24 +69,29 @@ class PacificaModel(Model):
 
     def rollback(self):
         """Reconnect to the database on errors."""
+        # pylint: disable=no-member
         self._meta.database.rollback()
+        # pylint: enable=no-member
 
     def _set_only_if(self, key, obj, dest_attr, func):
         if key in obj:
             setattr(self, dest_attr, func())
 
     def _set_date_part(self, date_part, obj):
-        self._set_only_if(date_part, obj, date_part, lambda: date_converts(obj[date_part]))
+        self._set_only_if(date_part, obj, date_part,
+                          lambda: date_converts(obj[date_part]))
 
     def _set_datetime_part(self, time_part, obj):
-        self._set_only_if(time_part, obj, time_part, lambda: datetime_converts(obj[time_part]))
+        self._set_only_if(time_part, obj, time_part,
+                          lambda: datetime_converts(obj[time_part]))
 
     def to_hash(self):
         """Convert the base object fields into serializable attributes in a hash."""
         obj = {}
         obj['created'] = self.created.isoformat()
         obj['updated'] = self.updated.isoformat()
-        obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
+        obj['deleted'] = self.deleted.isoformat(
+        ) if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         return obj
 
@@ -135,14 +141,17 @@ class PacificaModel(Model):
         where_clause = Expression(1, OP.EQ, 1)
         if 'deleted' in kwargs:
             if kwargs['deleted'] is None:
-                where_clause &= Expression(getattr(my_class, 'deleted'), OP.IS, None)
+                where_clause &= Expression(
+                    getattr(my_class, 'deleted'), OP.IS, None)
             else:
                 date_obj = datetime_converts(kwargs['deleted'])
-                where_clause &= Expression(getattr(my_class, 'deleted'), OP.EQ, date_obj)
+                where_clause &= Expression(
+                    getattr(my_class, 'deleted'), OP.EQ, date_obj)
         for date in ['updated', 'created']:
             if date in kwargs:
                 date_obj, date_oper = self._date_operator_compare(date, kwargs)
-                where_clause &= Expression(getattr(my_class, date), date_oper, date_obj)
+                where_clause &= Expression(
+                    getattr(my_class, date), date_oper, date_obj)
         return where_clause
 
     @classmethod
@@ -160,7 +169,8 @@ class PacificaModel(Model):
         """
         hash_list = []
         hash_dict = {}
-        all_keys_query = cls.select(*[getattr(cls, key) for key in cls.get_primary_keys()]).dicts()
+        all_keys_query = cls.select(*[getattr(cls, key)
+                                      for key in cls.get_primary_keys()]).dicts()
         for obj in all_keys_query.execute():
             inst_key = index_hash(*obj.values())
             hash_list.append(inst_key)
@@ -178,6 +188,47 @@ class PacificaModel(Model):
         primary_key = cls._meta.primary_key
         if isinstance(primary_key, CompositeKey) and len(cls._meta.rel) > 0:
             return list(primary_key.field_names)
-            # pylint: enable=no-member
+        # pylint: enable=no-member
         else:
             return [primary_key.name]
+
+    @classmethod
+    def atomic(cls):
+        """Get the atomic context or decorator."""
+        # pylint: disable=no-member
+        return cls._meta.database.atomic()
+        # pylint: enable=no-member
+
+    @classmethod
+    def get_object_info(cls):
+        """Get model and field information about the model class."""
+        if cls.last_change_date() is not None:
+            last_changed = cls.last_change_date().isoformat(' ')
+        else:
+            last_changed = '1970-01-01 00:00:00'
+        related_model_info = {}
+        # pylint: disable=no-member
+        for rel_mod_name in cls._meta.rel:
+            if rel_mod_name != cls.__name__:
+                fkf = cls._meta.rel.get(rel_mod_name)
+                rel_mod = fkf.rel_model
+                # pylint: disable=protected-access
+                table = rel_mod._meta.db_table
+                pkey = rel_mod._meta.primary_key.name
+                # pylint: enable=protected-access
+                related_model_info[rel_mod_name] = {
+                    'db_column': fkf.db_column,
+                    'db_table': table,
+                    'primary_key': pkey
+                }
+        js_object = {
+            'callable_name': cls.__module__.split('.')[2],
+            'last_changed_date': last_changed,
+            'primary_keys': cls.get_primary_keys(),
+            'field_list': cls._meta.sorted_field_names,
+            'foreign_keys': cls._meta.rel.keys(),
+            'related_models': related_model_info,
+            'record_count': cls.select().count()
+        }
+        # pylint: enable=no-member
+        return js_object
