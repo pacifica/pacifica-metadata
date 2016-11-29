@@ -43,7 +43,7 @@ services:
       - elasticmaster
       - elasticlb
     ports:
-      - 8121:8080
+      - 8121:8121
     environment:
       ELASTICDB_PORT: tcp://elasticmaster:9200
       POSTGRES_ENV_POSTGRES_DB: pacifica_metadata
