@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """CherryPy root object class."""
 from metadata.orm import ORM_OBJECTS
-from metadata.rest.uploader import UploaderAPI
+from metadata.rest.ingest import IngestAPI
 
 
 # pylint: disable=too-few-public-methods
@@ -13,7 +13,7 @@ class Root(object):
     """
 
     exposed = False
-    uploader = UploaderAPI
+    ingest = IngestAPI()
 # pylint: enable=too-few-public-methods
 
 
