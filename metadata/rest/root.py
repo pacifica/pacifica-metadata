@@ -1,6 +1,7 @@
 #!/usr/bin/python
 """CherryPy root object class."""
 from metadata.orm import ORM_OBJECTS
+from metadata.rest.objectinfo import ObjectInfoAPI
 from metadata.rest.ingest import IngestAPI
 
 
@@ -13,6 +14,8 @@ class Root(object):
     """
 
     exposed = False
+
+    objectinfo = ObjectInfoAPI()
     ingest = IngestAPI()
 # pylint: enable=too-few-public-methods
 

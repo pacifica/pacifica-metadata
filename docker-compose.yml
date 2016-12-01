@@ -36,7 +36,8 @@ services:
       - 5432:5432
 
   metadataserver:
-    build: .
+    build:
+        context: .
     container_name: metadataserver
     links:
       - metadatadb:postgres

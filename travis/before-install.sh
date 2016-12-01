@@ -21,3 +21,7 @@ else
   pip install codeclimate-test-reporter coverage nose pytest
 fi
 sudo service postgresql stop
+if [ -z "$RUN_LINTS" ] ; then
+  docker pull postgres:latest
+  docker pull elasticsearch:2.4
+fi
