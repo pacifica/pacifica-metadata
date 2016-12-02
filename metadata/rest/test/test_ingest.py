@@ -2,12 +2,19 @@
 """Test the ORM interface IngestAPI."""
 from json import dumps
 import requests
+from cherrypy.test import helper
 from test_files.loadit import main
-from metadata.rest.test import CPCommonTest
+from metadata.rest.test import CPCommonTest, DockerMetadata
 
 
-class TestIngestAPI(CPCommonTest):
+class TestIngestAPI(CPCommonTest, helper.CPWebCase):
     """Test the CherryPyAPI class."""
+
+    @classmethod
+    def teardown_class(cls):
+        """Tear down the services required by the server."""
+        super(TestIngestAPI, cls).teardown_class()
+        DockerMetadata.stop_services()
 
     def test_ingest_api(self):
         """Test the PUT (insert) method."""
@@ -18,6 +25,7 @@ class TestIngestAPI(CPCommonTest):
             {'destinationTable': 'Transactions.instrument', 'value': 54},
             {'destinationTable': 'TransactionKeyValue', 'key': 'Temp C', 'value': '27'},
             {'destinationTable': 'TransactionKeyValue', 'key': 'Temp F', 'value': '27'},
+            {'destinationTable': 'TransactionKeyValue', 'key': 'Tag', 'value': 'foo'},
             {
                 'destinationTable': 'Files',
                 '_id': 34, 'name': 'foo.txt', 'subdir': 'a/b/',

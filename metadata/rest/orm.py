@@ -27,21 +27,16 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
 
     def _update(self, update_json, **kwargs):
         """Internal update method for an object."""
-        objs = self.select().where(self.where_clause(kwargs))
-        complete_objs = []
-        for obj in objs:
-            try:
-                obj.from_json(update_json)
-            except ValueError as ex:
-                raise HTTPError(500, str(ex))
-            if obj.updated is None:
-                obj.updated = datetime_now_nomicrosecond()
-            try:
-                obj.save()
-            except IntegrityError as ex:  # pragma no cover
-                obj.rollback()
-                raise HTTPError(500, str(ex))
-            complete_objs.append(obj.to_hash())
+        update_hash = loads(update_json)
+        if 'updated' not in update_hash:
+            update_hash['updated'] = datetime_now_nomicrosecond()
+        query = self.update(**update_hash).where(self.where_clause(kwargs))
+        try:
+            query.execute()
+        except IntegrityError as ex:
+            self.rollback()
+            raise HTTPError(500, str(ex))
+        complete_objs = [obj.to_hash() for obj in self.select().where(self.where_clause(kwargs))]
         self.elastic_upload(complete_objs)
 
     def _set_or_create(self, insert_json):
@@ -54,17 +49,15 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         if isinstance(objs, dict):
             objs = [objs]
         complete_objs = []
-        for obj in objs:
-            self.from_hash(obj)
-            try:
-                self.save(force_insert=True)
-                self.created = datetime_now_nomicrosecond()
-            except IntegrityError as ex:
-                self.rollback()
-            self.deleted = None
-            self.updated = datetime_now_nomicrosecond()
-            self.save()
-            complete_objs.append(self.to_hash())
+        for obj_hash in objs:
+            if '_id' in obj_hash:
+                obj_hash['id'] = obj_hash.pop('_id')
+            obj, created = self.create_or_get(**obj_hash)
+            if not created:
+                for key, value in obj_hash.iteritems():
+                    setattr(obj, key, value)
+                obj.save()
+            complete_objs.append(obj.to_hash())
         self.elastic_upload(complete_objs)
 
     def _insert(self, insert_json):

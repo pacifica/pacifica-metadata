@@ -4,13 +4,20 @@ from time import time
 from json import loads, dumps
 import requests
 import cherrypy
+from cherrypy.test import helper
 from test_files.loadit import main
-from metadata.rest.test import CPCommonTest
+from metadata.rest.test import CPCommonTest, DockerMetadata
 from metadata.orm.keys import Keys
 
 
-class TestCherryPyAPI(CPCommonTest):
+class TestCherryPyAPI(CPCommonTest, helper.CPWebCase):
     """Test the CherryPyAPI class."""
+
+    @classmethod
+    def teardown_class(cls):
+        """Tear down the services required by the server."""
+        super(TestCherryPyAPI, cls).teardown_class()
+        DockerMetadata.stop_services()
 
     def test_methods(self):
         """Test the PUT (insert) method."""
@@ -21,6 +28,10 @@ class TestCherryPyAPI(CPCommonTest):
         keys = loads(req.content)
         self.assertEqual(len(keys), 1)
         set_hash = {'key': 'Break Keys', 'updated': None}
+        req = requests.post('{0}/keys'.format(self.url),
+                            data=dumps(set_hash), headers=self.headers)
+        self.assertEqual(req.status_code, 500)
+        del set_hash['updated']
         req = requests.post('{0}/keys'.format(self.url),
                             data=dumps(set_hash), headers=self.headers)
         self.assertEqual(req.status_code, 200)
@@ -63,6 +74,10 @@ class TestCherryPyAPI(CPCommonTest):
         req = requests.put('{0}/keys'.format(self.url),
                            data=dumps({'_id': 1, 'key': 'blarg'}), headers=self.headers)
         self.assertEqual(req.status_code, 400)
+
+        req = requests.post('{0}/keys?_id=107'.format(self.url),
+                            data='{"_id": 142}', headers=self.headers)
+        self.assertEqual(req.status_code, 500)
 
         # delete the item I just put in
         req = requests.delete('{0}/keys?key=blarg'.format(self.url))

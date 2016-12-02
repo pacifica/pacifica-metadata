@@ -3,13 +3,13 @@
 from json import loads
 import logging
 import cherrypy
-from cherrypy.test import helper
 from docker import Client
 from metadata.orm import create_tables
 from metadata.rest.root import Root
 
 
-class CPCommonTest(helper.CPWebCase):
+# pylint: disable=too-few-public-methods
+class CPCommonTest(object):
     """Common test info for all rest."""
 
     PORT = 8121
@@ -17,16 +17,11 @@ class CPCommonTest(helper.CPWebCase):
     url = 'http://{0}:{1}'.format(HOST, PORT)
     headers = {'content-type': 'application/json'}
 
-    @classmethod
-    def teardown_class(cls):
-        """Tear down the services required by the server."""
-        super(CPCommonTest, cls).teardown_class()
-        DockerMetadata.stop_services()
-
-    @classmethod
-    def setup_server(cls):
+    @staticmethod
+    def setup_server():
         """Start the cherrypy server."""
         DockerMetadata.start_services()
+# pylint: enable=too-few-public-methods
 
 
 class DockerMetadata(object):
@@ -114,7 +109,7 @@ class DockerMetadata(object):
     @classmethod
     def start_services(cls):
         """Start all the services."""
-        logger = logging.getLogger('peewee')
+        logger = logging.getLogger('urllib2')
         logger.setLevel(logging.DEBUG)
         logger.addHandler(logging.StreamHandler())
         cls.start_postgres_docker()
