@@ -1,6 +1,7 @@
 #!/usr/bin/python
 """Test the ORM interface CherryPyAPI."""
 from time import time
+from datetime import datetime
 from json import loads, dumps
 import requests
 import cherrypy
@@ -8,6 +9,7 @@ from cherrypy.test import helper
 from test_files.loadit import main
 from metadata.rest.test import CPCommonTest, DockerMetadata
 from metadata.orm.keys import Keys
+from metadata.orm.utils import datetime_now_nomicrosecond
 
 
 class TestCherryPyAPI(CPCommonTest, helper.CPWebCase):
@@ -23,31 +25,32 @@ class TestCherryPyAPI(CPCommonTest, helper.CPWebCase):
         """Test the PUT (insert) method."""
         main()
         req = requests.get(
-            '{0}/keys?page_number=1&items_per_page=1'.format(self.url))
+            '{0}/files?page_number=1&items_per_page=1'.format(self.url))
         self.assertEqual(req.status_code, 200)
-        keys = loads(req.content)
-        self.assertEqual(len(keys), 1)
-        set_hash = {'key': 'Break Keys', 'updated': None}
-        req = requests.post('{0}/keys'.format(self.url),
+        files = loads(req.content)
+        self.assertEqual(len(files), 1)
+        set_hash = {'name': 'Renamed File', 'updated': None}
+        req = requests.post('{0}/files'.format(self.url),
                             data=dumps(set_hash), headers=self.headers)
         self.assertEqual(req.status_code, 500)
         del set_hash['updated']
-        req = requests.post('{0}/keys'.format(self.url),
+        set_hash['mtime'] = datetime.now().isoformat()
+        req = requests.post('{0}/files'.format(self.url),
                             data=dumps(set_hash), headers=self.headers)
         self.assertEqual(req.status_code, 200)
-        req = requests.get('{0}/keys'.format(self.url))
+        req = requests.get('{0}/files'.format(self.url))
         self.assertEqual(req.status_code, 200)
-        keys = loads(req.content)
-        self.assertEqual(len(keys), 2)
-        for key in keys:
-            self.assertEqual(key['key'], 'Break Keys')
+        files = loads(req.content)
+        self.assertEqual(len(files), 1)
+        for file_hash in files:
+            self.assertEqual(file_hash['name'], 'Renamed File')
 
-        req = requests.get('{0}/keys'.format(self.url))
+        req = requests.get('{0}/files'.format(self.url))
         self.assertEqual(req.status_code, 200)
-        keys = loads(req.content)
-        self.assertEqual(len(keys), 2)
+        files = loads(req.content)
+        self.assertEqual(len(files), 1)
 
-        # update a foreign key to something that isn't there
+        # update a foreign key to Keys obj that isn't there
         req = requests.post('{0}/file_key_value?file_id=103'.format(self.url),
                             data='{"key_id": 107}', headers=self.headers)
         self.assertEqual(req.status_code, 500)
@@ -56,6 +59,12 @@ class TestCherryPyAPI(CPCommonTest, helper.CPWebCase):
                            data='{"key_id": 107, "file_id": 103, "value_id": 103}',
                            headers=self.headers)
         self.assertEqual(req.status_code, 500)
+
+    # try changing updating something that works
+        req = requests.post('{0}/file_key_value?file_id=103&key_id=103&value_id=103'.format(self.url),
+                            data='{"key_id": 104, "file_id": 103, "value_id": 103}',
+                            headers=self.headers)
+        self.assertEqual(req.status_code, 200)
 
         # just try invalid json
         req = requests.post('{0}/keys'.format(self.url),
@@ -67,7 +76,11 @@ class TestCherryPyAPI(CPCommonTest, helper.CPWebCase):
 
         # insert one item
         req = requests.put('{0}/keys'.format(self.url),
-                           data=dumps({'_id': 1, 'key': 'blarg'}), headers=self.headers)
+                           data=dumps({
+                               '_id': 1, 'key': 'blarg',
+                               'created': datetime_now_nomicrosecond().isoformat()
+                           }),
+                           headers=self.headers)
         self.assertEqual(req.status_code, 200)
 
         # try to insert the same item again

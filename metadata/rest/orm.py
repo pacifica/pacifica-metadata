@@ -5,7 +5,7 @@ from cherrypy import request, HTTPError
 from peewee import IntegrityError, DoesNotExist
 from metadata.orm.base import PacificaModel
 from metadata.elastic.orm import ElasticAPI
-from metadata.orm.utils import datetime_now_nomicrosecond
+from metadata.orm.utils import datetime_now_nomicrosecond, datetime_converts
 
 
 class CherryPyAPI(PacificaModel, ElasticAPI):
@@ -30,12 +30,17 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         update_hash = loads(update_json)
         if 'updated' not in update_hash:
             update_hash['updated'] = datetime_now_nomicrosecond()
-        query = self.update(**update_hash).where(self.where_clause(kwargs))
-        try:
-            query.execute()
-        except IntegrityError as ex:
-            self.rollback()
-            raise HTTPError(500, str(ex))
+        did_something = False
+        for obj in self.select().where(self.where_clause(kwargs)):
+            did_something = True
+            obj.from_hash(update_hash)
+            try:
+                obj.save()
+            except IntegrityError as ex:
+                self.rollback()
+                raise HTTPError(500, str(ex))
+        if not did_something:
+            raise HTTPError(500, "Get args didn't select any objects.")
         complete_objs = [obj.to_hash() for obj in self.select().where(self.where_clause(kwargs))]
         self.elastic_upload(complete_objs)
 
@@ -74,7 +79,18 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             message = 'Could not insert records [ID: {0}] due to duplicated ID values. '.format(','.join(bad_id_list))
             message += 'Remove or change the duplicated id values'
             raise HTTPError(400, message)
-        clean_objs = self._clean_for_bulk_upload(objs)
+
+        def fix_dates(orig_obj, db_obj, es_obj):
+            """Fix the dates for insert."""
+            for date_key in ['created', 'updated', 'deleted']:
+                if date_key in orig_obj:
+                    es_obj[date_key] = db_obj[date_key] = datetime_converts(orig_obj[date_key])
+            for date_key in ['created', 'updated']:
+                if date_key not in orig_obj:
+                    es_obj[date_key] = db_obj[date_key] = datetime_converts(datetime_now_nomicrosecond())
+            if 'deleted' not in orig_obj:
+                db_obj['deleted'] = es_obj['deleted'] = None
+        clean_objs = self._clean_for_bulk_upload(objs, fix_dates)
         es_objs = []
         insert_query = self.__class__.insert_many(clean_objs['upload_objs']).returning(self.__class__)
         with self.__class__.atomic():
@@ -98,19 +114,16 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                     obj = None
         return [str(x) for x in bad_id_list]
 
-    def _clean_for_bulk_upload(self, obj_hashes):
+    def _clean_for_bulk_upload(self, obj_hashes, fix_dates):
         model_info = self.__class__.get_object_info()
         clean_objs = {'es_objs': [], 'upload_objs': []}
         for obj in obj_hashes:
-            # if 'id' in obj.keys():
-            #     obj['_id'] = obj['id']
             if '_id' in obj.keys():
                 obj['id'] = obj['_id']
             self.from_hash(obj)
-            self.deleted = None
-            self.created = self.updated
             new_obj = self.to_hash()
             es_obj = self.to_hash()
+            fix_dates(obj, new_obj, es_obj)
             clean_objs['es_objs'].append(es_obj)
 
             if len(model_info.get('related_models')) > 0:
@@ -121,9 +134,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                     db_col = info.get('db_column')
                     if db_col in new_obj.keys():
                         new_obj[name] = new_obj.pop(db_col)
-            if '_id' in obj.keys():
-                if obj['_id'] is not None:
-                    new_obj['id'] = obj.get('_id')
+            if '_id' in obj.keys() and obj['_id'] is not None:
+                new_obj['id'] = obj.get('_id')
             new_obj.pop('_id')
             clean_objs['upload_objs'].append(new_obj)
 
