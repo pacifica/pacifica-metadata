@@ -28,6 +28,10 @@ class Files(CherryPyAPI):
         +-------------+-------------------------------------------+
         | mtime       | User modified time for the file           |
         +-------------+-------------------------------------------+
+        | hashsum     | Hash sum string                           |
+        +-------------+-------------------------------------------+
+        | hashtype    | Hash sum type string                      |
+        +-------------+-------------------------------------------+
         | size        | Size of the file in bytes                 |
         +-------------+-------------------------------------------+
         | transaction | Link to the transaction model             |
@@ -42,6 +46,8 @@ class Files(CherryPyAPI):
     subdir = CharField(default='')
     ctime = ExtendDateTimeField(default=datetime_now_nomicrosecond)
     mtime = ExtendDateTimeField(default=datetime_now_nomicrosecond)
+    hashsum = CharField(default='')
+    hashtype = CharField(default='sha1')
     size = BigIntegerField(default=-1)
     transaction = ForeignKeyField(Transactions, related_name='files')
     mimetype = CharField(default='')
@@ -56,7 +62,8 @@ class Files(CherryPyAPI):
         obj['ctime'] = obj['mtime'] = \
             {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
         obj['name'] = obj['subdir'] = obj['mimetype'] = \
-            obj['encoding'] = {'type': 'string'}
+            obj['encoding'] = obj['hashsum'] = \
+            obj['hashtype'] = {'type': 'string'}
 
     def to_hash(self):
         """Convert the object to a hash."""
@@ -71,6 +78,8 @@ class Files(CherryPyAPI):
         obj['transaction_id'] = int(self.transaction.id)
         # pylint: enable=no-member
         obj['size'] = int(self.size)
+        obj['hashsum'] = str(self.hashsum)
+        obj['hashtype'] = str(self.hashtype)
         obj['encoding'] = str(self.encoding)
         return obj
 
@@ -83,6 +92,8 @@ class Files(CherryPyAPI):
         self._set_only_if('mimetype', obj, 'mimetype', lambda: str(obj['mimetype']))
         self._set_datetime_part('ctime', obj)
         self._set_datetime_part('mtime', obj)
+        self._set_only_if('hashtype', obj, 'hashtype', lambda: str(obj['hashtype']))
+        self._set_only_if('hashsum', obj, 'hashsum', lambda: str(obj['hashsum']))
         self._set_only_if('size', obj, 'size', lambda: int(obj['size']))
         self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
 
@@ -100,7 +111,7 @@ class Files(CherryPyAPI):
 
     @staticmethod
     def _where_attr_clause(where_clause, kwargs):
-        for key in ['name', 'subdir', 'mimetype', 'size', 'encoding']:
+        for key in ['name', 'subdir', 'mimetype', 'size', 'encoding', 'hashtype', 'hashsum']:
             if key in kwargs:
                 key_oper = OP.EQ
                 if '{0}_operator'.format(key) in kwargs:

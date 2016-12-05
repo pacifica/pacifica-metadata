@@ -16,6 +16,8 @@ SAMPLE_FILE_HASH = {
     'mimetype': 'text/plain',
     'mtime': datetime_now_nomicrosecond().isoformat(),
     'ctime': datetime_now_nomicrosecond().isoformat(),
+    'hashtype': 'sha1',
+    'hashsum': 'd8ff327b2f643130b431ae7c1f1b1e191bc419af',
     'size': 1234,
     'transaction_id': SAMPLE_TRANSACTION_HASH['_id'],
     'encoding': 'UTF8'
@@ -28,6 +30,8 @@ SAMPLE_UNICODE_FILE_HASH = {
     'mimetype': 'text/plain',
     'mtime': datetime_now_nomicrosecond().isoformat(),
     'ctime': datetime_now_nomicrosecond().isoformat(),
+    'hashtype': 'sha1',
+    'hashsum': 'd8ff327b2f643130b431ae7c1f1b1e191bc419af',
     'size': 1234,
     'transaction_id': SAMPLE_TRANSACTION_HASH['_id'],
     'encoding': 'UTF8'
