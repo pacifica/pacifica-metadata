@@ -75,37 +75,38 @@ class IngestAPI(object):
             'instrument': pull_value_by_attr(request.json, 'Transactions.instrument', 'value'),
             'proposal': pull_value_by_attr(request.json, 'Transactions.proposal', 'value')
         }
-        trans = Transactions()
-        # pylint: disable=protected-access
-        trans._insert(dumps(transaction_hash))
-        # pylint: enable=protected-access
-        keys = []
-        values = []
-        tkvs = []
-        for key, value in pull_kv_by_attr(request.json):
-            keys.append({'key': key})
-            values.append({'value': value})
-        # pylint: disable=protected-access
-        Keys()._set_or_create(dumps(keys))
-        Values()._set_or_create(dumps(values))
-        # pylint: enable=protected-access
-        for key, value in pull_kv_by_attr(request.json):
-            key_obj = Keys.get(key=key)
-            value_obj = Values.get(value=value)
-            tkvs.append({
-                'key_id': key_obj.id,
-                'transaction_id': transaction_hash['_id'],
-                'value_id': value_obj.id
-            })
-        tkv = TransactionKeyValue()
-        # pylint: disable=protected-access
-        tkv._insert(dumps(tkvs))
-        # pylint: enable=protected-access
-        files = []
-        for file_hash in pull_file_by_attr(request.json):
-            file_hash['transaction_id'] = transaction_hash['_id']
-            files.append(file_hash)
-        # pylint: disable=protected-access
-        Files()._insert(dumps(files))
-        # pylint: enable=protected-access
+        with Transactions.atomic():
+            trans = Transactions()
+            # pylint: disable=protected-access
+            trans._insert(dumps(transaction_hash))
+            # pylint: enable=protected-access
+            keys = []
+            values = []
+            tkvs = []
+            for key, value in pull_kv_by_attr(request.json):
+                keys.append({'key': key})
+                values.append({'value': value})
+            # pylint: disable=protected-access
+            Keys()._set_or_create(dumps(keys))
+            Values()._set_or_create(dumps(values))
+            # pylint: enable=protected-access
+            for key, value in pull_kv_by_attr(request.json):
+                key_obj = Keys.get(key=key)
+                value_obj = Values.get(value=value)
+                tkvs.append({
+                    'key_id': key_obj.id,
+                    'transaction_id': transaction_hash['_id'],
+                    'value_id': value_obj.id
+                })
+            tkv = TransactionKeyValue()
+            # pylint: disable=protected-access
+            tkv._insert(dumps(tkvs))
+            # pylint: enable=protected-access
+            files = []
+            for file_hash in pull_file_by_attr(request.json):
+                file_hash['transaction_id'] = transaction_hash['_id']
+                files.append(file_hash)
+            # pylint: disable=protected-access
+            Files()._insert(dumps(files))
+            # pylint: enable=protected-access
         return {'status': 'success'}
