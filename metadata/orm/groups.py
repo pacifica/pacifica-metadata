@@ -61,7 +61,7 @@ class Groups(CherryPyAPI):
             if key in kwargs:
                 key_oper = OP.EQ
                 if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)])
+                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
                 where_clause &= Expression(getattr(Groups, key), key_oper, kwargs[key])
         return where_clause
 

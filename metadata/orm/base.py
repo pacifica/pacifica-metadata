@@ -124,7 +124,7 @@ class PacificaModel(Model):
     @staticmethod
     def _date_operator_compare(date, kwargs, dt_converts=datetime_converts):
         if '{0}_operator'.format(date) in kwargs:
-            date_oper = getattr(OP, kwargs['{0}_operator'.format(date)])
+            date_oper = getattr(OP, kwargs['{0}_operator'.format(date)].upper())
         else:
             date_oper = OP.EQ
         if date_oper == OP.BETWEEN:
