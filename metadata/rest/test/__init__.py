@@ -95,14 +95,14 @@ class DockerMetadata(object):
     @classmethod
     def stop_elasticsearch_docker(cls):
         """Stop and blow away the elasticsearch docker container."""
-        cls.cli.stop(cls.es_container_id)
+        cls.cli.stop(cls.es_container_id, timeout=20)
         cls.cli.remove_container(cls.es_container_id)
         cls.es_container_id = None
 
     @classmethod
     def stop_postgres_docker(cls):
         """Stop and blow away the postgres docker container."""
-        cls.cli.stop(cls.pg_container_id)
+        cls.cli.stop(cls.pg_container_id, timeout=20)
         cls.cli.remove_container(cls.pg_container_id)
         cls.pg_container_id = None
 
