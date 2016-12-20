@@ -34,6 +34,13 @@ class TestIngestAPI(CPCommonTest, helper.CPWebCase):
                 'size': 128, 'mimetype': 'text/plain'
             },
             {
+                'destinationTable': 'FileKeyValue',
+                'key': 'Micronic Adjustment',
+                'value': '5.66%',
+                'file_id': 34
+            },
+
+            {
                 'destinationTable': 'Files',
                 '_id': 35, 'name': 'bar.txt', 'subdir': 'a/b/',
                 'ctime': 'Tue Nov 29 14:09:05 PST 2016',
