@@ -4,5 +4,11 @@
     "instrument": 54,
     "proposal": "1234a",
     "submitter": 10
+  },
+  {
+    "_id": 68,
+    "instrument": 54,
+    "proposal": "1237",
+    "submitter": 10
   }
 ]

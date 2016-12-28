@@ -60,7 +60,7 @@ class Files(CherryPyAPI):
         obj['transaction_id'] = obj['size'] = \
             {'type': 'integer'}
         obj['ctime'] = obj['mtime'] = \
-            {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
+            {'type': 'date', 'format': 'yyyy-mm-dd\'T\'HH:mm:ss'}
         obj['name'] = obj['subdir'] = obj['mimetype'] = \
             obj['encoding'] = obj['hashsum'] = \
             obj['hashtype'] = {'type': 'string'}

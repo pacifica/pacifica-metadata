@@ -8,5 +8,15 @@
     "size": 123,
     "subdir": "a/b",
     "transaction_id": 67
+  },
+  {
+    "_id": 104,
+    "ctime": "Sat Nov 12 21:38:21 2016",
+    "mimetype": "text/plain",
+    "mtime": "Sat Nov 12 21:38:21 2016",
+    "name": "bar.txt",
+    "size": 234,
+    "subdir": "a/b",
+    "transaction_id": 67
   }
 ]

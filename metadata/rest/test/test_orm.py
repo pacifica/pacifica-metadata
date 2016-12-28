@@ -41,14 +41,14 @@ class TestCherryPyAPI(CPCommonTest, helper.CPWebCase):
         req = requests.get('{0}/files'.format(self.url))
         self.assertEqual(req.status_code, 200)
         files = loads(req.content)
-        self.assertEqual(len(files), 1)
+        self.assertEqual(len(files), 2)
         for file_hash in files:
             self.assertEqual(file_hash['name'], 'Renamed File')
 
         req = requests.get('{0}/files'.format(self.url))
         self.assertEqual(req.status_code, 200)
         files = loads(req.content)
-        self.assertEqual(len(files), 1)
+        self.assertEqual(len(files), 2)
 
         # update a foreign key to Keys obj that isn't there
         req = requests.post('{0}/file_key_value?file_id=103'.format(self.url),

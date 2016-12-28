@@ -149,7 +149,9 @@ class PacificaModel(Model):
                     getattr(my_class, 'deleted'), OP.EQ, date_obj)
         for date in ['updated', 'created']:
             if date in kwargs:
-                date_obj, date_oper = self._date_operator_compare(date, kwargs)
+                # pylint: disable=protected-access
+                date_obj, date_oper = my_class._date_operator_compare(date, kwargs)
+                # pylint: enable=protected-access
                 where_clause &= Expression(
                     getattr(my_class, date), date_oper, date_obj)
         return where_clause

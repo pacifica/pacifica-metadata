@@ -2,6 +2,9 @@
 """CherryPy root object class."""
 from metadata.orm import ORM_OBJECTS
 from metadata.rest.objectinfo import ObjectInfoAPI
+from metadata.rest.userinfo import UserInfoAPI
+from metadata.rest.proposalinfo import ProposalInfoAPI
+from metadata.rest.transactioninfo import TransactionInfoAPI
 from metadata.rest.ingest import IngestAPI
 
 
@@ -16,6 +19,9 @@ class Root(object):
     exposed = False
 
     objectinfo = ObjectInfoAPI()
+    userinfo = UserInfoAPI()
+    proposalinfo = ProposalInfoAPI()
+    transactioninfo = TransactionInfoAPI()
     ingest = IngestAPI()
 # pylint: enable=too-few-public-methods
 

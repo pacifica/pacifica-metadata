@@ -57,12 +57,9 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         for obj_hash in objs:
             if '_id' in obj_hash:
                 obj_hash['id'] = obj_hash.pop('_id')
-            obj, created = self.create_or_get(**obj_hash)
-            if not created:
-                for key, value in obj_hash.iteritems():
-                    setattr(obj, key, value)
-                obj.save()
-            complete_objs.append(obj.to_hash())
+            obj, created = self.get_or_create(**obj_hash)
+            if created:
+                complete_objs.append(obj.to_hash())
         self.elastic_upload(complete_objs)
 
     def _insert(self, insert_json):
@@ -128,7 +125,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
 
             if len(model_info.get('related_models')) > 0:
                 rel_models = model_info.get('related_models')
-                for (name, info) in rel_models.iteritems():
+                for (name, info) in rel_models.items():
                     # replace incoming lookup table names with
                     # corresponding model field names
                     db_col = info.get('db_column')

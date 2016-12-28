@@ -39,7 +39,6 @@ class TestIngestAPI(CPCommonTest, helper.CPWebCase):
                 'value': '5.66%',
                 'file_id': 34
             },
-
             {
                 'destinationTable': 'Files',
                 '_id': 35, 'name': 'bar.txt', 'subdir': 'a/b/',

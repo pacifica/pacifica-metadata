@@ -5,6 +5,7 @@ from cherrypy import tools
 import metadata.orm as orm
 
 
+# pylint: disable=too-few-public-methods
 class ObjectInfoAPI(object):
     """ObjectInfoAPI API."""
 

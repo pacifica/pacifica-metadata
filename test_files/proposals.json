@@ -1,13 +1,57 @@
 [
   {
     "_id": "1234a",
-    "abstract": "This is the Pacifica development proposal for use with development of data asset workflows. The goals is to provide the metadata needed for users to develop and refine how Pacifica fits into their workflows to save data required by sponsors and publishing agencies.",
-    "accepted_date": "Sun Nov 13 2016",
-    "actual_end_date": "Sun Nov 13 2016",
-    "actual_start_date": "Sun Nov 13 2016",
+    "abstract": "This is a currently active proposal with a set end date but no closed date",
+    "accepted_date": "Tue Oct 01 2013",
+    "actual_end_date": "Fri Sep 29 2017",
+    "actual_start_date": "Tue Oct 01 2013",
     "closed_date": null,
     "science_theme": "general",
-    "submitted_date": "Sun Nov 13 08:15:26 2016",
-    "title": "Pacifica Development"
+    "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "title": "Pacifica Development (active no close)"
+  },
+  {
+    "_id": "1235",
+    "abstract": "This is an active proposal with no set end or closed date",
+    "accepted_date": "Tue Oct 01 2013",
+    "actual_end_date": null,
+    "actual_start_date": "Tue Oct 01 2013",
+    "closed_date": null,
+    "science_theme": "general",
+    "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "title": "Pacifica Development (no close or end)"
+  },
+  {
+    "_id": "1236",
+    "abstract": "This is an expired proposal with a closed and actual end date",
+    "accepted_date": "Tue Oct 01 2013",
+    "actual_end_date": "Mon Sep 29 2014",
+    "actual_start_date": "Tue Oct 01 2013",
+    "closed_date": "Mon Sep 29 2014",
+    "science_theme": "general",
+    "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "title": "Pacifica Development (expired closed and end)"
+  },
+  {
+    "_id": "1237",
+    "abstract": "This is an expired proposal with a closed date but no actual end date",
+    "accepted_date": "Tue Oct 01 2013",
+    "actual_end_date": null,
+    "actual_start_date": "Tue Oct 01 2013",
+    "closed_date": "Mon Sep 29 2014",
+    "science_theme": "general",
+    "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "title": "Pacifica Development (expired closed no end)"
+  },
+  {
+    "_id": "1238",
+    "abstract": "This is a pre-active proposal with a start date after today and no closed or end date",
+    "accepted_date": "Mon Oct 03 2016",
+    "actual_end_date": null,
+    "actual_start_date": "Fri Oct 01 2021",
+    "closed_date": null,
+    "science_theme": "general",
+    "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "title": "Pacifica Development (pre-active)"
   }
 ]

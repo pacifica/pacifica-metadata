@@ -103,8 +103,8 @@ class TestBase(TestCase):
         """
         with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             obj = self.base_create_obj(self.obj_cls, obj_hash)
-            for key in obj_hash.keys():
-                chk_obj = self.base_where_clause_search(obj, {key: obj_hash[key]})[0]
+            for (key, val) in obj_hash.iteritems():
+                chk_obj = self.base_where_clause_search(obj, {key: val})[0]
                 chk_obj_hash = chk_obj.to_hash()
                 for key in obj_hash.keys():
                     self.assertEqual(chk_obj_hash[key], obj_hash[key])

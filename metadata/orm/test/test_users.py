@@ -11,6 +11,7 @@ SAMPLE_USER_HASH = {
     'middle_initial': 'G',
     'last_name': 'Doe',
     'email_address': 'jdoe@example.com',
+    'network_id': 'doej7789',
     'encoding': 'UTF8'
 }
 
@@ -39,6 +40,12 @@ class TestUsers(TestBase):
     def test_users_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_USER_HASH)
+
+    def test_users_hash_no_network_id(self):
+        """Test the hash portion using base object method, but with no network_id included."""
+        test_hash = SAMPLE_USER_HASH.copy()
+        test_hash.pop('network_id')
+        self.base_test_hash(test_hash)
 
     def test_unicode_users_hash(self):
         """Test the hash portion using base object method."""
