@@ -69,6 +69,9 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             objs = loads(insert_json)
         except ValueError as ex:
             raise HTTPError(500, str(ex))
+        if not len(objs):
+            # nothing to upload
+            return
         if isinstance(objs, dict):
             objs = [objs]
         bad_id_list = self.__class__.check_for_key_existence(objs)

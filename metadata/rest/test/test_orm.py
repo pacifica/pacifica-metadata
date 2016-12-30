@@ -83,6 +83,12 @@ class TestCherryPyAPI(CPCommonTest, helper.CPWebCase):
                            headers=self.headers)
         self.assertEqual(req.status_code, 200)
 
+        # try inserting empty array
+        req = requests.put('{0}/keys'.format(self.url),
+                           data=dumps([]),
+                           headers=self.headers)
+        self.assertEqual(req.status_code, 200)
+
         # try to insert the same item again
         req = requests.put('{0}/keys'.format(self.url),
                            data=dumps({'_id': 1, 'key': 'blarg'}), headers=self.headers)
