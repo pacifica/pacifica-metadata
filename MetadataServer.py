@@ -20,9 +20,13 @@ def error_page_default(**kwargs):
 def main():
     """Main method to start the httpd server."""
     create_tables()
-    cherrypy.config.update({'error_page.default': error_page_default})
     cherrypy.quickstart(Root(), '/', 'server.conf')
 
 
+cherrypy.config.update({'error_page.default': error_page_default})
+# pylint doesn't realize that application is actually a callable
+# pylint: disable=invalid-name
+application = cherrypy.Application(Root(), '/', 'server.conf')
+# pylint: enable=invalid-name
 if __name__ == '__main__':
     main()
