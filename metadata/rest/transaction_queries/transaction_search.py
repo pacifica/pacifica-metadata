@@ -18,11 +18,6 @@ class TransactionSearch(QueryBase):
         trans = Transactions()
         where_clause = Expression(1, OP.EQ, 1)
         query = trans.select()
-        if len(set(search_terms.keys()) & set(['start_time', 'start'])) != 0 and \
-                len(set(search_terms.keys()) & set(['end_time', 'end'])) != 0:
-            start_time_key = list(set(search_terms.keys()) & set(['start_time', 'start'])).pop()
-            end_time_key = list(set(search_terms.keys()) & set(['end_time', 'end'])).pop()
-            search_terms['between'] = [search_terms.pop(start_time_key), search_terms.pop(end_time_key)]
         for term in search_terms:
             value = str(search_terms[term])
             if term in ['proposal', 'proposal_id'] and value != '-1':
