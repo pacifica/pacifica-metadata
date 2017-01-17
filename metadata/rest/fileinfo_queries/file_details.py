@@ -1,0 +1,28 @@
+"""CherryPy File Details object class."""
+import cherrypy
+from cherrypy import tools, HTTPError, request
+from metadata.orm import Files
+
+class FileDetailsLookup(object):
+    """Retrieves file details for a list of file id's."""
+
+    exposed = True
+
+    @staticmethod
+    def _get_file_details(file_list):
+        query = Files().select().where(Files.id << file_list)
+        return [{
+            'file_id': f.id,
+            'relative_local_path': '{0}/{1}'.format(f.rstrip('/'), f.name),
+            'file_size_bytes': f.size
+        } for f in query]
+
+    # Cherrypy requires these named methods.
+    # pylint: disable=invalid-name
+    @staticmethod
+    @tools.json_in()
+    @tools.json_out()
+    def POST():
+        """Return file details for the list of file id's"""
+        file_list = request.json
+        return FileDetailsLookup._get_file_details(file_list)

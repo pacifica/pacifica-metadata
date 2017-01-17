@@ -5,6 +5,7 @@ from metadata.rest.objectinfo import ObjectInfoAPI
 from metadata.rest.userinfo import UserInfoAPI
 from metadata.rest.proposalinfo import ProposalInfoAPI
 from metadata.rest.transactioninfo import TransactionInfoAPI
+from metadata.rest.fileinfo import FileInfoAPI
 from metadata.rest.ingest import IngestAPI
 
 
@@ -21,6 +22,7 @@ class Root(object):
     objectinfo = ObjectInfoAPI()
     userinfo = UserInfoAPI()
     proposalinfo = ProposalInfoAPI()
+    fileinfo = FileInfoAPI()
     transactioninfo = TransactionInfoAPI()
     ingest = IngestAPI()
 # pylint: enable=too-few-public-methods
