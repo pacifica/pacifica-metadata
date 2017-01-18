@@ -1,13 +1,9 @@
 """CherryPy Status Metadata object class."""
-# import cherrypy
 import re
 from cherrypy import tools, HTTPError
 from peewee import DoesNotExist
 from metadata.orm import Proposals, Instruments, ProposalInstrument
-# from metadata.orm import , ProposalParticipant
 from metadata.rest.proposal_queries.query_base import QueryBase
-
-# import re
 
 
 class ProposalLookup(QueryBase):
