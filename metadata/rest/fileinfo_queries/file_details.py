@@ -3,6 +3,7 @@ from cherrypy import tools, HTTPError, request
 from metadata.orm import Files
 
 
+# pylint: disable=too-few-public-methods
 class FileDetailsLookup(object):
     """Retrieves file details for a list of file id's."""
 
