@@ -4,10 +4,8 @@ import re
 from cherrypy import tools, HTTPError
 from peewee import DoesNotExist
 from metadata.orm import Proposals, Instruments, ProposalInstrument
-# from metadata.orm import , ProposalParticipant
 from metadata.rest.proposal_queries.query_base import QueryBase
-
-# import re
+from metadata.orm.base import db_connection_decorator
 
 
 class ProposalLookup(QueryBase):
@@ -58,6 +56,7 @@ class ProposalLookup(QueryBase):
     # pylint: disable=invalid-name
     @staticmethod
     @tools.json_out()
+    @db_connection_decorator
     def GET(proposal_id=None):
         """CherryPy GET method."""
         return ProposalLookup._get_proposal_details(proposal_id)
