@@ -4,6 +4,7 @@ from cherrypy import tools, HTTPError
 from peewee import DoesNotExist
 from metadata.orm import Proposals, ProposalParticipant, Users
 from metadata.rest.proposal_queries.query_base import QueryBase
+from metadata.orm.base import db_connection_decorator
 
 
 class ProposalUserSearch(QueryBase):
@@ -39,6 +40,7 @@ class ProposalUserSearch(QueryBase):
     # pylint: disable=invalid-name
     @staticmethod
     @tools.json_out()
+    @db_connection_decorator
     def GET(user_id=None):
         """Return a set of proposals for a given user."""
         if user_id is not None:

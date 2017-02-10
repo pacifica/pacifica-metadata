@@ -3,7 +3,7 @@
 from json import loads, dumps
 from cherrypy import request, HTTPError
 from peewee import IntegrityError, DoesNotExist
-from metadata.orm.base import PacificaModel
+from metadata.orm.base import PacificaModel, db_connection_decorator
 from metadata.elastic.orm import ElasticAPI
 from metadata.orm.utils import datetime_now_nomicrosecond, datetime_converts
 
@@ -151,6 +151,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
     # CherryPy requires these named methods
     # Add HEAD (basically Get without returning body
     # pylint: disable=invalid-name
+    @db_connection_decorator
     def GET(self, **kwargs):
         """
         Implement the GET HTTP method.
@@ -159,6 +160,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """
         return self._select(**kwargs)
 
+    @db_connection_decorator
     def PUT(self):
         """
         Implement the PUT HTTP method.
@@ -167,6 +169,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """
         self._insert(request.body.read())
 
+    @db_connection_decorator
     def POST(self, **kwargs):
         """
         Implement the POST HTTP method.
@@ -176,6 +179,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """
         self._update(request.body.read(), **kwargs)
 
+    @db_connection_decorator
     def DELETE(self, **kwargs):
         """
         Implement the DELETE HTTP method.

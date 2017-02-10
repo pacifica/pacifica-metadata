@@ -35,6 +35,17 @@ DEFAULT_ELASTIC_ENDPOINT = getenv(
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 
 
+def db_connection_decorator(func):
+    """Wrap a method with a database connect and close."""
+    def func_wrapper(*args, **kwargs):
+        """Wrapper to connect and close connection to database."""
+        DB.connect()
+        ret = func(*args, **kwargs)
+        DB.close()
+        return ret
+    return func_wrapper
+
+
 class PacificaModel(Model):
     """
     Basic fields for an object within the model.

@@ -4,6 +4,7 @@ import cherrypy
 from cherrypy import tools
 from peewee import OP, Expression
 from metadata.orm import Users
+from metadata.orm.base import db_connection_decorator
 from metadata.rest.user_queries.query_base import QueryBase
 
 
@@ -49,6 +50,7 @@ class UserSearch(QueryBase):
     @staticmethod
     @tools.json_out()
     @cherrypy.expose
+    @db_connection_decorator
     def GET(search_term=None):
         """Return the requested user information for a given set of search criteria."""
         if search_term is not None and len(search_term) > 0:
