@@ -1,5 +1,4 @@
 """CherryPy Status Metadata object class."""
-# import cherrypy
 import re
 from cherrypy import tools, HTTPError
 from peewee import DoesNotExist
