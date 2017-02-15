@@ -11,6 +11,12 @@ class TestProposalInfoAPI(CPCommonTest, helper.CPWebCase):
     """Test the ObjectInfoAPI class."""
 
     @classmethod
+    def setup_class(cls):
+        """Setup the services required by the server."""
+        super(TestProposalInfoAPI, cls).setup_class()
+        main()
+
+    @classmethod
     def teardown_class(cls):
         """Tear down the services required by the server."""
         super(TestProposalInfoAPI, cls).teardown_class()
@@ -18,7 +24,6 @@ class TestProposalInfoAPI(CPCommonTest, helper.CPWebCase):
 
     def test_proposalinfo_api(self):
         """Test the GET method."""
-        main()
         # test by_user_id
         user_id = 10
         req = requests.get(
