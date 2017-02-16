@@ -17,7 +17,7 @@ class QueryBase(object):
         }
 
     @staticmethod
-    def compose_help_block_message():
+    def instrument_help_block_message():
         """Assemble a block of relevant help text to be returned with an invalid request."""
         message = 'You must supply either a instrument id (like "/instrumentinfo/<instrument_id>")'
         message += ' or search for one using the form "/instrumentinfo/search/<search_term_1>+<search_term_2>"'

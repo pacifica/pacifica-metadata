@@ -49,7 +49,7 @@ class QueryBase(object):
         return return_block
 
     @staticmethod
-    def compose_help_block_message():
+    def proposal_help_block_message():
         """Assemble a block of relevant help text to be returned with an invalid request."""
         message = 'You must supply either a proposal id (like "/proposalinfo/<proposal_id>")'
         message += ' or search for one using the form "/proposalinfo/search/<search_term_1>+<search_term_2>"'

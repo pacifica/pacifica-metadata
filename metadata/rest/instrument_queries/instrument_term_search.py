@@ -18,17 +18,18 @@ class InstrumentTermSearch(QueryBase):
         terms = re.findall(r'[^+ ,;]+', search_term)
         keys = ['display_name', 'name_short', 'name', 'id']
         where_clause = Expression(1, OP.EQ, 1)
-        for term in terms:
-            term = str(term)
+        for item in terms:
+            term = str(item)
             where_clause_part = Expression(1, OP.EQ, 0)
             for k in keys:
-                if k == 'id':
+                if k != 'id':
+                    where_clause_part |= Expression(
+                        getattr(Instruments, k), OP.ILIKE, '%{0}%'.format(term))
+
+                else:
                     if re.match('[0-9]+', term):
                         where_clause_part |= Expression(
                             Instruments.id, OP.EQ, term)
-                else:
-                    where_clause_part |= Expression(
-                        getattr(Instruments, k), OP.ILIKE, '%{0}%'.format(term))
             where_clause &= (where_clause_part)
         objs = Instruments.select().where(where_clause).order_by(Instruments.name_short)
         if len(objs) == 0:
@@ -39,6 +40,7 @@ class InstrumentTermSearch(QueryBase):
         return [QueryBase.format_instrument_block(obj) for obj in objs]
 
     # pylint: disable=invalid-name
+    # pylint: disable=duplicate-code
     @staticmethod
     @tools.json_out()
     def GET(search_term=None):
@@ -48,5 +50,5 @@ class InstrumentTermSearch(QueryBase):
         else:
             raise cherrypy.HTTPError(
                 '400 No Search Terms Provided',
-                QueryBase.compose_help_block_message()
+                QueryBase.instrument_help_block_message()
             )

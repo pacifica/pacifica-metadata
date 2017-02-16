@@ -52,5 +52,5 @@ class InstrumentLookup(QueryBase):
             cherrypy.log.error(message)
             raise HTTPError(
                 status='400 Invalid Request Options',
-                message=QueryBase.compose_help_block_message()
+                message=QueryBase.instrument_help_block_message()
             )
