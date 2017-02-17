@@ -77,9 +77,8 @@ class TestProposalInfoAPI(CPCommonTest, helper.CPWebCase):
         proposal_id = 'my_proposal'
         req = requests.get(
             '{0}/proposalinfo/by_proposal_id/{1}'.format(self.url, proposal_id))
-        self.assertEqual(req.status_code, 404)
-        self.assertTrue(
-            'No Proposal with an ID of my_proposal was found' in req.text)
+        self.assertEqual(req.status_code, 400)
+
         proposal_id = '2345b'
         req = requests.get(
             '{0}/proposalinfo/by_proposal_id/{1}'.format(self.url, proposal_id))
