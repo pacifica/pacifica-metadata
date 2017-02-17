@@ -87,8 +87,8 @@ class TestProposalInfoAPI(CPCommonTest, helper.CPWebCase):
             'No Proposal with an ID of 2345b was found' in req.text)
 
         req = requests.get('{0}/proposalinfo/by_proposal_id'.format(self.url))
-        self.assertEqual(req.status_code, 404)
-        self.assertTrue('No Proposal with an ID of None was found' in req.text)
+        self.assertEqual(req.status_code, 400)
+        self.assertTrue('Invalid Request' in req.text)
 
         search_terms = ''
         req = requests.get(
