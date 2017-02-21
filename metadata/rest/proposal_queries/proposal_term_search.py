@@ -40,6 +40,7 @@ class ProposalTermSearch(QueryBase):
         return [QueryBase.format_proposal_block(obj) for obj in objs]
 
     # pylint: disable=invalid-name
+    # pylint: disable=duplicate-code
     @staticmethod
     @tools.json_out()
     @db_connection_decorator
@@ -50,5 +51,5 @@ class ProposalTermSearch(QueryBase):
         else:
             raise cherrypy.HTTPError(
                 '400 No Search Terms Provided',
-                QueryBase.compose_help_block_message()
+                QueryBase.proposal_help_block_message()
             )

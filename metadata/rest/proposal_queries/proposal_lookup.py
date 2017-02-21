@@ -1,5 +1,6 @@
 """CherryPy Status Metadata object class."""
 import re
+import cherrypy
 from cherrypy import tools, HTTPError
 from peewee import DoesNotExist
 from metadata.orm import Proposals, Instruments, ProposalInstrument
@@ -58,4 +59,15 @@ class ProposalLookup(QueryBase):
     @db_connection_decorator
     def GET(proposal_id=None):
         """CherryPy GET method."""
-        return ProposalLookup._get_proposal_details(proposal_id)
+        if proposal_id is not None and re.match('[0-9]+[a-z]+', proposal_id):
+            cherrypy.log.error('proposal details request')
+            return ProposalLookup._get_proposal_details(proposal_id)
+        else:
+            message = 'Invalid proposal details lookup request. '
+            message += "'{0}' is not a valid proposal_id".format(
+                proposal_id)
+            cherrypy.log.error(message)
+            raise HTTPError(
+                status='400 Invalid Request Options',
+                message=QueryBase.proposal_help_block_message()
+            )

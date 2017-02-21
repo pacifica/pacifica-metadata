@@ -11,6 +11,12 @@ class TestProposalInfoAPI(CPCommonTest, helper.CPWebCase):
     """Test the ObjectInfoAPI class."""
 
     @classmethod
+    def setup_class(cls):
+        """Setup the services required by the server."""
+        super(TestProposalInfoAPI, cls).setup_class()
+        main()
+
+    @classmethod
     def teardown_class(cls):
         """Tear down the services required by the server."""
         super(TestProposalInfoAPI, cls).teardown_class()
@@ -18,7 +24,6 @@ class TestProposalInfoAPI(CPCommonTest, helper.CPWebCase):
 
     def test_proposalinfo_api(self):
         """Test the GET method."""
-        main()
         # test by_user_id
         user_id = 10
         req = requests.get(
@@ -72,9 +77,8 @@ class TestProposalInfoAPI(CPCommonTest, helper.CPWebCase):
         proposal_id = 'my_proposal'
         req = requests.get(
             '{0}/proposalinfo/by_proposal_id/{1}'.format(self.url, proposal_id))
-        self.assertEqual(req.status_code, 404)
-        self.assertTrue(
-            'No Proposal with an ID of my_proposal was found' in req.text)
+        self.assertEqual(req.status_code, 400)
+
         proposal_id = '2345b'
         req = requests.get(
             '{0}/proposalinfo/by_proposal_id/{1}'.format(self.url, proposal_id))
@@ -83,8 +87,8 @@ class TestProposalInfoAPI(CPCommonTest, helper.CPWebCase):
             'No Proposal with an ID of 2345b was found' in req.text)
 
         req = requests.get('{0}/proposalinfo/by_proposal_id'.format(self.url))
-        self.assertEqual(req.status_code, 404)
-        self.assertTrue('No Proposal with an ID of None was found' in req.text)
+        self.assertEqual(req.status_code, 400)
+        self.assertTrue('Invalid Request' in req.text)
 
         search_terms = ''
         req = requests.get(

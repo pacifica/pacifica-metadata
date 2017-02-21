@@ -106,6 +106,14 @@ class TestTransactionInfoAPI(CPCommonTest, helper.CPWebCase):
         req_json = loads(req.text)
         self.assertEqual(len(req_json), 2)
 
+        # test last transaction lookup
+        req = requests.get(
+            url='{0}/transactioninfo/last/'.format(self.url)
+        )
+        self.assertEqual(req.status_code, 200)
+        req_json = loads(req.text)
+        self.assertEqual(req_json['latest_transaction_id'], 68)
+
     def test_bad_transactioninfo_api(self):
         """Test the GET method with bad data."""
         # test by_id
