@@ -20,7 +20,6 @@ class TransactionLast(QueryBase):
                   .where(Transactions.deleted >> None)
                   .dicts()
                   .get())
-        print 'transaction_id = {0}'.format(txn_id)
         return {'latest_transaction_id': txn_id['id']}
 
     # Cherrypy requires these named methods.
