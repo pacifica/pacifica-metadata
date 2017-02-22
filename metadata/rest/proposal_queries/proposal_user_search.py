@@ -1,10 +1,10 @@
 """CherryPy Status Metadata object class."""
 import re
 from cherrypy import tools, HTTPError
-from peewee import DoesNotExist
-from metadata.orm import Proposals, ProposalParticipant, Users
+from metadata.orm import Proposals, ProposalParticipant
 from metadata.rest.proposal_queries.query_base import QueryBase
 from metadata.orm.base import db_connection_decorator
+from metadata.rest.userinfo import user_exists_decorator
 
 
 class ProposalUserSearch(QueryBase):
@@ -13,19 +13,12 @@ class ProposalUserSearch(QueryBase):
     exposed = True
 
     @staticmethod
+    @user_exists_decorator
     def get_proposals_for_user(user_id):
         """Return a list of formatted proposal objects for the indicated user."""
-        # does this user even exist?
-        try:
-            user_entry = (Users.get(Users.id == user_id))
-        except DoesNotExist:
-            raise HTTPError(
-                '404 User Does Not Exist',
-                'No User with ID:{0} exists in the system'.format(user_id)
-            )
-
         # get list of proposal_ids for this user
-        where_clause = ProposalParticipant().where_clause({'person_id': user_entry.id})
+        where_clause = ProposalParticipant().where_clause(
+            {'person_id': user_id})
         proposals = (Proposals
                      .select(
                          Proposals.id, Proposals.title, Proposals.actual_start_date,

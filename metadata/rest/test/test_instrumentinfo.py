@@ -33,6 +33,12 @@ class TestObjectInfoAPI(CPCommonTest, helper.CPWebCase):
         req = requests.get(url=url, headers=header_list)
         return req
 
+    def _get_instruments_for_user(self, user_id):
+        header_list = {'Content-Type': 'application/json'}
+        url = '{0}/instrumentinfo/by_user_id/{1}'.format(self.url, user_id)
+        req = requests.get(url=url, headers=header_list)
+        return req
+
     def test_instrumentinfo_api(self):
         """Test the GET method."""
         # test instrument lookup with good id
@@ -52,6 +58,11 @@ class TestObjectInfoAPI(CPCommonTest, helper.CPWebCase):
         req = self._search_for_instrument(search_term)
         self.assertEqual(req.status_code, 200)
 
+        # test get instruments for user
+        user_id = 10
+        req = self._get_instruments_for_user(user_id=user_id)
+        self.assertEqual(req.status_code, 200)
+
     def test_bad_instrumentinfo_api(self):
         """Test the GET method with bad data."""
         # test instrument lookup with nonexistant id
@@ -69,7 +80,7 @@ class TestObjectInfoAPI(CPCommonTest, helper.CPWebCase):
         req = self._search_for_instrument(search_term)
         self.assertEqual(req.status_code, 404)
 
-        # test instrument search with known invalid term
-        search_term = None
-        req = self._search_for_instrument('')
-        self.assertEqual(req.status_code, 400)
+        # test get instruments for user
+        user_id = 11
+        req = self._get_instruments_for_user(user_id=user_id)
+        self.assertEqual(req.status_code, 404)

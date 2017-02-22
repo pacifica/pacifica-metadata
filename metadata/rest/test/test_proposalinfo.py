@@ -69,7 +69,7 @@ class TestProposalInfoAPI(CPCommonTest, helper.CPWebCase):
         req = requests.get('{0}/proposalinfo/by_user_id'.format(self.url))
         self.assertEqual(req.status_code, 400)
         self.assertTrue('No user ID specified' in req.text)
-        user_id = 11
+        user_id = 21
         req = requests.get(
             '{0}/proposalinfo/by_user_id/{1}'.format(self.url, user_id))
         self.assertEqual(req.status_code, 404)

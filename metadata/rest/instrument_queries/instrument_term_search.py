@@ -43,12 +43,6 @@ class InstrumentTermSearch(QueryBase):
     # pylint: disable=duplicate-code
     @staticmethod
     @tools.json_out()
-    def GET(search_term=None):
+    def GET(search_term=''):
         """Return a set of instruments for a given user."""
-        if search_term is not None and len(search_term) > 0:
-            return InstrumentTermSearch.search_for_instrument(search_term)
-        else:
-            raise cherrypy.HTTPError(
-                '400 No Search Terms Provided',
-                QueryBase.instrument_help_block_message()
-            )
+        return InstrumentTermSearch.search_for_instrument(search_term)
