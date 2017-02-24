@@ -40,8 +40,11 @@ def db_connection_decorator(func):
     def func_wrapper(*args, **kwargs):
         """Wrapper to connect and close connection to database."""
         DB.connect()
-        ret = func(*args, **kwargs)
-        DB.close()
+        try:
+            with DB.transaction():
+                ret = func(*args, **kwargs)
+        finally:
+            DB.close()
         return ret
     return func_wrapper
 
@@ -77,12 +80,6 @@ class PacificaModel(Model):
         database = DB
         only_save_dirty = True
     # pylint: enable=too-few-public-methods
-
-    def rollback(self):
-        """Reconnect to the database on errors."""
-        # pylint: disable=no-member
-        self._meta.database.rollback()
-        # pylint: enable=no-member
 
     def _set_only_if(self, key, obj, dest_attr, func):
         if key in obj:
@@ -204,13 +201,6 @@ class PacificaModel(Model):
         # pylint: enable=no-member
         else:
             return [primary_key.name]
-
-    @classmethod
-    def atomic(cls):
-        """Get the atomic context or decorator."""
-        # pylint: disable=no-member
-        return cls._meta.database.atomic()
-        # pylint: enable=no-member
 
     @classmethod
     def get_object_info(cls):

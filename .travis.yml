@@ -5,6 +5,8 @@ language: python
 python:
  - 2.7
  - 3.5
+env:
+  DOCKER_COMPOSE_VERSION: 1.9.0
 
 matrix:
   exclude:

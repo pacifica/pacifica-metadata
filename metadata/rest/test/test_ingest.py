@@ -2,19 +2,13 @@
 """Test the ORM interface IngestAPI."""
 from json import dumps
 import requests
-from cherrypy.test import helper
-from test_files.loadit import main
-from metadata.rest.test import CPCommonTest, DockerMetadata
+from metadata.rest.test import CPCommonTest
 
 
-class TestIngestAPI(CPCommonTest, helper.CPWebCase):
+class TestIngestAPI(CPCommonTest):
     """Test the CherryPyAPI class."""
 
-    @classmethod
-    def teardown_class(cls):
-        """Tear down the services required by the server."""
-        super(TestIngestAPI, cls).teardown_class()
-        DockerMetadata.stop_services()
+    __test__ = True
 
     def test_ingest_api(self):
         """Test the PUT (insert) method."""
@@ -47,7 +41,6 @@ class TestIngestAPI(CPCommonTest, helper.CPWebCase):
                 'size': 47, 'mimetype': 'text/plain'
             },
         ]
-        main()
         req = requests.put(
             '{0}/ingest'.format(self.url), data=dumps(putdata), headers={'content-type': 'application/json'})
         self.assertEqual(req.text, '{"status": "success"}')

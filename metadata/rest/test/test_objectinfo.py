@@ -2,23 +2,16 @@
 """Test the ORM interface IngestAPI."""
 from json import loads
 import requests
-from cherrypy.test import helper
-from test_files.loadit import main
-from metadata.rest.test import CPCommonTest, DockerMetadata
+from metadata.rest.test import CPCommonTest
 
 
-class TestObjectInfoAPI(CPCommonTest, helper.CPWebCase):
+class TestObjectInfoAPI(CPCommonTest):
     """Test the ObjectInfoAPI class."""
 
-    @classmethod
-    def teardown_class(cls):
-        """Tear down the services required by the server."""
-        super(TestObjectInfoAPI, cls).teardown_class()
-        DockerMetadata.stop_services()
+    __test__ = True
 
     def test_objectinfo_api(self):
         """Test the GET method."""
-        main()
         req = requests.get('{0}/objectinfo?object_class_name=list'.format(self.url))
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)

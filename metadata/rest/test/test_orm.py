@@ -4,26 +4,18 @@ from time import time
 from datetime import datetime
 from json import loads, dumps
 import requests
-import cherrypy
-from cherrypy.test import helper
-from test_files.loadit import main
-from metadata.rest.test import CPCommonTest, DockerMetadata
+from metadata.rest.test import CPCommonTest
 from metadata.orm.keys import Keys
 from metadata.orm.utils import datetime_now_nomicrosecond
 
 
-class TestCherryPyAPI(CPCommonTest, helper.CPWebCase):
+class TestCherryPyAPI(CPCommonTest):
     """Test the CherryPyAPI class."""
 
-    @classmethod
-    def teardown_class(cls):
-        """Tear down the services required by the server."""
-        super(TestCherryPyAPI, cls).teardown_class()
-        DockerMetadata.stop_services()
+    __test__ = True
 
     def test_methods(self):
         """Test the PUT (insert) method."""
-        main()
         req = requests.get(
             '{0}/files?page_number=1&items_per_page=1'.format(self.url))
         self.assertEqual(req.status_code, 200)
@@ -133,7 +125,8 @@ class TestCherryPyAPI(CPCommonTest, helper.CPWebCase):
         hit_exception = False
         try:
             obj._set_or_create('{ bad json }')
-        except cherrypy.HTTPError:
+        except ValueError:
             hit_exception = True
         self.assertTrue(hit_exception)
+        obj._meta.database.close()
         # pylint: enable=protected-access

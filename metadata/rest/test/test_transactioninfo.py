@@ -3,23 +3,16 @@
 from json import loads
 import datetime
 import requests
-from cherrypy.test import helper
-from test_files.loadit import main
-from metadata.rest.test import CPCommonTest, DockerMetadata
+from metadata.rest.test import CPCommonTest
 
 
-class TestTransactionInfoAPI(CPCommonTest, helper.CPWebCase):
+class TestTransactionInfoAPI(CPCommonTest):
     """Test the TransactionInfoAPI class."""
 
-    @classmethod
-    def teardown_class(cls):
-        """Tear down the services required by the server."""
-        super(TestTransactionInfoAPI, cls).teardown_class()
-        DockerMetadata.stop_services()
+    __test__ = True
 
     def test_transactioninfo_api(self):
         """Test the GET method."""
-        main()
         start_date = datetime.datetime.utcnow().date() - datetime.timedelta(1)
         end_date = datetime.datetime.utcnow().date() + datetime.timedelta(1)
 

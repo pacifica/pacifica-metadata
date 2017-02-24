@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: docker-compose/Dockerfile.elastic
     container_name: elasticmaster
+    ports:
+      - 9200:9200
 
   elasticslave:
     build:
@@ -22,8 +24,6 @@ services:
       - elasticslave:elasticslave
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    ports:
-      - 9200:80
 
   metadatadb:
     image: postgres
@@ -42,7 +42,6 @@ services:
     links:
       - metadatadb:postgres
       - elasticmaster
-      - elasticlb
     ports:
       - 8121:8121
     environment:

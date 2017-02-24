@@ -146,12 +146,11 @@ class IngestAPI(object):
             'instrument': pull_value_by_attr(request.json, 'Transactions.instrument', 'value'),
             'proposal': pull_value_by_attr(request.json, 'Transactions.proposal', 'value')
         }
-        with Transactions.atomic():
-            # pylint: disable=protected-access
-            Transactions()._insert(dumps(transaction_hash))
-            TransactionKeyValue()._insert(dumps(generate_tkvs(request.json)))
-            Files()._insert(dumps(extract_files(request.json)))
-            FileKeyValue()._insert(dumps(generate_fkvs(request.json)))
-            # pylint: enable=protected-access
 
+        # pylint: disable=protected-access
+        Transactions()._insert(dumps(transaction_hash))
+        TransactionKeyValue()._insert(dumps(generate_tkvs(request.json)))
+        Files()._insert(dumps(extract_files(request.json)))
+        FileKeyValue()._insert(dumps(generate_fkvs(request.json)))
+        # pylint: enable=protected-access
         return {'status': 'success'}
