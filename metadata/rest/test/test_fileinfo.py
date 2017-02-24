@@ -3,25 +3,13 @@
 from json import loads
 import requests
 from dateutil import parser
-from cherrypy.test import helper
-from test_files.loadit import main
-from metadata.rest.test import CPCommonTest, DockerMetadata
+from metadata.rest.test import CPCommonTest
 
 
-class TestFileInfoAPI(CPCommonTest, helper.CPWebCase):
+class TestFileInfoAPI(CPCommonTest):
     """Test the ObjectInfoAPI class."""
 
-    @classmethod
-    def setup_class(cls):
-        """Setup the services required by the server."""
-        super(TestFileInfoAPI, cls).setup_class()
-        main()
-
-    @classmethod
-    def teardown_class(cls):
-        """Tear down the services required by the server."""
-        super(TestFileInfoAPI, cls).teardown_class()
-        DockerMetadata.stop_services()
+    __test__ = True
 
     def _get_file_info(self, file_id_list):
         header_list = {'Content-Type': 'application/json'}

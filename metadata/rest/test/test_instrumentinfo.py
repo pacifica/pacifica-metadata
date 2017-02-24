@@ -1,25 +1,13 @@
 #!/usr/bin/python
 """Test the ORM interface InstrumentInfo."""
 import requests
-from cherrypy.test import helper
-from test_files.loadit import main
-from metadata.rest.test import CPCommonTest, DockerMetadata
+from metadata.rest.test import CPCommonTest
 
 
-class TestObjectInfoAPI(CPCommonTest, helper.CPWebCase):
+class TestObjectInfoAPI(CPCommonTest):
     """Test the ObjectInfoAPI class."""
 
-    @classmethod
-    def setup_class(cls):
-        """Setup the services required by the server."""
-        super(TestObjectInfoAPI, cls).setup_class()
-        main()
-
-    @classmethod
-    def teardown_class(cls):
-        """Tear down the services required by the server."""
-        super(TestObjectInfoAPI, cls).teardown_class()
-        DockerMetadata.stop_services()
+    __test__ = True
 
     def _get_instrument_details(self, instrument_id):
         header_list = {'Content-Type': 'application/json'}

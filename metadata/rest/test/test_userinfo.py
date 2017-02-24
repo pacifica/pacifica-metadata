@@ -2,23 +2,16 @@
 """Test the UserInfoAPI object."""
 from json import loads
 import requests
-from cherrypy.test import helper
-from test_files.loadit import main
-from metadata.rest.test import CPCommonTest, DockerMetadata
+from metadata.rest.test import CPCommonTest
 
 
-class TestUserInfoAPI(CPCommonTest, helper.CPWebCase):
+class TestUserInfoAPI(CPCommonTest):
     """Test aspects of the UserInfoAPI class."""
 
-    @classmethod
-    def teardown_class(cls):
-        """Tear down the services required by the server."""
-        super(TestUserInfoAPI, cls).teardown_class()
-        DockerMetadata.stop_services()
+    __test__ = True
 
     def test_userinfo_api(self):
         """Test the GET method."""
-        main()
         # test by user_id
         user_id = 10
         req = requests.get('{0}/userinfo/by_id/{1}'.format(self.url, user_id))

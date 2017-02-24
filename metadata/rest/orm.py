@@ -2,7 +2,7 @@
 """Core interface for each ORM object to interface with CherryPy."""
 from json import loads, dumps
 from cherrypy import request, HTTPError
-from peewee import IntegrityError, DoesNotExist
+from peewee import DoesNotExist
 from metadata.orm.base import PacificaModel, db_connection_decorator
 from metadata.elastic.orm import ElasticAPI
 from metadata.orm.utils import datetime_now_nomicrosecond, datetime_converts
@@ -34,11 +34,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         for obj in self.select().where(self.where_clause(kwargs)):
             did_something = True
             obj.from_hash(update_hash)
-            try:
-                obj.save()
-            except IntegrityError as ex:
-                self.rollback()
-                raise HTTPError(500, str(ex))
+            obj.save()
         if not did_something:
             raise HTTPError(500, "Get args didn't select any objects.")
         complete_objs = [obj.to_hash() for obj in self.select().where(self.where_clause(kwargs))]
@@ -46,11 +42,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
 
     def _set_or_create(self, insert_json):
         """Set or create the object if it doesn't already exist."""
-        objs = None
-        try:
-            objs = loads(insert_json)
-        except ValueError as ex:
-            raise HTTPError(500, str(ex))
+        objs = loads(insert_json)
         if isinstance(objs, dict):
             objs = [objs]
         complete_objs = []
@@ -64,11 +56,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
 
     def _insert(self, insert_json):
         """Insert object from json into the system."""
-        objs = None
-        try:
-            objs = loads(insert_json)
-        except ValueError as ex:
-            raise HTTPError(500, str(ex))
+        objs = loads(insert_json)
         if not len(objs):
             # nothing to upload
             return
@@ -93,10 +81,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         clean_objs = self._clean_for_bulk_upload(objs, fix_dates)
         es_objs = []
         insert_query = self.__class__.insert_many(clean_objs['upload_objs']).returning(self.__class__)
-        with self.__class__.atomic():
-            for item in insert_query.execute():
-                es_objs.append(item.to_hash())
-
+        for item in insert_query.execute():
+            es_objs.append(item.to_hash())
         self.elastic_upload(es_objs)
 
     @classmethod
