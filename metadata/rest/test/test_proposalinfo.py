@@ -53,10 +53,10 @@ class TestProposalInfoAPI(CPCommonTest):
         req = requests.get(
             '{0}/proposalinfo/by_user_id/{1}'.format(self.url, str_user_id))
         self.assertEqual(req.status_code, 400)
-        self.assertTrue('"bob" is not a valid user ID' in req.text)
+        self.assertTrue('"bob" is not a valid user ID' in loads(req.text)['traceback'])
         req = requests.get('{0}/proposalinfo/by_user_id'.format(self.url))
         self.assertEqual(req.status_code, 400)
-        self.assertTrue('No user ID specified' in req.text)
+        self.assertTrue('No user ID specified' in loads(req.text)['traceback'])
         user_id = 11
         req = requests.get(
             '{0}/proposalinfo/by_user_id/{1}'.format(self.url, user_id))
@@ -76,16 +76,16 @@ class TestProposalInfoAPI(CPCommonTest):
 
         req = requests.get('{0}/proposalinfo/by_proposal_id'.format(self.url))
         self.assertEqual(req.status_code, 400)
-        self.assertTrue('Invalid Request' in req.text)
+        self.assertTrue('Invalid Request' in loads(req.text)['traceback'])
 
         search_terms = ''
         req = requests.get(
             '{0}/proposalinfo/search'.format(self.url))
         self.assertEqual(req.status_code, 400)
-        self.assertTrue('No Search Terms Provided' in req.text)
+        self.assertTrue('No Search Terms Provided' in loads(req.text)['traceback'])
 
         search_terms = 'bob+uncle'
         req = requests.get(
             '{0}/proposalinfo/search/{1}'.format(self.url, search_terms))
         self.assertEqual(req.status_code, 404)
-        self.assertTrue('No Valid Proposals' in req.text)
+        self.assertTrue('No Valid Proposals' in loads(req.text)['traceback'])
