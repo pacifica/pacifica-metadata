@@ -131,7 +131,6 @@ objects in the model.
 | Column | Type | Reference |
 | --- | --- | --- |
 | id | SERIAL |  |
-| citation | INTEGER | Citations.id |
 | encoding | VARCHAR |  |
 | keyword | VARCHAR |  |
 | created | TIMESTAMP |  |
@@ -145,6 +144,16 @@ objects in the model.
 | author | INTEGER | Contributors.id |
 | author_precedence | INTEGER |  |
 | citation | INTEGER | Citations.id |
+| created | TIMESTAMP |  |
+| deleted | TIMESTAMP |  |
+| updated | TIMESTAMP |  |
+
+### CitationKeyword
+| Column | Type | Reference |
+| --- | --- | --- |
+| id | SERIAL |  |
+| citation | INTEGER | Citations.id |
+| keyword | INTEGER | Keywords.id |
 | created | TIMESTAMP |  |
 | deleted | TIMESTAMP |  |
 | updated | TIMESTAMP |  |
