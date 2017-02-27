@@ -34,6 +34,7 @@ Example uploaded data:
 ]
 """
 from __future__ import print_function
+import hashlib
 from json import dumps
 from cherrypy import request, tools
 from metadata.orm.transactions import Transactions
@@ -50,6 +51,43 @@ class IngestAPI(object):
     """Uploader ingest API."""
 
     exposed = True
+
+    @staticmethod
+    def validate_mime_type(mimetype):
+        """Validate the mimetype string."""
+        valid_prefixes = [
+            'application', 'audio', 'font', 'example', 'image',
+            'message', 'model', 'mulitpart', 'text', 'video'
+        ]
+        validated = False
+        for prefix in valid_prefixes:
+            if prefix + '/' == mimetype[:len(prefix)+1]:
+                validated = True
+        return validated
+
+    @staticmethod
+    def validate_hash_data(hashtype, hashsum):
+        """Validate the hashtype and hashsum are valid."""
+        if hashtype not in hashlib.algorithms_available:
+            return False
+        try:
+            int(hashsum, 16)
+        except ValueError:
+            return False
+        hashd = getattr(hashlib, hashtype)()
+        hashd.update('blah')
+        if len(hashsum) != len(hashd.hexdigest()):
+            return False
+        return True
+
+    @staticmethod
+    def validate_file_meta(file_meta):
+        """Validate the file metadata."""
+        if not IngestAPI.validate_mime_type(file_meta['mimetype']):
+            return False
+        if not IngestAPI.validate_hash_data(file_meta['hashtype'], file_meta['hashsum']):
+            return False
+        return True
 
     # CherryPy requires these named methods.
     # pylint: disable=invalid-name
@@ -80,8 +118,14 @@ class IngestAPI(object):
             for part in json:
                 if part['destinationTable'] == 'Files':
                     ret = {}
-                    for key in ['name', 'subdir', 'mtime', 'ctime', 'size', 'mimetype', '_id']:
+                    parts = [
+                        'name', 'subdir', 'mtime', 'ctime', 'size',
+                        'mimetype', '_id', 'hashsum', 'hashtype'
+                    ]
+                    for key in parts:
                         ret[key] = part[key]
+                    if not IngestAPI.validate_file_meta(ret):
+                        raise ValueError('Invalid metadata for file {0}'.format(ret['_id']))
                     yield ret
 
         def generate_tkvs(json):

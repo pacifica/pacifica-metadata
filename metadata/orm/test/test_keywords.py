@@ -4,26 +4,22 @@
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.keywords import Keywords
-from metadata.orm.test.test_citations import SAMPLE_CITATION_HASH, TestCitations
-from metadata.orm.citations import Citations
 
 SAMPLE_KEYWORD_HASH = {
     '_id': 142,
-    'citation_id': SAMPLE_CITATION_HASH['_id'],
     'keyword': 'halitosis',
     'encoding': 'UTF8'
 }
 
 SAMPLE_UNICODE_KEYWORD_HASH = {
     '_id': 143,
-    'citation_id': SAMPLE_CITATION_HASH['_id'],
     'keyword': u'blargééééé',
     'encoding': 'UTF8'
 }
 
 
 class TestKeywords(TestBase):
-    """Test the InstitutionPerson ORM object."""
+    """Test the Keywords ORM object."""
 
     obj_cls = Keywords
     obj_id = Keywords.id
@@ -31,15 +27,7 @@ class TestKeywords(TestBase):
     @classmethod
     def dependent_cls(cls):
         """Return dependent classes for the Keywords object."""
-        return TestCitations.dependent_cls() + [Keywords]
-
-    @classmethod
-    def base_create_dep_objs(cls):
-        """Create all objects that FileKeyValue need."""
-        cite = Citations()
-        TestCitations.base_create_dep_objs()
-        cite.from_hash(SAMPLE_CITATION_HASH)
-        cite.save(force_insert=True)
+        return [Keywords]
 
     def test_keywords_hash(self):
         """Test the hash portion using base object method."""

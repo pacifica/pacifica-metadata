@@ -59,7 +59,7 @@ class ProposalLookup(QueryBase):
     @db_connection_decorator
     def GET(proposal_id=None):
         """CherryPy GET method."""
-        if proposal_id is not None and re.match('[0-9]+[a-z]+', proposal_id):
+        if proposal_id is not None and re.match('[0-9]+[a-z]*', proposal_id):
             cherrypy.log.error('proposal details request')
             return ProposalLookup._get_proposal_details(proposal_id)
         else:

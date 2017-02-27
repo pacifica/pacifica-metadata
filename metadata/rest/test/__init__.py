@@ -7,6 +7,7 @@ from cherrypy.test import helper
 from metadata.orm import create_tables
 from metadata.rest.root import Root
 from test_files.loadit import main
+from MetadataServer import error_page_default
 
 
 # pylint: disable=too-few-public-methods
@@ -39,6 +40,7 @@ class CPCommonTest(helper.CPWebCase):
         logger.setLevel(logging.DEBUG)
         logger.addHandler(logging.StreamHandler())
         create_tables()
+        cherrypy.config.update({'error_page.default': error_page_default})
         cherrypy.config.update('server.conf')
         cherrypy.tree.mount(Root(), '/', 'server.conf')
 # pylint: enable=too-few-public-methods
