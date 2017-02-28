@@ -24,14 +24,21 @@ class QueryBase(object):
             info.pop('abstract')
             prop_id = prop.id
             clean_proposals[prop_id] = info
-
+        display_name = '[EUS ID {0}] {1} {2} &lt;{3}&gt;'.format(
+            user_entry.id,
+            user_hash.get('first_name'),
+            user_hash.get('last_name'),
+            user_hash.get('email_address')
+        )
         return_block = {
+            'category': user_hash.get('last_name')[:1],
             'person_id': user_hash.get('_id'),
             'first_name': user_hash.get('first_name'),
             'last_name': user_hash.get('last_name'),
             'network_id': user_hash.get('network_id'),
             'email_address': user_hash.get('email_address'),
             'last_updated': user_hash.get('updated'),
+            'display_name': display_name,
             'emsl_employee': False,
             'proposals': clean_proposals
         }

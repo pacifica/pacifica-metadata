@@ -23,14 +23,14 @@ class InstrumentTermSearch(QueryBase):
             where_clause_part = Expression(1, OP.EQ, 0)
             for k in keys:
                 field = getattr(Instruments, k)
-                field_type = field.get_column_type()
-                if field_type != 'VARCHAR' and re.match('[0-9]+', term):
-                    where_clause_part |= (
-                        field == int(term)
-                    )
-                    where_clause_part |= (
-                        fn.TO_CHAR(field, '999999').contains(term)
-                    )
+                if k == 'id':
+                    if re.match('[0-9]+', term):
+                        where_clause_part |= (
+                            field == int(term)
+                        )
+                        where_clause_part |= (
+                            fn.TO_CHAR(field, '999999').contains(term)
+                        )
                 else:
                     where_clause_part |= (
                         field.contains(term))
