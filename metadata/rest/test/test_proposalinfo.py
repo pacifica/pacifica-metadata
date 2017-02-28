@@ -53,7 +53,7 @@ class TestProposalInfoAPI(CPCommonTest):
         req = requests.get(
             '{0}/proposalinfo/by_user_id/{1}'.format(self.url, str_user_id))
         self.assertEqual(req.status_code, 400)
-        self.assertTrue('"bob" is not a valid user ID' in req.text)
+        self.assertTrue('not a valid user ID' in req.text)
         req = requests.get('{0}/proposalinfo/by_user_id'.format(self.url))
         self.assertEqual(req.status_code, 400)
         self.assertTrue('No user ID specified' in req.text)

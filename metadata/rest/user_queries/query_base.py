@@ -14,9 +14,7 @@ class QueryBase(object):
         proposal_person_query = (
             ProposalParticipant.select().where(where_exp))
 
-        proposals_id_list = [prop.proposal.id for prop in proposal_person_query]
-
-        proposals = Proposals.select().where(Proposals.id << proposals_id_list)
+        proposals = Proposals.select().where(Proposals.id << [prop.proposal.id for prop in proposal_person_query])
 
         clean_proposals = {}
         for prop in proposals:
@@ -45,9 +43,8 @@ class QueryBase(object):
 
         usergroup_xref = UserGroup()
         where_exp = usergroup_xref.where_clause({'person_id': user_entry.id})
-        groups = (UserGroup.select().where(where_exp))
 
-        for group in groups:
+        for group in UserGroup.select().where(where_exp):
             if group.person_id == user_entry.id:
                 return_block['emsl_employee'] = True
                 break

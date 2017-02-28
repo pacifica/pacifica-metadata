@@ -44,7 +44,7 @@ class UserSearch(QueryBase):
         return [QueryBase.format_user_block(obj) for obj in objs]
 
     # CherryPy requires these named methods.
-    # pylint: disable=invalid-name
+    # pylint: disable=invalid-name, unused-argument
     @staticmethod
     @tools.json_out()
     @cherrypy.expose

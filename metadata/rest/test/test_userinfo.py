@@ -56,7 +56,7 @@ class TestUserInfoAPI(CPCommonTest):
         self.assertEqual(req.status_code, 400)
         self.assertTrue('Invalid Lookup Options' in req.text)
 
-        user_id = 11
+        user_id = 21
         req = requests.get('{0}/userinfo/by_id/{1}'.format(self.url, user_id))
         self.assertEqual(req.status_code, 404)
         self.assertTrue('Not Found' in req.text)
