@@ -43,7 +43,6 @@ from metadata.orm.file_key_value import FileKeyValue
 from metadata.orm.keys import Keys
 from metadata.orm.values import Values
 from metadata.orm.files import Files
-from metadata.orm.base import db_connection_decorator
 
 
 # pylint: disable=too-few-public-methods
@@ -94,7 +93,6 @@ class IngestAPI(object):
     @staticmethod
     @tools.json_in()
     @tools.json_out()
-    @db_connection_decorator
     def PUT():
         """Sample doc string to put data to the server."""
         def pull_value_by_attr(json, table, attr):

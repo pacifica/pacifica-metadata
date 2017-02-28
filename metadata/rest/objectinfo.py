@@ -3,7 +3,6 @@
 import cherrypy
 from cherrypy import tools
 import metadata.orm as orm
-from metadata.orm.base import db_connection_decorator
 
 
 # pylint: disable=too-few-public-methods
@@ -32,7 +31,6 @@ class ObjectInfoAPI(object):
     # pylint: disable=invalid-name, protected-access
     @staticmethod
     @tools.json_out()
-    @db_connection_decorator
     def GET(object_class_name=None, operation=None):
         """
         Implement the GET HTTP method.

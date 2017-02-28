@@ -5,7 +5,6 @@ from cherrypy import tools
 from peewee import OP, Expression
 from metadata.orm import Proposals
 from metadata.rest.proposal_queries.query_base import QueryBase
-from metadata.orm.base import db_connection_decorator
 
 
 class ProposalTermSearch(QueryBase):
@@ -43,7 +42,6 @@ class ProposalTermSearch(QueryBase):
     # pylint: disable=duplicate-code
     @staticmethod
     @tools.json_out()
-    @db_connection_decorator
     def GET(search_term=None):
         """Return a set of proposals for a given user."""
         if search_term is not None:

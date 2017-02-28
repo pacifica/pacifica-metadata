@@ -14,6 +14,7 @@ the base fields.
 There are also CherryPy methods for creating, updating, getting
 and deleting these objects in from a web service layer.
 """
+import cherrypy
 from os import getenv
 from json import dumps, loads
 
@@ -35,18 +36,21 @@ DEFAULT_ELASTIC_ENDPOINT = getenv(
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 
 
-def db_connection_decorator(func):
-    """Wrap a method with a database connect and close."""
-    def func_wrapper(*args, **kwargs):
-        """Wrapper to connect and close connection to database."""
-        DB.connect()
-        try:
-            with DB.transaction():
-                ret = func(*args, **kwargs)
-        finally:
-            DB.close()
-        return ret
-    return func_wrapper
+def connect():
+    """Connect to the database on request init."""
+    cherrypy.log('connect')
+    DB.connect()
+
+
+def close():
+    """Close the database connection when the request is done."""
+    cherrypy.log('close')
+    if not DB.is_closed():
+        DB.close()
+
+
+cherrypy.engine.subscribe('before_request', connect)
+cherrypy.engine.subscribe('after_request', close)
 
 
 class PacificaModel(Model):

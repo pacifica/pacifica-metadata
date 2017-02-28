@@ -3,7 +3,6 @@ import re
 import cherrypy
 from cherrypy import tools, HTTPError
 from metadata.rest.transaction_queries.query_base import QueryBase
-from metadata.orm.base import db_connection_decorator
 
 
 class TransactionLookup(QueryBase):
@@ -15,7 +14,6 @@ class TransactionLookup(QueryBase):
     # pylint: disable=invalid-name
     @staticmethod
     @tools.json_out()
-    @db_connection_decorator
     def GET(trans_id=None):
         """Return details about the specified transaction entity."""
         if trans_id is not None and re.match('[0-9]+', trans_id):
