@@ -1,11 +1,11 @@
 # Pacifica Metadata Services
-[![Build Status](https://travis-ci.org/EMSL-MSC/pacifica-metadata.svg?branch=master)](https://travis-ci.org/EMSL-MSC/pacifica-metadata)
-[![Code Climate](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata/badges/gpa.svg)](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata)
-[![Test Coverage](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata/badges/coverage.svg)](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata/coverage)
-[![Issue Count](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata/badges/issue_count.svg)](https://codeclimate.com/github/EMSL-MSC/pacifica-metadata)
-[![Docker Stars](https://img.shields.io/docker/stars/pacifica/metadata.svg?maxAge=2592000)](https://hub.docker.com/r/pacifica/metadata)
-[![Docker Pulls](https://img.shields.io/docker/pulls/pacifica/metadata.svg?maxAge=2592000)](https://hub.docker.com/r/pacifica/metadata)
-[![Docker Automated build](https://img.shields.io/docker/automated/pacifica/metadata.svg?maxAge=2592000)](https://hub.docker.com/r/pacifica/metadata)
+[![Build Status](https://travis-ci.org/pacifica/pacifica-metadata.svg?branch=master)](https://travis-ci.org/pacifica/pacifica-metadata)
+[![Code Climate](https://codeclimate.com/github/pacifica/pacifica-metadata/badges/gpa.svg)](https://codeclimate.com/github/pacifica/pacifica-metadata)
+[![Test Coverage](https://codeclimate.com/github/pacifica/pacifica-metadata/badges/coverage.svg)](https://codeclimate.com/github/pacifica/pacifica-metadata/coverage)
+[![Issue Count](https://codeclimate.com/github/pacifica/pacifica-metadata/badges/issue_count.svg)](https://codeclimate.com/github/pacifica/pacifica-metadata)
+[![Docker Stars](https://img.shields.io/docker/stars/pacifica/metadata.svg?maxAge=2592000)](https://cloud.docker.com/swarm/pacifica/repository/docker/pacifica/metadata/general)
+[![Docker Pulls](https://img.shields.io/docker/pulls/pacifica/metadata.svg?maxAge=2592000)](https://cloud.docker.com/swarm/pacifica/repository/docker/pacifica/metadata/general)
+[![Docker Automated build](https://img.shields.io/docker/automated/pacifica/metadata.svg?maxAge=2592000)](https://cloud.docker.com/swarm/pacifica/repository/docker/pacifica/metadata/builds)
 
 This is the pacifica metadata API.
 
