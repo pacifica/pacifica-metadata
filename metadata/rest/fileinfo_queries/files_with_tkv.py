@@ -1,7 +1,7 @@
 """CherryPy File Details object class."""
 from cherrypy import tools
 from peewee import DoesNotExist, fn
-from urllib import quote, unquote
+from urllib import unquote
 from metadata.orm import Files, TransactionKeyValue, Keys, Values
 
 

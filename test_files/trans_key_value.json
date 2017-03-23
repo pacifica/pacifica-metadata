@@ -1,12 +1,12 @@
 [
-    {
-        "key_id": 104,
-        "transaction_id": 67,
-        "value_id": 103
-    },
-    {
-        "key_id": 104,
-        "transaction_id": 68,
-        "value_id": 104
-    }
+  {
+    "key_id": 104,
+    "transaction_id": 67,
+    "value_id": 103
+  },
+  {
+    "key_id": 104,
+    "transaction_id": 68,
+    "value_id": 104
+  }
 ]

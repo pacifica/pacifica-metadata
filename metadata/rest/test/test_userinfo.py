@@ -29,6 +29,16 @@ class TestUserInfoAPI(CPCommonTest):
         user = req_json.pop()
         self.assertEqual(user['person_id'], user_id)
 
+        # test search with network_id, simple return
+        search_terms = 'dmlb2001'
+        req = requests.get(
+            '{0}/userinfo/search/{1}/simple'.format(self.url, search_terms))
+        self.assertEqual(req.status_code, 200)
+        req_json = loads(req.text)
+        self.assertEqual(len(req_json), 1)
+        user = req_json.pop()
+        self.assertEqual(user['person_id'], user_id)
+
         # test search with network_id
         search_terms = 'dmlb2001'
         req = requests.get(

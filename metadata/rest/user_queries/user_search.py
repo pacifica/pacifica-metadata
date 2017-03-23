@@ -13,7 +13,7 @@ class UserSearch(QueryBase):
     exposed = True
 
     @staticmethod
-    def search_for_user(search_term):
+    def search_for_user(search_term, option):
         """Return a dictionary containing information about a given user."""
         terms = re.findall(r'[^+ ,;]+', search_term)
         keys = ['first_name', 'last_name', 'network_id', 'email_address', 'id']
@@ -41,18 +41,18 @@ class UserSearch(QueryBase):
             message += '\' and \''.join(terms) + '\''
             raise cherrypy.HTTPError('404 No Valid Users Located', message)
 
-        return [QueryBase.format_user_block(obj) for obj in objs]
+        return [QueryBase.format_user_block(obj, option) for obj in objs]
 
     # CherryPy requires these named methods.
     # pylint: disable=invalid-name, unused-argument
     @staticmethod
     @tools.json_out()
     @cherrypy.expose
-    def GET(search_term=None, **kwargs):
+    def GET(search_term=None, option=None, **kwargs):
         """Return the requested user information for a given set of search criteria."""
         if search_term is not None and len(search_term) > 0:
             cherrypy.log.error('search request')
-            return UserSearch.search_for_user(search_term)
+            return UserSearch.search_for_user(search_term, option)
         else:
             cherrypy.log.error('invalid request')
             raise cherrypy.HTTPError(
