@@ -1,7 +1,7 @@
 """CherryPy File Details object class."""
+from urllib import unquote
 from cherrypy import tools
 from peewee import DoesNotExist, fn
-from urllib import unquote
 from metadata.orm import Files, TransactionKeyValue, Keys, Values
 
 
@@ -31,7 +31,7 @@ class FilesWithTransactionKeyValue(object):
             # valid key, valid value, no relations
             return []
 
-        files_query = Files().select().where(Files.transaction_id << transaction_list)
+        files_query = Files().select().where(Files.transaction << transaction_list)
 
         return [f.to_hash() for f in files_query]
 

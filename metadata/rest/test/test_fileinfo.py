@@ -71,12 +71,25 @@ class TestFileInfoAPI(CPCommonTest):
         latest = parser.parse(req_json['latest'])
         self.assertTrue(latest >= earliest)
 
-        # test for proposal single proposal by modified time
+        # test for proposal single proposal by submitted time
         id_list = ['1234a']
         req = self._get_earliest_latest(
             item_type='proposal',
             id_list=id_list,
             time_basis='submitted'
+        )
+        self.assertEqual(req.status_code, 200)
+        req_json = loads(req.text)
+        earliest = parser.parse(req_json['earliest'])
+        latest = parser.parse(req_json['latest'])
+        self.assertTrue(latest >= earliest)
+
+        # test for proposal single proposal by created time
+        id_list = ['1234a']
+        req = self._get_earliest_latest(
+            item_type='proposal',
+            id_list=id_list,
+            time_basis='created'
         )
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)

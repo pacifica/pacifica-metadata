@@ -40,12 +40,10 @@ class EarliestLatestFiles(object):
         # normalize time_basis
         if time_basis.startswith('submit'):
             time_basis = 'submitted'
-        elif time_basis.startswith('modif'):
+        if time_basis.startswith('modif'):
             time_basis = 'modified'
-        elif time_basis.startswith('creat'):
+        if time_basis.startswith('creat'):
             time_basis = 'created'
-        else:
-            time_basis = 'modified'
 
         search_field = getattr(Transactions, '{0}_id'.format(item_type))
         if time_basis == 'submitted':
