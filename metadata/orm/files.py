@@ -123,9 +123,10 @@ class Files(CherryPyAPI):
         """PeeWee specific where expression."""
         where_clause = super(Files, self).where_clause(kwargs)
         if 'transaction_id' in kwargs:
-            kwargs['transaction_id'] = Transactions.get(
+            trans = Transactions.get(
                 Transactions.id == kwargs['transaction_id']
             )
+            where_clause &= Expression(Files.transaction, OP.EQ, trans)
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
         where_clause = self._where_date_clause(where_clause, kwargs)

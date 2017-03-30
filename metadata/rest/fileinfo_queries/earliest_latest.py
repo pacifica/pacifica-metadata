@@ -14,7 +14,14 @@ class EarliestLatestFiles(object):
     @staticmethod
     def _get_earliest_latest(item_type, item_list, time_basis):
         accepted_item_types = ['proposal', 'submitter', 'instrument']
-        accepted_time_basis_types = ['submitted', 'modified', 'created']
+        accepted_time_basis_types = [
+            'submitted', 'modified', 'created',
+            'submit', 'modified', 'create',
+            'submit_time', 'modified_time', 'create_time',
+            'submitted_date', 'modified_date', 'created_date',
+        ]
+
+        time_basis = time_basis.lower()
         if item_type not in accepted_item_types:
             raise HTTPError(
                 '400 Invalid Query',
@@ -29,6 +36,17 @@ class EarliestLatestFiles(object):
                     time_basis, ', '.join(accepted_time_basis_types)
                 )
             )
+
+        # normalize time_basis
+        if time_basis.startswith('submit'):
+            time_basis = 'submitted'
+        elif time_basis.startswith('modif'):
+            time_basis = 'modified'
+        elif time_basis.startswith('creat'):
+            time_basis = 'created'
+        else:
+            time_basis = 'modified'
+
         search_field = getattr(Transactions, '{0}_id'.format(item_type))
         if time_basis == 'submitted':
             query = Transactions().select(
