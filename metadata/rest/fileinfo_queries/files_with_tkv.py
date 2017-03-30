@@ -1,8 +1,11 @@
 """CherryPy File Details object class."""
-from urllib.parse import unquote
 from cherrypy import tools
 from peewee import DoesNotExist, fn
 from metadata.orm import Files, TransactionKeyValue, Keys, Values
+try:
+    from urllib.parse import unquote
+except ImportError:
+    from urlparse import unquote
 
 
 # pylint: disable=too-few-public-methods
