@@ -63,11 +63,13 @@ class QueryBase(object):
 
     @staticmethod
     def _is_admin_user(user_entry):
+        is_admin = False
         where_exp = UserGroup().where_clause({'person_id': user_entry.id})
         for group in UserGroup.select().where(where_exp):
             if group.person_id == user_entry.id:
-                return True
-        return False
+                is_admin = True
+                break
+        return is_admin
 
     @staticmethod
     def compose_help_block_message():
