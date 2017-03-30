@@ -57,15 +57,17 @@ class QueryBase(object):
                 'emsl_employee': False
             }
 
-        usergroup_xref = UserGroup()
-        where_exp = usergroup_xref.where_clause({'person_id': user_entry.id})
-
-        for group in UserGroup.select().where(where_exp):
-            if group.person_id == user_entry.id:
-                return_block['emsl_employee'] = True
-                break
+        return_block['emsl_employee'] = QueryBase._is_admin_user(user_entry)
 
         return return_block
+
+    @staticmethod
+    def _is_admin_user(user_entry):
+        where_exp = UserGroup().where_clause({'person_id': user_entry.id})
+        for group in UserGroup.select().where(where_exp):
+            if group.person_id == user_entry.id:
+                return True
+        return False
 
     @staticmethod
     def compose_help_block_message():
