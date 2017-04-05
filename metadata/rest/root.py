@@ -8,6 +8,7 @@ from metadata.rest.transactioninfo import TransactionInfoAPI
 from metadata.rest.fileinfo import FileInfoAPI
 from metadata.rest.ingest import IngestAPI
 from metadata.rest.instrumentinfo import InstrumentInfoAPI
+from metadata.rest.summaryinfo import SummaryInfoAPI
 
 
 # pylint: disable=too-few-public-methods
@@ -26,6 +27,7 @@ class Root(object):
     fileinfo = FileInfoAPI()
     transactioninfo = TransactionInfoAPI()
     instrumentinfo = InstrumentInfoAPI()
+    summaryinfo = SummaryInfoAPI()
     ingest = IngestAPI()
 # pylint: enable=too-few-public-methods
 
