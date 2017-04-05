@@ -48,10 +48,9 @@ class QueryBase(object):
                 'person_id': user_hash.get('_id'),
                 'first_name': user_hash.get('first_name'),
                 'last_name': user_hash.get('last_name'),
-                'display_name': '{0} {1} &lt;{2}&gt;'.format(
+                'display_name': '{0} {1}'.format(
                     user_hash.get('first_name'),
-                    user_hash.get('last_name'),
-                    user_hash.get('email_address')
+                    user_hash.get('last_name')
                 ),
                 'email_address': user_hash.get('email_address'),
                 'emsl_employee': False
