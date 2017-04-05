@@ -2,7 +2,7 @@
 import re
 import cherrypy
 from cherrypy import tools
-from peewee import OP, Expression
+from peewee import OP, Expression, fn
 from metadata.orm import Instruments
 from metadata.rest.instrument_queries.query_base import QueryBase
 
@@ -22,15 +22,20 @@ class InstrumentTermSearch(QueryBase):
             term = str(item)
             where_clause_part = Expression(1, OP.EQ, 0)
             for k in keys:
-                if k != 'id':
-                    where_clause_part |= Expression(
-                        getattr(Instruments, k), OP.ILIKE, '%{0}%'.format(term))
-
-                else:
+                field = getattr(Instruments, k)
+                if k == 'id':
                     if re.match('[0-9]+', term):
-                        where_clause_part |= Expression(
-                            Instruments.id, OP.EQ, term)
+                        where_clause_part |= (
+                            field == int(term)
+                        )
+                        where_clause_part |= (
+                            fn.TO_CHAR(field, '999999').contains(term)
+                        )
+                else:
+                    where_clause_part |= (
+                        field.contains(term))
             where_clause &= (where_clause_part)
+
         objs = Instruments.select().where(where_clause).order_by(Instruments.name_short)
         if len(objs) == 0:
             message = 'No instrument entries were retrieved using the terms: \''
@@ -43,12 +48,6 @@ class InstrumentTermSearch(QueryBase):
     # pylint: disable=duplicate-code
     @staticmethod
     @tools.json_out()
-    def GET(search_term=None):
+    def GET(search_term=''):
         """Return a set of instruments for a given user."""
-        if search_term is not None and len(search_term) > 0:
-            return InstrumentTermSearch.search_for_instrument(search_term)
-        else:
-            raise cherrypy.HTTPError(
-                '400 No Search Terms Provided',
-                QueryBase.instrument_help_block_message()
-            )
+        return InstrumentTermSearch.search_for_instrument(search_term)

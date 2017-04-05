@@ -5,7 +5,6 @@ from cherrypy import tools, HTTPError
 from peewee import Expression, OP
 from metadata.rest.transaction_queries.query_base import QueryBase
 from metadata.orm import Transactions
-from metadata.orm.base import db_connection_decorator
 
 
 class TransactionSearch(QueryBase):
@@ -28,10 +27,12 @@ class TransactionSearch(QueryBase):
                 where_clause &= Transactions().where_clause({'instrument': value})
                 continue
             if term in ['start', 'start_time']:
-                where_clause &= Transactions().where_clause({'updated': value, 'updated_operator': 'gte'})
+                where_clause &= Transactions().where_clause(
+                    {'updated': value, 'updated_operator': 'gte'})
                 continue
             if term in ['end', 'end_time']:
-                where_clause &= Transactions().where_clause({'updated': value, 'updated_operator': 'lte'})
+                where_clause &= Transactions().where_clause(
+                    {'updated': value, 'updated_operator': 'lte'})
                 continue
             if term in ['user', 'user_id', 'person', 'person_id', 'submitter', 'submitter_id'] and value != '-1':
                 where_clause &= Transactions().where_clause({'submitter': value})
@@ -48,7 +49,6 @@ class TransactionSearch(QueryBase):
     # pylint: disable=invalid-name
     @staticmethod
     @tools.json_out()
-    @db_connection_decorator
     def GET(option='details', **kwargs):
         """Return transactions for the search params."""
         option = 'details' if option not in ['list', 'details'] else option

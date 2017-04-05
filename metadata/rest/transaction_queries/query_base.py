@@ -12,11 +12,14 @@ class QueryBase(object):
 
     @staticmethod
     def _get_transaction_key_values(transaction_id):
+        where_clause = TransactionKeyValue().where_clause(
+            {'transaction_id': transaction_id}
+        )
         tkv_list = (TransactionKeyValue
                     .select(Keys.key, Values.value)
                     .join(Keys, on=(Keys.id == TransactionKeyValue.key))
                     .join(Values, on=(Values.id == TransactionKeyValue.value))
-                    .where(TransactionKeyValue.transaction == transaction_id)
+                    .where(where_clause)
                     .order_by(TransactionKeyValue.key)
                     .dicts())
 
@@ -24,9 +27,10 @@ class QueryBase(object):
 
     @staticmethod
     def _get_file_list(transaction_id):
+        where_clause = Files().where_clause({'transaction_id': transaction_id})
         files_list = (Files
                       .select()
-                      .where(Files.transaction == transaction_id)
+                      .where(where_clause)
                       .order_by(Files.subdir, Files.name))
 
         return {f.id: f.to_hash() for f in files_list}
@@ -111,12 +115,15 @@ class QueryBase(object):
                     'submitter').get('_id')
                 transaction['groups']['instrument_id'] = metadata.get(
                     'instrument').get('_id')
+                transaction['files'] = metadata.get(
+                    'files')
             else:
-                transaction['groups']['proposal_id'] = entry.get('proposal_id')
+                transaction['groups']['proposal_id'] = metadata.get('proposal')
                 transaction['groups'][
-                    'submitter_id'] = entry.get('submitter_id')
+                    'submitter_id'] = metadata.get('submitter')
                 transaction['groups'][
-                    'instrument_id'] = entry.get('instrument_id')
+                    'instrument_id'] = metadata.get('instrument')
+                transaction['files'] = [f for f in metadata.get('files').keys()]
 
             transaction_results['transactions'][trans.id] = transaction
             transaction_results['times'][entry.get('updated')] = trans.id
@@ -182,5 +189,6 @@ class QueryBase(object):
     @staticmethod
     def compose_help_block_message():
         """Assemble a block of relevant help text to be returned with an invalid request."""
-        message = 'You must supply a numeric transaction id (like "/transactioninfo/<transaction_id>")'
+        message = 'You must supply a numeric transaction id '
+        message += '(like "/transactioninfo/<transaction_id>")'
         return message

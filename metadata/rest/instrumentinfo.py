@@ -2,6 +2,7 @@
 """Core interface for the proposalinfo metadata objects to interface with CherryPy."""
 from metadata.rest.instrument_queries.instrument_lookup import InstrumentLookup
 from metadata.rest.instrument_queries.instrument_term_search import InstrumentTermSearch
+from metadata.rest.instrument_queries.instrument_user_search import InstrumentUserSearch
 
 
 # pylint: disable=too-few-public-methods
@@ -14,3 +15,4 @@ class InstrumentInfoAPI(object):
         """Create local objects for subtree items."""
         self.search = InstrumentTermSearch()
         self.by_instrument_id = InstrumentLookup()
+        self.by_user_id = InstrumentUserSearch()
