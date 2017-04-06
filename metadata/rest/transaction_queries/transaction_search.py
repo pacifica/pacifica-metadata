@@ -28,10 +28,12 @@ class TransactionSearch(QueryBase):
                 where_clause &= Transactions().where_clause({'instrument': value})
                 continue
             if term in ['start', 'start_time']:
-                where_clause &= Transactions().where_clause({'updated': value, 'updated_operator': 'gte'})
+                where_clause &= Transactions().where_clause(
+                    {'updated': value, 'updated_operator': 'gte'})
                 continue
             if term in ['end', 'end_time']:
-                where_clause &= Transactions().where_clause({'updated': value, 'updated_operator': 'lte'})
+                where_clause &= Transactions().where_clause(
+                    {'updated': value, 'updated_operator': 'lte'})
                 continue
             if term in ['user', 'user_id', 'person', 'person_id', 'submitter', 'submitter_id'] and value != '-1':
                 where_clause &= Transactions().where_clause({'submitter': value})

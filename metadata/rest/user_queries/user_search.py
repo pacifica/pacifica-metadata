@@ -2,10 +2,10 @@
 import re
 import cherrypy
 from cherrypy import tools
-from peewee import OP, Expression
+from peewee import OP, Expression, fn
 from metadata.orm import Users
-from metadata.orm.base import db_connection_decorator
 from metadata.rest.user_queries.query_base import QueryBase
+from metadata.orm.base import db_connection_decorator
 
 
 class UserSearch(QueryBase):
@@ -14,14 +14,9 @@ class UserSearch(QueryBase):
     exposed = True
 
     @staticmethod
-    def search_for_user(search_term):
+    def search_for_user(search_term, option):
         """Return a dictionary containing information about a given user."""
         terms = re.findall(r'[^+ ,;]+', search_term)
-        # if len(terms) == 0:
-        #     raise cherrypy.HTTPError(
-        #         '400 Invalid Request Options',
-        #         QueryBase.compose_help_block_message()
-        #     )
         keys = ['first_name', 'last_name', 'network_id', 'email_address', 'id']
         where_clause = Expression(1, OP.EQ, 1)
         for user_term in terms:
@@ -32,9 +27,13 @@ class UserSearch(QueryBase):
                     if re.match('[0-9]+', user_term):
                         where_clause_part |= Expression(
                             Users.id, OP.EQ, user_term)
+                        where_clause_part |= (
+                            fn.TO_CHAR(Users.id, '999999').contains(user_term)
+                        )
                 else:
-                    where_clause_part |= Expression(
-                        getattr(Users, k), OP.ILIKE, '%{0}%'.format(user_term))
+                    where_clause_part |= (
+                        getattr(Users, k).contains(user_term)
+                    )
             where_clause &= (where_clause_part)
         objs = Users.select().where(where_clause)
         # print objs.sql()
@@ -43,19 +42,19 @@ class UserSearch(QueryBase):
             message += '\' and \''.join(terms) + '\''
             raise cherrypy.HTTPError('404 No Valid Users Located', message)
 
-        return [QueryBase.format_user_block(obj) for obj in objs]
+        return [QueryBase.format_user_block(obj, option) for obj in objs]
 
     # CherryPy requires these named methods.
-    # pylint: disable=invalid-name
+    # pylint: disable=invalid-name, unused-argument
     @staticmethod
     @tools.json_out()
     @cherrypy.expose
     @db_connection_decorator
-    def GET(search_term=None):
+    def GET(search_term=None, option=None, **kwargs):
         """Return the requested user information for a given set of search criteria."""
         if search_term is not None and len(search_term) > 0:
             cherrypy.log.error('search request')
-            return UserSearch.search_for_user(search_term)
+            return UserSearch.search_for_user(search_term, option)
         else:
             cherrypy.log.error('invalid request')
             raise cherrypy.HTTPError(

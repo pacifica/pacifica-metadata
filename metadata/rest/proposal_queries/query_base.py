@@ -33,10 +33,13 @@ class QueryBase(object):
         currently_active = True if proposal_state == 'active' and (
             _pe.actual_end_date is None or _pe.actual_end_date >= now) else False
         proposal_state = 'invalid' if _pe.actual_start_date is None and _pe.actual_end_date is None else proposal_state
-
+        title = _pe.title if _pe.title is not None else '<Title Unspecified>'
+        year = _pe.actual_end_date.year if _pe.actual_end_date is not None else 'Unknown'
         return_block = {
             'id': _pe.id,
-            'title': _pe.title,
+            'title': title,
+            'category': year,
+            'display_name': '[Proposal {0}]: {1}'.format(_pe.id, _pe.title),
             'currently_active': currently_active,
             'state': proposal_state,
             'start_date': _pe.actual_start_date.strftime('%Y-%m-%d') if _pe.actual_start_date is not None else '---',

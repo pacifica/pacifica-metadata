@@ -25,11 +25,16 @@ class ProposalTermSearch(QueryBase):
             for k in keys:
                 if k == 'id':
                     if re.match('[0-9]+[a-z]?', term):
-                        where_clause_part |= Expression(
-                            Proposals.id, OP.EQ, term)
+                        where_clause_part |= (
+                            Proposals.id == term
+                        )
+                        where_clause_part |= (
+                            Proposals.id.contains(term)
+                        )
                 else:
-                    where_clause_part |= Expression(
-                        getattr(Proposals, k), OP.ILIKE, '%{0}%'.format(term))
+                    where_clause_part |= (
+                        getattr(Proposals, k).contains(term)
+                    )
             where_clause &= (where_clause_part)
         objs = Proposals.select().where(where_clause).order_by(Proposals.title)
         if len(objs) == 0:

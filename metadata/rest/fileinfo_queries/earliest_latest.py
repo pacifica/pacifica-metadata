@@ -14,21 +14,25 @@ class EarliestLatestFiles(object):
     @staticmethod
     def _get_earliest_latest(item_type, item_list, time_basis):
         accepted_item_types = ['proposal', 'submitter', 'instrument']
-        accepted_time_basis_types = ['submitted', 'modified', 'created']
-        if item_type not in accepted_item_types:
-            raise HTTPError(
-                '400 Invalid Query',
-                '{0} is not an acceptable item_type. Please choose one of: {1}'.format(
-                    item_type, ', '.join(accepted_item_types)
-                )
-            )
-        if time_basis not in accepted_time_basis_types:
-            raise HTTPError(
-                '400 Invalid Query',
-                '{0} is not an acceptable time basis type. Please choose one of: {1}'.format(
-                    time_basis, ', '.join(accepted_time_basis_types)
-                )
-            )
+        accepted_time_basis_types = [
+            'submitted', 'modified', 'created',
+            'submit', 'modified', 'create',
+            'submit_time', 'modified_time', 'create_time',
+            'submitted_date', 'modified_date', 'created_date',
+        ]
+
+        time_basis = time_basis.lower()
+        if item_type not in accepted_item_types or time_basis not in accepted_time_basis_types:
+            raise HTTPError('400 Invalid Query')
+
+        short_time_basis = time_basis[:5]
+
+        time_basis = {
+            'submi': lambda x: 'submitted',
+            'modif': lambda x: 'modified',
+            'creat': lambda x: 'created'
+        }[short_time_basis](short_time_basis)
+
         search_field = getattr(Transactions, '{0}_id'.format(item_type))
         if time_basis == 'submitted':
             query = Transactions().select(
