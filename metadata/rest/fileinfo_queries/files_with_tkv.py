@@ -2,7 +2,6 @@
 from cherrypy import tools
 from peewee import DoesNotExist, fn
 from metadata.orm import Files, TransactionKeyValue, Keys, Values
-from metadata.orm.base import db_connection_decorator
 try:
     from urllib.parse import unquote
 except ImportError:
@@ -35,7 +34,6 @@ class FilesWithTransactionKeyValue(object):
     # pylint: disable=invalid-name
     @staticmethod
     @tools.json_out()
-    @db_connection_decorator
     def GET(key, value):
         """Return file details for the given key/value combo."""
         key = unquote(key)

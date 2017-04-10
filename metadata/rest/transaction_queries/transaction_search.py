@@ -5,7 +5,6 @@ from cherrypy import tools, HTTPError
 from peewee import Expression, OP
 from metadata.rest.transaction_queries.query_base import QueryBase
 from metadata.orm import Transactions
-from metadata.orm.base import db_connection_decorator
 
 
 class TransactionSearch(QueryBase):
@@ -20,7 +19,7 @@ class TransactionSearch(QueryBase):
         where_clause = Expression(1, OP.EQ, 1)
         query = trans.select()
         for term in search_terms:
-            value = str(search_terms[term])
+            value = str(search_terms[term]).replace('+', ' ').replace('-', ' ')
             if term in ['proposal', 'proposal_id'] and value != '-1':
                 where_clause &= Transactions().where_clause({'proposal': value})
                 continue
@@ -35,7 +34,8 @@ class TransactionSearch(QueryBase):
                 where_clause &= Transactions().where_clause(
                     {'updated': value, 'updated_operator': 'lte'})
                 continue
-            if term in ['user', 'user_id', 'person', 'person_id', 'submitter', 'submitter_id'] and value != '-1':
+            if term in ['user', 'user_id', 'person',
+                        'person_id', 'submitter', 'submitter_id'] and value != '-1':
                 where_clause &= Transactions().where_clause({'submitter': value})
                 continue
             if term in ['transaction_id'] and value != '-1':
@@ -50,7 +50,6 @@ class TransactionSearch(QueryBase):
     # pylint: disable=invalid-name
     @staticmethod
     @tools.json_out()
-    @db_connection_decorator
     def GET(option='details', **kwargs):
         """Return transactions for the search params."""
         option = 'details' if option not in ['list', 'details'] else option
@@ -60,9 +59,7 @@ class TransactionSearch(QueryBase):
             'time_frame', 'start_time', 'start', 'end_time', 'end', 'transaction_id',
             'user', 'user_id', 'person', 'person_id', 'submitter', 'submitter_id'
         ]
-
         kwargs = {k: v for (k, v) in kwargs.items() if k in valid_keywords}
-
         if len(kwargs) == 0:
             message = 'Invalid transaction details search request. '
             cherrypy.log.error(message)

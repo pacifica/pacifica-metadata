@@ -4,7 +4,6 @@ from cherrypy import tools
 from metadata.orm import Instruments, ProposalParticipant, ProposalInstrument
 from metadata.rest.instrument_queries.query_base import QueryBase
 from metadata.rest.userinfo import user_exists_decorator
-from metadata.orm.base import db_connection_decorator
 
 
 class InstrumentUserSearch(QueryBase):
@@ -38,7 +37,6 @@ class InstrumentUserSearch(QueryBase):
     # pylint: disable=duplicate-code
     @staticmethod
     @tools.json_out()
-    @db_connection_decorator
     def GET(user_id):
         """Return a set of instruments for a given user."""
         inst_list = InstrumentUserSearch.get_instruments_for_user(user_id=user_id)
