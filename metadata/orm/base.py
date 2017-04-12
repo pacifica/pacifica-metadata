@@ -16,7 +16,7 @@ and deleting these objects in from a web service layer.
 """
 from os import getenv
 from json import dumps, loads
-import cherrypy
+from cherrypy import engine
 
 from peewee import PostgresqlDatabase as pgdb
 from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause
@@ -38,19 +38,17 @@ ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 
 def connect():
     """Connect to the database on request init."""
-    cherrypy.log('connect')
     DB.connect()
 
 
 def close():
     """Close the database connection when the request is done."""
-    cherrypy.log('close')
     if not DB.is_closed():
         DB.close()
 
 
-cherrypy.engine.subscribe('before_request', connect)
-cherrypy.engine.subscribe('after_request', close)
+engine.subscribe('before_request', connect)
+engine.subscribe('after_request', close)
 
 
 class PacificaModel(Model):

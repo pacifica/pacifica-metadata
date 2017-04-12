@@ -33,6 +33,16 @@ class TestSummaryInfoAPI(CPCommonTest):
         )
         self.assertEqual(req.status_code, 200)
 
+    def test_detailed_list(self):
+        """Test the detailed_transaction_list function."""
+        transaction_list = [67, 68]
+        header_list = {'Content-Type': 'application/json'}
+        url = '{0}/summaryinfo/transaction_details'.format(self.url)
+        req = requests.post(
+            url=url, json=transaction_list, headers=header_list
+        )
+        self.assertEqual(req.status_code, 200)
+
     def test_bad_summaryinfo_api(self):
         """Test the POST method with bad data."""
         # test for modified time with bad time basis and times
