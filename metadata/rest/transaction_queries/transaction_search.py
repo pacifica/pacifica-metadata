@@ -19,7 +19,7 @@ class TransactionSearch(QueryBase):
         where_clause = Expression(1, OP.EQ, 1)
         query = trans.select()
         for term in search_terms:
-            value = str(search_terms[term]).replace('+', ' ').replace('-', ' ')
+            value = str(search_terms[term]).replace('+', ' ')
             if term in ['proposal', 'proposal_id'] and value != '-1':
                 where_clause &= Transactions().where_clause({'proposal': value})
                 continue
