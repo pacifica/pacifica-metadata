@@ -67,19 +67,8 @@ class SummarizeByDate(QueryBase):
         raw_results = {d['id']: d for d in query.dicts()}
 
         for item in query:
-            # handle day graph calculations
-            current_day = SummarizeByDate._utc_to_local(raw_results[item.id]['filedate']).date()
-            # current_day_js_timestamp = int(time.mktime(current_day.timetuple()) * 1000)
-            current_day = current_day.strftime('%Y-%m-%d')
-            if current_day not in results['day_graph']['by_date']['file_count'].keys():
-                results['day_graph']['by_date']['file_count'][current_day] = 0
-            if current_day not in results['day_graph']['by_date']['file_volume'].keys():
-                results['day_graph']['by_date']['file_volume'][current_day] = 0
-            if current_day not in results['day_graph']['by_date']['transactions'].keys():
-                results['day_graph']['by_date']['transactions'][current_day] = []
-            results['day_graph']['by_date']['file_count'][current_day] += 1
-            results['day_graph']['by_date']['file_volume'][current_day] += item.size
-            results['day_graph']['by_date']['transactions'][current_day].append(item.transaction.id)
+            results['day_graph']['by_date'] = SummarizeByDate._summarize_by_date(
+                results['day_graph']['by_date'], item, raw_results)
 
             results['transaction_info']['transaction'][item.transaction.id] = item.transaction.to_hash()
             results['transaction_info']['proposal'][item.transaction.proposal.id] = item.transaction.proposal.title
@@ -87,23 +76,44 @@ class SummarizeByDate(QueryBase):
             results['transaction_info']['user'][item.transaction.submitter.id] = '{0} {1}'.format(
                 item.transaction.submitter.first_name, item.transaction.submitter.last_name)
 
-            # handle summary calculation updates
-            if item.transaction.proposal.id not in results['summary_totals']['upload_stats']['proposal'].keys():
-                results['summary_totals']['upload_stats']['proposal'][item.transaction.proposal.id] = 0
-            results['summary_totals']['upload_stats']['proposal'][item.transaction.proposal.id] += 1
-
-            if item.transaction.instrument.id not in results['summary_totals']['upload_stats']['instrument'].keys():
-                results['summary_totals']['upload_stats']['instrument'][item.transaction.instrument.id] = 0
-            results['summary_totals']['upload_stats']['instrument'][item.transaction.instrument.id] += 1
-
-            if item.transaction.submitter.id not in results['summary_totals']['upload_stats']['user'].keys():
-                results['summary_totals']['upload_stats']['user'][item.transaction.submitter.id] = 0
-            results['summary_totals']['upload_stats']['user'][item.transaction.submitter.id] += 1
+            SummarizeByDate._summarize_upload_stats(results['summary_totals']['upload_stats'], item)
 
             results['summary_totals']['total_file_count'] += 1
             results['summary_totals']['total_size_bytes'] += item.size
 
         return results
+
+    @staticmethod
+    def _summarize_upload_stats(upload_stats_block, item):
+        if item.transaction.proposal.id not in upload_stats_block['proposal'].keys():
+            upload_stats_block['proposal'][item.transaction.proposal.id] = 0
+        upload_stats_block['proposal'][item.transaction.proposal.id] += 1
+
+        if item.transaction.instrument.id not in upload_stats_block['instrument'].keys():
+            upload_stats_block['instrument'][item.transaction.instrument.id] = 0
+        upload_stats_block['instrument'][item.transaction.instrument.id] += 1
+
+        if item.transaction.submitter.id not in upload_stats_block['user'].keys():
+            upload_stats_block['user'][item.transaction.submitter.id] = 0
+        upload_stats_block['user'][item.transaction.submitter.id] += 1
+
+        return upload_stats_block
+
+    @staticmethod
+    def _summarize_by_date(summary_block, item, raw_results):
+        current_day = SummarizeByDate._utc_to_local(raw_results[item.id]['filedate']).date()
+        current_day = current_day.strftime('%Y-%m-%d')
+        if current_day not in summary_block['file_count'].keys():
+            summary_block['file_count'][current_day] = 0
+        if current_day not in summary_block['file_volume'].keys():
+            summary_block['file_volume'][current_day] = 0
+        if current_day not in summary_block['transactions'].keys():
+            summary_block['transactions'][current_day] = []
+        summary_block['file_count'][current_day] += 1
+        summary_block['file_volume'][current_day] += item.size
+        summary_block['transactions'][current_day].append(item.transaction.id)
+
+        return summary_block
 
     @staticmethod
     def _local_to_utc(local_datetime_obj):
@@ -116,6 +126,19 @@ class SummarizeByDate(QueryBase):
         local_datetime_obj = pytz.timezone('UTC').localize(utc_datetime_obj)
         local_datetime_obj.astimezone(QueryBase.local_timezone)
         return local_datetime_obj
+
+    @staticmethod
+    def _canonicalize_dates(start_date, end_date):
+        try:
+            start_date_obj = SummarizeByDate._local_to_utc(parse(start_date))
+        except ValueError:
+            start_date_obj = SummarizeByDate._local_to_utc(parse('1997-01-01'))
+        try:
+            end_date_obj = SummarizeByDate._local_to_utc(parse(end_date))
+        except ValueError:
+            end_date_obj = SummarizeByDate._local_to_utc(datetime.datetime.now())
+
+        return start_date_obj.isoformat(), end_date_obj.isoformat()
 
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
@@ -135,20 +158,8 @@ class SummarizeByDate(QueryBase):
             object_type = 'instrument'
 
         # check start/end date validity
-        try:
-            start_date_object = SummarizeByDate._local_to_utc(parse(start_date))
-        except ValueError:
-            start_date_object = SummarizeByDate._local_to_utc(parse('1997-01-01'))
-        try:
-            end_date_object = SummarizeByDate._local_to_utc(parse(end_date))
-        except ValueError:
-            end_date_object = SummarizeByDate._local_to_utc(datetime.datetime.now())
-
-        # parse object list
-        object_id_list = request.json
+        start_date, end_date = SummarizeByDate._canonicalize_dates(start_date, end_date)
 
         return SummarizeByDate._search_by_dates(
-            object_type, object_id_list,
-            start_date_object.isoformat(' '),
-            end_date_object.isoformat(' '),
-            time_basis)
+            object_type, request.json,
+            start_date, end_date, time_basis)
