@@ -5,6 +5,7 @@ from cherrypy import tools, HTTPError
 from peewee import Expression, OP
 from metadata.rest.transaction_queries.query_base import QueryBase
 from metadata.orm import Transactions
+from metadata.orm.base import db_connection_decorator
 
 
 class TransactionSearch(QueryBase):
@@ -50,6 +51,7 @@ class TransactionSearch(QueryBase):
     # pylint: disable=invalid-name
     @staticmethod
     @tools.json_out()
+    @db_connection_decorator
     def GET(option='details', **kwargs):
         """Return transactions for the search params."""
         option = 'details' if option not in ['list', 'details'] else option

@@ -3,6 +3,7 @@ from cherrypy import tools, request
 from peewee import fn
 from metadata.rest.reporting_queries.query_base import QueryBase
 from metadata.orm import Transactions, Files
+from metadata.orm.base import db_connection_decorator
 
 
 # pylint: disable=too-few-public-methods
@@ -46,6 +47,7 @@ class DetailedTransactionList(QueryBase):
     @staticmethod
     @tools.json_in()
     @tools.json_out()
+    @db_connection_decorator
     def POST():
         """Return summaryinfo for a given object type/id/time range combo."""
         # parse object list

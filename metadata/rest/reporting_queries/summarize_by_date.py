@@ -6,6 +6,7 @@ from cherrypy import tools, request
 from peewee import Expression, OP
 from metadata.rest.reporting_queries.query_base import QueryBase
 from metadata.orm import Transactions, Files
+from metadata.orm.base import db_connection_decorator
 
 
 # pylint: disable=too-few-public-methods
@@ -121,6 +122,7 @@ class SummarizeByDate(QueryBase):
     @staticmethod
     @tools.json_in()
     @tools.json_out()
+    @db_connection_decorator
     def POST(time_basis=None, object_type=None, start_date=None, end_date=None):
         """Return summaryinfo for a given object type/id/time range combo."""
         # check time basis validity

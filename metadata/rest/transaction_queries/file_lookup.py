@@ -3,6 +3,7 @@ import re
 import cherrypy
 from cherrypy import tools, HTTPError
 from metadata.rest.transaction_queries.query_base import QueryBase
+from metadata.orm.base import db_connection_decorator
 
 
 class FileLookup(QueryBase):
@@ -14,6 +15,7 @@ class FileLookup(QueryBase):
     # pylint: disable=invalid-name
     @staticmethod
     @tools.json_out()
+    @db_connection_decorator
     def GET(transaction_id=None):
         """Return File entries from the specified transaction entity."""
         if transaction_id is not None and re.match('[0-9]+', transaction_id):

@@ -16,8 +16,6 @@ and deleting these objects in from a web service layer.
 """
 from os import getenv
 from json import dumps, loads
-from cherrypy import engine
-
 from peewee import PostgresqlDatabase as pgdb
 from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause
 
@@ -36,32 +34,19 @@ DEFAULT_ELASTIC_ENDPOINT = getenv(
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 
 
-def connect():
-    """Connect to the database on request init."""
-    DB.connect()
-
-
-def close():
-    """Close the database connection when the request is done."""
-    if not DB.is_closed():
-        DB.close()
-
-
-engine.subscribe('before_request', connect)
-engine.subscribe('after_request', close)
-# def db_connection_decorator(func):
-#     """Wrap a method with a database connect and close."""
-#     def func_wrapper(*args, **kwargs):
-#         """Wrapper to connect and close connection to database."""
-#         if DB.is_closed():
-#             DB.connect()
-#         try:
-#             with DB.transaction():
-#                 ret = func(*args, **kwargs)
-#         finally:
-#             DB.close()
-#         return ret
-#     return func_wrapper
+def db_connection_decorator(func):
+    """Wrap a method with a database connect and close."""
+    def func_wrapper(*args, **kwargs):
+        """Wrapper to connect and close connection to database."""
+        if DB.is_closed():
+            DB.connect()
+        try:
+            with DB.transaction():
+                ret = func(*args, **kwargs)
+        finally:
+            DB.close()
+        return ret
+    return func_wrapper
 
 
 class PacificaModel(Model):

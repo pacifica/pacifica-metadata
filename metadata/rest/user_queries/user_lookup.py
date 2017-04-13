@@ -5,6 +5,7 @@ from cherrypy import tools
 from peewee import DoesNotExist
 from metadata.orm import Users
 from metadata.rest.user_queries.query_base import QueryBase
+from metadata.orm.base import db_connection_decorator
 
 
 class UserLookup(QueryBase):
@@ -33,6 +34,7 @@ class UserLookup(QueryBase):
     @staticmethod
     @tools.json_out()
     @cherrypy.expose
+    @db_connection_decorator
     def GET(person_id=None, option=None):
         """Return the requested user information for a specific person_id."""
         if person_id is not None and re.match('[0-9]+', person_id):

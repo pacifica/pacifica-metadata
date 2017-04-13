@@ -1,7 +1,7 @@
 #!/usr/bin/python
 """Test the ORM interface SummaryInfoAPI."""
-import requests
 import datetime
+import requests
 from metadata.rest.test import CPCommonTest
 
 
