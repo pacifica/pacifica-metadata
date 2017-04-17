@@ -36,8 +36,8 @@ class EarliestLatestFiles(object):
         search_field = getattr(Transactions, '{0}_id'.format(item_type))
         if time_basis == 'submitted':
             query = Transactions().select(
-                fn.Min(Transactions().updated).alias('earliest'),
-                fn.Max(Transactions().updated).alias('latest'),
+                fn.Min(Transactions.updated).alias('earliest'),
+                fn.Max(Transactions.updated).alias('latest'),
             )
         if time_basis in ['modified', 'created']:
             time_basis_field = getattr(Files, '{0}time'.format(time_basis[:1]))
@@ -46,7 +46,8 @@ class EarliestLatestFiles(object):
                 fn.Max(time_basis_field).alias('latest'),
             ).join(Transactions)
 
-        row = query.where(search_field << item_list).get()
+        query = query.where(search_field << item_list)
+        row = query.get()
         if row.earliest is None or row.latest is None:
             message = ''
             raise HTTPError('404 Not Found', message)

@@ -40,6 +40,8 @@ class QueryBase(object):
                 'email_address': user_hash.get('email_address'),
                 'last_updated': user_hash.get('updated'),
                 'display_name': display_name,
+                'simple_display_name': '{0} {1}'.format(
+                    user_hash.get('first_name'), user_hash.get('last_name')),
                 'emsl_employee': False,
                 'proposals': clean_proposals
             }
