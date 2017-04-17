@@ -3,6 +3,7 @@
 from os import getenv
 from time import sleep
 from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import ElasticsearchException
 
 ELASTIC_CONNECT_ATTEMPTS = 40
 ELASTIC_WAIT = 3
@@ -25,8 +26,7 @@ def try_es_connect(attempts=0):
     try:
         cli = Elasticsearch([ELASTIC_ENDPOINT])
         cli.info()
-    # pylint: disable=broad-except
-    except Exception as ex:
+    except ElasticsearchException as ex:
         if attempts < ELASTIC_CONNECT_ATTEMPTS:
             sleep(ELASTIC_WAIT)
             attempts += 1

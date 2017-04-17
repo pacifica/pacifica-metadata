@@ -6,7 +6,7 @@ httpretty
 nose
 peewee
 psycopg2
-pylint
+pylint==1.6.3
 pytest
 python-dateutil
 radon
