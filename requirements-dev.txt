@@ -1,7 +1,6 @@
 cherrypy
 codeclimate-test-reporter
 coverage
-docker-py
 elasticsearch
 httpretty
 nose
