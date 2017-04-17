@@ -137,6 +137,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
     # CherryPy requires these named methods
     # Add HEAD (basically Get without returning body
     # pylint: disable=invalid-name
+
     @db_connection_decorator
     def GET(self, **kwargs):
         """

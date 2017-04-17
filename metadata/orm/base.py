@@ -16,7 +16,6 @@ and deleting these objects in from a web service layer.
 """
 from os import getenv
 from json import dumps, loads
-
 from peewee import PostgresqlDatabase as pgdb
 from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause
 
@@ -39,7 +38,8 @@ def db_connection_decorator(func):
     """Wrap a method with a database connect and close."""
     def func_wrapper(*args, **kwargs):
         """Wrapper to connect and close connection to database."""
-        DB.connect()
+        if DB.is_closed():
+            DB.connect()
         try:
             with DB.transaction():
                 ret = func(*args, **kwargs)

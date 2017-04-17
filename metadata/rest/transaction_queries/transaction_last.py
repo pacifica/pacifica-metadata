@@ -5,9 +5,8 @@ from metadata.rest.transaction_queries.query_base import QueryBase
 from metadata.orm import Transactions
 from metadata.orm.base import db_connection_decorator
 
+
 # pylint: disable=too-few-public-methods
-
-
 class TransactionLast(QueryBase):
     """Retrieves details for an individual transaction."""
 
