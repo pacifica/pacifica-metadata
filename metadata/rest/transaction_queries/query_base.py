@@ -67,8 +67,6 @@ class QueryBase(object):
 
     @staticmethod
     def _get_transaction_info_blocks(transaction_list, option='details'):
-        # if not isinstance(transaction_list, list):
-        #     transaction_list = [transaction_list]
         transactions = (Transactions
                         .select(
                             Transactions,
@@ -85,7 +83,6 @@ class QueryBase(object):
             kv_list = {}
             entry = trans.to_hash()
             metadata = QueryBase._get_base_transaction_metadata(entry, option)
-            # entry['key_values'] = kv_list[trans.id] if trans.id in kv_list.keys() else {}
             transaction = {}
             kvs = QueryBase._get_transaction_key_values(trans.id)
             for key_value in kvs:
@@ -94,37 +91,12 @@ class QueryBase(object):
                 trans.file_size_bytes) if trans.file_size_bytes is not None else 0
             transaction['file_count'] = int(
                 trans.file_count) if trans.file_count is not None else 0
-            transaction['groups'] = kv_list
             transaction['status'] = {
                 'trans_id': trans.id, 'person_id': trans.submitter_id,
                 'step': 6, 'message': 'verified', 'status': 'success'
             }
-            if option == 'details':
-                transaction['groups']['proposal_name'] = metadata.get(
-                    'proposal').get('title')
-                transaction['groups']['submitter_name'] = '{0} {1}'.format(
-                    metadata.get('submitter').get('first_name'),
-                    metadata.get('submitter').get('last_name')
-                )
-                transaction['groups']['instrument_name'] = metadata.get(
-                    'instrument').get('display_name')
-
-                transaction['groups']['proposal_id'] = metadata.get(
-                    'proposal').get('_id')
-                transaction['groups']['submitter_id'] = metadata.get(
-                    'submitter').get('_id')
-                transaction['groups']['instrument_id'] = metadata.get(
-                    'instrument').get('_id')
-                transaction['files'] = metadata.get(
-                    'files')
-            else:
-                transaction['groups']['proposal_id'] = metadata.get('proposal')
-                transaction['groups'][
-                    'submitter_id'] = metadata.get('submitter')
-                transaction['groups'][
-                    'instrument_id'] = metadata.get('instrument')
-                transaction['files'] = [f for f in metadata.get('files').keys()]
-
+            transaction['metadata'] = metadata
+            transaction['kv_pairs'] = kv_list
             transaction_results['transactions'][trans.id] = transaction
             transaction_results['times'][entry.get('updated')] = trans.id
 
@@ -161,30 +133,37 @@ class QueryBase(object):
     @staticmethod
     def _get_base_transaction_metadata(transaction_entry, option=None):
         transaction_id = transaction_entry.get('_id')
+        files = QueryBase._get_file_list(transaction_id)
+        base_metadata = {
+            'transaction_id': transaction_id,
+            'submitter_id': transaction_entry.get('submitter'),
+            'proposal_id': transaction_entry.get('proposal'),
+            'instrument_id': transaction_entry.get('instrument'),
+            'file_ids': files.keys()
+        }
         if option == 'details':
             submitter = Users.get(
-                Users.id == transaction_entry.get('submitter')).to_hash()
+                Users.id == transaction_entry.get('submitter')
+            ).to_hash()
             proposal = Proposals.get(
-                Proposals.id == transaction_entry.get('proposal')).to_hash()
-            proposal.pop('abstract')
+                Proposals.id == transaction_entry.get('proposal')
+            ).to_hash()
             instrument = Instruments.get(
-                Instruments.id == transaction_entry.get('instrument')).to_hash()
-        else:
-            submitter = transaction_entry.get('submitter')
-            proposal = transaction_entry.get('proposal')
-            instrument = transaction_entry.get('instrument')
+                Instruments.id == transaction_entry.get('instrument')
+            ).to_hash()
+            details_metadata = {
+                'submitter_name': '{0} {1}'.format(
+                    submitter.get('first_name'),
+                    submitter.get('last_name')
+                ),
+                'proposal_name': proposal.get('title'),
+                'instrument_name': instrument.get('display_name'),
+                'files': QueryBase._get_file_key_values(files)
+            }
 
-        files = QueryBase._get_file_list(transaction_id)
+            base_metadata.update(details_metadata)
 
-        files = QueryBase._get_file_key_values(files)
-
-        return {
-            'submitter': submitter,
-            'instrument': instrument,
-            'proposal': proposal,
-            'files': files,
-            'id': transaction_id
-        }
+        return base_metadata
 
     @staticmethod
     def compose_help_block_message():
