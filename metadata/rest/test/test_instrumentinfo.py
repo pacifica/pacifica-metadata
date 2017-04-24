@@ -68,6 +68,12 @@ class TestObjectInfoAPI(CPCommonTest):
         req = self._search_for_instrument(search_term)
         self.assertEqual(req.status_code, 404)
 
+        # test instrument search with empty search term
+        search_term = ''
+        req = self._search_for_instrument(search_term)
+        self.assertEqual(req.status_code, 200)
+        self.assertEqual(req.text, '[]')
+
         # test get instruments for user
         user_id = 11
         req = self._get_instruments_for_user(user_id=user_id)
