@@ -57,8 +57,8 @@ class Files(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(Files, Files).elastic_mapping_builder(obj)
-        obj['transaction_id'] = obj['size'] = \
-            {'type': 'integer'}
+        obj['transaction_id'] = {'type': 'integer'}
+        obj['size'] = {'type': 'long'}
         obj['ctime'] = obj['mtime'] = \
             {'type': 'date', 'format': 'yyyy-mm-dd\'T\'HH:mm:ss'}
         obj['name'] = obj['subdir'] = obj['mimetype'] = \
