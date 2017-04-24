@@ -16,6 +16,8 @@ class InstrumentTermSearch(QueryBase):
     def search_for_instrument(search_term):
         """Return a dictionary containing information about a given instrument."""
         terms = re.findall(r'[^+ ,;]+', search_term)
+        if not terms:
+            return []
         keys = ['display_name', 'name_short', 'name', 'id']
         where_clause = Expression(1, OP.EQ, 1)
         for item in terms:
