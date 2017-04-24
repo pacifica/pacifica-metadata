@@ -22,7 +22,7 @@ class TestTransactionInfoAPI(CPCommonTest):
             '{0}/transactioninfo/by_id/{1}'.format(self.url, transaction_id))
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
-        self.assertEqual(str(req_json['id']), str(transaction_id))
+        self.assertEqual(str(req_json['_id']), str(transaction_id))
 
         # test search with multiple return
         search_terms = {
