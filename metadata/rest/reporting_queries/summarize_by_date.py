@@ -111,7 +111,8 @@ class SummarizeByDate(QueryBase):
             summary_block['transactions'][current_day] = []
         summary_block['file_count'][current_day] += 1
         summary_block['file_volume'][current_day] += item.size
-        summary_block['transactions'][current_day].append(item.transaction.id)
+        if item.transaction_id not in summary_block['transactions'][current_day]:
+            summary_block['transactions'][current_day].append(item.transaction.id)
 
         return summary_block
 
@@ -149,9 +150,11 @@ class SummarizeByDate(QueryBase):
     def POST(time_basis=None, object_type=None, start_date=None, end_date=None):
         """Return summaryinfo for a given object type/id/time range combo."""
         # check time basis validity
-        time_basis_list = ['created', 'modified', 'submitted']
-        if time_basis not in time_basis_list or time_basis is None:
+        time_basis_list = {'creat': 'created', 'modif': 'modified', 'submi': 'submitted'}
+        if time_basis[0:5] not in time_basis_list.keys() or time_basis is None:
             time_basis = 'modified'
+        else:
+            time_basis = time_basis_list[time_basis[0:5]]
 
         object_type_list = ['instrument', 'proposal', 'user']
         if object_type not in object_type_list or object_type is None:

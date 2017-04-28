@@ -40,3 +40,4 @@ class UserInfoAPI(object):
         # self.search = ProposalTermSearch()
         self.search = UserSearch()
         self.by_id = UserLookup()
+        self.by_user_id = UserLookup()
