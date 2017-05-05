@@ -31,7 +31,7 @@ class QueryBase(object):
         files_list = (Files
                       .select()
                       .where(where_clause)
-                      .order_by(Files.subdir, Files.name))
+                      .order_by(Files.name))
 
         return {f.id: f.to_hash() for f in files_list}
 
