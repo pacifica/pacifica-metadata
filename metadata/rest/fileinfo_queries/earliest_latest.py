@@ -1,26 +1,29 @@
 """CherryPy File Details object class."""
 from cherrypy import tools, HTTPError, request
 from metadata.orm import Files, Transactions
+from metadata.rest.reporting_queries.query_base import QueryBase
 from peewee import fn
 
 # pylint: disable=too-few-public-methods
 
 
-class EarliestLatestFiles(object):
+class EarliestLatestFiles(QueryBase):
     """Retrieves earliest and latest file entries for a set of metadata specifiers."""
 
     exposed = True
 
     @staticmethod
     def _get_earliest_latest(item_type, item_list, time_basis):
-        accepted_item_types = ['proposal', 'submitter', 'instrument']
+        accepted_item_types = list(
+            set(QueryBase.object_type_mappings.keys() + QueryBase.object_type_mappings.values())
+        )
         accepted_time_basis_types = [
             'submitted', 'modified', 'created',
             'submit', 'modified', 'create',
             'submit_time', 'modified_time', 'create_time',
             'submitted_date', 'modified_date', 'created_date',
         ]
-
+        item_type = QueryBase.object_type_mappings.get(item_type)
         time_basis = time_basis.lower()
         if item_type not in accepted_item_types or time_basis not in accepted_time_basis_types:
             raise HTTPError('400 Invalid Query')
