@@ -18,7 +18,9 @@ class FileDetailsLookup(object):
         return [{
             'file_id': f.id,
             'relative_local_path': '{0}/{1}'.format(f.subdir.rstrip('/'), f.name),
-            'file_size_bytes': f.size
+            'file_size_bytes': f.size,
+            'hashtype': f.hashtype,
+            'hashsum': f.hashsum
         } for f in query]
 
     # Cherrypy requires these named methods.
