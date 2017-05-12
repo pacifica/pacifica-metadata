@@ -61,7 +61,7 @@ To create an object issue an HTTP PUT request.
 
 Then put the file.
 ```
-curl -X PUT -T foo.json http://localhost:8080/users
+curl -X PUT -T foo.json http://localhost:8121/users
 ```
 
 ### Get the Object
@@ -69,7 +69,7 @@ curl -X PUT -T foo.json http://localhost:8080/users
 To get the object just created issue an HTTP GET request.
 
 ```
-curl http://localhost:8080/users?_id=127
+curl http://localhost:8121/users?_id=127
 {
   "updated": 1459204793,
   "last_name": "Doe",
@@ -84,7 +84,7 @@ curl http://localhost:8080/users?_id=127
 Optionally query on any other parts of the object.
 
 ```
-curl http://localhost:8080/users?last_name=Doe&first_name=John
+curl http://localhost:8121/users?last_name=Doe&first_name=John
 {
   "updated": 1459204793,
   "last_name": "Doe",
