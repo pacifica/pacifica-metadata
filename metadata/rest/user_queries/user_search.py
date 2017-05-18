@@ -35,7 +35,7 @@ class UserSearch(QueryBase):
                         getattr(Users, k).contains(user_term)
                     )
             where_clause &= (where_clause_part)
-        objs = Users.select().where(where_clause)
+        objs = Users.select().where(where_clause).order_by(Users.last_name, Users.first_name)
         # print objs.sql()
         if len(objs) == 0:
             message = "No user entries were retrieved using the terms: '"
