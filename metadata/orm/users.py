@@ -59,11 +59,11 @@ class Users(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(Users, self).from_hash(obj)
-        self._set_only_if('_id', obj, 'id', int(obj['_id']))
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
         for attr in ['first_name', 'middle_initial', 'last_name', 'email_address']:
-            self._set_only_if(attr, obj, attr, unicode_type(obj[attr]))
-        self._set_only_if('network_id', obj, 'network_id', unicode_type(obj[attr]).lower())
-        self._set_only_if('encoding', obj, 'encoding', str(obj['encoding']))
+            self._set_only_if(attr, obj, attr, lambda: unicode_type(obj[attr]))
+        self._set_only_if('network_id', obj, 'network_id', lambda: unicode_type(obj['network_id']).lower())
+        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
 
     @staticmethod
     def _where_clause_if_available(where_clause, key, kwargs):
@@ -73,7 +73,6 @@ class Users(CherryPyAPI):
             if '{0}_operator'.format(key) in kwargs:
                 key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
             where_clause &= Expression(getattr(Users, key), key_oper, kwargs[key])
-        return where_clause
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
@@ -82,7 +81,7 @@ class Users(CherryPyAPI):
             where_clause &= Expression(Users.id, OP.EQ, kwargs['_id'])
         if 'network_id' in kwargs:
             kwargs['network_id'] = kwargs['network_id'].lower()
-        for key in ['first_name', 'middle_initial', 'last_name',
+        for key in ['first_name', 'middle_initial', 'last_name', 'network_id',
                     'encoding', 'email_address']:
-            where_clause = self._where_clause_if_available(where_clause, key, kwargs)
+            self._where_clause_if_available(where_clause, key, kwargs)
         return where_clause
