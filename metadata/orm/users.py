@@ -61,7 +61,9 @@ class Users(CherryPyAPI):
         super(Users, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
         for attr in ['first_name', 'middle_initial', 'last_name', 'email_address']:
+            # pylint: disable=cell-var-from-loop
             self._set_only_if(attr, obj, attr, lambda: unicode_type(obj[attr]))
+            # pylint: enable=cell-var-from-loop
         self._set_only_if('network_id', obj, 'network_id', lambda: unicode_type(obj['network_id']).lower())
         self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
 
