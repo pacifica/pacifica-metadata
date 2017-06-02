@@ -63,22 +63,32 @@ class Users(CherryPyAPI):
             # pylint: disable=invalid-name
             self.id = int(obj['_id'])
             # pylint: enable=invalid-name
-        for attr in ['first_name', 'middle_initial', 'last_name', 'network_id', 'email_address']:
+        for attr in ['first_name', 'middle_initial', 'last_name', 'email_address']:
             if attr in obj:
                 setattr(self, attr, unicode_type(obj[attr]))
+        if 'network_id' in obj:
+            self.network_id = unicode_type(obj[attr]).lower()
         if 'encoding' in obj:
             self.encoding = str(obj['encoding'])
+
+    @staticmethod
+    def _where_clause_if_available(where_clause, key, kwargs):
+        """Return the where clause if the key is in the kwargs."""
+        if key in kwargs:
+            key_oper = OP.EQ
+            if '{0}_operator'.format(key) in kwargs:
+                key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
+            where_clause &= Expression(getattr(Users, key), key_oper, kwargs[key])
+        return where_clause
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
         where_clause = super(Users, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Users.id, OP.EQ, kwargs['_id'])
-        for key in ['first_name', 'middle_initial', 'last_name', 'network_id',
+        if 'network_id' in kwargs:
+            kwargs['network_id'] = kwargs['network_id'].lower()
+        for key in ['first_name', 'middle_initial', 'last_name',
                     'encoding', 'email_address']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Users, key), key_oper, kwargs[key])
+            where_clause = self._where_clause_if_available(where_clause, key, kwargs)
         return where_clause
