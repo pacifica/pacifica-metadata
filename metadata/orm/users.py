@@ -59,26 +59,31 @@ class Users(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(Users, self).from_hash(obj)
-        if '_id' in obj:
-            # pylint: disable=invalid-name
-            self.id = int(obj['_id'])
-            # pylint: enable=invalid-name
-        for attr in ['first_name', 'middle_initial', 'last_name', 'network_id', 'email_address']:
-            if attr in obj:
-                setattr(self, attr, unicode_type(obj[attr]))
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
+        for attr in ['first_name', 'middle_initial', 'last_name', 'email_address']:
+            # pylint: disable=cell-var-from-loop
+            self._set_only_if(attr, obj, attr, lambda: unicode_type(obj[attr]))
+            # pylint: enable=cell-var-from-loop
+        self._set_only_if('network_id', obj, 'network_id', lambda: unicode_type(obj['network_id']).lower())
+        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
+
+    @staticmethod
+    def _where_clause_if_available(where_clause, key, kwargs):
+        """Return the where clause if the key is in the kwargs."""
+        if key in kwargs:
+            key_oper = OP.EQ
+            if '{0}_operator'.format(key) in kwargs:
+                key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
+            where_clause &= Expression(getattr(Users, key), key_oper, kwargs[key])
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
         where_clause = super(Users, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Users.id, OP.EQ, kwargs['_id'])
+        if 'network_id' in kwargs:
+            kwargs['network_id'] = kwargs['network_id'].lower()
         for key in ['first_name', 'middle_initial', 'last_name', 'network_id',
                     'encoding', 'email_address']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Users, key), key_oper, kwargs[key])
+            self._where_clause_if_available(where_clause, key, kwargs)
         return where_clause
