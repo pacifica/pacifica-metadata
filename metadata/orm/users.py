@@ -59,17 +59,11 @@ class Users(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(Users, self).from_hash(obj)
-        if '_id' in obj:
-            # pylint: disable=invalid-name
-            self.id = int(obj['_id'])
-            # pylint: enable=invalid-name
+        self._set_only_if('_id', obj, 'id', int(obj['_id']))
         for attr in ['first_name', 'middle_initial', 'last_name', 'email_address']:
-            if attr in obj:
-                setattr(self, attr, unicode_type(obj[attr]))
-        if 'network_id' in obj:
-            self.network_id = unicode_type(obj[attr]).lower()
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+            self._set_only_if(attr, obj, attr, unicode_type(obj[attr]))
+        self._set_only_if('network_id', obj, 'network_id', unicode_type(obj[attr]).lower())
+        self._set_only_if('encoding', obj, 'encoding', str(obj['encoding']))
 
     @staticmethod
     def _where_clause_if_available(where_clause, key, kwargs):
