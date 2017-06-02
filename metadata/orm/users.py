@@ -75,6 +75,7 @@ class Users(CherryPyAPI):
             if '{0}_operator'.format(key) in kwargs:
                 key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
             where_clause &= Expression(getattr(Users, key), key_oper, kwargs[key])
+        return where_clause
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
@@ -85,5 +86,5 @@ class Users(CherryPyAPI):
             kwargs['network_id'] = kwargs['network_id'].lower()
         for key in ['first_name', 'middle_initial', 'last_name', 'network_id',
                     'encoding', 'email_address']:
-            self._where_clause_if_available(where_clause, key, kwargs)
+            where_clause &= self._where_clause_if_available(where_clause, key, kwargs)
         return where_clause
