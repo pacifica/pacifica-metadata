@@ -86,5 +86,5 @@ class Users(CherryPyAPI):
             kwargs['network_id'] = kwargs['network_id'].lower()
         for key in ['first_name', 'middle_initial', 'last_name', 'network_id',
                     'encoding', 'email_address']:
-            where_clause = self._where_clause_if_available(where_clause, key, kwargs)
+            where_clause &= self._where_clause_if_available(where_clause, key, kwargs)
         return where_clause
