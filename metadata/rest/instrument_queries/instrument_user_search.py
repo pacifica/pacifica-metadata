@@ -1,5 +1,4 @@
 """CherryPy Status Metadata object class."""
-import cherrypy
 from cherrypy import tools
 from metadata.orm import Instruments, ProposalParticipant, ProposalInstrument
 from metadata.rest.instrument_queries.query_base import QueryBase
@@ -26,12 +25,8 @@ class InstrumentUserSearch(QueryBase):
                                  on=(ProposalInstrument.instrument == Instruments.id))
                            .join(ProposalParticipant,
                                  on=(ProposalParticipant.proposal == ProposalInstrument.proposal))
-                           .where(where_clause))
-        if len(instrument_list) == 0:
-            message = 'No instrument entries were retrieved the requested user'
-            raise cherrypy.HTTPError(
-                '404 No Valid Instruments Located', message)
-
+                           .where(where_clause)
+                           .order_by(Instruments.display_name))
         return [QueryBase.format_instrument_block(obj) for obj in instrument_list]
 
     # pylint: disable=invalid-name
