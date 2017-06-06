@@ -64,11 +64,8 @@ class SummarizeByDate(QueryBase):
             }
         }
 
-        raw_results = {d['id']: d for d in query.dicts()}
-
         for item in query:
-            results['day_graph']['by_date'] = SummarizeByDate._summarize_by_date(
-                results['day_graph']['by_date'], item, raw_results)
+            SummarizeByDate._summarize_by_date(results['day_graph']['by_date'], item)
 
             results['transaction_info']['transaction'][item.transaction.id] = item.transaction.to_hash()
             results['transaction_info']['proposal'][item.transaction.proposal.id] = item.transaction.proposal.title
@@ -97,11 +94,9 @@ class SummarizeByDate(QueryBase):
             upload_stats_block['user'][item.transaction.submitter.id] = 0
         upload_stats_block['user'][item.transaction.submitter.id] += 1
 
-        return upload_stats_block
-
     @staticmethod
-    def _summarize_by_date(summary_block, item, raw_results):
-        current_day = SummarizeByDate._utc_to_local(raw_results[item.id]['filedate']).date()
+    def _summarize_by_date(summary_block, item):
+        current_day = SummarizeByDate._utc_to_local(item.mtime).date()
         current_day = current_day.strftime('%Y-%m-%d')
         if current_day not in summary_block['file_count'].keys():
             summary_block['file_count'][current_day] = 0
@@ -114,7 +109,7 @@ class SummarizeByDate(QueryBase):
         if item.transaction_id not in summary_block['transactions'][current_day]:
             summary_block['transactions'][current_day].append(item.transaction.id)
 
-        return summary_block
+        # return summary_block
 
     @staticmethod
     def _local_to_utc(local_datetime_obj):
