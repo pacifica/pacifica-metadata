@@ -77,4 +77,5 @@ class TestObjectInfoAPI(CPCommonTest):
         # test get instruments for user
         user_id = 11
         req = self._get_instruments_for_user(user_id=user_id)
-        self.assertEqual(req.status_code, 404)
+        self.assertEqual(req.status_code, 200)
+        self.assertEqual(req.text, '[]')
