@@ -25,10 +25,10 @@ class Instruments(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    display_name = CharField(default='')
-    name = CharField(default='')
-    name_short = CharField(default='')
-    active = BooleanField(default=False)
+    display_name = CharField(default='', index=True)
+    name = CharField(default='', index=True)
+    name_short = CharField(default='', index=True)
+    active = BooleanField(default=False, index=True)
     encoding = CharField(default='UTF8')
 
     @staticmethod
