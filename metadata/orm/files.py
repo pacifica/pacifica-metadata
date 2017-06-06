@@ -42,14 +42,14 @@ class Files(CherryPyAPI):
         +-------------+-------------------------------------------+
     """
 
-    name = CharField(default='')
-    subdir = CharField(default='')
-    ctime = ExtendDateTimeField(default=datetime_now_nomicrosecond)
-    mtime = ExtendDateTimeField(default=datetime_now_nomicrosecond)
-    hashsum = CharField(default='')
-    hashtype = CharField(default='sha1')
+    name = CharField(default='', index=True)
+    subdir = CharField(default='', index=True)
+    ctime = ExtendDateTimeField(default=datetime_now_nomicrosecond, index=True)
+    mtime = ExtendDateTimeField(default=datetime_now_nomicrosecond, index=True)
+    hashsum = CharField(default='', index=True)
+    hashtype = CharField(default='sha1', index=True)
     size = BigIntegerField(default=-1)
-    transaction = ForeignKeyField(Transactions, related_name='files')
+    transaction = ForeignKeyField(Transactions, related_name='files', index=True)
     mimetype = CharField(default='')
     encoding = CharField(default='UTF8')
 

@@ -27,11 +27,11 @@ class Users(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    first_name = CharField(default='')
-    middle_initial = CharField(default='')
-    last_name = CharField(default='')
-    network_id = CharField(null=True)
-    email_address = CharField(default='')
+    first_name = CharField(default='', index=True)
+    middle_initial = CharField(default='', index=True)
+    last_name = CharField(default='', index=True)
+    network_id = CharField(null=True, index=True)
+    email_address = CharField(default='', index=True)
     encoding = CharField(default='UTF8')
 
     @staticmethod

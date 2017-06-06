@@ -19,7 +19,7 @@ class Keys(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    key = CharField(default='')
+    key = CharField(default='', index=True)
     encoding = CharField(default='UTF8')
 
     @staticmethod
