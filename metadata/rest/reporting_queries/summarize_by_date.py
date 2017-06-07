@@ -74,20 +74,23 @@ class SummarizeByDate(QueryBase):
             results['day_graph']['by_date'] = SummarizeByDate._summarize_by_date(
                 results['day_graph']['by_date'], item)
 
-            # results['transaction_info']['transaction'][item.transaction.id] = item.transaction.to_hash()
-            if t_info['proposal'] not in results['transaction_info']['proposal'].keys():
-                results['transaction_info']['proposal'][t_info['proposal']] = item.transaction.proposal.title
-            if t_info['instrument'] not in results['transaction_info']['instrument'].keys():
-                results['transaction_info']['instrument'][t_info['instrument']] = item.transaction.instrument.name
-            if t_info['submitter'] not in results['transaction_info']['user'].keys():
-                results['transaction_info']['user'][t_info['submitter']] = '{0} {1}'.format(
-                    item.transaction.submitter.first_name, item.transaction.submitter.last_name)
+            SummarizeByDate._update_transaction_info_block(results['transaction_info'], item, t_info)
 
             SummarizeByDate._summarize_upload_stats(results['summary_totals']['upload_stats'], t_info)
 
             results['summary_totals']['total_file_count'] += 1
             results['summary_totals']['total_size_bytes'] += item.size
         return results
+
+    @staticmethod
+    def _update_transaction_info_block(info_block, item, t_info):
+        if t_info['proposal'] not in info_block['proposal'].keys():
+            info_block['proposal'][t_info['proposal']] = item.transaction.proposal.title
+        if t_info['instrument'] not in info_block['instrument'].keys():
+            info_block['instrument'][t_info['instrument']] = item.transaction.instrument.name
+        if t_info['submitter'] not in info_block['user'].keys():
+            info_block['user'][t_info['submitter']] = '{0} {1}'.format(
+                item.transaction.submitter.first_name, item.transaction.submitter.last_name)
 
     @staticmethod
     def _summarize_upload_stats(upload_stats_block, transaction_info):
