@@ -28,7 +28,7 @@ class UserSearch(QueryBase):
                         where_clause_part |= Expression(
                             Users.id, OP.EQ, user_term)
                         where_clause_part |= (
-                            fn.TO_CHAR(Users.id, '999999').contains(user_term)
+                            fn.TO_CHAR(Users.id, '99999999999').contains(user_term)
                         )
                 else:
                     where_clause_part |= (
