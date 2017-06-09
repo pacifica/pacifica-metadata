@@ -31,7 +31,7 @@ class InstrumentTermSearch(QueryBase):
                             field == int(term)
                         )
                         where_clause_part |= (
-                            fn.TO_CHAR(field, '999999').contains(term)
+                            fn.TO_CHAR(field, '99999999999').contains(term)
                         )
                 else:
                     where_clause_part |= (
