@@ -71,8 +71,7 @@ class SummarizeByDate(QueryBase):
                 transaction_cache[item.transaction_id] = t_info
             else:
                 t_info = transaction_cache[item.transaction_id]
-            results['day_graph']['by_date'] = SummarizeByDate._summarize_by_date(
-                results['day_graph']['by_date'], item)
+            SummarizeByDate._summarize_by_date(results['day_graph']['by_date'], item)
 
             SummarizeByDate._update_transaction_info_block(results['transaction_info'], item, t_info)
 
