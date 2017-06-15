@@ -71,8 +71,7 @@ class SummarizeByDate(QueryBase):
                 transaction_cache[item.transaction_id] = t_info
             else:
                 t_info = transaction_cache[item.transaction_id]
-            results['day_graph']['by_date'] = SummarizeByDate._summarize_by_date(
-                results['day_graph']['by_date'], item)
+            SummarizeByDate._summarize_by_date(results['day_graph']['by_date'], item)
 
             SummarizeByDate._update_transaction_info_block(results['transaction_info'], item, t_info)
 
@@ -121,7 +120,7 @@ class SummarizeByDate(QueryBase):
         if item.transaction_id not in summary_block['transactions'][current_day]:
             summary_block['transactions'][current_day].append(item.transaction.id)
 
-        return summary_block
+        # return summary_block
 
     @staticmethod
     def _local_to_utc(local_datetime_obj):
