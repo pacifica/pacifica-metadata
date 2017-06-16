@@ -28,16 +28,16 @@ class UserSearch(QueryBase):
                         where_clause_part |= Expression(
                             Users.id, OP.EQ, user_term)
                         where_clause_part |= (
-                            fn.TO_CHAR(Users.id, '999999').contains(user_term)
+                            fn.TO_CHAR(Users.id, '99999999999').contains(user_term)
                         )
                 else:
                     where_clause_part |= (
                         getattr(Users, k).contains(user_term)
                     )
             where_clause &= (where_clause_part)
-        objs = Users.select().where(where_clause)
+        objs = Users.select().where(where_clause).order_by(Users.last_name, Users.first_name)
         # print objs.sql()
-        if len(objs) == 0:
+        if not objs:
             message = "No user entries were retrieved using the terms: '"
             message += '\' and \''.join(terms) + '\''
             raise cherrypy.HTTPError('404 No Valid Users Located', message)
@@ -52,7 +52,7 @@ class UserSearch(QueryBase):
     @db_connection_decorator
     def GET(search_term=None, option=None, **kwargs):
         """Return the requested user information for a given set of search criteria."""
-        if search_term is not None and len(search_term) > 0:
+        if search_term is not None and search_term:
             cherrypy.log.error('search request')
             return UserSearch.search_for_user(search_term, option)
         else:

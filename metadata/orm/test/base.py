@@ -106,5 +106,5 @@ class TestBase(TestCase):
             for (key, val) in obj_hash.iteritems():
                 chk_obj = self.base_where_clause_search(obj, {key: val})[0]
                 chk_obj_hash = chk_obj.to_hash()
-                for key in obj_hash.keys():
-                    self.assertEqual(chk_obj_hash[key], obj_hash[key])
+                for chkkey in obj_hash.keys():
+                    self.assertEqual(chk_obj_hash[chkkey], obj_hash[chkkey])

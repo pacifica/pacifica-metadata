@@ -37,7 +37,7 @@ class ProposalTermSearch(QueryBase):
                     )
             where_clause &= (where_clause_part)
         objs = Proposals.select().where(where_clause).order_by(Proposals.title)
-        if len(objs) == 0:
+        if not objs:
             message = 'No proposal entries were retrieved using the terms: \''
             message += '\' and \''.join(terms) + '\''
             raise cherrypy.HTTPError('404 No Valid Proposals Located', message)

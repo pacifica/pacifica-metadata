@@ -31,7 +31,7 @@ class InstrumentTermSearch(QueryBase):
                             field == int(term)
                         )
                         where_clause_part |= (
-                            fn.TO_CHAR(field, '999999').contains(term)
+                            fn.TO_CHAR(field, '99999999999').contains(term)
                         )
                 else:
                     where_clause_part |= (
@@ -39,7 +39,7 @@ class InstrumentTermSearch(QueryBase):
             where_clause &= (where_clause_part)
 
         objs = Instruments.select().where(where_clause).order_by(Instruments.name_short)
-        if len(objs) == 0:
+        if not objs:
             message = 'No instrument entries were retrieved using the terms: \''
             message += '\' and \''.join(terms) + '\''
             raise cherrypy.HTTPError('404 No Valid Instruments Located', message)

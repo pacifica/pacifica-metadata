@@ -104,7 +104,7 @@ class QueryBase(object):
 
     @staticmethod
     def _get_file_key_values(file_entries):
-        if len(file_entries) == 0:
+        if not file_entries:
             return file_entries
         file_keys = FileKeyValue.select(
             Keys.key, Values.value, FileKeyValue.file

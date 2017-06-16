@@ -1,10 +1,9 @@
 #!/usr/bin/python
 """Test the REST interfaces."""
 import logging
-from subprocess import call
 import cherrypy
 from cherrypy.test import helper
-from metadata.orm import create_tables
+from metadata.orm import create_tables, ORM_OBJECTS, DB
 from metadata.rest.root import Root
 from test_files.loadit import main
 from MetadataServer import error_page_default
@@ -24,12 +23,14 @@ class CPCommonTest(helper.CPWebCase):
     def teardown_class(cls):
         """Tear down the services required by the server."""
         super(CPCommonTest, cls).teardown_class()
-        call(['docker-compose', 'down'])
+        for dbobj in ORM_OBJECTS:
+            dbobj.drop_table(cascade=True)
+        if not DB.is_closed():
+            DB.close()
 
     @classmethod
     def setup_class(cls):
         """Setup the services required by the server."""
-        call(['docker-compose', 'up', '-d', 'elasticmaster', 'metadatadb'])
         super(CPCommonTest, cls).setup_class()
         main()
 

@@ -64,44 +64,50 @@ class SummarizeByDate(QueryBase):
             }
         }
 
-        raw_results = {d['id']: d for d in query.dicts()}
+        transaction_cache = {}
+        for item in query.iterator():
+            if item.transaction_id not in transaction_cache:
+                t_info = item.transaction.to_hash()
+                transaction_cache[item.transaction_id] = t_info
+            else:
+                t_info = transaction_cache[item.transaction_id]
+            SummarizeByDate._summarize_by_date(results['day_graph']['by_date'], item)
 
-        for item in query:
-            results['day_graph']['by_date'] = SummarizeByDate._summarize_by_date(
-                results['day_graph']['by_date'], item, raw_results)
+            SummarizeByDate._update_transaction_info_block(results['transaction_info'], item, t_info)
 
-            results['transaction_info']['transaction'][item.transaction.id] = item.transaction.to_hash()
-            results['transaction_info']['proposal'][item.transaction.proposal.id] = item.transaction.proposal.title
-            results['transaction_info']['instrument'][item.transaction.instrument.id] = item.transaction.instrument.name
-            results['transaction_info']['user'][item.transaction.submitter.id] = '{0} {1}'.format(
-                item.transaction.submitter.first_name, item.transaction.submitter.last_name)
-
-            SummarizeByDate._summarize_upload_stats(results['summary_totals']['upload_stats'], item)
+            SummarizeByDate._summarize_upload_stats(results['summary_totals']['upload_stats'], t_info)
 
             results['summary_totals']['total_file_count'] += 1
             results['summary_totals']['total_size_bytes'] += item.size
-
         return results
 
     @staticmethod
-    def _summarize_upload_stats(upload_stats_block, item):
-        if item.transaction.proposal.id not in upload_stats_block['proposal'].keys():
-            upload_stats_block['proposal'][item.transaction.proposal.id] = 0
-        upload_stats_block['proposal'][item.transaction.proposal.id] += 1
-
-        if item.transaction.instrument.id not in upload_stats_block['instrument'].keys():
-            upload_stats_block['instrument'][item.transaction.instrument.id] = 0
-        upload_stats_block['instrument'][item.transaction.instrument.id] += 1
-
-        if item.transaction.submitter.id not in upload_stats_block['user'].keys():
-            upload_stats_block['user'][item.transaction.submitter.id] = 0
-        upload_stats_block['user'][item.transaction.submitter.id] += 1
-
-        return upload_stats_block
+    def _update_transaction_info_block(info_block, item, t_info):
+        if t_info['proposal'] not in info_block['proposal'].keys():
+            info_block['proposal'][t_info['proposal']] = item.transaction.proposal.title
+        if t_info['instrument'] not in info_block['instrument'].keys():
+            info_block['instrument'][t_info['instrument']] = item.transaction.instrument.name
+        if t_info['submitter'] not in info_block['user'].keys():
+            info_block['user'][t_info['submitter']] = '{0} {1}'.format(
+                item.transaction.submitter.first_name, item.transaction.submitter.last_name)
 
     @staticmethod
-    def _summarize_by_date(summary_block, item, raw_results):
-        current_day = SummarizeByDate._utc_to_local(raw_results[item.id]['filedate']).date()
+    def _summarize_upload_stats(upload_stats_block, transaction_info):
+        if transaction_info['proposal'] not in upload_stats_block['proposal'].keys():
+            upload_stats_block['proposal'][transaction_info['proposal']] = 0
+        upload_stats_block['proposal'][transaction_info['proposal']] += 1
+
+        if transaction_info['instrument'] not in upload_stats_block['instrument'].keys():
+            upload_stats_block['instrument'][transaction_info['instrument']] = 0
+        upload_stats_block['instrument'][transaction_info['instrument']] += 1
+
+        if transaction_info['submitter'] not in upload_stats_block['user'].keys():
+            upload_stats_block['user'][transaction_info['submitter']] = 0
+        upload_stats_block['user'][transaction_info['submitter']] += 1
+
+    @staticmethod
+    def _summarize_by_date(summary_block, item):
+        current_day = SummarizeByDate._utc_to_local(item.filedate).date()
         current_day = current_day.strftime('%Y-%m-%d')
         if current_day not in summary_block['file_count'].keys():
             summary_block['file_count'][current_day] = 0
@@ -114,7 +120,7 @@ class SummarizeByDate(QueryBase):
         if item.transaction_id not in summary_block['transactions'][current_day]:
             summary_block['transactions'][current_day].append(item.transaction.id)
 
-        return summary_block
+        # return summary_block
 
     @staticmethod
     def _local_to_utc(local_datetime_obj):

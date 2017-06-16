@@ -1,8 +1,5 @@
 #!/bin/bash -xe
-sudo rm -f /usr/local/bin/docker-compose
-sudo curl -L -o /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)
-sudo chmod +x /usr/local/bin/docker-compose
-
+psql -c 'create database pacifica_metadata;' -U postgres
 case "$TRAVIS_PYTHON_VERSION" in
   pypy) export PYPY_VERSION="pypy-2.6.1" ;;
   pypy3) export PYPY_VERSION="pypy3-2.4.0" ;;
@@ -21,6 +18,5 @@ fi
 if [ "$RUN_LINTS" = "true" ]; then
   pip install pre-commit
 else
-  pip install codeclimate-test-reporter coverage nose pytest
+  pip install pytest
 fi
-sudo service postgresql stop
