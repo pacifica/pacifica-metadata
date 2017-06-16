@@ -76,7 +76,6 @@ def try_db_connect(attempts=0):
     try:
         DB.connect()
     except OperationalError:
-        print OperationalError
         if attempts < DATABASE_CONNECT_ATTEMPTS:
             sleep(DATABASE_WAIT)
             attempts += 1
