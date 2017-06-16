@@ -3,7 +3,7 @@
 import logging
 import cherrypy
 from cherrypy.test import helper
-from metadata.orm import create_tables, ORM_OBJECTS
+from metadata.orm import create_tables, ORM_OBJECTS, DB
 from metadata.rest.root import Root
 from test_files.loadit import main
 from MetadataServer import error_page_default
@@ -24,7 +24,9 @@ class CPCommonTest(helper.CPWebCase):
         """Tear down the services required by the server."""
         super(CPCommonTest, cls).teardown_class()
         for dbobj in ORM_OBJECTS:
-            dbobj.drop_table()
+            dbobj.drop_table(cascade=True)
+        if not DB.is_closed():
+            DB.close()
 
     @classmethod
     def setup_class(cls):

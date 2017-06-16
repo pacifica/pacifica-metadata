@@ -62,7 +62,7 @@ class TransactionSearch(QueryBase):
             'user', 'user_id', 'person', 'person_id', 'submitter', 'submitter_id'
         ]
         kwargs = {k: v for (k, v) in kwargs.items() if k in valid_keywords}
-        if len(kwargs) == 0:
+        if not kwargs:
             message = 'Invalid transaction details search request. '
             cherrypy.log.error(message)
             raise HTTPError(
