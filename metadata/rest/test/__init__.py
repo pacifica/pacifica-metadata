@@ -1,7 +1,6 @@
 #!/usr/bin/python
 """Test the REST interfaces."""
 import logging
-from subprocess import call
 import cherrypy
 from cherrypy.test import helper
 from metadata.orm import create_tables
@@ -24,12 +23,10 @@ class CPCommonTest(helper.CPWebCase):
     def teardown_class(cls):
         """Tear down the services required by the server."""
         super(CPCommonTest, cls).teardown_class()
-        call(['docker-compose', 'down'])
 
     @classmethod
     def setup_class(cls):
         """Setup the services required by the server."""
-        call(['docker-compose', 'up', '-d', 'elasticmaster', 'metadatadb'])
         super(CPCommonTest, cls).setup_class()
         main()
 
