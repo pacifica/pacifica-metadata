@@ -38,7 +38,7 @@ class ProposalUserSearch(QueryBase):
         """Return a set of proposals for a given user."""
         if user_id is not None:
             user_ids = re.findall('[0-9]+', user_id)
-            if len(user_ids) > 0:
+            if user_ids:
                 user_id = int(user_ids.pop(0))
             else:
                 raise HTTPError(

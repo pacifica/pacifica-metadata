@@ -57,13 +57,13 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
     def _insert(self, insert_json):
         """Insert object from json into the system."""
         objs = loads(insert_json)
-        if not len(objs):
+        if not objs:
             # nothing to upload
             return
         if isinstance(objs, dict):
             objs = [objs]
         bad_id_list = self.__class__.check_for_key_existence(objs)
-        if len(bad_id_list) > 0:
+        if bad_id_list:
             message = 'Could not insert records [ID: {0}] due to duplicated ID values. '.format(','.join(bad_id_list))
             message += 'Remove or change the duplicated id values'
             raise HTTPError(400, message)
@@ -112,7 +112,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             fix_dates(obj, new_obj, es_obj)
             clean_objs['es_objs'].append(es_obj)
 
-            if len(model_info.get('related_models')) > 0:
+            if model_info.get('related_models'):
                 rel_models = model_info.get('related_models')
                 for (name, info) in rel_models.items():
                     # replace incoming lookup table names with

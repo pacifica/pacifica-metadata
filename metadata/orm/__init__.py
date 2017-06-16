@@ -75,13 +75,13 @@ def try_db_connect(attempts=0):
     """Recursively try to connect to the database."""
     try:
         DB.connect()
-    except OperationalError as ex:
+    except OperationalError:
         if attempts < DATABASE_CONNECT_ATTEMPTS:
             sleep(DATABASE_WAIT)
             attempts += 1
             try_db_connect(attempts)
         else:
-            raise ex
+            raise OperationalError
 
 
 def create_tables():
