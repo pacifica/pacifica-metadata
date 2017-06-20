@@ -9,6 +9,7 @@ from metadata.rest.fileinfo import FileInfoAPI
 from metadata.rest.ingest import IngestAPI
 from metadata.rest.instrumentinfo import InstrumentInfoAPI
 from metadata.rest.summaryinfo import SummaryInfoAPI
+from metadata.rest.tkvinfo import TkvInfoAPI
 
 
 # pylint: disable=too-few-public-methods
@@ -29,6 +30,7 @@ class Root(object):
     instrumentinfo = InstrumentInfoAPI()
     summaryinfo = SummaryInfoAPI()
     ingest = IngestAPI()
+    tkvinfo = TkvInfoAPI()
 # pylint: enable=too-few-public-methods
 
 
