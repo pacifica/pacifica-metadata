@@ -25,6 +25,7 @@ class UploadEntries(object):
             if value_diff:
                 value_cache = UploadEntries._update_id_list(item.values(), Values, 'value')
             UploadEntries._insert_kv_mappings(item, key_cache, value_cache, transaction)
+        return {'status': 'success'}
 
     # we should have a complete set of key ids now
     @staticmethod
@@ -40,12 +41,13 @@ class UploadEntries(object):
 
     @staticmethod
     def _update_id_list(names_list, model_obj, field_name):
+        names_list = map(str, names_list)
         local_list = UploadEntries._get_id_list(names_list, model_obj, field_name)
         diff = list(set(names_list) - set(local_list.keys()))
         insert_list = [{field_name: str(o)} for o in diff]
         if insert_list:
             with DB.atomic():
-                # print insert_list
+                print insert_list
                 model_obj.insert_many(insert_list).execute()
 
         return UploadEntries._get_id_list(names_list, model_obj, field_name)
@@ -62,9 +64,13 @@ class UploadEntries(object):
                 'value': value_id,
                 'transaction': transaction_id
             })
+        insert_count = 0
         if insert_list:
             with DB.atomic():
-                TransactionKeyValue.insert_many(insert_list).execute()
+                for item in insert_list:
+                    TransactionKeyValue.get_or_create(**item)
+                    insert_count += 1
+        return insert_count
 
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name

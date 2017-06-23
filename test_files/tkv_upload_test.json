@@ -1,0 +1,36 @@
+{
+  "67": {
+    "ncbi_taxonomy_id": 9606,
+    "omics.dms.acquisition_length_min": 120,
+    "omics.dms.acquisition_time": "2017-03-09 10:37:35",
+    "omics.dms.campaign_id": 2690,
+    "omics.dms.campaign_name": "CPTAC",
+    "omics.dms.dataset_id": 568641,
+    "omics.dms.dataset_name": "01CPTAC_CompRef_W_PNNL_20161212_B3S5_f17_6Mar17_Bane_Rep-16-12-04",
+    "omics.dms.dataset_type": "HMS-HCD-HMSn",
+    "omics.dms.experiment_id": 180698,
+    "omics.dms.experiment_name": "01CPTAC_CompRef_W_PNNL_20161212_B3S5_f17",
+    "omics.dms.number_of_scans": 44010,
+    "omics.dms.organism_id": 8,
+    "omics.dms.requested_run_id": 550120,
+    "omics.dms.separation_type": "LC-Formic_100min",
+    "organism_name": "Homo_sapiens"
+  },
+  "68": {
+    "ncbi_taxonomy_id": null,
+    "omics.dms.acquisition_length_min": 4,
+    "omics.dms.acquisition_time": "2017-03-09 14:42:35",
+    "omics.dms.campaign_id": 2006,
+    "omics.dms.campaign_name": "Instrument Calibration",
+    "omics.dms.dataset_id": 568642,
+    "omics.dms.dataset_name": "CCS-Neg-3A-38099-82-0_8Mar17_Beech_Infuse",
+    "omics.dms.dataset_type": "IMS-HMS",
+    "omics.dms.experiment_id": 119894,
+    "omics.dms.experiment_name": "IMS_Metabolomics",
+    "omics.dms.number_of_scans": 208,
+    "omics.dms.organism_id": 16,
+    "omics.dms.requested_run_id": 571828,
+    "omics.dms.separation_type": "Infusion",
+    "organism_name": "None"
+  }
+}

@@ -1,6 +1,5 @@
 """CherryPy File Details object class."""
 from cherrypy import tools
-from peewee import DoesNotExist
 from metadata.orm import TransactionKeyValue, Keys, Values
 from metadata.orm.base import db_connection_decorator
 try:
@@ -19,21 +18,17 @@ class ValuesForKey(object):
     def get_values_for_key(key):
         """Retrieve all the tkv values for a given key item."""
         # get the id of the key to look for
-        try:
-            val_list = (Keys
-                        .select(
-                            Keys.key, Values.value, TransactionKeyValue.transaction
-                        )
-                        .join(TransactionKeyValue,
-                              on=(Keys.id == TransactionKeyValue.key))
-                        .join(Values,
-                              on=(Values.id == TransactionKeyValue.value))
-                        .where(Keys.key == key)).dicts()
+        val_list = (Keys
+                    .select(
+                        Keys.key, Values.value, TransactionKeyValue.transaction
+                    )
+                    .join(TransactionKeyValue,
+                          on=(Keys.id == TransactionKeyValue.key))
+                    .join(Values,
+                          on=(Values.id == TransactionKeyValue.value))
+                    .where(Keys.key == key)).dicts()
 
-            return {str(val.get('value')): int(val['transaction']) for val in val_list}
-        except DoesNotExist:
-            # invalid value
-            return []
+        return {str(val.get('value')): int(val['transaction']) for val in val_list}
 
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
