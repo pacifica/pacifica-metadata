@@ -47,7 +47,6 @@ class UploadEntries(object):
         insert_list = [{field_name: str(o)} for o in diff]
         if insert_list:
             with DB.atomic():
-                print insert_list
                 model_obj.insert_many(insert_list).execute()
 
         return UploadEntries._get_id_list(names_list, model_obj, field_name)
