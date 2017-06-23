@@ -66,8 +66,8 @@ class UploadEntries(object):
         insert_count = 0
         if insert_list:
             with DB.atomic():
-                for item in insert_list:
-                    TransactionKeyValue.get_or_create(**item)
+                for insert_item in insert_list:
+                    TransactionKeyValue.get_or_create(**insert_item)
                     insert_count += 1
         return insert_count
 
