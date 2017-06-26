@@ -34,7 +34,7 @@ class TestSummaryTkvAPI(CPCommonTest):
         # Test value retrieval
         getreq = requests.get(
             url='{0}/tkvinfo/values_for_key/{1}'.format(
-                self.url, 'omics.dms.dataset_id'
+                self.url, 'organism_name'
             ),
             headers=header_list
         )
