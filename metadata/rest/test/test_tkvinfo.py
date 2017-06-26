@@ -24,7 +24,7 @@ class TestSummaryTkvAPI(CPCommonTest):
 
         header_list = {'Content-Type': 'application/json'}
         req = requests.post(
-            url='{0}/tkvinfo/upload_entries'.format(self.url),
+            url='{0}/tkvupload/upload_entries'.format(self.url),
             json=insert_data,
             headers=header_list
         )
