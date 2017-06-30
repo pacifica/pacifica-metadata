@@ -12,7 +12,7 @@ class InstrumentCategories(QueryBase):
     exposed = True
 
     @staticmethod
-    def _derived_instrument_categories():
+    def derived_instrument_categories():
         """Extract category names from the display name strings for EUS Instruments."""
         inst_collection = Instruments.select(
             Instruments.id, Instruments.name, Instruments.display_name
@@ -32,7 +32,9 @@ class InstrumentCategories(QueryBase):
 
         for inst_id in uncategorized_instruments:
             categorized_instruments['Miscellaneous'].append(inst_id)
-        return categorized_instruments
+
+        return [{'category': cat, 'instrument_list': categorized_instruments[cat]} for cat in categorized_instruments]
+        # return categorized_instruments
 
     # CherryPy requires these named methods
     # pylint: disable=invalid-name
@@ -40,4 +42,4 @@ class InstrumentCategories(QueryBase):
     @tools.json_out()
     def GET():
         """CherryPy GET method."""
-        return InstrumentCategories._derived_instrument_categories()
+        return InstrumentCategories.derived_instrument_categories()

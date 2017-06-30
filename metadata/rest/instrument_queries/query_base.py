@@ -9,7 +9,7 @@ class QueryBase(object):
     def format_instrument_block(instrument_entry):
         """Construct a dictionary from a given proposal instance in the metadata stack."""
         _ie = instrument_entry
-        name_components = re.search(r'(.+):\s*(.+)', str(_ie.name))
+        name_components = re.search(r'(.+?):\s*(.+)', str(_ie.name))
         category = name_components.group(1) if name_components is not None else 'Miscellaneous'
         name = name_components.group(2) if name_components is not None else _ie.name
         display_name = '[{0} / ID:{1}] {2}'.format(
