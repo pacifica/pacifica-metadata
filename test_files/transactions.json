@@ -2,7 +2,7 @@
   {
     "_id": 67,
     "instrument": 54,
-    "proposal": "1234a",
+    "proposal": "1234\u00e9",
     "submitter": 10
   },
   {
