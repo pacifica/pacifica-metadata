@@ -21,7 +21,8 @@ class QueryBase(object):
             'display_name': display_name,
             'name': name,
             'name_short': _ie.name_short,
-            'active': _ie.active
+            'active': _ie.active,
+            'last_updated': _ie.updated.isoformat(' ')
         }
 
     @staticmethod
