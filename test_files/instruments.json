@@ -5,5 +5,12 @@
     "display_name": "NMR PROBES: Nittany Liquid Probes",
     "name": "NMR PROBES: Nittany Liquid Probes",
     "name_short": "Nittany Liquid Probes"
+  },
+  {
+    "_id": 104,
+    "active": true,
+    "display_name": "Nanoscale Transmogriscope",
+    "name": "Nanoscale Transmogriscope",
+    "name_short": "Transmogriscope"
   }
 ]
