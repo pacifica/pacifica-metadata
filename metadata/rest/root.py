@@ -10,6 +10,8 @@ from metadata.rest.ingest import IngestAPI
 from metadata.rest.instrumentinfo import InstrumentInfoAPI
 from metadata.rest.summaryinfo import SummaryInfoAPI
 from metadata.rest.migrationinfo import MigrationInfoAPI
+from metadata.rest.tkvinfo import TkvInfoAPI
+from metadata.rest.tkvupload import TkvUploadAPI
 
 
 # pylint: disable=too-few-public-methods
@@ -31,6 +33,8 @@ class Root(object):
     summaryinfo = SummaryInfoAPI()
     ingest = IngestAPI()
     migrate = MigrationInfoAPI()
+    tkvinfo = TkvInfoAPI()
+    tkvupload = TkvUploadAPI()
 # pylint: enable=too-few-public-methods
 
 
