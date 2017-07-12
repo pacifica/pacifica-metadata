@@ -14,15 +14,15 @@ class TestMigrationInfoAPI(CPCommonTest):
         header_list = {'Content-Type': 'application/json'}
 
         # test instrument lookup for migration assistance
-        url = '{0}/migrate/instruments/'
+        url = '{0}/migrate/instruments/'.format(self.url)
         req = requests.get(url=url, headers=header_list)
         self.assertEqual(req.status_code, 200)
 
         # test user lookup for migration assistance
-        url = '{0}/migrate/users/'
+        url = '{0}/migrate/users/'.format(self.url)
         req = requests.get(url=url, headers=header_list)
         self.assertEqual(req.status_code, 200)
 
-        url = '{0}/migrate/proposals/'
+        url = '{0}/migrate/proposals/'.format(self.url)
         req = requests.get(url=url, headers=header_list)
         self.assertEqual(req.status_code, 200)

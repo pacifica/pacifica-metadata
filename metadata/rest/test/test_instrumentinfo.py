@@ -35,7 +35,7 @@ class TestInstrumentInfoAPI(CPCommonTest):
 
     def _get_instrument_categories(self):
         header_list = {'Content-Type': 'application/json'}
-        url = '{0}/instrumentinfo/instrument_categories/'.format(self.url)
+        url = '{0}/instrumentinfo/categories/'.format(self.url)
         req = requests.get(url=url, headers=header_list)
         return req
 
