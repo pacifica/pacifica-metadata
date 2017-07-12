@@ -1,5 +1,6 @@
 """CherryPy Status Metadata proposalinfo base class."""
-import re
+from metadata.orm.instrument_group import InstrumentGroup
+from metadata.orm.groups import Groups
 
 
 class QueryBase(object):
@@ -7,17 +8,24 @@ class QueryBase(object):
 
     @staticmethod
     def format_instrument_block(instrument_entry):
-        """Construct a dictionary from a given proposal instance in the metadata stack."""
+        """Construct a dictionary from a given instrument instance in the metadata stack."""
         _ie = instrument_entry
-        name_components = re.search(r'(.+):\s*(.+)', str(_ie.name))
-        category = name_components.group(1) if name_components is not None else 'Miscellaneous'
-        name = name_components.group(2) if name_components is not None else _ie.name
+        g_names = Groups.select(
+            Groups.name
+        ).join(
+            InstrumentGroup
+        ).where(
+            InstrumentGroup.instrument_id == _ie.id
+        )
+        category = g_names[0].name if g_names else 'Miscellaneous'
+        name = _ie.name
         display_name = '[{0} / ID:{1}] {2}'.format(
             category, _ie.id, name
         )
         return {
             'id': _ie.id,
             'category': category,
+            'groups': [g.name for g in g_names],
             'display_name': display_name,
             'name': name,
             'name_short': _ie.name_short,
