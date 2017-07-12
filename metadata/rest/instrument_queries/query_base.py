@@ -8,7 +8,7 @@ class QueryBase(object):
 
     @staticmethod
     def format_instrument_block(instrument_entry):
-        """Construct a dictionary from a given proposal instance in the metadata stack."""
+        """Construct a dictionary from a given instrument instance in the metadata stack."""
         _ie = instrument_entry
         g_names = Groups.select(
             Groups.name
