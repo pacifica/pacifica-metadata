@@ -2,13 +2,19 @@
   {
     "_id": 67,
     "instrument": 54,
-    "proposal": "1234\u00e9",
+    "proposal": "1234a",
     "submitter": 10
   },
   {
     "_id": 68,
     "instrument": 54,
     "proposal": "1237",
+    "submitter": 10
+  },
+  {
+    "_id": 68,
+    "instrument": 54,
+    "proposal": "1236\u00e9",
     "submitter": 10
   }
 ]
