@@ -7,18 +7,24 @@ from metadata.elastic import ELASTIC_ENDPOINT, ELASTIC_INDEX
 class ElasticAPI(object):
     """Elastic search conversion and interface methods."""
 
+    es_kwargs = {
+        'sniff_on_start': True,
+        'sniff_on_connection_fail': True,
+        'sniffer_timeout': 60
+    }
+
     @classmethod
     def elastic_delete(cls, obj):
         """Delete the object for the class in elastic search."""
         class_name = obj.__class__.__name__
         obj_id = obj.id
-        esclient = Elasticsearch([ELASTIC_ENDPOINT])
+        esclient = Elasticsearch([ELASTIC_ENDPOINT], **cls.es_kwargs)
         esclient.delete(ELASTIC_INDEX, class_name, obj_id)
 
     @classmethod
     def elastic_upload(cls, objs):
         """Upload the object for the class to elastic search."""
-        esclient = Elasticsearch([ELASTIC_ENDPOINT])
+        esclient = Elasticsearch([ELASTIC_ENDPOINT], **cls.es_kwargs)
         class_name = cls.__name__
         clean_oper = []
         for obj in objs:
