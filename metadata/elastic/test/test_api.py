@@ -5,6 +5,7 @@ from json import dumps, loads
 import httpretty
 from metadata.orm.utils import unicode_type
 from metadata.elastic.orm import ElasticAPI
+from metadata.elastic.test import ES_CLUSTER_BODY
 
 
 class TestElasticAPI(TestCase):
@@ -35,6 +36,9 @@ class TestElasticAPI(TestCase):
                 }
             ]
         }
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
+                               content_type='application/json')
         httpretty.register_uri(httpretty.HEAD, url, status=404)
         httpretty.register_uri(httpretty.POST, 'http://127.0.0.1:9200/_bulk',
                                body=dumps(response_body),
@@ -51,6 +55,9 @@ class TestElasticAPI(TestCase):
     @httpretty.activate
     def test_failed_upload(self):
         """Test the upload class method failed upload."""
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
+                               content_type='application/json')
         obj_hash = {
             '_id': 127,
             u'foo': u'bar'
@@ -75,6 +82,9 @@ class TestElasticAPI(TestCase):
         response_body = {
             'status': 'deleted!'
         }
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
+                               content_type='application/json')
         httpretty.register_uri(httpretty.DELETE, url,
                                body=dumps(response_body),
                                content_type='application/json')
@@ -90,6 +100,9 @@ class TestElasticAPI(TestCase):
         response_body = {
             'status': 'error!'
         }
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
+                               content_type='application/json')
         httpretty.register_uri(httpretty.DELETE, url,
                                body=dumps(response_body),
                                content_type='application/json',
@@ -111,6 +124,9 @@ class TestElasticAPI(TestCase):
         response_body = {
             'status': 'mapped!'
         }
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
+                               content_type='application/json')
         httpretty.register_uri(httpretty.PUT, url,
                                body=dumps(response_body),
                                content_type='application/json')
@@ -126,6 +142,9 @@ class TestElasticAPI(TestCase):
         response_body = {
             'status': 'error!'
         }
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
+                               content_type='application/json')
         httpretty.register_uri(httpretty.PUT, url,
                                body=dumps(response_body),
                                content_type='application/json',

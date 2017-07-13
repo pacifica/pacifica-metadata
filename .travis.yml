@@ -16,6 +16,14 @@ matrix:
       env: RUN_LINTS=true
 cache: pip
 
+addons:
+  apt:
+    sources:
+      - elasticsearch-5.x
+    packages:
+      - elasticsearch
+      - oracle-java8-set-default
+
 before_install: bash -xe travis/before-install.sh
 install: pip install -r requirements-dev.txt
 script: bash -xe travis/test-script.sh
