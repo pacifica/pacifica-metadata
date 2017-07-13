@@ -31,7 +31,7 @@ class TestProposalInfoAPI(CPCommonTest):
         # test proposal search
         search_terms = u'pac+d\u00e9vel'
         req = requests.get(
-            '{0}/proposalinfo/search/{1}'.format(self.url, search_terms))
+            u'{0}/proposalinfo/search/{1}'.format(self.url, search_terms))
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
         self.assertTrue(len(req_json) >= 1)
