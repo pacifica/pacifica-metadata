@@ -19,7 +19,7 @@ class QueryBase(object):
         )
         category = g_names[0].name if g_names else 'Miscellaneous'
         name = _ie.name
-        display_name = '[{0} / ID:{1}] {2}'.format(
+        display_name = u'[{0} / ID:{1}] {2}'.format(
             category, _ie.id, name
         )
         return {

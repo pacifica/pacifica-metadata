@@ -152,7 +152,7 @@ class QueryBase(object):
                 Instruments.id == transaction_entry.get('instrument')
             ).to_hash()
             details_metadata = {
-                'submitter_name': '{0} {1}'.format(
+                'submitter_name': u'{0} {1}'.format(
                     submitter.get('first_name'),
                     submitter.get('last_name')
                 ),
