@@ -88,7 +88,7 @@ class SummarizeByDate(QueryBase):
         if t_info['instrument'] not in info_block['instrument'].keys():
             info_block['instrument'][t_info['instrument']] = item.transaction.instrument.name
         if t_info['submitter'] not in info_block['user'].keys():
-            info_block['user'][t_info['submitter']] = '{0} {1}'.format(
+            info_block['user'][t_info['submitter']] = u'{0} {1}'.format(
                 item.transaction.submitter.first_name, item.transaction.submitter.last_name)
 
     @staticmethod
