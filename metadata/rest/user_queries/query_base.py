@@ -24,7 +24,7 @@ class QueryBase(object):
             prop_id = prop.id
             clean_proposals[prop_id] = info
 
-        display_name = '[User ID {0}] {1} {2} &lt;{3}&gt;'.format(
+        display_name = u'[User ID {0}] {1} {2} &lt;{3}&gt;'.format(
             user_entry.id,
             user_hash.get('first_name'),
             user_hash.get('last_name'),
@@ -50,7 +50,7 @@ class QueryBase(object):
                 'person_id': user_hash.get('_id'),
                 'first_name': user_hash.get('first_name'),
                 'last_name': user_hash.get('last_name'),
-                'display_name': '{0} {1}'.format(
+                'display_name': u'{0} {1}'.format(
                     user_hash.get('first_name'),
                     user_hash.get('last_name')
                 ),
