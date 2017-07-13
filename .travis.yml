@@ -19,7 +19,7 @@ cache: pip
 addons:
   apt:
     sources:
-      - elasticsearch-5.5
+      - elasticsearch-5.x
     packages:
       - elasticsearch
 
