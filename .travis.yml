@@ -16,6 +16,13 @@ matrix:
       env: RUN_LINTS=true
 cache: pip
 
+addons:
+  apt:
+    sources:
+      - elasticsearch-5.5
+    packages:
+      - elasticsearch
+
 before_install: bash -xe travis/before-install.sh
 install: pip install -r requirements-dev.txt
 script: bash -xe travis/test-script.sh
