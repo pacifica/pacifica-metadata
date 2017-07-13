@@ -49,7 +49,7 @@ class TestUserInfoAPI(CPCommonTest):
         user = req_json.pop()
         self.assertEqual(user['person_id'], user_id)
 
-        # test search with eus id
+        # test search with user id
         search_terms = '10'
         req = requests.get(
             '{0}/userinfo/search/{1}'.format(self.url, search_terms))

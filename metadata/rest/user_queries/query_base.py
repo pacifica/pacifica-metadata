@@ -24,7 +24,7 @@ class QueryBase(object):
             prop_id = prop.id
             clean_proposals[prop_id] = info
 
-        display_name = u'[EUS ID {0}] {1} {2} &lt;{3}&gt;'.format(
+        display_name = '[User ID {0}] {1} {2} &lt;{3}&gt;'.format(
             user_entry.id,
             user_hash.get('first_name'),
             user_hash.get('last_name'),
@@ -35,10 +35,9 @@ class QueryBase(object):
                 'category': user_hash.get('last_name')[:1],
                 'person_id': user_hash.get('_id'),
                 'first_name': user_hash.get('first_name'),
-                'middle_initial': user_hash.get('middle_initial'),
                 'last_name': user_hash.get('last_name'),
                 'network_id': user_hash.get('network_id'),
-                'email_address': user_hash['email_address'],
+                'email_address': user_hash.get('email_address'),
                 'last_updated': user_hash.get('updated'),
                 'display_name': display_name,
                 'simple_display_name': u'{0} {1}'.format(
@@ -50,10 +49,8 @@ class QueryBase(object):
             return_block = {
                 'person_id': user_hash.get('_id'),
                 'first_name': user_hash.get('first_name'),
-                'middle_initial': user_hash.get('middle_initial'),
                 'last_name': user_hash.get('last_name'),
-                'network_id': user_hash.get('network_id'),
-                'display_name': u'{0} {1}'.format(
+                'display_name': '{0} {1}'.format(
                     user_hash.get('first_name'),
                     user_hash.get('last_name')
                 ),
