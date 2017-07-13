@@ -29,7 +29,7 @@ class TestProposalInfoAPI(CPCommonTest):
         self.assertEqual(req_json['id'], proposal_id)
 
         # test proposal search
-        search_terms = 'pac+devel'
+        search_terms = u'pac+d\u00e9vel'
         req = requests.get(
             '{0}/proposalinfo/search/{1}'.format(self.url, search_terms))
         self.assertEqual(req.status_code, 200)
