@@ -53,7 +53,7 @@ class ElasticAPI(object):
         { body }
         """
         class_name = cls.__name__
-        esclient = Elasticsearch([ELASTIC_ENDPOINT], **cls.es_kwargs)
+        esclient = Elasticsearch([ELASTIC_ENDPOINT])
         esclient.indices.put_mapping(class_name, cls.elastic_mapping())
 
     @staticmethod
