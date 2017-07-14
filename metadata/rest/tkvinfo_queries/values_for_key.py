@@ -18,17 +18,17 @@ class ValuesForKey(object):
     def get_values_for_key(key):
         """Retrieve all the tkv values for a given key item."""
         # get the id of the key to look for
-        val_list = (Keys
-                    .select(
-                        Keys.key, Values.value, TransactionKeyValue.transaction
-                    )
-                    .join(TransactionKeyValue,
-                          on=(Keys.id == TransactionKeyValue.key))
-                    .join(Values,
-                          on=(Values.id == TransactionKeyValue.value))
+        val_list = (Values
+                    .select(TransactionKeyValue.transaction)
+                    .join(TransactionKeyValue)
+                    .join(Keys)
                     .where(Keys.key == key)).dicts()
-
-        return {str(val.get('value')): int(val['transaction']) for val in val_list}
+        ret = {}
+        for val in val_list:
+            if val.get('value') not in ret:
+                ret[val.get('value')] = []
+            ret[val.get('value')].append(val.get('transaction'))
+        return ret
 
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
