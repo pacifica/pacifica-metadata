@@ -25,9 +25,9 @@ class ValuesForKey(object):
                     .where(Keys.key == key)).dicts()
         ret = {}
         for val in val_list:
-            if val.value not in ret:
-                ret[val.value] = []
-            ret[val.value].append(val.transaction)
+            if val.get('value') not in ret:
+                ret[val.get('value')] = []
+            ret[val.get('value')].append(val.get('transaction'))
         return ret
 
     # Cherrypy requires these named methods.
