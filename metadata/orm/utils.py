@@ -18,7 +18,7 @@ def index_hash(*args):
     """
     arg_hash = md5()
     for arg in args:
-        arg_hash.update(str(arg))
+        arg_hash.update(unicode_type(arg).encode('utf-8'))
     return arg_hash.hexdigest()
 
 

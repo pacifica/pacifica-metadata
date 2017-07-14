@@ -18,7 +18,7 @@ class TestProposalInfoAPI(CPCommonTest):
             '{0}/proposalinfo/by_user_id/{1}'.format(self.url, user_id))
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
-        self.assertEqual(len(req_json), 1)
+        self.assertEqual(len(req_json), 2)
 
         # test individual lookup
         proposal_id = '1234a'
