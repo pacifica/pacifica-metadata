@@ -45,7 +45,7 @@ class ProposalInstrument(CherryPyAPI):
         obj = super(ProposalInstrument, self).to_hash()
         obj['_id'] = index_hash(unicode_type(self.proposal.id), int(self.instrument.id))
         obj['instrument_id'] = int(self.instrument.id)
-        obj['proposal_id'] = str(self.proposal.id)
+        obj['proposal_id'] = unicode_type(self.proposal.id)
         return obj
 
     def from_hash(self, obj):
