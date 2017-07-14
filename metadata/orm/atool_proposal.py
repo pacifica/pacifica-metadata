@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """TransactionKeyValue links Transactions and Keys and Values objects."""
-from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from peewee import ForeignKeyField, CompositeKey, Expression, OP, unicode_type
 from metadata.orm.base import DB
 from metadata.orm.utils import index_hash
 from metadata.orm.proposals import Proposals
@@ -43,9 +43,9 @@ class AToolProposal(CherryPyAPI):
     def to_hash(self):
         """Convert the object to a hash."""
         obj = super(AToolProposal, self).to_hash()
-        obj['_id'] = index_hash(self.proposal.id,
+        obj['_id'] = index_hash(unicode_type(self.proposal.id),
                                 int(self.analytical_tool.id))
-        obj['proposal_id'] = str(self.proposal.id)
+        obj['proposal_id'] = unicode_type(self.proposal.id)
         obj['analytical_tool_id'] = int(self.analytical_tool.id)
         return obj
 

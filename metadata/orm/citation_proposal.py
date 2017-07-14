@@ -45,7 +45,7 @@ class CitationProposal(CherryPyAPI):
         obj = super(CitationProposal, self).to_hash()
         obj['_id'] = index_hash(int(self.citation.id), unicode_type(self.proposal.id))
         obj['citation_id'] = int(self.citation.id)
-        obj['proposal_id'] = str(self.proposal.id)
+        obj['proposal_id'] = unicode_type(self.proposal.id)
         return obj
 
     def from_hash(self, obj):
