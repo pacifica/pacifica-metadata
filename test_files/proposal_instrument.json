@@ -2,5 +2,9 @@
   {
     "instrument_id": 54,
     "proposal_id": "1234a"
+  },
+  {
+    "instrument_id": 54,
+    "proposal_id": "1236\u00e9"
   }
 ]

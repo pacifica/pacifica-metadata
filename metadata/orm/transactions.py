@@ -5,6 +5,7 @@ from metadata.rest.orm import CherryPyAPI
 from metadata.orm.users import Users
 from metadata.orm.proposals import Proposals
 from metadata.orm.instruments import Instruments
+from metadata.orm.utils import unicode_type
 
 
 class Transactions(CherryPyAPI):
@@ -41,7 +42,7 @@ class Transactions(CherryPyAPI):
         obj['_id'] = int(self.id) if self.id is not None else obj['_id']
         obj['submitter'] = int(self.submitter.id)
         obj['instrument'] = int(self.instrument.id)
-        obj['proposal'] = str(self.proposal.id)
+        obj['proposal'] = unicode_type(self.proposal.id)
         return obj
 
     def from_hash(self, obj):

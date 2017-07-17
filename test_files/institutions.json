@@ -3,12 +3,12 @@
     "_id": 48,
     "association_cd": "academy",
     "is_foreign": false,
-    "name": "Washington State University"
+    "name": "Washington Stat\u00e9 University"
   },
   {
     "_id": 47,
     "association_cd": "academy",
     "is_foreign": false,
-    "name": "University of Washington"
+    "name": "University of Washington\u00e9"
   }
 ]

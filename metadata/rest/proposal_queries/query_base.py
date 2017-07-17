@@ -39,7 +39,7 @@ class QueryBase(object):
             'id': _pe.id,
             'title': title,
             'category': year,
-            'display_name': '[Proposal {0}]: {1}'.format(_pe.id, _pe.title),
+            'display_name': u'[Proposal {0}]: {1}'.format(_pe.id, _pe.title),
             'currently_active': currently_active,
             'state': proposal_state,
             'start_date': _pe.actual_start_date.strftime('%Y-%m-%d') if _pe.actual_start_date is not None else '---',

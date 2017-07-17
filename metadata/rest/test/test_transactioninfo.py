@@ -105,7 +105,7 @@ class TestTransactionInfoAPI(CPCommonTest):
         )
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
-        self.assertEqual(req_json['latest_transaction_id'], 68)
+        self.assertEqual(req_json['latest_transaction_id'], 69)
 
     def test_bad_transactioninfo_api(self):
         """Test the GET method with bad data."""

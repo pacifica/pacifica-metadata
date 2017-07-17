@@ -1,10 +1,10 @@
 [
   {
     "_id": 100,
-    "dept_code": "Computer Science",
-    "first_name": "David",
+    "dept_code": "Computer Scienc\u00e9",
+    "first_name": "David\u00e9",
     "institution_id": 47,
-    "last_name": "Brown Jr.",
+    "last_name": "Brown\u00e9 Jr.",
     "middle_initial": "ML",
     "person_id": 10
   }
