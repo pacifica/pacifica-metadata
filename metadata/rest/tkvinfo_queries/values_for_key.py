@@ -19,7 +19,7 @@ class ValuesForKey(object):
         """Retrieve all the tkv values for a given key item."""
         # get the id of the key to look for
         val_list = (Values
-                    .select(TransactionKeyValue.transaction)
+                    .select(Values.value, TransactionKeyValue.transaction)
                     .join(TransactionKeyValue)
                     .join(Keys)
                     .where(Keys.key == key)).dicts()
