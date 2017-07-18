@@ -1,6 +1,6 @@
 """CherryPy File Details object class."""
-from dateutil.parser import parse
 from datetime import datetime
+from dateutil.parser import parse
 from cherrypy import tools
 from metadata.orm import TransactionKeyValue, Keys, Values, Transactions
 from metadata.orm.base import db_connection_decorator
