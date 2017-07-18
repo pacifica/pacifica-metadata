@@ -1,7 +1,7 @@
 """CherryPy File Details object class."""
 from datetime import datetime
 from cherrypy import tools
-from metadata.orm import TransactionKeyValue, Keys, Values
+from metadata.orm import TransactionKeyValue, Keys, Values, Transactions
 from metadata.orm.base import db_connection_decorator
 try:
     from urllib.parse import unquote
@@ -21,12 +21,12 @@ class ValuesForKey(object):
         # get the id of the key to look for
         val_list = (Values
                     .select(Values.value, TransactionKeyValue.transaction)
-                    .join(Transaction)
+                    .join(Transactions)
                     .join(TransactionKeyValue)
                     .join(Keys)
                     .where(Keys.key == key)
-                    .where(Transaction.created < end_time)
-                    .where(Transaction.created >= start_time)).dicts()
+                    .where(Transactions.created < end_time)
+                    .where(Transactions.created >= start_time)).dicts()
         ret = {}
         for val in val_list:
             if val.get('value') not in ret:
