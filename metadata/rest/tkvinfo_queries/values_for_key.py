@@ -1,4 +1,5 @@
 """CherryPy File Details object class."""
+from dateutil.parser import parse
 from datetime import datetime
 from cherrypy import tools
 from metadata.orm import TransactionKeyValue, Keys, Values, Transactions
@@ -21,9 +22,9 @@ class ValuesForKey(object):
         # get the id of the key to look for
         val_list = (Values
                     .select(Values.value, TransactionKeyValue.transaction)
-                    .join(Transactions)
                     .join(TransactionKeyValue)
                     .join(Keys)
+                    .join(Transactions, on=(Transactions.id == TransactionKeyValue.transaction_id))
                     .where(Keys.key == key)
                     .where(Transactions.created < end_time)
                     .where(Transactions.created >= start_time)).dicts()
@@ -43,10 +44,10 @@ class ValuesForKey(object):
         """Return file details for the given key/value combo."""
         key = unquote(key)
         if start_time and end_time:
-            return ValuesForKey.get_values_for_key(key, datetime(start_time), datetime(end_time))
+            assert parse(start_time) < parse(end_time)
+            return ValuesForKey.get_values_for_key(key, parse(start_time), parse(end_time))
         elif start_time:
-            return ValuesForKey.get_values_for_key(key, datetime(start_time), datetime.utcnow())
+            return ValuesForKey.get_values_for_key(key, parse(start_time), datetime.utcnow())
         elif end_time:
-            return ValuesForKey.get_values_for_key(key, datetime(0), datetime(end_time))
-        else:
-            return ValuesForKey.get_values_for_key(key, datetime(0), datetime.utcnow())
+            return ValuesForKey.get_values_for_key(key, datetime.fromtimestamp(0), parse(end_time))
+        return ValuesForKey.get_values_for_key(key, datetime.fromtimestamp(0), datetime.utcnow())
