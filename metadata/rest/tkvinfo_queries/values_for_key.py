@@ -51,5 +51,5 @@ class ValuesForKey(object):
             end_time = parse(end_time)
         else:
             end_time = datetime.utcnow()
-        assert parse(start_time) < parse(end_time)
+        assert start_time < end_time
         return ValuesForKey.get_values_for_key(key, start_time, end_time)
