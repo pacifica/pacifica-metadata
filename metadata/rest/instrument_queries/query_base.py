@@ -15,7 +15,7 @@ class QueryBase(object):
         ).join(
             InstrumentGroup
         ).where(
-            InstrumentGroup.instrument_id == _ie.id
+            InstrumentGroup.instrument == _ie.id
         )
         category = g_names[0].name if g_names else 'Miscellaneous'
         name = _ie.name

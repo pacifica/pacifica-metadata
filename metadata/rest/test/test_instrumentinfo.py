@@ -4,7 +4,7 @@ import requests
 from metadata.rest.test import CPCommonTest
 
 
-class TestObjectInfoAPI(CPCommonTest):
+class TestInstrumentInfoAPI(CPCommonTest):
     """Test the ObjectInfoAPI class."""
 
     __test__ = True
@@ -24,6 +24,18 @@ class TestObjectInfoAPI(CPCommonTest):
     def _get_instruments_for_user(self, user_id):
         header_list = {'Content-Type': 'application/json'}
         url = '{0}/instrumentinfo/by_user_id/{1}'.format(self.url, user_id)
+        req = requests.get(url=url, headers=header_list)
+        return req
+
+    def _get_instrument_with_category(self):
+        header_list = {'Content-Type': 'application/json'}
+        url = '{0}/instrumentinfo/instruments_with_category/'.format(self.url)
+        req = requests.get(url=url, headers=header_list)
+        return req
+
+    def _get_instrument_categories(self):
+        header_list = {'Content-Type': 'application/json'}
+        url = '{0}/instrumentinfo/categories/'.format(self.url)
         req = requests.get(url=url, headers=header_list)
         return req
 
@@ -49,6 +61,14 @@ class TestObjectInfoAPI(CPCommonTest):
         # test get instruments for user
         user_id = 10
         req = self._get_instruments_for_user(user_id=user_id)
+        self.assertEqual(req.status_code, 200)
+
+        # test instrument category retrieval
+        req = self._get_instrument_categories()
+        self.assertEqual(req.status_code, 200)
+
+        # test instruments with categories retrieval
+        req = self._get_instrument_with_category()
         self.assertEqual(req.status_code, 200)
 
     def test_bad_instrumentinfo_api(self):

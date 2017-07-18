@@ -9,6 +9,7 @@ from metadata.rest.fileinfo import FileInfoAPI
 from metadata.rest.ingest import IngestAPI
 from metadata.rest.instrumentinfo import InstrumentInfoAPI
 from metadata.rest.summaryinfo import SummaryInfoAPI
+from metadata.rest.migrationinfo import MigrationInfoAPI
 from metadata.rest.tkvinfo import TkvInfoAPI
 from metadata.rest.tkvupload import TkvUploadAPI
 
@@ -31,6 +32,7 @@ class Root(object):
     instrumentinfo = InstrumentInfoAPI()
     summaryinfo = SummaryInfoAPI()
     ingest = IngestAPI()
+    migrate = MigrationInfoAPI()
     tkvinfo = TkvInfoAPI()
     tkvupload = TkvUploadAPI()
 # pylint: enable=too-few-public-methods
