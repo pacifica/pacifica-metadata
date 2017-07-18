@@ -43,11 +43,13 @@ class ValuesForKey(object):
     def GET(key, start_time=None, end_time=None):
         """Return file details for the given key/value combo."""
         key = unquote(key)
-        if start_time and end_time:
-            assert parse(start_time) < parse(end_time)
-            return ValuesForKey.get_values_for_key(key, parse(start_time), parse(end_time))
-        elif start_time:
-            return ValuesForKey.get_values_for_key(key, parse(start_time), datetime.utcnow())
-        elif end_time:
-            return ValuesForKey.get_values_for_key(key, datetime.fromtimestamp(0), parse(end_time))
-        return ValuesForKey.get_values_for_key(key, datetime.fromtimestamp(0), datetime.utcnow())
+        if start_time:
+            start_time = parse(start_time)
+        else:
+            start_time = datetime.fromtimestamp(0)
+        if end_time:
+            end_time = parse(end_time)
+        else:
+            end_time = datetime.utcnow()
+        assert parse(start_time) < parse(end_time)
+        return ValuesForKey.get_values_for_key(key, start_time, end_time)
