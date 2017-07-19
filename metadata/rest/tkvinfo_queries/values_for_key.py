@@ -24,7 +24,7 @@ class ValuesForKey(object):
                     .select(Values.value, TransactionKeyValue.transaction)
                     .join(TransactionKeyValue)
                     .join(Keys)
-                    .join(Transactions, on=(Transactions.id == TransactionKeyValue.transaction_id))
+                    .join(Transactions, on=(Transactions.id == TransactionKeyValue.transaction))
                     .where(Keys.key == key)
                     .where(Transactions.created < end_time)
                     .where(Transactions.created >= start_time)).dicts()

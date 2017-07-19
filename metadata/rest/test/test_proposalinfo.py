@@ -29,9 +29,9 @@ class TestProposalInfoAPI(CPCommonTest):
         self.assertEqual(req_json['id'], proposal_id)
 
         # test proposal search
-        search_terms = u'pac+d\u00e9vel'
+        search_terms_unicode = u'pac+d\u00e9vel'
         req = requests.get(
-            u'{0}/proposalinfo/search/{1}'.format(self.url, search_terms))
+            u'{0}/proposalinfo/search/{1}'.format(self.url, search_terms_unicode))
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
         self.assertTrue(len(req_json) >= 1)
