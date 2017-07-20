@@ -39,7 +39,9 @@ class TestTransactionInfoAPI(CPCommonTest):
         # test search with single return with details
         search_terms = {
             'proposal': '1234a',
-            'end': end_date.strftime('%Y-%m-%d')
+            'end': end_date.strftime('%Y-%m-%d'),
+            'item_count': 10,
+            'page': 1
         }
         req = requests.get(
             url='{0}/transactioninfo/search/details'.format(self.url),
