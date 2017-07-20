@@ -34,7 +34,7 @@ class TestTransactionInfoAPI(CPCommonTest):
         )
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
-        self.assertEqual(len(req_json), 2)
+        self.assertTrue(len(req_json) > 1)
 
         # test search with single return with details
         search_terms = {
