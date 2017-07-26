@@ -61,7 +61,7 @@ class Citations(CherryPyAPI):
             obj['journal_issue'] = {'type': 'integer'}
         obj['abstract_text'] = obj['xml_text'] = \
             obj['page_range'] = obj['release_authorization_id'] = \
-            {'type': 'string'}
+            {'type': 'text'}
         obj['article_title'] = obj['encoding'] = \
             obj['doi_reference'] = {'type': 'keyword'}
 
