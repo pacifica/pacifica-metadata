@@ -63,7 +63,7 @@ class Files(CherryPyAPI):
             {'type': 'date', 'format': 'yyyy-mm-dd\'T\'HH:mm:ss'}
         obj['name'] = obj['subdir'] = obj['mimetype'] = \
             obj['encoding'] = {'type': 'keyword'}
-        obj['hashsum'] = obj['hashtype'] = {'type': 'string'}
+        obj['hashsum'] = obj['hashtype'] = {'type': 'text'}
 
     def to_hash(self):
         """Convert the object to a hash."""

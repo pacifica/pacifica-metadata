@@ -34,7 +34,7 @@ class Transactions(CherryPyAPI):
         super(Transactions, Transactions).elastic_mapping_builder(obj)
         obj['submitter'] = {'type': 'integer'}
         obj['instrument'] = {'type': 'integer'}
-        obj['proposal'] = {'type': 'string'}
+        obj['proposal'] = {'type': 'text'}
 
     def to_hash(self):
         """Convert the object to a hash."""

@@ -54,7 +54,7 @@ class Proposals(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(Proposals, Proposals).elastic_mapping_builder(obj)
-        obj['abstract'] = {'type': 'string'}
+        obj['abstract'] = {'type': 'text'}
         obj['title'] = obj['science_theme'] = obj['proposal_type'] = \
             obj['encoding'] = {'type': 'keyword'}
 
