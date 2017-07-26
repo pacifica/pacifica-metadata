@@ -24,7 +24,6 @@ services:
     build:
       context: .
       dockerfile: docker-compose/Dockerfile.elastic
-    # image: docker.elastic.co/elasticsearch/elasticsearch:5.5.1
     environment:
       - cluster.name=pacifica-cluster
       - bootstrap.memory_lock=true
