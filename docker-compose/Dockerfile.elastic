@@ -1,6 +1,9 @@
 # Pull base image.
-FROM elasticsearch:2.4
+FROM docker.elastic.co/elasticsearch/elasticsearch:5.5.1
 
-# Install HEAD plugin
-RUN ./bin/plugin install mobz/elasticsearch-head
-CMD ["-Des.discovery.zen.ping.unicast.hosts=elasticmaster", "-Des.discovery.zen.ping.multicast.enabled=false"]
+# Deal with cross-site scripting issues
+RUN touch /usr/share/elasticsearch/config/elasticsearch.yml \
+    && echo "http.cors.enabled : true" >> /usr/share/elasticsearch/config/elasticsearch.yml \
+    && echo "http.cors.allow-origin: \"/.*/\"" >> /usr/share/elasticsearch/config/elasticsearch.yml \
+    && echo "http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE" >> /usr/share/elasticsearch/config/elasticsearch.yml \
+    && echo "http.cors.allow-headers : \"X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization\"" >> /usr/share/elasticsearch/config/elasticsearch.yml

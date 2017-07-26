@@ -1,10 +1,21 @@
 version: '2'
+
 services:
   elasticmaster:
     build:
       context: .
       dockerfile: docker-compose/Dockerfile.elastic
     container_name: elasticmaster
+    environment:
+      - cluster.name=pacifica-cluster
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
     ports:
       - 9200:9200
 
@@ -12,11 +23,17 @@ services:
     build:
       context: .
       dockerfile: docker-compose/Dockerfile.elastic
-    links:
-     - elasticmaster
     environment:
-      UNICAST_HOST: elasticmaster
-      EXCLUDE_PORTS: 9300
+      - cluster.name=pacifica-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+      - discovery.zen.ping.unicast.hosts=elasticmaster
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
 
   elasticlb:
     image: dockercloud/haproxy
