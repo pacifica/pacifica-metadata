@@ -63,7 +63,7 @@ class Citations(CherryPyAPI):
             obj['page_range'] = obj['release_authorization_id'] = \
             {'type': 'text'}
         obj['article_title'] = obj['encoding'] = \
-            obj['doi_reference'] = {'type': 'keyword'}
+            obj['doi_reference'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self):
         """Convert the citation fields to a serializable hash."""
