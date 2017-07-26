@@ -26,7 +26,7 @@ class AnalyticalTools(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(AnalyticalTools, AnalyticalTools).elastic_mapping_builder(obj)
-        obj['name'] = obj['encoding'] = {'type': 'string'}
+        obj['name'] = obj['encoding'] = {'type': 'keyword'}
 
     def to_hash(self):
         """Convert the object to a hash."""

@@ -59,9 +59,11 @@ class Citations(CherryPyAPI):
         super(Citations, Citations).elastic_mapping_builder(obj)
         obj['journal_id'] = obj['journal_volume'] = \
             obj['journal_issue'] = {'type': 'integer'}
-        obj['article_title'] = obj['abstract_text'] = obj['xml_text'] = \
-            obj['page_range'] = obj['doi_reference'] = obj['release_authorization_id'] = \
-            obj['encoding'] = {'type': 'string'}
+        obj['abstract_text'] = obj['xml_text'] = \
+            obj['page_range'] = obj['release_authorization_id'] = \
+            {'type': 'string'}
+        obj['article_title'] = obj['encoding'] = \
+            obj['doi_reference'] = {'type': 'keyword'}
 
     def to_hash(self):
         """Convert the citation fields to a serializable hash."""
