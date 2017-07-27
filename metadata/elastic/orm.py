@@ -10,7 +10,8 @@ class ElasticAPI(object):
     es_kwargs = {
         'sniff_on_start': True,
         'sniff_on_connection_fail': True,
-        'sniffer_timeout': 60
+        'sniffer_timeout': 60,
+        'timeout': 60
     }
 
     @classmethod
