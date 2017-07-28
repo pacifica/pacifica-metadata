@@ -32,7 +32,8 @@ class Journals(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(Journals, Journals).elastic_mapping_builder(obj)
-        obj['name'] = obj['website_url'] = obj['encoding'] = {'type': 'keyword'}
+        obj['name'] = obj['website_url'] = obj['encoding'] = \
+            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['impact_factor'] = {'type': 'float'}
 
     def to_hash(self):

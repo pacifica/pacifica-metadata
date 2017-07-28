@@ -56,7 +56,7 @@ class Proposals(CherryPyAPI):
         super(Proposals, Proposals).elastic_mapping_builder(obj)
         obj['abstract'] = {'type': 'text'}
         obj['title'] = obj['science_theme'] = obj['proposal_type'] = \
-            obj['encoding'] = {'type': 'keyword'}
+            obj['encoding'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
         obj['submitted_date'] = \
             {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}

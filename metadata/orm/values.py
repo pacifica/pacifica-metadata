@@ -26,7 +26,8 @@ class Values(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(Values, Values).elastic_mapping_builder(obj)
-        obj['value'] = obj['encoding'] = {'type': 'keyword'}
+        obj['value'] = obj['encoding'] = \
+            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self):
         """Convert the object to a hash."""
