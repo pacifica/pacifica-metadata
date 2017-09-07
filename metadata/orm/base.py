@@ -98,9 +98,11 @@ class PacificaModel(Model):
         obj = {}
         obj['created'] = self.created.isoformat()
         obj['updated'] = self.updated.isoformat()
-        obj['deleted'] = self.deleted.isoformat(
-        ) if self.deleted is not None else None
+        obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
+        for attr in self.__dict__.keys():
+            if isinstance(ReverseRelationDescriptor, getattr(self.__class__, attr)):
+                obj[attr] = getattr(self, attr)
         return obj
 
     def from_hash(self, obj):
