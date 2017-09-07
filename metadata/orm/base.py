@@ -101,7 +101,7 @@ class PacificaModel(Model):
         obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         for attr in self.__dict__.keys():
-            if isinstance(ReverseRelationDescriptor, getattr(self.__class__, attr)):
+            if isinstance(getattr(self.__class__, attr), ReverseRelationDescriptor):
                 obj[attr] = getattr(self, attr)
         return obj
 
