@@ -225,6 +225,10 @@ class PacificaModel(Model):
                     'db_table': table,
                     'primary_key': pkey
                 }
+        related_names = []
+        for attr, value in cls.__dict__.items():
+            if isinstance(value, ReverseRelationDescriptor):
+                related_names.append(attr)
         js_object = {
             'callable_name': cls.__module__.split('.')[2],
             'last_changed_date': last_changed,
@@ -232,6 +236,7 @@ class PacificaModel(Model):
             'field_list': cls._meta.sorted_field_names,
             'foreign_keys': cls._meta.rel.keys(),
             'related_models': related_model_info,
+            'related_names': related_names,
             'record_count': cls.select().count()
         }
         # pylint: enable=no-member

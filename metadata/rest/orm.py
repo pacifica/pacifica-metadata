@@ -122,6 +122,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                         new_obj[name] = new_obj.pop(db_col)
             if '_id' in obj.keys() and obj['_id'] is not None:
                 new_obj['id'] = obj.get('_id')
+            for attr in model_info.get('related_names'):
+                del new_obj[attr]
             new_obj.pop('_id')
             clean_objs['upload_objs'].append(new_obj)
 
