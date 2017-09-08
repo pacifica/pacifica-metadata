@@ -102,7 +102,7 @@ class PacificaModel(Model):
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         for attr, value in self.__class__.__dict__.items():
             if isinstance(value, ReverseRelationDescriptor):
-                obj[attr] = [obj_id for obj_id in value]
+                obj[attr] = [obj_id for obj_id in getattr(self, attr)]
         return obj
 
     def from_hash(self, obj):
