@@ -45,11 +45,6 @@ class TestFiles(TestBase):
     obj_id = Files.id
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Files object."""
-        return TestTransactions.dependent_cls() + [Files]
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that Files depend on."""
         trans = Transactions()

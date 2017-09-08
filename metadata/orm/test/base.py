@@ -5,6 +5,7 @@ from unittest import TestCase
 from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
 from metadata.orm.base import PacificaModel
+from metadata.orm import ORM_OBJECTS
 from metadata.orm.utils import unicode_type
 
 
@@ -16,10 +17,10 @@ class TestBase(TestCase):
     obj_id = PacificaModel.id
     # pylint: enable=no-member
 
-    @classmethod
-    def dependent_cls(cls):
+    @staticmethod
+    def dependent_cls():
         """Return dependent classes."""
-        pass
+        return ORM_OBJECTS
 
     @classmethod
     def base_create_dep_objs(cls):

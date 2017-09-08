@@ -21,14 +21,6 @@ class TestInstrumentGroup(TestBase):
     obj_id = InstrumentGroup.instrument
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the InstrumentGroup object."""
-        ret = [InstrumentGroup]
-        ret += TestInstruments.dependent_cls()
-        ret += TestGroups.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that InstrumentGroup need."""
         groups = Groups()

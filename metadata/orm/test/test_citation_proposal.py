@@ -21,14 +21,6 @@ class TestCitationProposal(TestBase):
     obj_id = CitationProposal.proposal
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the CitationProposal object."""
-        ret = [CitationProposal]
-        ret += TestCitations.dependent_cls()
-        ret += TestProposals.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that FileKeyValue need."""
         prop1 = Proposals()
