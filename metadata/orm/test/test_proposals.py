@@ -46,11 +46,6 @@ class TestProposals(TestBase):
     obj_cls = Proposals
     obj_id = Proposals.id
 
-    @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Proposals object."""
-        return [Proposals]
-
     def test_proposals_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_PROPOSAL_HASH)

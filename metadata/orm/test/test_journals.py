@@ -27,11 +27,6 @@ class TestJournals(TestBase):
     obj_cls = Journals
     obj_id = Journals.id
 
-    @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Journals object."""
-        return [Journals]
-
     def test_journal_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_JOURNAL_HASH)

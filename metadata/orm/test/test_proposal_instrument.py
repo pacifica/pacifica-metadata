@@ -21,14 +21,6 @@ class TestProposalInstrument(TestBase):
     obj_id = ProposalInstrument.proposal
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the ProposalInstrument object."""
-        ret = [ProposalInstrument]
-        ret += TestProposals.dependent_cls()
-        ret += TestInstruments.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that FileKeyValue need."""
         prop2 = Proposals()
