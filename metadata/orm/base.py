@@ -93,16 +93,17 @@ class PacificaModel(Model):
         self._set_only_if(time_part, obj, time_part,
                           lambda: datetime_converts(obj[time_part]))
 
-    def to_hash(self):
+    def to_hash(self, recursion_depth=1):
         """Convert the base object fields into serializable attributes in a hash."""
         obj = {}
         obj['created'] = self.created.isoformat()
         obj['updated'] = self.updated.isoformat()
         obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
-        for attr, value in self.__class__.__dict__.items():
-            if isinstance(value, ReverseRelationDescriptor):
-                obj[attr] = [obj_ref.to_hash() for obj_ref in getattr(self, attr)]
+        if recursion_depth:
+            for attr, value in self.__class__.__dict__.items():
+                if isinstance(value, ReverseRelationDescriptor):
+                    obj[attr] = [obj_ref.to_hash(recursion_depth-1) for obj_ref in getattr(self, attr)]
         return obj
 
     def from_hash(self, obj):

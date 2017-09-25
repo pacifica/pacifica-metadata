@@ -32,9 +32,9 @@ class UserGroup(CherryPyAPI):
         primary_key = CompositeKey('person', 'group')
     # pylint: enable=too-few-public-methods
 
-    def to_hash(self):
+    def to_hash(self, recursion_depth=1):
         """Convert the object to a hash."""
-        obj = super(UserGroup, self).to_hash()
+        obj = super(UserGroup, self).to_hash(recursion_depth)
         obj['person_id'] = int(self.person.id)
         obj['group_id'] = int(self.group.id)
         return obj
