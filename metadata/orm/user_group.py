@@ -1,6 +1,7 @@
 #!/usr/bin/python
 """UserGroup links Groups and Users and objects."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from metadata.orm.utils import index_hash
 from metadata.orm.base import DB
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.groups import Groups
@@ -32,9 +33,16 @@ class UserGroup(CherryPyAPI):
         primary_key = CompositeKey('person', 'group')
     # pylint: enable=too-few-public-methods
 
+    @staticmethod
+    def elastic_mapping_builder(obj):
+        """Build the elasticsearch mapping bits."""
+        super(UserGroup, UserGroup).elastic_mapping_builder(obj)
+        obj['group_id'] = obj['person_id'] = {'type': 'integer'}
+
     def to_hash(self):
         """Convert the object to a hash."""
         obj = super(UserGroup, self).to_hash()
+        obj['_id'] = index_hash(int(self.person.id), int(self.group.id))
         obj['person_id'] = int(self.person.id)
         obj['group_id'] = int(self.group.id)
         return obj
