@@ -109,6 +109,10 @@ class TestTransactionInfoAPI(CPCommonTest):
         req_json = loads(req.text)
         self.assertEqual(req_json['latest_transaction_id'], 69)
 
+        req = requests.get(
+            url='{0}/transactioninfo/multisearch?instrument_group_id={1}'.format(self.url, 1001))
+        self.assertEqual(req.status_code, 200)
+
     def test_bad_transactioninfo_api(self):
         """Test the GET method with bad data."""
         # test by_id
