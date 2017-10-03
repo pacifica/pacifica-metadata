@@ -1,6 +1,5 @@
 """CherryPy Status Metadata object class."""
 import datetime
-import pprint
 from cherrypy import tools
 from dateutil.parser import parse
 from peewee import Expression, OP
@@ -18,7 +17,11 @@ class TransactionsMultiSearch(QueryBase):
     @staticmethod
     def _get_transactions_from_group(instrument_group_id, proposal_id, start_time, end_time):
         # get instruments for group_id
-        instrument_list = TransactionsMultiSearch._get_instruments_from_group_id(instrument_group_id) if instrument_group_id else None
+        if instrument_group_id:
+            instrument_list = TransactionsMultiSearch._get_instruments_from_group_id(
+                instrument_group_id)
+        else:
+            instrument_list = None
 
         where_clause = Expression(1, OP.EQ, 1)
         # now get the appropriate transactions

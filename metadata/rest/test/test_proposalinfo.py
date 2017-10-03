@@ -38,9 +38,9 @@ class TestProposalInfoAPI(CPCommonTest):
         # obj = req_json.pop()
         # self.assertEqual(obj['id'], proposal_id)
 
-        search_terms = '1234a'
+        search_terms_string = '1234a'
         req = requests.get(
-            '{0}/proposalinfo/search/{1}'.format(self.url, search_terms))
+            '{0}/proposalinfo/search/{1}'.format(self.url, search_terms_string))
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
         self.assertEqual(len(req_json), 1)

@@ -1,13 +1,11 @@
 """CherryPy Status Metadata object class."""
 import cherrypy
 # import re
-from cherrypy import tools, HTTPError, request
-from peewee import Expression, OP, fn
+from cherrypy import tools, HTTPError
+from peewee import Expression, OP
 from metadata.rest.transaction_queries.query_base import QueryBase
-from metadata.orm import Transactions, Files, InstrumentGroup
+from metadata.orm import Transactions
 from metadata.orm.base import db_connection_decorator
-from metadata.rest.reporting_queries.detailed_transactions_list import DetailedTransactionList
-
 
 class TransactionSearch(QueryBase):
     """Retrieves a list of all transactions matching the search criteria."""
@@ -84,19 +82,3 @@ class TransactionSearch(QueryBase):
         results = QueryBase._get_transaction_info_blocks(transactions, option)
         results.update(transaction_search_stats)
         return results
-
-    # @staticmethod
-    # @tools.json_in()
-    # @tools.json_out()
-    # @db_connection_decorator
-    # def POST(object_type):
-    #     """Return file details for the list of file id's."""
-    #     request_info_list = request.json
-    #     start_time = request_info_list['start_time'] if 'start_time' in request_info_list else None
-    #     end_time = request_info_list['end_time'] if 'end_time' in request_info_list else None
-    #     id_list = request_info_list['id_list'] if 'id_list' in request_info_list else []
-    #
-    #     transaction_list = TransactionSearch._get_transactions_from_search_list(
-    #         object_type, id_list, start_time, end_time)
-    #     # results = QueryBase._get_transaction_info_blocks(transaction_list, 'list')
-    #     return transaction_list
