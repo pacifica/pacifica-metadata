@@ -13,7 +13,8 @@ class DetailedTransactionList(QueryBase):
     exposed = True
 
     @staticmethod
-    def _get_transaction_list_details(transaction_list):
+    def get_transaction_list_details(transaction_list):
+        """Return complete data set on a specified transaction."""
         query = (Files().select(
             Files.transaction.alias('upload_id'),
             fn.Max(Transactions.updated).alias('upload_date'),
@@ -53,4 +54,4 @@ class DetailedTransactionList(QueryBase):
         # parse object list
         transaction_list = request.json
 
-        return DetailedTransactionList._get_transaction_list_details(transaction_list)
+        return DetailedTransactionList.get_transaction_list_details(transaction_list)
