@@ -110,7 +110,7 @@ class TestTransactionInfoAPI(CPCommonTest):
         self.assertEqual(req_json['latest_transaction_id'], 69)
 
         req = requests.get(
-            url='{0}/transactioninfo/multisearch?instrument_group_id={1}'.format(self.url, 1001))
+            url='{0}/transactioninfo/multisearch?instrument_group_id={1}&proposal_id=1234a'.format(self.url, 1001))
         self.assertEqual(req.status_code, 200)
 
     def test_bad_transactioninfo_api(self):

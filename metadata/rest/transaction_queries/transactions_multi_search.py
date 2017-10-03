@@ -16,12 +16,8 @@ class TransactionsMultiSearch(QueryBase):
 
     @staticmethod
     def _get_transactions_from_group(instrument_group_id, proposal_id, start_time, end_time):
-        # get instruments for group_id
-        if instrument_group_id:
-            instrument_list = TransactionsMultiSearch._get_instruments_from_group_id(
-                instrument_group_id)
-        else:
-            instrument_list = None
+        instrument_list = TransactionsMultiSearch._get_instruments_from_group_id(
+            instrument_group_id)
 
         where_clause = Expression(1, OP.EQ, 1)
         # now get the appropriate transactions
@@ -48,10 +44,8 @@ class TransactionsMultiSearch(QueryBase):
         return instrument_list
 
     @staticmethod
-    def _get_first_last_day(month_id=None):
+    def _get_first_last_day():
         today = datetime.datetime.today()
-        if month_id:
-            today = today.replace(month=month_id)
         first_day_of_month = today.replace(day=1).date()
         last_day_of_month = datetime.date(today.year, today.month + 1, 1) - datetime.timedelta(days=1)
         return first_day_of_month, last_day_of_month
