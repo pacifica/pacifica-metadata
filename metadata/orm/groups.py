@@ -33,9 +33,9 @@ class Groups(CherryPyAPI):
             {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['is_admin'] = {'type': 'boolean'}
 
-    def to_hash(self):
+    def to_hash(self, recursion_depth=1):
         """Convert the object to a hash."""
-        obj = super(Groups, self).to_hash()
+        obj = super(Groups, self).to_hash(recursion_depth)
         obj['_id'] = int(self.id)
         obj['name'] = unicode_type(self.name)
         obj['encoding'] = str(self.encoding)

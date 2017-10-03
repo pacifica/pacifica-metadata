@@ -36,9 +36,9 @@ class Transactions(CherryPyAPI):
         obj['instrument'] = {'type': 'integer'}
         obj['proposal'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self):
+    def to_hash(self, recursion_depth=1):
         """Convert the object to a hash."""
-        obj = super(Transactions, self).to_hash()
+        obj = super(Transactions, self).to_hash(recursion_depth)
         obj['_id'] = int(self.id) if self.id is not None else obj['_id']
         obj['submitter'] = int(self.submitter.id)
         obj['instrument'] = int(self.instrument.id)
