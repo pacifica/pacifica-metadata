@@ -7,6 +7,7 @@ from metadata.rest.transaction_queries.query_base import QueryBase
 from metadata.orm import Transactions
 from metadata.orm.base import db_connection_decorator
 
+
 class TransactionSearch(QueryBase):
     """Retrieves a list of all transactions matching the search criteria."""
 
