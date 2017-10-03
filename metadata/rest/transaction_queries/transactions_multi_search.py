@@ -36,7 +36,6 @@ class TransactionsMultiSearch(QueryBase):
             where_clause &= (Transactions.proposal == proposal_id)
         transactions_list_query = Transactions.select(Transactions.id).where(where_clause)
 
-        print transactions_list_query.sql()
         transactions_list = [t['id'] for t in transactions_list_query.dicts()]
         return transactions_list
 
