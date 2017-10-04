@@ -49,7 +49,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         complete_objs = [obj.to_hash() for obj in self.select().where(self.where_clause(kwargs))]
         self.elastic_upload(complete_objs)
         for obj in updated_objs:
-            obj.elastic_upload(obj.to_hash())
+            obj.elastic_upload([obj.to_hash()])
 
     def _set_or_create(self, insert_json):
         """Set or create the object if it doesn't already exist."""
