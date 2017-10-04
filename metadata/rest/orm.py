@@ -34,8 +34,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
     def _update(self, update_json, **kwargs):
         """Internal update method for an object."""
         update_hash = loads(update_json)
-        if 'updated' not in update_hash:
-            update_hash['updated'] = datetime_now_nomicrosecond()
+        update_hash['updated'] = update_hash.get('updated', datetime_now_nomicrosecond())
         did_something = False
         updated_objs = []
         for obj in self.select().where(self.where_clause(kwargs)):
