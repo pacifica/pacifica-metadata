@@ -16,7 +16,7 @@ and deleting these objects in from a web service layer.
 """
 from os import getenv
 from json import dumps, loads
-from peewee import PostgresqlDatabase as pgdb, ReverseRelationDescriptor, RelationDescriptor
+from peewee import PostgresqlDatabase as pgdb, ReverseRelationDescriptor
 from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause
 
 from metadata.orm.utils import index_hash, ExtendDateTimeField
@@ -96,11 +96,7 @@ class PacificaModel(Model):
     @classmethod
     def cls_foreignkeys(cls):
         """Provide the foreign keys of the class as a list of attrs."""
-        ret = []
-        for attr, value in cls.__dict__.items():
-            if isinstance(value, RelationDescriptor):
-                ret.append(attr)
-        return ret
+        return cls._meta.rel.keys()
 
     @classmethod
     def cls_revforeignkeys(cls):
@@ -248,18 +244,14 @@ class PacificaModel(Model):
                     'db_table': table,
                     'primary_key': pkey
                 }
-        related_names = []
-        for attr, value in cls.__dict__.items():
-            if isinstance(value, ReverseRelationDescriptor):
-                related_names.append(attr)
         js_object = {
             'callable_name': cls.__module__.split('.')[2],
             'last_changed_date': last_changed,
             'primary_keys': cls.get_primary_keys(),
             'field_list': cls._meta.sorted_field_names,
-            'foreign_keys': cls._meta.rel.keys(),
+            'foreign_keys': cls.cls_foreignkeys(),
             'related_models': related_model_info,
-            'related_names': related_names,
+            'related_names': cls.cls_revforeignkeys(),
             'record_count': cls.select().count()
         }
         # pylint: enable=no-member
