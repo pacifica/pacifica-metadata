@@ -93,6 +93,20 @@ class PacificaModel(Model):
         self._set_only_if(time_part, obj, time_part,
                           lambda: datetime_converts(obj[time_part]))
 
+    @classmethod
+    def cls_foreignkeys(cls):
+        """Provide the foreign keys of the class as a list of attrs."""
+        return cls._meta.rel.keys()
+
+    @classmethod
+    def cls_revforeignkeys(cls):
+        """Provide the rev foreign keys of the class as a list of attrs."""
+        ret = []
+        for attr, value in cls.__dict__.items():
+            if isinstance(value, ReverseRelationDescriptor):
+                ret.append(attr)
+        return ret
+
     def to_hash(self, recursion_depth=1):
         """Convert the base object fields into serializable attributes in a hash."""
         obj = {}
@@ -101,9 +115,8 @@ class PacificaModel(Model):
         obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         if recursion_depth:
-            for attr, value in self.__class__.__dict__.items():
-                if isinstance(value, ReverseRelationDescriptor):
-                    obj[attr] = [obj_ref.to_hash(recursion_depth - 1) for obj_ref in getattr(self, attr)]
+            for attr in self.cls_revforeignkeys():
+                obj[attr] = [obj_ref.to_hash(recursion_depth-1) for obj_ref in getattr(self, attr)]
         return obj
 
     def from_hash(self, obj):
@@ -231,18 +244,14 @@ class PacificaModel(Model):
                     'db_table': table,
                     'primary_key': pkey
                 }
-        related_names = []
-        for attr, value in cls.__dict__.items():
-            if isinstance(value, ReverseRelationDescriptor):
-                related_names.append(attr)
         js_object = {
             'callable_name': cls.__module__.split('.')[2],
             'last_changed_date': last_changed,
             'primary_keys': cls.get_primary_keys(),
             'field_list': cls._meta.sorted_field_names,
-            'foreign_keys': cls._meta.rel.keys(),
+            'foreign_keys': cls.cls_foreignkeys(),
             'related_models': related_model_info,
-            'related_names': related_names,
+            'related_names': cls.cls_revforeignkeys(),
             'record_count': cls.select().count()
         }
         # pylint: enable=no-member
