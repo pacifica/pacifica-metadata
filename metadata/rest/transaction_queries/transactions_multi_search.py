@@ -55,7 +55,6 @@ class TransactionsMultiSearch(QueryBase):
         valid_keywords = ['proposal_id', 'instrument_group_id', 'start_time', 'end_time']
         return {k: v for (k, v) in kwargs.items() if k in valid_keywords}
 
-
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
     @staticmethod
