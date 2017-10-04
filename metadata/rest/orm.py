@@ -39,6 +39,12 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         for attr in obj.cls_foreignkeys():
             updated_objs.append(getattr(obj, attr))
 
+    @staticmethod
+    def _update_dep_objs(obj, updated_objs):
+        """Update the dependent objs of obj and append to updated_objs."""
+        for attr in obj.cls_foreignkeys():
+            updated_objs.append(getattr(obj, attr))
+
     def _update(self, update_json, **kwargs):
         """Internal update method for an object."""
         update_hash = loads(update_json)
