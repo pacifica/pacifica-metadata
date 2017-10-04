@@ -93,6 +93,15 @@ class PacificaModel(Model):
         self._set_only_if(time_part, obj, time_part,
                           lambda: datetime_converts(obj[time_part]))
 
+    @classmethod
+    def cls_foreignkeys(cls):
+        """Provide the foreign keys of the class as a list of attrs."""
+        ret = []
+        for attr, value in cls.__dict__.items():
+            if isinstance(value, ReverseRelationDescriptor):
+                ret.append(attr)
+        return ret
+
     def to_hash(self, recursion_depth=1):
         """Convert the base object fields into serializable attributes in a hash."""
         obj = {}
@@ -101,9 +110,8 @@ class PacificaModel(Model):
         obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         if recursion_depth:
-            for attr, value in self.__class__.__dict__.items():
-                if isinstance(value, ReverseRelationDescriptor):
-                    obj[attr] = [obj_ref.to_hash(recursion_depth-1) for obj_ref in getattr(self, attr)]
+            for attr in self.cls_foreignkeys():
+                obj[attr] = [obj_ref.to_hash(recursion_depth-1) for obj_ref in getattr(self, attr)]
         return obj
 
     def from_hash(self, obj):
