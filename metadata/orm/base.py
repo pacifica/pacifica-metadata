@@ -103,7 +103,7 @@ class PacificaModel(Model):
         if recursion_depth:
             for attr, value in self.__class__.__dict__.items():
                 if isinstance(value, ReverseRelationDescriptor):
-                    obj[attr] = [obj_ref.to_hash(recursion_depth-1) for obj_ref in getattr(self, attr)]
+                    obj[attr] = [obj_ref.to_hash(recursion_depth - 1) for obj_ref in getattr(self, attr)]
         return obj
 
     def from_hash(self, obj):
