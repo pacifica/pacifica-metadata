@@ -30,7 +30,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
     def _check_recursion_depth(kwargs):
         recursion_depth = int(kwargs.get('recursion_depth', 1))
         if recursion_depth not in range(0, 2):
-            raise ValueError("Recursion depth must be in the range of 0->2.")
+            raise ValueError('Recursion depth must be in the range of 0->2.')
         return recursion_depth
 
     @staticmethod

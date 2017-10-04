@@ -21,6 +21,11 @@ class TestCherryPyAPI(CPCommonTest):
         self.assertEqual(req.status_code, 200)
         files = loads(req.content)
         self.assertEqual(len(files), 1)
+
+        req = requests.get(
+            '{0}/files?page_number=1&items_per_page=1&recursion_depth=4'.format(self.url))
+        self.assertEqual(req.status_code, 500)
+
         set_hash = {'name': 'Renamed File', 'updated': None}
         req = requests.post('{0}/files'.format(self.url),
                             data=dumps(set_hash), headers=self.headers)
