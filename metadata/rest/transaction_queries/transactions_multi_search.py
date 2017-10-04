@@ -50,6 +50,12 @@ class TransactionsMultiSearch(QueryBase):
         last_day_of_month = datetime.date(today.year, today.month + 1, 1) - datetime.timedelta(days=1)
         return first_day_of_month, last_day_of_month
 
+    @staticmethod
+    def _check_keywords(kwargs):
+        valid_keywords = ['proposal_id', 'instrument_group_id', 'start_time', 'end_time']
+        return {k: v for (k, v) in kwargs.items() if k in valid_keywords}
+
+
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
     @staticmethod
@@ -57,9 +63,8 @@ class TransactionsMultiSearch(QueryBase):
     @db_connection_decorator
     def GET(**kwargs):
         """Return Transactions for a proposal_id and instrument_group_id."""
-        valid_keywords = ['proposal_id', 'instrument_group_id', 'start_time', 'end_time']
         first_day_of_month, last_day_of_month = TransactionsMultiSearch._get_first_last_day()
-        kwargs = {k: v for (k, v) in kwargs.items() if k in valid_keywords}
+        kwargs = TransactionsMultiSearch._check_keywords(kwargs)
 
         instrument_group_id = kwargs['instrument_group_id'] if 'instrument_group_id' in kwargs else None
         proposal_id = kwargs['proposal_id'] if 'proposal_id' in kwargs else None

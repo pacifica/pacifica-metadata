@@ -16,7 +16,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
     def _select(self, **kwargs):
         """Internal select method."""
         primary_keys = []
-        recursion_depth = 1
+        recursion_depth = CherryPyAPI._check_recursion_depth(kwargs)
         for key in self.get_primary_keys():
             primary_keys.append(getattr(self.__class__, key))
         objs = (self.select()
@@ -24,9 +24,14 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                 .order_by(*primary_keys))
         if 'page_number' in kwargs and 'items_per_page' in kwargs:
             objs = objs.paginate(int(kwargs['page_number']), int(kwargs['items_per_page']))
+        return dumps([obj.to_hash(recursion_depth) for obj in objs])
+
+    @staticmethod
+    def _check_recursion_depth(kwargs):
+        recursion_depth = 1
         if 'recursion_depth' in kwargs:
             recursion_depth = max(0, min(int(kwargs['recursion_depth']), 2))
-        return dumps([obj.to_hash(recursion_depth) for obj in objs])
+        return recursion_depth
 
     def _update(self, update_json, **kwargs):
         """Internal update method for an object."""
