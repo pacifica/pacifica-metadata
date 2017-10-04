@@ -16,7 +16,7 @@ and deleting these objects in from a web service layer.
 """
 from os import getenv
 from json import dumps, loads
-from peewee import PostgresqlDatabase as pgdb, ReverseRelationDescriptor
+from peewee import PostgresqlDatabase as pgdb, ReverseRelationDescriptor, RelationDescriptor
 from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause
 
 from metadata.orm.utils import index_hash, ExtendDateTimeField
@@ -98,6 +98,15 @@ class PacificaModel(Model):
         """Provide the foreign keys of the class as a list of attrs."""
         ret = []
         for attr, value in cls.__dict__.items():
+            if isinstance(value, RelationDescriptor):
+                ret.append(attr)
+        return ret
+
+    @classmethod
+    def cls_revforeignkeys(cls):
+        """Provide the rev foreign keys of the class as a list of attrs."""
+        ret = []
+        for attr, value in cls.__dict__.items():
             if isinstance(value, ReverseRelationDescriptor):
                 ret.append(attr)
         return ret
@@ -110,7 +119,7 @@ class PacificaModel(Model):
         obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         if recursion_depth:
-            for attr in self.cls_foreignkeys():
+            for attr in self.cls_revforeignkeys():
                 obj[attr] = [obj_ref.to_hash(recursion_depth-1) for obj_ref in getattr(self, attr)]
         return obj
 
