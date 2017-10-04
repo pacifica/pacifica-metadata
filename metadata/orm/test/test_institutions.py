@@ -28,11 +28,6 @@ class TestInstitutions(TestBase):
     obj_cls = Institutions
     obj_id = Institutions.id
 
-    @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Institutions object."""
-        return [Institutions]
-
     def test_institutions_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_INSTITUTION_HASH)

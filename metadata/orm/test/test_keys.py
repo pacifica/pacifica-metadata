@@ -24,11 +24,6 @@ class TestKeys(TestBase):
     obj_cls = Keys
     obj_id = Keys.id
 
-    @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Keys object."""
-        return [Keys]
-
     def test_keys_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_KEY_HASH)

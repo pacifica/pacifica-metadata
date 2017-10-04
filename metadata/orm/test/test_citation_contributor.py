@@ -22,14 +22,6 @@ class TestCitationContributor(TestBase):
     obj_id = CitationContributor.author
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the CitationContributor object."""
-        ret = [CitationContributor]
-        ret += TestContributors.dependent_cls()
-        ret += TestCitations.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that Files depend on."""
         cite1 = Citations()

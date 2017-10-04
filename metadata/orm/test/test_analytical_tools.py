@@ -24,11 +24,6 @@ class TestAnalyticalTools(TestBase):
     obj_cls = AnalyticalTools
     obj_id = AnalyticalTools.id
 
-    @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the AnalyticalTools object."""
-        return [AnalyticalTools]
-
     def test_tools_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_TOOL_HASH)

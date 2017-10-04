@@ -21,14 +21,6 @@ class TestUserGroup(TestBase):
     obj_id = UserGroup.person
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the UserGroup object."""
-        ret = [UserGroup]
-        ret += TestUsers.dependent_cls()
-        ret += TestGroups.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that UserGroup need."""
         member = Users()

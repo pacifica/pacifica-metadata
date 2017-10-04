@@ -40,9 +40,9 @@ class CitationKeyword(CherryPyAPI):
         obj['citation_id'] = {'type': 'integer'}
         obj['keyword_id'] = {'type': 'integer'}
 
-    def to_hash(self):
+    def to_hash(self, recursion_depth=1):
         """Convert the object to a hash."""
-        obj = super(CitationKeyword, self).to_hash()
+        obj = super(CitationKeyword, self).to_hash(recursion_depth)
         # pylint: disable=no-member
         obj['_id'] = index_hash(int(self.citation.id), int(self.keyword.id))
         obj['citation_id'] = int(self.citation.id)

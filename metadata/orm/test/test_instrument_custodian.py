@@ -21,14 +21,6 @@ class TestInstrumentCustodian(TestBase):
     obj_id = InstrumentCustodian.custodian
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the InstrumentCustodian object."""
-        ret = [InstrumentCustodian]
-        ret += TestUsers.dependent_cls()
-        ret += TestInstruments.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that InstrumentCustodian need."""
         inst = Instruments()

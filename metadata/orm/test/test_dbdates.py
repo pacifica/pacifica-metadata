@@ -80,10 +80,6 @@ class TestDBDates(TestBase):
         """Test method to check the where clause against now dates."""
         self.base_where_clause(SAMPLE_REP_HASH)
 
-    def test_testbase_dependent_cls(self):
-        """Make sure we cover the dependent class method."""
-        self.assertEqual(super(TestDBDates, self).dependent_cls(), None)
-
     def test_dates_range(self):
         """Test date ranges using operators."""
         with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):

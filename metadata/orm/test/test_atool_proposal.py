@@ -21,14 +21,6 @@ class TestAToolProposal(TestBase):
     obj_id = AToolProposal.proposal
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the TransactionKeyValue object."""
-        ret = [AToolProposal]
-        ret += TestProposals.dependent_cls()
-        ret += TestAnalyticalTools.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that TransactionKeyValue need."""
         prop = Proposals()

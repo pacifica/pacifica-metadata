@@ -26,15 +26,6 @@ class TestTransactions(TestBase):
     obj_id = Transactions.id
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Transactions object."""
-        ret = [Transactions]
-        ret += TestUsers.dependent_cls()
-        ret += TestInstruments.dependent_cls()
-        ret += TestProposals.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Build the object and make dependent user object."""
         submitter = Users()

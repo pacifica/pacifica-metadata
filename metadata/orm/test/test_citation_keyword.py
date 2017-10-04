@@ -21,14 +21,6 @@ class TestCitationKeyword(TestBase):
     obj_id = CitationKeyword.keyword
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the CitationContributor object."""
-        ret = [CitationKeyword]
-        ret += TestKeywords.dependent_cls()
-        ret += TestCitations.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that Files depend on."""
         keyword = Keywords()

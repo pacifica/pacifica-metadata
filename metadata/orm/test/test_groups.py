@@ -26,11 +26,6 @@ class TestGroups(TestBase):
     obj_cls = Groups
     obj_id = Groups.id
 
-    @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Groups object."""
-        return [Groups]
-
     def test_group_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_GROUP_HASH)

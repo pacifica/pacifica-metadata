@@ -21,14 +21,6 @@ class TestProposalParticipant(TestBase):
     obj_id = ProposalParticipant.person
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the ProposalParticipant object."""
-        ret = [ProposalParticipant]
-        ret += TestProposals.dependent_cls()
-        ret += TestUsers.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that ProposalParticipant need."""
         prop3 = Proposals()

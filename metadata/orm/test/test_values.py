@@ -24,11 +24,6 @@ class TestValues(TestBase):
     obj_cls = Values
     obj_id = Values.id
 
-    @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Values object."""
-        return [Values]
-
     def test_values_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_VALUE_HASH)

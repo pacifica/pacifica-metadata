@@ -21,14 +21,6 @@ class TestInstitutionPerson(TestBase):
     obj_id = InstitutionPerson.person
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the InstitutionPerson object."""
-        ret = [InstitutionPerson]
-        ret += TestUsers.dependent_cls()
-        ret += TestInstitutions.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that InstitutionPerson need."""
         inst = Institutions()

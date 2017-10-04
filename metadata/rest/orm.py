@@ -25,20 +25,30 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             objs = objs.paginate(int(kwargs['page_number']), int(kwargs['items_per_page']))
         return dumps([obj.to_hash() for obj in objs])
 
+    @staticmethod
+    def _update_dep_objs(obj, updated_objs):
+        """Update the dependent objs of obj and append to updated_objs."""
+        for attr in obj.cls_foreignkeys():
+            updated_objs.append(getattr(obj, attr))
+
     def _update(self, update_json, **kwargs):
         """Internal update method for an object."""
         update_hash = loads(update_json)
-        if 'updated' not in update_hash:
-            update_hash['updated'] = datetime_now_nomicrosecond()
+        update_hash['updated'] = update_hash.get('updated', datetime_now_nomicrosecond())
         did_something = False
+        updated_objs = []
         for obj in self.select().where(self.where_clause(kwargs)):
             did_something = True
+            self._update_dep_objs(obj, updated_objs)
             obj.from_hash(update_hash)
             obj.save()
+            self._update_dep_objs(obj, updated_objs)
         if not did_something:
             raise HTTPError(500, "Get args didn't select any objects.")
         complete_objs = [obj.to_hash() for obj in self.select().where(self.where_clause(kwargs))]
         self.elastic_upload(complete_objs)
+        for obj in updated_objs:
+            obj.elastic_upload([obj.to_hash()])
 
     def _set_or_create(self, insert_json):
         """Set or create the object if it doesn't already exist."""
@@ -122,6 +132,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                         new_obj[name] = new_obj.pop(db_col)
             if '_id' in obj.keys() and obj['_id'] is not None:
                 new_obj['id'] = obj.get('_id')
+            for attr in model_info.get('related_names'):
+                del new_obj[attr]
             new_obj.pop('_id')
             clean_objs['upload_objs'].append(new_obj)
 
