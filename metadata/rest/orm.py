@@ -28,16 +28,10 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
 
     @staticmethod
     def _check_recursion_depth(kwargs):
-        recursion_depth = 1
-        if 'recursion_depth' in kwargs:
-            recursion_depth = max(0, min(int(kwargs['recursion_depth']), 2))
+        recursion_depth = int(kwargs.get('recursion_depth', 1))
+        if recursion_depth not in range(0, 2):
+            raise ValueError("Recursion depth must be in the range of 0->2.")
         return recursion_depth
-
-    @staticmethod
-    def _update_dep_objs(obj, updated_objs):
-        """Update the dependent objs of obj and append to updated_objs."""
-        for attr in obj.cls_foreignkeys():
-            updated_objs.append(getattr(obj, attr))
 
     @staticmethod
     def _update_dep_objs(obj, updated_objs):
