@@ -10,6 +10,13 @@ from cherrypy import HTTPError
 class QueryBase(object):
     """Retrieves a set of proposals for a given keyword set."""
 
+    valid_keywords = [
+        'proposal', 'proposal_id', 'instrument', 'instrument_id', 'requesting_user',
+        'time_frame', 'start_time', 'start', 'end_time', 'end', 'transaction_id',
+        'user', 'user_id', 'person', 'person_id', 'submitter', 'submitter_id',
+        'item_count', 'page'
+    ]
+
     @staticmethod
     def _get_transaction_key_values(transaction_id):
         where_clause = TransactionKeyValue().where_clause(

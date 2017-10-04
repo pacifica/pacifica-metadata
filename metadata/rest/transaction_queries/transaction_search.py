@@ -69,13 +69,7 @@ class TransactionSearch(QueryBase):
         """Return transactions for the search params."""
         option = 'details' if option not in ['list', 'details'] else option
 
-        valid_keywords = [
-            'proposal', 'proposal_id', 'instrument', 'instrument_id', 'requesting_user',
-            'time_frame', 'start_time', 'start', 'end_time', 'end', 'transaction_id',
-            'user', 'user_id', 'person', 'person_id', 'submitter', 'submitter_id',
-            'item_count', 'page'
-        ]
-        kwargs = {k: v for (k, v) in kwargs.items() if k in valid_keywords}
+        kwargs = {k: v for (k, v) in kwargs.items() if k in QueryBase.valid_keywords}
         if not kwargs:
             message = 'Invalid transaction details search request. '
             cherrypy.log.error(message)
