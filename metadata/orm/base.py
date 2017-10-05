@@ -107,7 +107,7 @@ class PacificaModel(Model):
                 ret.append(attr)
         return ret
 
-    def to_hash(self, recursion_depth=1):
+    def to_hash(self, recursion_depth=0):
         """Convert the base object fields into serializable attributes in a hash."""
         obj = {}
         obj['created'] = self.created.isoformat()
