@@ -72,7 +72,7 @@ class ElasticAPI(object):
         # pylint: disable=no-member
         for attr in cls.cls_revforeignkeys():
             obj[attr] = {'type': 'nested'}
-        # pylint: disable=no-member
+        # pylint: enable=no-member
 
         ret['properties'] = obj
         return ret
