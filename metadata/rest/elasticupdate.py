@@ -6,11 +6,9 @@ from elasticsearch import Elasticsearch, helpers
 from metadata.orm.base import db_connection_decorator
 from metadata.rest.objectinfo import ObjectInfoAPI
 
-ELASTIC_CONNECT_ATTEMPTS = 40
-ELASTIC_WAIT = 3
+ELASTIC_INDEX = getenv('ELASTIC_INDEX', 'pacifica')
 DEFAULT_ELASTIC_ENDPOINT = getenv('ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
-ELASTIC_INDEX = getenv('ELASTIC_INDEX', 'pacifica')
 ES_INDEX_URL = '{0}/{1}'.format(ELASTIC_ENDPOINT, ELASTIC_INDEX)
 
 
@@ -41,6 +39,7 @@ class ElasticSearchUpdateAPI(object):
 
     @staticmethod
     def read_md_records(md_records, recursion_depth):
+        """Make a generator object to be used in push_elastic_updates."""
         for record in md_records:
             record_dict = record.to_hash(recursion_depth)
             yield record_dict

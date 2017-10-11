@@ -96,7 +96,10 @@ class PacificaModel(Model):
     @classmethod
     def cls_foreignkeys(cls):
         """Provide the foreign keys of the class as a list of attrs."""
+        # pylint: disable=no-member
         return cls._meta.rel.keys()
+        # pylint: disable=no-member
+
 
     @classmethod
     def cls_revforeignkeys(cls):

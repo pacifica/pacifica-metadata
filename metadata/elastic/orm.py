@@ -68,8 +68,13 @@ class ElasticAPI(object):
         """Return the elasticsearch mapping for the object."""
         ret = {}
         obj = {}
+        print cls
+        print cls.__name__
         cls.elastic_mapping_builder(obj)
+        # pylint: disable=no-member
         for attr in cls.cls_revforeignkeys():
             obj[attr] = {'type': 'nested'}
+        # pylint: disable=no-member
+
         ret['properties'] = obj
         return ret
