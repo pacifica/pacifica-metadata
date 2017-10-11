@@ -70,9 +70,10 @@ class ElasticAPI(object):
         obj = {}
         cls.elastic_mapping_builder(obj)
         # pylint: disable=no-member
-        for attr in cls.cls_revforeignkeys():
-            obj[attr] = {'type': 'nested'}
+        rev_f_keys = cls.cls_revforeignkeys()
         # pylint: enable=no-member
+        for attr in rev_f_keys:
+            obj[attr] = {'type': 'nested'}
 
         ret['properties'] = obj
         return ret
