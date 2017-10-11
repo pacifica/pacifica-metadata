@@ -69,5 +69,7 @@ class ElasticAPI(object):
         ret = {}
         obj = {}
         cls.elastic_mapping_builder(obj)
+        for attr in cls.cls_revforeignkeys():
+            obj[attr] = {'type': 'nested'}
         ret['properties'] = obj
         return ret
