@@ -1,8 +1,6 @@
 #!/usr/bin/python
 """Test the ORM interface ElasticUpdateAPI."""
-from json import loads
 import requests
-from dateutil import parser
 from metadata.rest.test import CPCommonTest
 
 
