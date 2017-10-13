@@ -70,15 +70,9 @@ class ElasticAPI(object):
         ret = {}
         obj = {}
         cls.elastic_mapping_builder(obj)
-        # pylint: disable=no-member
-        # rev_f_keys = cls.cls_revforeignkeys()
-        # pylint: enable=no-member
         for attr, value in cls.__dict__.items():
             if isinstance(value, ReverseRelationDescriptor):
                 obj[attr] = {'type': 'nested'}
-
-        # for attr in rev_f_keys:
-        #     obj[attr] = {'type': 'nested'}
 
         ret['properties'] = obj
         return ret
