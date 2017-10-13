@@ -9,14 +9,13 @@ class TestElasticUpdateAPI(CPCommonTest):
 
     __test__ = True
 
-    def _post_to_elasticupdate_api(self, object_name, id_list):
-        header_list = {'Content-Type': 'application/json'}
+    def _post_to_elasticupdate_api(self, object_name, list_of_instrument_ids):
         req = requests.post(
             url='{0}/elasticupdate/{1}'.format(
                 self.url, object_name
             ),
-            json=id_list,
-            headers=header_list
+            json=list_of_instrument_ids,
+            headers={'Content-Type': 'application/json'}
         )
         return req
 
