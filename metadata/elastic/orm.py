@@ -2,6 +2,7 @@
 """Elastic search core class to convert db object."""
 from elasticsearch import Elasticsearch, helpers
 from metadata.elastic import ELASTIC_ENDPOINT, ELASTIC_INDEX
+from peewee import ReverseRelationDescriptor
 
 
 class ElasticAPI(object):
@@ -69,5 +70,9 @@ class ElasticAPI(object):
         ret = {}
         obj = {}
         cls.elastic_mapping_builder(obj)
+        for attr, value in cls.__dict__.items():
+            if isinstance(value, ReverseRelationDescriptor):
+                obj[attr] = {'type': 'nested'}
+
         ret['properties'] = obj
         return ret
