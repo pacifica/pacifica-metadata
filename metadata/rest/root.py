@@ -1,6 +1,7 @@
 #!/usr/bin/python
 """CherryPy root object class."""
 from metadata.orm import ORM_OBJECTS
+from metadata.rest.elasticupdate import ElasticSearchUpdateAPI
 from metadata.rest.objectinfo import ObjectInfoAPI
 from metadata.rest.userinfo import UserInfoAPI
 from metadata.rest.proposalinfo import ProposalInfoAPI
@@ -25,6 +26,7 @@ class Root(object):
     exposed = False
 
     objectinfo = ObjectInfoAPI()
+    elasticupdate = ElasticSearchUpdateAPI()
     userinfo = UserInfoAPI()
     proposalinfo = ProposalInfoAPI()
     fileinfo = FileInfoAPI()

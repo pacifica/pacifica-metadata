@@ -35,8 +35,15 @@ class Instruments(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(Instruments, Instruments).elastic_mapping_builder(obj)
-        obj['display_name'] = obj['name'] = obj['name_short'] = \
-            obj['encoding'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+        obj['display_name'] = obj['name'] = obj['name_short'] = obj['encoding'] = {
+            'type': 'text',
+            'fields': {
+                'keyword': {
+                    'type': 'keyword',
+                    'ignore_above': 256
+                }
+            }
+        }
 
     def to_hash(self, recursion_depth=1):
         """Convert the object to a hash."""

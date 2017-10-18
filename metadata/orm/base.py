@@ -96,7 +96,9 @@ class PacificaModel(Model):
     @classmethod
     def cls_foreignkeys(cls):
         """Provide the foreign keys of the class as a list of attrs."""
+        # pylint: disable=no-member
         return cls._meta.rel.keys()
+        # pylint: enable=no-member
 
     @classmethod
     def cls_revforeignkeys(cls):
@@ -116,7 +118,7 @@ class PacificaModel(Model):
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         if recursion_depth:
             for attr in self.cls_revforeignkeys():
-                obj[attr] = [obj_ref.to_hash(recursion_depth-1) for obj_ref in getattr(self, attr)]
+                obj[attr] = [obj_ref.to_hash(recursion_depth - 1) for obj_ref in getattr(self, attr)]
         return obj
 
     def from_hash(self, obj):
