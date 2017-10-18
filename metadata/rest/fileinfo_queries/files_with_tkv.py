@@ -29,7 +29,7 @@ class FilesWithTransactionKeyValue(object):
             # invalid value
             return []
 
-        return [f.to_hash() for f in files_query]
+        return [f.to_hash(0) for f in files_query]
 
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
