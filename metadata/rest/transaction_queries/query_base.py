@@ -40,7 +40,7 @@ class QueryBase(object):
                       .where(where_clause)
                       .order_by(Files.name))
 
-        return {f.id: f.to_hash() for f in files_list}
+        return {f.id: f.to_hash(0) for f in files_list}
 
     @staticmethod
     def _get_transaction_info_block(transaction_id, option='details'):
@@ -53,7 +53,7 @@ class QueryBase(object):
                                 .where(where_clause)
                                 .get())
 
-            transaction_entry = transaction_info.to_hash()
+            transaction_entry = transaction_info.to_hash(0)
         except DoesNotExist:
             message = 'No Transaction with an ID of {0} was found'.format(
                 transaction_id)
@@ -88,7 +88,7 @@ class QueryBase(object):
 
         for trans in transactions:
             kv_list = {}
-            entry = trans.to_hash()
+            entry = trans.to_hash(0)
             metadata = QueryBase._get_base_transaction_metadata(entry, option)
             transaction = {}
             kvs = QueryBase._get_transaction_key_values(trans.id)
@@ -151,13 +151,13 @@ class QueryBase(object):
         if option == 'details':
             submitter = Users.get(
                 Users.id == transaction_entry.get('submitter')
-            ).to_hash()
+            ).to_hash(0)
             proposal = Proposals.get(
                 Proposals.id == transaction_entry.get('proposal')
-            ).to_hash()
+            ).to_hash(0)
             instrument = Instruments.get(
                 Instruments.id == transaction_entry.get('instrument')
-            ).to_hash()
+            ).to_hash(0)
             details_metadata = {
                 'submitter_name': u'{0} {1}'.format(
                     submitter.get('first_name'),

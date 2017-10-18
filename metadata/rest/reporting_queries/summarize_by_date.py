@@ -67,7 +67,7 @@ class SummarizeByDate(QueryBase):
         transaction_cache = {}
         for item in query.iterator():
             if item.transaction_id not in transaction_cache:
-                t_info = item.transaction.to_hash()
+                t_info = item.transaction.to_hash(0)
                 transaction_cache[item.transaction_id] = t_info
             else:
                 t_info = transaction_cache[item.transaction_id]
