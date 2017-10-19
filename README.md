@@ -121,6 +121,27 @@ Response bodies for queries on other parts may contain JSON data for more than o
 ]
 ```
 
+#### Pagination
+
+By default, Pacifica Metadata Services API endpoints respond with JSON data for all matching objects.
+Hence, the response size, and therefore, the response time is proportional to the number of matches.
+
+To reduce the response time, but still enable access to all matching objects, all Pacifica Metadata Services API endpoints offer a "pagination" capability, where large responses are subdivided into "pages" with a fixed number of matching objects "per page".
+
+For example, 100 matching objects are divided into 4 pages of 25 matching objects per page:
+
+* Page 1 = Matching objects 1 to 25
+* Page 2 = Matching objects 26 to 50
+* Page 3 = Matching objects 51 to 75
+* Page 4 = Matching objects 76 to 100
+* Page >4 = No matching objects
+
+Use the `page_number` and `items_per_page` query parameters to specify the number of pages and the number of matching objects per page, respectively, e.g., to retrieve the 7th page of 10 `User`s per page using the `curl` command:
+
+```
+curl -X GET 'http://localhost:8121/users?items_per_page=10&page_number=7'
+```
+
 ### Updating an Object
 
 To modify a preexisting object, use the query parameters to identify the
