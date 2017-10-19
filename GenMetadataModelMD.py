@@ -19,29 +19,41 @@ objects in the model.
 
 for obj_cls in ORM_OBJECTS:
     print('### {0}'.format(obj_cls.__name__))
-    print('| Column | Type | Reference |')
-    print('| --- | --- | --- |')
+    print('| Column | Type | Reference | Attributes |')
+    print('| --- | --- | --- | --- |')
     column_tuples = []
     for obj_cls_attr in dir(obj_cls):
+        attr = getattr(obj_cls, obj_cls_attr)
+        attr_type = type(attr)
         # pylint: disable=too-many-boolean-expressions
         # introspection is hard...
-        extended_objs = type(getattr(obj_cls, obj_cls_attr)).__name__ == 'ExtendDateTimeField' or \
-            type(getattr(obj_cls, obj_cls_attr)).__name__ == 'ExtendDateField'
-        peewee_chk = type(getattr(obj_cls, obj_cls_attr)).__module__ == 'peewee' and \
+        extended_objs = attr_type.__name__ == 'ExtendDateTimeField' or \
+            attr_type.__name__ == 'ExtendDateField'
+        peewee_chk = attr_type.__module__ == 'peewee' and \
             obj_cls_attr != '_meta' and \
-            type(getattr(obj_cls, obj_cls_attr)).__name__ != 'ReverseRelationDescriptor' and \
-            type(getattr(obj_cls, obj_cls_attr)).__name__ != 'CompositeKey'
+            attr_type.__name__ != 'ReverseRelationDescriptor' and \
+            attr_type.__name__ != 'CompositeKey'
         if extended_objs or peewee_chk:
             column_name = obj_cls_attr
-            column_type = getattr(obj_cls, obj_cls_attr).get_column_type()
+            column_type = attr.get_column_type()
             points_to = ''
-            if type(getattr(obj_cls, obj_cls_attr)).__name__ == 'ForeignKeyField':
-                points_to_class = getattr(obj_cls, obj_cls_attr).to_field.model_class.__name__
-                points_to_column = getattr(obj_cls, obj_cls_attr).to_field.name
+            sql_attrs = []
+            if attr.null:
+                sql_attrs.append('NULL')
+            else:
+                sql_attrs.append('NOT NULL')
+            if attr.primary_key:
+                sql_attrs.append('PRIMARY KEY')
+            if attr.sequence:
+                sql_attrs.append('DEFAULT NEXTVAL({0})'.format(attr.sequence))
+            sql_attrs = ', '.join(sql_attrs)
+            if attr_type.__name__ == 'ForeignKeyField':
+                points_to_class = attr.to_field.model_class.__name__
+                points_to_column = attr.to_field.name
                 points_to = '{0}.{1}'.format(points_to_class, points_to_column)
                 if column_name.endswith('_id'):
                     continue
-            column_tuples.append((column_name, column_type, points_to))
+            column_tuples.append((column_name, column_type, points_to, sql_attrs))
 
     # pylint: disable=invalid-name
     # pylint: disable=too-many-return-statements
@@ -71,7 +83,7 @@ for obj_cls in ORM_OBJECTS:
     # pylint: enable=invalid-name
 
     for column in sorted(column_tuples, cmp=column_cmp):
-        print('| {0} | {1} | {2} |'.format(*column))
+        print('| {0} | {1} | {2} | {3} |'.format(*column))
     print('')
 
 print("""
