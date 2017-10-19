@@ -43,8 +43,7 @@ python MetadataServer.py
 
 There are many different types of objects that all get queried and
 created the same way. We will only show the user object interface
-here but there are more covered in the [metadata model]
-(METADATA_MODEL.md) docs.
+here but there are more covered in the [metadata model](METADATA_MODEL.md) docs.
 
 ### Create an Object
 
@@ -154,6 +153,5 @@ curl http://localhost:8121/users?_id=127
 ## Contributions
 
 Contributions are accepted on github via the fork and pull request
-workflow. Github has a good [help article]
-(https://help.github.com/articles/using-pull-requests/) if you are
-unfamiliar with this method of contributing.
+workflow. Github has a good [help article](https://help.github.com/articles/using-pull-requests/)
+if you are unfamiliar with this method of contributing.
