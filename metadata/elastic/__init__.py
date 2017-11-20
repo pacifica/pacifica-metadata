@@ -11,6 +11,12 @@ DEFAULT_ELASTIC_ENDPOINT = getenv('ELASTICDB_PORT', 'tcp://127.0.0.1:9200').repl
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 ELASTIC_INDEX = getenv('ELASTIC_INDEX', 'pacifica')
 ES_INDEX_URL = '{0}/{1}'.format(ELASTIC_ENDPOINT, ELASTIC_INDEX)
+ES_CLIENT_ARGS = {
+    'sniff_on_start': True,
+    'sniff_on_connection_fail': True,
+    'sniffer_timeout': 60,
+    'timeout': 60
+}
 
 
 def create_elastic_index():
