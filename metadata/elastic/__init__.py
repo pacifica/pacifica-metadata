@@ -21,7 +21,7 @@ ES_CLIENT_ARGS = {
 
 def create_elastic_index():
     """Create the elastic search index for all our data."""
-    cli = Elasticsearch([ELASTIC_ENDPOINT], **ES_CLIENT_ARGS)
+    cli = Elasticsearch([ELASTIC_ENDPOINT])
     # pylint: disable=unexpected-keyword-arg
     cli.indices.create(index=ELASTIC_INDEX, ignore=400)
     # pylint: enable=unexpected-keyword-arg
@@ -30,7 +30,7 @@ def create_elastic_index():
 def try_es_connect(attempts=0):
     """Recursively try to connect to elasticsearch."""
     try:
-        cli = Elasticsearch([ELASTIC_ENDPOINT], **ES_CLIENT_ARGS)
+        cli = Elasticsearch([ELASTIC_ENDPOINT])
         cli.info()
     except ElasticsearchException as ex:
         if attempts < ELASTIC_CONNECT_ATTEMPTS:
