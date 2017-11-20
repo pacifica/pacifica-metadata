@@ -2,7 +2,7 @@
 """Core interface for the uploader metadata objects to interface with CherryPy."""
 from cherrypy import tools, request
 from elasticsearch import Elasticsearch, helpers
-from metadata.elastic import ELASTIC_ENDPOINT, ELASTIC_INDEX
+from metadata.elastic import ELASTIC_ENDPOINT, ELASTIC_INDEX, ES_CLIENT_ARGS
 from metadata.orm.base import db_connection_decorator
 from metadata.rest.objectinfo import ObjectInfoAPI
 
@@ -11,23 +11,17 @@ from metadata.rest.objectinfo import ObjectInfoAPI
 class ElasticSearchUpdateAPI(object):
     """ElasticSearchUpdateAPI."""
 
-    es_kwargs = {
-        'sniff_on_start': True,
-        'sniff_on_connection_fail': True,
-        'sniffer_timeout': 60,
-        'timeout': 60
-    }
     exposed = True
 
-    @classmethod
+    @staticmethod
     @db_connection_decorator
-    def push_elastic_updates(cls, object_class_name, id_list, recursion_depth):
+    def push_elastic_updates(object_class_name, id_list, recursion_depth):
         """Push out updates to the ES cluster for updated MD records."""
         myclass = ObjectInfoAPI.get_class_object_from_name(object_class_name=object_class_name)
         records = myclass.select()
         if id_list:
             records.where(myclass.id << id_list)
-        es_client = Elasticsearch([ELASTIC_ENDPOINT], **cls.es_kwargs)
+        es_client = Elasticsearch([ELASTIC_ENDPOINT], **ES_CLIENT_ARGS)
         update_list = ({
             '_op_type': 'update',
             '_index': ELASTIC_INDEX,
