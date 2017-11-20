@@ -22,22 +22,20 @@ class ElasticSearchUpdateAPI(object):
         if id_list:
             records.where(myclass.id << id_list)
         es_client = Elasticsearch([ELASTIC_ENDPOINT], **ES_CLIENT_ARGS)
-        update_list = ({
-            '_op_type': 'update',
-            '_index': ELASTIC_INDEX,
-            '_type': myclass.__name__,
-            '_id': r.pop('_id'),
-            'doc': r
-        } for r in ElasticSearchUpdateAPI.read_md_records(records, recursion_depth))
-
-        return helpers.bulk(es_client, update_list)
+        return helpers.bulk(es_client, ElasticSearchUpdateAPI.read_md_records(records, myclass, recursion_depth))
 
     @staticmethod
-    def read_md_records(md_records, recursion_depth):
+    def read_md_records(md_records, myclass, recursion_depth):
         """Make a generator object to be used in push_elastic_updates."""
         for record in md_records:
-            record_dict = record.to_hash(recursion_depth)
-            yield record_dict
+            record_hash = record.to_hash(recursion_depth)
+            yield {
+                '_op_type': 'update',
+                '_index': ELASTIC_INDEX,
+                '_type': myclass.__name__,
+                '_id': record_hash.pop('_id'),
+                'doc': record_hash
+            }
 
     # CherryPy requires these named methods.
     # pylint: disable=invalid-name, protected-access
