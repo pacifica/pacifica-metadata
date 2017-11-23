@@ -118,7 +118,7 @@ class PacificaModel(Model):
         obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         if recursion_depth:
-            for attr in self.cls_revforeignkeys():
+            for attr in set(self.cls_revforeignkeys()) - set(flags.get('recursion_exclude', [])):
                 rec_flags = flags.copy()
                 rec_flags['recursion_depth'] -= 1
                 obj[attr] = [obj_ref.to_hash(rec_flags) for obj_ref in getattr(self, attr)]
