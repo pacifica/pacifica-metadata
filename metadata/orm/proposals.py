@@ -71,18 +71,17 @@ class Proposals(CherryPyAPI):
         obj = super(Proposals, self).to_hash(flags)
         obj['_id'] = unicode_type(self.id)
         obj['title'] = unicode_type(self.title)
-        obj['abstract'] = unicode_type(self.abstract) if not exclude_text else None
+
+        def _set_only_if(attr, expr, value, else_value):
+            obj[attr] = value if expr else else_value
+        _set_only_if('abstract', exclude_text, unicode_type(self.abstract), None)
         obj['science_theme'] = unicode_type(self.science_theme)
         obj['proposal_type'] = unicode_type(self.proposal_type)
         obj['submitted_date'] = self.submitted_date.isoformat()
-        obj['actual_start_date'] = self.actual_start_date.isoformat() \
-            if self.actual_start_date is not None else None
-        obj['accepted_date'] = self.accepted_date.isoformat() \
-            if self.accepted_date is not None else None
-        obj['actual_end_date'] = self.actual_end_date.isoformat() \
-            if self.actual_end_date is not None else None
-        obj['closed_date'] = self.closed_date.isoformat() \
-            if self.closed_date is not None else None
+        _set_only_if('actual_start_date', self.actual_start_date is not None, self.actual_start_date.isoformat(), None)
+        _set_only_if('accepted_date', self.accepted_date is not None, self.accepted_date.isoformat(), None)
+        _set_only_if('actual_end_date', self.actual_end_date is not None, self.actual_end_date.isoformat(), None)
+        _set_only_if('closed_date', self.closed_date is not None, self.closed_date.isoformat(), None)
         obj['encoding'] = str(self.encoding)
         return obj
 
