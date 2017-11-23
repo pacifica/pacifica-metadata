@@ -28,9 +28,9 @@ class Keys(CherryPyAPI):
         super(Keys, Keys).elastic_mapping_builder(obj)
         obj['key'] = obj['encoding'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self, recursion_depth=1):
+    def to_hash(self, flags):
         """Convert the object to a hash."""
-        obj = super(Keys, self).to_hash(recursion_depth)
+        obj = super(Keys, self).to_hash(flags)
         obj['_id'] = int(self.id)
         obj['key'] = unicode_type(self.key)
         obj['encoding'] = str(self.encoding)

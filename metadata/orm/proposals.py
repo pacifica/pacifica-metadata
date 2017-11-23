@@ -65,9 +65,9 @@ class Proposals(CherryPyAPI):
             obj['actual_end_date'] = obj['closed_date'] = \
             {'type': 'date', 'format': 'yyyy-mm-dd'}
 
-    def to_hash(self, recursion_depth=1):
+    def to_hash(self, flags):
         """Convert the object to a hash."""
-        obj = super(Proposals, self).to_hash(recursion_depth)
+        obj = super(Proposals, self).to_hash(flags)
         obj['_id'] = unicode_type(self.id)
         obj['title'] = unicode_type(self.title)
         obj['abstract'] = unicode_type(self.abstract)
