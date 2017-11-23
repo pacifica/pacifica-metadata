@@ -39,9 +39,9 @@ class UserGroup(CherryPyAPI):
         super(UserGroup, UserGroup).elastic_mapping_builder(obj)
         obj['group_id'] = obj['person_id'] = {'type': 'integer'}
 
-    def to_hash(self, flags={}):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(UserGroup, self).to_hash(flags)
+        obj = super(UserGroup, self).to_hash(**flags)
         obj['_id'] = index_hash(int(self.person.id), int(self.group.id))
         obj['person_id'] = int(self.person.id)
         obj['group_id'] = int(self.group.id)

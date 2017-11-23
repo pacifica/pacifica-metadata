@@ -44,9 +44,9 @@ class FileKeyValue(CherryPyAPI):
         obj['file_id'] = obj['key_id'] = obj['value_id'] = \
             {'type': 'integer'}
 
-    def to_hash(self, flags={}):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(FileKeyValue, self).to_hash(flags)
+        obj = super(FileKeyValue, self).to_hash(**flags)
         obj['_id'] = index_hash(int(self.key.id),
                                 int(self.file.id),
                                 int(self.value.id))

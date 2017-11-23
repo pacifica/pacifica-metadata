@@ -40,9 +40,9 @@ class ProposalInstrument(CherryPyAPI):
         obj['instrument_id'] = {'type': 'integer'}
         obj['proposal_id'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self, flags={}):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(ProposalInstrument, self).to_hash(flags)
+        obj = super(ProposalInstrument, self).to_hash(**flags)
         obj['_id'] = index_hash(unicode_type(self.proposal.id), int(self.instrument.id))
         obj['instrument_id'] = int(self.instrument.id)
         obj['proposal_id'] = unicode_type(self.proposal.id)
