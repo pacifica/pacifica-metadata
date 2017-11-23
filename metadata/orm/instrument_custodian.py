@@ -39,7 +39,7 @@ class InstrumentCustodian(CherryPyAPI):
         super(InstrumentCustodian, InstrumentCustodian).elastic_mapping_builder(obj)
         obj['instrument_id'] = obj['custodian_id'] = {'type': 'integer'}
 
-    def to_hash(self, flags):
+    def to_hash(self, flags={}):
         """Convert the object to a hash."""
         obj = super(InstrumentCustodian, self).to_hash(flags)
         obj['_id'] = index_hash(int(self.custodian.id), int(self.instrument.id))

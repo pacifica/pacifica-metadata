@@ -36,7 +36,7 @@ class Journals(CherryPyAPI):
             {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['impact_factor'] = {'type': 'float'}
 
-    def to_hash(self, flags):
+    def to_hash(self, flags={}):
         """Convert the object to a hash."""
         obj = super(Journals, self).to_hash(flags)
         obj['_id'] = int(self.id)

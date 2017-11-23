@@ -65,7 +65,7 @@ class Citations(CherryPyAPI):
         obj['article_title'] = obj['encoding'] = \
             obj['doi_reference'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self, flags):
+    def to_hash(self, flags={}):
         """Convert the citation fields to a serializable hash."""
         exclude_text = flags.get('exclude_text', False)
         obj = super(Citations, self).to_hash(flags)

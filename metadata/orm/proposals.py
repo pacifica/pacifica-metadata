@@ -65,7 +65,7 @@ class Proposals(CherryPyAPI):
             obj['actual_end_date'] = obj['closed_date'] = \
             {'type': 'date', 'format': 'yyyy-mm-dd'}
 
-    def to_hash(self, flags):
+    def to_hash(self, flags={}):
         """Convert the object to a hash."""
         exclude_text = flags.get('exclude_text', False)
         obj = super(Proposals, self).to_hash(flags)

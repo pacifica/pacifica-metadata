@@ -45,7 +45,7 @@ class Instruments(CherryPyAPI):
             }
         }
 
-    def to_hash(self, flags):
+    def to_hash(self, flags={}):
         """Convert the object to a hash."""
         obj = super(Instruments, self).to_hash(flags)
         obj['_id'] = self.id

@@ -55,7 +55,7 @@ class Contributors(CherryPyAPI):
             obj['dept_code'] = obj['encoding'] = \
             {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self, flags):
+    def to_hash(self, flags={}):
         """Convert the object fields into a serializable hash."""
         obj = super(Contributors, self).to_hash(flags)
         obj['_id'] = int(self.id)

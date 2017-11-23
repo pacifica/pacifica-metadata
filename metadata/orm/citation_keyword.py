@@ -40,7 +40,7 @@ class CitationKeyword(CherryPyAPI):
         obj['citation_id'] = {'type': 'integer'}
         obj['keyword_id'] = {'type': 'integer'}
 
-    def to_hash(self, flags):
+    def to_hash(self, flags={}):
         """Convert the object to a hash."""
         obj = super(CitationKeyword, self).to_hash(flags)
         # pylint: disable=no-member

@@ -40,7 +40,7 @@ class CitationProposal(CherryPyAPI):
         obj['citation_id'] = {'type': 'integer'}
         obj['proposal_id'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self, flags):
+    def to_hash(self, flags={}):
         """Convert the object to a hash."""
         obj = super(CitationProposal, self).to_hash(flags)
         obj['_id'] = index_hash(int(self.citation.id), unicode_type(self.proposal.id))

@@ -65,7 +65,7 @@ class Files(CherryPyAPI):
             obj['encoding'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['hashsum'] = obj['hashtype'] = {'type': 'text'}
 
-    def to_hash(self, flags):
+    def to_hash(self, flags={}):
         """Convert the object to a hash."""
         obj = super(Files, self).to_hash(flags)
         obj['_id'] = int(self.id)
