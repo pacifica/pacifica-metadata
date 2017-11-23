@@ -74,7 +74,7 @@ class Proposals(CherryPyAPI):
 
         def _set_only_if(attr, expr, value, else_value):
             obj[attr] = value if expr else else_value
-        _set_only_if('abstract', exclude_text, unicode_type(self.abstract), None)
+        _set_only_if('abstract', not exclude_text, unicode_type(self.abstract), None)
         obj['science_theme'] = unicode_type(self.science_theme)
         obj['proposal_type'] = unicode_type(self.proposal_type)
         obj['submitted_date'] = self.submitted_date.isoformat()
