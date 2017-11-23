@@ -71,8 +71,7 @@ class Proposals(CherryPyAPI):
         obj = super(Proposals, self).to_hash(flags)
         obj['_id'] = unicode_type(self.id)
         obj['title'] = unicode_type(self.title)
-        if not exclude_text:
-            obj['abstract'] = unicode_type(self.abstract)
+        obj['abstract'] = unicode_type(self.abstract) if not exclude_text else None
         obj['science_theme'] = unicode_type(self.science_theme)
         obj['proposal_type'] = unicode_type(self.proposal_type)
         obj['submitted_date'] = self.submitted_date.isoformat()
