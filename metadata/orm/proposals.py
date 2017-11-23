@@ -67,10 +67,12 @@ class Proposals(CherryPyAPI):
 
     def to_hash(self, flags):
         """Convert the object to a hash."""
+        exclude_text = flags.get('exclude_text', False)
         obj = super(Proposals, self).to_hash(flags)
         obj['_id'] = unicode_type(self.id)
         obj['title'] = unicode_type(self.title)
-        obj['abstract'] = unicode_type(self.abstract)
+        if not exclude_text:
+            obj['abstract'] = unicode_type(self.abstract)
         obj['science_theme'] = unicode_type(self.science_theme)
         obj['proposal_type'] = unicode_type(self.proposal_type)
         obj['submitted_date'] = self.submitted_date.isoformat()
