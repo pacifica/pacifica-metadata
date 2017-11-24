@@ -72,16 +72,23 @@ class Proposals(CherryPyAPI):
         obj['_id'] = unicode_type(self.id)
         obj['title'] = unicode_type(self.title)
 
-        def _set_only_if(attr, expr, value, else_value):
-            obj[attr] = value if expr else else_value
-        _set_only_if('abstract', not exclude_text, unicode_type(self.abstract), None)
+        def _set_only_if(attr, expr, true_value, else_func):
+            obj[attr] = true_value if expr else else_func()
         obj['science_theme'] = unicode_type(self.science_theme)
         obj['proposal_type'] = unicode_type(self.proposal_type)
         obj['submitted_date'] = self.submitted_date.isoformat()
-        _set_only_if('actual_start_date', self.actual_start_date is not None, self.actual_start_date.isoformat(), None)
-        _set_only_if('accepted_date', self.accepted_date is not None, self.accepted_date.isoformat(), None)
-        _set_only_if('actual_end_date', self.actual_end_date is not None, self.actual_end_date.isoformat(), None)
-        _set_only_if('closed_date', self.closed_date is not None, self.closed_date.isoformat(), None)
+        # pylint: disable=unnecessary-lambda
+        _set_only_if('abstract', exclude_text, None, lambda: unicode_type(self.abstract))
+        _set_only_if(
+            'actual_start_date',
+            self.actual_start_date is None,
+            None,
+            lambda: self.actual_start_date.isoformat()
+        )
+        _set_only_if('accepted_date', self.accepted_date is None, None, lambda: self.accepted_date.isoformat())
+        _set_only_if('actual_end_date', self.actual_end_date is None, None, lambda: self.actual_end_date.isoformat())
+        _set_only_if('closed_date', self.closed_date is None, None, lambda: self.closed_date.isoformat())
+        # pylint: enable=unnecessary-lambda
         obj['encoding'] = str(self.encoding)
         return obj
 
