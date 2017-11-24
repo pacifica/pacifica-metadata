@@ -13,7 +13,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
 
     es_recursive_flags = {
         'recursion_depth': 1,
-        'recursion_exclude': ['transactions']
+        'recursion_exclude': ['transactions', 'trans_links']
     }
     exposed = True
 
