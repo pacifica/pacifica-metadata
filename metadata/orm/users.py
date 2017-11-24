@@ -42,9 +42,9 @@ class Users(CherryPyAPI):
             obj['middle_initial'] = obj['encoding'] = \
             {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self, recursion_depth=1):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(Users, self).to_hash(recursion_depth)
+        obj = super(Users, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['first_name'] = unicode_type(self.first_name)
         obj['middle_initial'] = unicode_type(self.middle_initial)

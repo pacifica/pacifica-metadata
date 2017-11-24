@@ -8,7 +8,7 @@ class QueryBase(object):
     @staticmethod
     def format_user_block(user_entry, option=None):
         """Construct a dictionary from a given user instance in the metadata stack."""
-        user_hash = user_entry.to_hash(0)
+        user_hash = user_entry.to_hash()
         proposal_xref = ProposalParticipant()
         where_exp = proposal_xref.where_clause({'person_id': user_entry.id})
         proposal_person_query = (
@@ -19,7 +19,7 @@ class QueryBase(object):
 
         clean_proposals = {}
         for prop in proposals:
-            info = prop.to_hash(0)
+            info = prop.to_hash()
             info.pop('abstract')
             prop_id = prop.id
             clean_proposals[prop_id] = info

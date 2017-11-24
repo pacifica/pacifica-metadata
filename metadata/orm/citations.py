@@ -65,13 +65,15 @@ class Citations(CherryPyAPI):
         obj['article_title'] = obj['encoding'] = \
             obj['doi_reference'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self, recursion_depth=1):
+    def to_hash(self, **flags):
         """Convert the citation fields to a serializable hash."""
-        obj = super(Citations, self).to_hash(recursion_depth)
+        exclude_text = flags.get('exclude_text', False)
+        obj = super(Citations, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['article_title'] = unicode_type(self.article_title)
-        obj['abstract_text'] = unicode_type(self.abstract_text)
-        obj['xml_text'] = unicode_type(self.xml_text)
+        if not exclude_text:
+            obj['abstract_text'] = unicode_type(self.abstract_text)
+            obj['xml_text'] = unicode_type(self.xml_text)
         # pylint: disable=no-member
         obj['journal_id'] = int(self.journal.id)
         # pylint: enable=no-member

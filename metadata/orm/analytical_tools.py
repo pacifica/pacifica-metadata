@@ -29,9 +29,9 @@ class AnalyticalTools(CherryPyAPI):
         obj['name'] = obj['encoding'] = \
             {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self, recursion_depth=1):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(AnalyticalTools, self).to_hash(recursion_depth)
+        obj = super(AnalyticalTools, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['name'] = unicode_type(self.name)
         obj['encoding'] = str(self.encoding)

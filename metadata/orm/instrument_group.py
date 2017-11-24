@@ -39,9 +39,9 @@ class InstrumentGroup(CherryPyAPI):
         super(InstrumentGroup, InstrumentGroup).elastic_mapping_builder(obj)
         obj['instrument_id'] = obj['group_id'] = {'type': 'integer'}
 
-    def to_hash(self, recursion_depth=1):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(InstrumentGroup, self).to_hash(recursion_depth)
+        obj = super(InstrumentGroup, self).to_hash(**flags)
         obj['_id'] = index_hash(int(self.group.id), int(self.instrument.id))
         obj['instrument_id'] = int(self.instrument.id)
         obj['group_id'] = int(self.group.id)
