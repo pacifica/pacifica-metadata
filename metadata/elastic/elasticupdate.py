@@ -28,7 +28,7 @@ class ElasticSearchUpdateAPI(object):
     def read_md_records(md_records, myclass, recursion_depth):
         """Make a generator object to be used in push_elastic_updates."""
         for record in md_records:
-            record_hash = record.to_hash(recursion_depth)
+            record_hash = record.to_hash(recursion_depth=recursion_depth)
             yield {
                 '_op_type': 'update',
                 '_index': ELASTIC_INDEX,
