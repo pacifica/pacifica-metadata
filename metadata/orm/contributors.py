@@ -52,11 +52,12 @@ class Contributors(CherryPyAPI):
         super(Contributors, Contributors).elastic_mapping_builder(obj)
         obj['person_id'] = obj['institution_id'] = {'type': 'integer'}
         obj['first_name'] = obj['middle_initial'] = obj['last_name'] = \
-            obj['dept_code'] = obj['encoding'] = {'type': 'string'}
+            obj['dept_code'] = obj['encoding'] = \
+            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self):
+    def to_hash(self, **flags):
         """Convert the object fields into a serializable hash."""
-        obj = super(Contributors, self).to_hash()
+        obj = super(Contributors, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['first_name'] = unicode_type(self.first_name)
         obj['middle_initial'] = unicode_type(self.middle_initial)

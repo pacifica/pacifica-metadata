@@ -21,14 +21,6 @@ class TestAToolTransaction(TestBase):
     obj_id = AToolTransaction.transaction
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the TransactionKeyValue object."""
-        ret = [AToolTransaction]
-        ret += TestTransactions.dependent_cls()
-        ret += TestAnalyticalTools.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that TransactionKeyValue need."""
         trans = Transactions()

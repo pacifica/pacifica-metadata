@@ -39,11 +39,12 @@ class Users(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(Users, Users).elastic_mapping_builder(obj)
         obj['first_name'] = obj['last_name'] = obj['network_id'] = \
-            obj['middle_initial'] = obj['encoding'] = {'type': 'string'}
+            obj['middle_initial'] = obj['encoding'] = \
+            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(Users, self).to_hash()
+        obj = super(Users, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['first_name'] = unicode_type(self.first_name)
         obj['middle_initial'] = unicode_type(self.middle_initial)

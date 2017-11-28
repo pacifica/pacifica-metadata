@@ -4,6 +4,7 @@ from peewee import fn
 from metadata.rest.reporting_queries.query_base import QueryBase
 from metadata.orm import Transactions, Files
 from metadata.orm.base import db_connection_decorator
+from metadata.rest.reporting_queries.summarize_by_date import SummarizeByDate
 
 
 # pylint: disable=too-few-public-methods
@@ -13,7 +14,8 @@ class DetailedTransactionList(QueryBase):
     exposed = True
 
     @staticmethod
-    def _get_transaction_list_details(transaction_list):
+    def get_transaction_list_details(transaction_list):
+        """Return complete data set on a specified transaction."""
         query = (Files().select(
             Files.transaction.alias('upload_id'),
             fn.Max(Transactions.updated).alias('upload_date'),
@@ -32,12 +34,12 @@ class DetailedTransactionList(QueryBase):
         return {str(r['upload_id']): {
             'upload_id': str(r['upload_id']),
             'upload_date': r['upload_date'].date().strftime('%Y-%m-%d'),
-            'file_date_start': r['file_date_start'].date().strftime('%Y-%m-%d'),
-            'file_date_end': r['file_date_end'].date().strftime('%Y-%m-%d'),
+            'file_date_start': SummarizeByDate.utc_to_local(r['file_date_start']).date().strftime('%Y-%m-%d'),
+            'file_date_end': SummarizeByDate.utc_to_local(r['file_date_end']).date().strftime('%Y-%m-%d'),
             'uploaded_by_id': int(r['uploaded_by_id']),
             'bundle_size': int(r['bundle_size']),
             'file_count': int(r['file_count']),
-            'upload_datetime': r['upload_date'].strftime('%Y-%m-%d %H:%M:%S'),
+            'upload_datetime': SummarizeByDate.utc_to_local(r['upload_date']).strftime('%Y-%m-%d %H:%M:%S'),
             'proposal_id': r['proposal_id'],
             'instrument_id': r['instrument_id']
         } for r in query.dicts()}
@@ -53,4 +55,4 @@ class DetailedTransactionList(QueryBase):
         # parse object list
         transaction_list = request.json
 
-        return DetailedTransactionList._get_transaction_list_details(transaction_list)
+        return DetailedTransactionList.get_transaction_list_details(transaction_list)

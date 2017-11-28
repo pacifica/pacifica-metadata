@@ -36,7 +36,6 @@ class UserSearch(QueryBase):
                     )
             where_clause &= (where_clause_part)
         objs = Users.select().where(where_clause).order_by(Users.last_name, Users.first_name)
-        # print objs.sql()
         if not objs:
             message = "No user entries were retrieved using the terms: '"
             message += '\' and \''.join(terms) + '\''

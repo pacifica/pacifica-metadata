@@ -1,6 +1,7 @@
 #!/usr/bin/python
 """CherryPy root object class."""
 from metadata.orm import ORM_OBJECTS
+from metadata.elastic.elasticupdate import ElasticSearchUpdateAPI
 from metadata.rest.objectinfo import ObjectInfoAPI
 from metadata.rest.userinfo import UserInfoAPI
 from metadata.rest.proposalinfo import ProposalInfoAPI
@@ -9,6 +10,7 @@ from metadata.rest.fileinfo import FileInfoAPI
 from metadata.rest.ingest import IngestAPI
 from metadata.rest.instrumentinfo import InstrumentInfoAPI
 from metadata.rest.summaryinfo import SummaryInfoAPI
+from metadata.rest.migrationinfo import MigrationInfoAPI
 from metadata.rest.tkvinfo import TkvInfoAPI
 from metadata.rest.tkvupload import TkvUploadAPI
 
@@ -24,6 +26,7 @@ class Root(object):
     exposed = False
 
     objectinfo = ObjectInfoAPI()
+    elasticupdate = ElasticSearchUpdateAPI()
     userinfo = UserInfoAPI()
     proposalinfo = ProposalInfoAPI()
     fileinfo = FileInfoAPI()
@@ -31,6 +34,7 @@ class Root(object):
     instrumentinfo = InstrumentInfoAPI()
     summaryinfo = SummaryInfoAPI()
     ingest = IngestAPI()
+    migrate = MigrationInfoAPI()
     tkvinfo = TkvInfoAPI()
     tkvupload = TkvUploadAPI()
 # pylint: enable=too-few-public-methods

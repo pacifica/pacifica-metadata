@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """Test the ORM interface SummaryInfoAPI."""
-# import datetime
+import datetime
 from os.path import realpath
 from json import loads
 import requests
@@ -41,6 +41,62 @@ class TestSummaryTkvAPI(CPCommonTest):
         results_obj = loads(getreq.text)
         self.assertEqual(getreq.status_code, 200)
         self.assertTrue(results_obj)
+
+        # Test value retrieval
+        getreq = requests.get(
+            url='{0}/tkvinfo/values_for_key/{1}/{2}'.format(
+                self.url, 'organism_name', datetime.datetime.now().isoformat()
+            ),
+            headers=header_list
+        )
+        results_obj = loads(getreq.text)
+        self.assertEqual(getreq.status_code, 200)
+        self.assertFalse(results_obj)
+
+        # Test value retrieval
+        getreq = requests.get(
+            url='{0}/tkvinfo/values_for_key/{1}?end_time={2}'.format(
+                self.url, 'organism_name', 'Mon Jul 12 00:00:00 2017'
+            ),
+            headers=header_list
+        )
+        results_obj = loads(getreq.text)
+        self.assertEqual(getreq.status_code, 200)
+        self.assertTrue(len(results_obj) == 1)
+
+        # Test value retrieval
+        getreq = requests.get(
+            url='{0}/tkvinfo/values_for_key/{1}/{2}/{3}'.format(
+                self.url, 'organism_name',
+                'Mon Jul 5 00:00:00 2017', 'Mon Jul 12 00:00:00 2017'
+            ),
+            headers=header_list
+        )
+        results_obj = loads(getreq.text)
+        self.assertEqual(getreq.status_code, 200)
+        self.assertTrue(len(results_obj) == 1)
+
+        # Test value retrieval
+        getreq = requests.get(
+            url='{0}/tkvinfo/values_for_key/{1}/{2}/{3}'.format(
+                self.url, 'organism_name',
+                'Mon Jul 12 00:00:00 2017', 'Mon Jul 5 00:00:00 2017'
+            ),
+            headers=header_list
+        )
+        results_obj = loads(getreq.text)
+        self.assertEqual(getreq.status_code, 500)
+
+        # Test value retrieval
+        getreq = requests.get(
+            url='{0}/tkvinfo/values_for_key/{1}/{2}'.format(
+                self.url, 'organism_name', 'Mon Jul 2 00:00:00 2017'
+            ),
+            headers=header_list
+        )
+        results_obj = loads(getreq.text)
+        self.assertEqual(getreq.status_code, 200)
+        self.assertTrue(len(results_obj) == 2)
 
         badreq = requests.get(
             url='{0}/tkvinfo/values_for_key/{1}'.format(

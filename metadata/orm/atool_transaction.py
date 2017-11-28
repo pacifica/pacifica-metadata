@@ -40,9 +40,9 @@ class AToolTransaction(CherryPyAPI):
         obj['transaction_id'] = {'type': 'integer'}
         obj['analytical_tool_id'] = {'type': 'integer'}
 
-    def to_hash(self):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(AToolTransaction, self).to_hash()
+        obj = super(AToolTransaction, self).to_hash(**flags)
         obj['_id'] = index_hash(int(self.transaction.id),
                                 int(self.analytical_tool.id))
         obj['transaction_id'] = int(self.transaction.id)

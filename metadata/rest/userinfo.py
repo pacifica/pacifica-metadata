@@ -26,9 +26,8 @@ def user_exists_decorator(func):
             )
     return func_wrapper
 
+
 # pylint: disable=too-few-public-methods
-
-
 class UserInfoAPI(object):
     """UserInfo API."""
 
@@ -36,8 +35,6 @@ class UserInfoAPI(object):
 
     def __init__(self):
         """Create local objects for subtree items."""
-        # self.by_user_id = ProposalUserSearch()
-        # self.search = ProposalTermSearch()
         self.search = UserSearch()
         self.by_id = UserLookup()
         self.by_user_id = UserLookup()

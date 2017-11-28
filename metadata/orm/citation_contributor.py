@@ -43,9 +43,9 @@ class CitationContributor(CherryPyAPI):
         obj['citation_id'] = obj['author_id'] = obj['author_precedence'] = \
             {'type': 'integer'}
 
-    def to_hash(self):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(CitationContributor, self).to_hash()
+        obj = super(CitationContributor, self).to_hash(**flags)
         obj['_id'] = index_hash(int(self.citation.id), int(self.author.id))
         obj['citation_id'] = int(self.citation.id)
         obj['author_id'] = int(self.author.id)

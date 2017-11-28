@@ -29,12 +29,13 @@ class Groups(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(Groups, Groups).elastic_mapping_builder(obj)
-        obj['name'] = obj['encoding'] = {'type': 'string'}
+        obj['name'] = obj['encoding'] = \
+            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['is_admin'] = {'type': 'boolean'}
 
-    def to_hash(self):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(Groups, self).to_hash()
+        obj = super(Groups, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['name'] = unicode_type(self.name)
         obj['encoding'] = str(self.encoding)

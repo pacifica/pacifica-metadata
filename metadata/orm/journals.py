@@ -32,12 +32,13 @@ class Journals(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(Journals, Journals).elastic_mapping_builder(obj)
-        obj['name'] = obj['website_url'] = obj['encoding'] = {'type': 'string'}
+        obj['name'] = obj['website_url'] = obj['encoding'] = \
+            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['impact_factor'] = {'type': 'float'}
 
-    def to_hash(self):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(Journals, self).to_hash()
+        obj = super(Journals, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['name'] = unicode_type(self.name)
         obj['impact_factor'] = float(self.impact_factor)

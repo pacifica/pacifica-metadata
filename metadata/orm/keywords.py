@@ -28,11 +28,12 @@ class Keywords(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(Keywords, Keywords).elastic_mapping_builder(obj)
-        obj['keyword'] = obj['encoding'] = {'type': 'string'}
+        obj['keyword'] = obj['encoding'] = \
+            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(Keywords, self).to_hash()
+        obj = super(Keywords, self).to_hash(**flags)
         obj['_id'] = int(self.id) if self.id is not None else obj['_id']
         obj['keyword'] = unicode_type(self.keyword)
         obj['encoding'] = str(self.encoding)

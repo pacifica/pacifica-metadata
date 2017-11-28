@@ -32,11 +32,6 @@ class TestUsers(TestBase):
     obj_cls = Users
     obj_id = Users.id
 
-    @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Users object."""
-        return [Users]
-
     def test_users_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_USER_HASH)

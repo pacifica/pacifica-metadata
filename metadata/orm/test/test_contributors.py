@@ -38,14 +38,6 @@ class TestContributors(TestBase):
     obj_id = Contributors.id
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Contributors object."""
-        ret = [Contributors]
-        ret += TestInstitutions.dependent_cls()
-        ret += TestUsers.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that Files depend on."""
         user = Users()

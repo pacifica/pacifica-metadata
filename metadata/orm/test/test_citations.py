@@ -58,11 +58,6 @@ class TestCitations(TestBase):
     obj_id = Citations.id
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the Citations object."""
-        return TestJournals.dependent_cls() + [Citations]
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that Files depend on."""
         journal = Journals()

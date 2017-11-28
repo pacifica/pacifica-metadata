@@ -16,7 +16,7 @@ and deleting these objects in from a web service layer.
 """
 from os import getenv
 from json import dumps, loads
-from peewee import PostgresqlDatabase as pgdb
+from peewee import PostgresqlDatabase as pgdb, ReverseRelationDescriptor
 from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause
 
 from metadata.orm.utils import index_hash, ExtendDateTimeField
@@ -93,14 +93,35 @@ class PacificaModel(Model):
         self._set_only_if(time_part, obj, time_part,
                           lambda: datetime_converts(obj[time_part]))
 
-    def to_hash(self):
+    @classmethod
+    def cls_foreignkeys(cls):
+        """Provide the foreign keys of the class as a list of attrs."""
+        # pylint: disable=no-member
+        return cls._meta.rel.keys()
+        # pylint: enable=no-member
+
+    @classmethod
+    def cls_revforeignkeys(cls):
+        """Provide the rev foreign keys of the class as a list of attrs."""
+        ret = []
+        for attr, value in cls.__dict__.items():
+            if isinstance(value, ReverseRelationDescriptor):
+                ret.append(attr)
+        return ret
+
+    def to_hash(self, **flags):
         """Convert the base object fields into serializable attributes in a hash."""
+        recursion_depth = flags.get('recursion_depth', 0)
         obj = {}
         obj['created'] = self.created.isoformat()
         obj['updated'] = self.updated.isoformat()
-        obj['deleted'] = self.deleted.isoformat(
-        ) if self.deleted is not None else None
+        obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
+        if recursion_depth:
+            for attr in set(self.cls_revforeignkeys()) - set(flags.get('recursion_exclude', [])):
+                rec_flags = flags.copy()
+                rec_flags['recursion_depth'] -= 1
+                obj[attr] = [obj_ref.to_hash(**rec_flags) for obj_ref in getattr(self, attr)]
         return obj
 
     def from_hash(self, obj):
@@ -202,12 +223,17 @@ class PacificaModel(Model):
         return [primary_key.name]
 
     @classmethod
+    def get_last_changed_date(cls):
+        """Return the last changed date or 0 epoch time."""
+        ret = cls.last_change_date()
+        if ret is not None:
+            return ret.isoformat(' ')
+        return '1970-01-01 00:00:00'
+
+    @classmethod
     def get_object_info(cls):
         """Get model and field information about the model class."""
-        if cls.last_change_date() is not None:
-            last_changed = cls.last_change_date().isoformat(' ')
-        else:
-            last_changed = '1970-01-01 00:00:00'
+        last_changed = cls.get_last_changed_date()
         related_model_info = {}
         # pylint: disable=no-member
         for rel_mod_name in cls._meta.rel:
@@ -228,8 +254,9 @@ class PacificaModel(Model):
             'last_changed_date': last_changed,
             'primary_keys': cls.get_primary_keys(),
             'field_list': cls._meta.sorted_field_names,
-            'foreign_keys': cls._meta.rel.keys(),
+            'foreign_keys': cls.cls_foreignkeys(),
             'related_models': related_model_info,
+            'related_names': cls.cls_revforeignkeys(),
             'record_count': cls.select().count()
         }
         # pylint: enable=no-member

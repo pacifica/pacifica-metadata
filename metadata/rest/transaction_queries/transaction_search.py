@@ -19,6 +19,8 @@ class TransactionSearch(QueryBase):
         trans = Transactions()
         where_clause = Expression(1, OP.EQ, 1)
         query = trans.select()
+        item_count = 100
+        page_num = -1
         for term in search_terms:
             value = str(search_terms[term]).replace('+', ' ')
             if term in ['proposal', 'proposal_id'] and value != '-1':
@@ -42,10 +44,21 @@ class TransactionSearch(QueryBase):
             if term in ['transaction_id'] and value != '-1':
                 where_clause &= Transactions().where_clause({'_id': value})
                 continue
-
+            if term in ['item_count'] and value != '-1':
+                item_count = int(value)
+            if term in ['page'] and value != '-1':
+                page_num = int(value)
         query = query.where(where_clause)
+        total_transaction_count = query.count()
+        transaction_search_stats = {
+            'total_count': total_transaction_count,
+            'items_per_page': item_count,
+            'page_num': page_num
+        }
+        if item_count > 0 and page_num > 0:
+            query = query.paginate(page_num, item_count)
 
-        return [t.id for t in query]
+        return [t.id for t in query], transaction_search_stats
 
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
@@ -56,12 +69,7 @@ class TransactionSearch(QueryBase):
         """Return transactions for the search params."""
         option = 'details' if option not in ['list', 'details'] else option
 
-        valid_keywords = [
-            'proposal', 'proposal_id', 'instrument', 'instrument_id', 'requesting_user',
-            'time_frame', 'start_time', 'start', 'end_time', 'end', 'transaction_id',
-            'user', 'user_id', 'person', 'person_id', 'submitter', 'submitter_id'
-        ]
-        kwargs = {k: v for (k, v) in kwargs.items() if k in valid_keywords}
+        kwargs = {k: v for (k, v) in kwargs.items() if k in QueryBase.valid_keywords}
         if not kwargs:
             message = 'Invalid transaction details search request. '
             cherrypy.log.error(message)
@@ -70,8 +78,8 @@ class TransactionSearch(QueryBase):
                 QueryBase.compose_help_block_message()
             )
         else:
-            transactions = TransactionSearch._search_transactions(kwargs)
+            transactions, transaction_search_stats = TransactionSearch._search_transactions(kwargs)
 
         results = QueryBase._get_transaction_info_blocks(transactions, option)
-
+        results.update(transaction_search_stats)
         return results

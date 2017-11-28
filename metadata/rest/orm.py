@@ -11,11 +11,17 @@ from metadata.orm.utils import datetime_now_nomicrosecond, datetime_converts
 class CherryPyAPI(PacificaModel, ElasticAPI):
     """Core CherryPy interface for all orm objects."""
 
+    es_recursive_flags = {
+        'recursion_depth': 1,
+        'recursion_exclude': ['transactions', 'trans_links']
+    }
     exposed = True
 
     def _select(self, **kwargs):
         """Internal select method."""
         primary_keys = []
+        copy_flags = self.es_recursive_flags.copy()
+        copy_flags['recursion_depth'] = CherryPyAPI._check_recursion_depth(kwargs)
         for key in self.get_primary_keys():
             primary_keys.append(getattr(self.__class__, key))
         objs = (self.select()
@@ -23,22 +29,42 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                 .order_by(*primary_keys))
         if 'page_number' in kwargs and 'items_per_page' in kwargs:
             objs = objs.paginate(int(kwargs['page_number']), int(kwargs['items_per_page']))
-        return dumps([obj.to_hash() for obj in objs])
+        return dumps([obj.to_hash(**copy_flags) for obj in objs])
+
+    @staticmethod
+    def _check_recursion_depth(kwargs):
+        recursion_depth = int(kwargs.get('recursion_depth', 1))
+        if recursion_depth not in range(0, 2):
+            raise ValueError('Recursion depth must be in the range of 0->2.')
+        return recursion_depth
+
+    @staticmethod
+    def _update_dep_objs(obj, updated_objs):
+        """Update the dependent objs of obj and append to updated_objs."""
+        for attr in obj.cls_foreignkeys():
+            updated_objs.append(getattr(obj, attr))
 
     def _update(self, update_json, **kwargs):
         """Internal update method for an object."""
         update_hash = loads(update_json)
-        if 'updated' not in update_hash:
-            update_hash['updated'] = datetime_now_nomicrosecond()
+        update_hash['updated'] = update_hash.get('updated', datetime_now_nomicrosecond())
         did_something = False
+        updated_objs = []
         for obj in self.select().where(self.where_clause(kwargs)):
             did_something = True
+            self._update_dep_objs(obj, updated_objs)
             obj.from_hash(update_hash)
             obj.save()
+            self._update_dep_objs(obj, updated_objs)
         if not did_something:
             raise HTTPError(500, "Get args didn't select any objects.")
-        complete_objs = [obj.to_hash() for obj in self.select().where(self.where_clause(kwargs))]
+        complete_objs = [
+            obj.to_hash(**self.es_recursive_flags)
+            for obj in self.select().where(self.where_clause(kwargs))
+        ]
         self.elastic_upload(complete_objs)
+        for obj in updated_objs:
+            obj.elastic_upload([obj.to_hash(**self.es_recursive_flags)])
 
     def _set_or_create(self, insert_json):
         """Set or create the object if it doesn't already exist."""
@@ -51,7 +77,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                 obj_hash['id'] = obj_hash.pop('_id')
             obj, created = self.get_or_create(**obj_hash)
             if created:
-                complete_objs.append(obj.to_hash())
+                complete_objs.append(obj.to_hash(**self.es_recursive_flags))
         self.elastic_upload(complete_objs)
 
     def _insert(self, insert_json):
@@ -82,7 +108,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         es_objs = []
         insert_query = self.__class__.insert_many(clean_objs['upload_objs']).returning(self.__class__)
         for item in insert_query.execute():
-            es_objs.append(item.to_hash())
+            es_objs.append(item.to_hash(**self.es_recursive_flags))
         self.elastic_upload(es_objs)
 
     @classmethod
@@ -107,8 +133,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             if '_id' in obj.keys():
                 obj['id'] = obj['_id']
             self.from_hash(obj)
-            new_obj = self.to_hash()
-            es_obj = self.to_hash()
+            new_obj = self.to_hash(**self.es_recursive_flags)
+            es_obj = self.to_hash(**self.es_recursive_flags)
             fix_dates(obj, new_obj, es_obj)
             clean_objs['es_objs'].append(es_obj)
 
@@ -122,6 +148,9 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                         new_obj[name] = new_obj.pop(db_col)
             if '_id' in obj.keys() and obj['_id'] is not None:
                 new_obj['id'] = obj.get('_id')
+            for attr in model_info.get('related_names'):
+                if attr in new_obj:
+                    del new_obj[attr]
             new_obj.pop('_id')
             clean_objs['upload_objs'].append(new_obj)
 

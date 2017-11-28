@@ -24,15 +24,6 @@ class TestFileKeyValue(TestBase):
     obj_id = FileKeyValue.file
 
     @classmethod
-    def dependent_cls(cls):
-        """Return dependent classes for the FileKeyValue object."""
-        ret = [FileKeyValue]
-        ret += TestFiles.dependent_cls()
-        ret += TestKeys.dependent_cls()
-        ret += TestValues.dependent_cls()
-        return ret
-
-    @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that FileKeyValue need."""
         keys = Keys()

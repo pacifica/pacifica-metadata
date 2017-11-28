@@ -38,11 +38,11 @@ class ProposalParticipant(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(ProposalParticipant, ProposalParticipant).elastic_mapping_builder(obj)
         obj['person_id'] = {'type': 'integer'}
-        obj['proposal_id'] = {'type': 'string'}
+        obj['proposal_id'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(ProposalParticipant, self).to_hash()
+        obj = super(ProposalParticipant, self).to_hash(**flags)
         obj['_id'] = index_hash(unicode_type(self.proposal.id), int(self.person.id))
         obj['person_id'] = int(self.person.id)
         obj['proposal_id'] = unicode_type(self.proposal.id)

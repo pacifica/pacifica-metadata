@@ -4,6 +4,7 @@ from metadata.rest.transaction_queries.transaction_lookup import TransactionLook
 from metadata.rest.transaction_queries.transaction_search import TransactionSearch
 from metadata.rest.transaction_queries.transaction_last import TransactionLast
 from metadata.rest.transaction_queries.file_lookup import FileLookup
+from metadata.rest.transaction_queries.transactions_multi_search import TransactionsMultiSearch
 
 
 # pylint: disable=too-few-public-methods
@@ -18,3 +19,4 @@ class TransactionInfoAPI(object):
         self.search = TransactionSearch()
         self.files = FileLookup()
         self.last = TransactionLast()
+        self.multisearch = TransactionsMultiSearch()

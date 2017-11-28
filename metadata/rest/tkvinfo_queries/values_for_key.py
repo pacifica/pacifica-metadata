@@ -1,6 +1,8 @@
 """CherryPy File Details object class."""
+from datetime import datetime
+from dateutil.parser import parse
 from cherrypy import tools
-from metadata.orm import TransactionKeyValue, Keys, Values
+from metadata.orm import TransactionKeyValue, Keys, Values, Transactions
 from metadata.orm.base import db_connection_decorator
 try:
     from urllib.parse import unquote
@@ -15,14 +17,17 @@ class ValuesForKey(object):
     exposed = True
 
     @staticmethod
-    def get_values_for_key(key):
+    def get_values_for_key(key, start_time, end_time):
         """Retrieve all the tkv values for a given key item."""
         # get the id of the key to look for
         val_list = (Values
                     .select(Values.value, TransactionKeyValue.transaction)
                     .join(TransactionKeyValue)
                     .join(Keys)
-                    .where(Keys.key == key)).dicts()
+                    .join(Transactions, on=(Transactions.id == TransactionKeyValue.transaction))
+                    .where(Keys.key == key)
+                    .where(Transactions.created < end_time)
+                    .where(Transactions.created >= start_time)).dicts()
         ret = {}
         for val in val_list:
             if val.get('value') not in ret:
@@ -35,7 +40,16 @@ class ValuesForKey(object):
     @staticmethod
     @tools.json_out()
     @db_connection_decorator
-    def GET(key):
+    def GET(key, start_time=None, end_time=None):
         """Return file details for the given key/value combo."""
         key = unquote(key)
-        return ValuesForKey.get_values_for_key(key)
+        if start_time:
+            start_time = parse(start_time)
+        else:
+            start_time = datetime.fromtimestamp(0)
+        if end_time:
+            end_time = parse(end_time)
+        else:
+            end_time = datetime.utcnow()
+        assert start_time < end_time
+        return ValuesForKey.get_values_for_key(key, start_time, end_time)

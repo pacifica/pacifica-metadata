@@ -34,11 +34,11 @@ class Transactions(CherryPyAPI):
         super(Transactions, Transactions).elastic_mapping_builder(obj)
         obj['submitter'] = {'type': 'integer'}
         obj['instrument'] = {'type': 'integer'}
-        obj['proposal'] = {'type': 'string'}
+        obj['proposal'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
-    def to_hash(self):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(Transactions, self).to_hash()
+        obj = super(Transactions, self).to_hash(**flags)
         obj['_id'] = int(self.id) if self.id is not None else obj['_id']
         obj['submitter'] = int(self.submitter.id)
         obj['instrument'] = int(self.instrument.id)

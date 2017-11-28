@@ -34,12 +34,14 @@ class TestTransactionInfoAPI(CPCommonTest):
         )
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
-        self.assertEqual(len(req_json), 2)
+        self.assertTrue(len(req_json) > 1)
 
         # test search with single return with details
         search_terms = {
             'proposal': '1234a',
-            'end': end_date.strftime('%Y-%m-%d')
+            'end': end_date.strftime('%Y-%m-%d'),
+            'item_count': 10,
+            'page': 1
         }
         req = requests.get(
             url='{0}/transactioninfo/search/details'.format(self.url),
@@ -106,6 +108,10 @@ class TestTransactionInfoAPI(CPCommonTest):
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
         self.assertEqual(req_json['latest_transaction_id'], 69)
+
+        req = requests.get(
+            url='{0}/transactioninfo/multisearch?instrument_group_id={1}&proposal_id=1234a'.format(self.url, 1001))
+        self.assertEqual(req.status_code, 200)
 
     def test_bad_transactioninfo_api(self):
         """Test the GET method with bad data."""

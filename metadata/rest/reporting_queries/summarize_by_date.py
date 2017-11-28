@@ -107,7 +107,7 @@ class SummarizeByDate(QueryBase):
 
     @staticmethod
     def _summarize_by_date(summary_block, item):
-        current_day = SummarizeByDate._utc_to_local(item.filedate).date()
+        current_day = SummarizeByDate.utc_to_local(item.filedate).date()
         current_day = current_day.strftime('%Y-%m-%d')
         if current_day not in summary_block['file_count'].keys():
             summary_block['file_count'][current_day] = 0
@@ -123,27 +123,27 @@ class SummarizeByDate(QueryBase):
         # return summary_block
 
     @staticmethod
-    def _local_to_utc(local_datetime_obj):
+    def local_to_utc(local_datetime_obj):
+        """Return a TZ corrected datetime object."""
         utc_datetime_obj = QueryBase.local_timezone.localize(local_datetime_obj)
-        utc_datetime_obj.astimezone(pytz.timezone('UTC'))
-        return utc_datetime_obj
+        return utc_datetime_obj.astimezone(pytz.utc)
 
     @staticmethod
-    def _utc_to_local(utc_datetime_obj):
-        local_datetime_obj = pytz.timezone('UTC').localize(utc_datetime_obj)
-        local_datetime_obj.astimezone(QueryBase.local_timezone)
-        return local_datetime_obj
+    def utc_to_local(utc_datetime_obj):
+        """Return a TZ corrected datetime object."""
+        local_datetime_obj = pytz.utc.localize(utc_datetime_obj)
+        return local_datetime_obj.astimezone(QueryBase.local_timezone)
 
     @staticmethod
     def _canonicalize_dates(start_date, end_date):
         try:
-            start_date_obj = SummarizeByDate._local_to_utc(parse(start_date))
+            start_date_obj = SummarizeByDate.local_to_utc(parse(start_date))
         except ValueError:
-            start_date_obj = SummarizeByDate._local_to_utc(parse('1997-01-01'))
+            start_date_obj = SummarizeByDate.local_to_utc(parse('1997-01-01'))
         try:
-            end_date_obj = SummarizeByDate._local_to_utc(parse(end_date))
+            end_date_obj = SummarizeByDate.local_to_utc(parse(end_date))
         except ValueError:
-            end_date_obj = SummarizeByDate._local_to_utc(datetime.datetime.now())
+            end_date_obj = SummarizeByDate.local_to_utc(datetime.datetime.now())
 
         return start_date_obj.isoformat(), end_date_obj.isoformat()
 

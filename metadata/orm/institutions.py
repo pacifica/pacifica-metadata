@@ -33,12 +33,12 @@ class Institutions(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(Institutions, Institutions).elastic_mapping_builder(obj)
         obj['name'] = obj['association_cd'] = \
-            obj['encoding'] = {'type': 'string'}
+            obj['encoding'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['is_foreign'] = {'type': 'boolean'}
 
-    def to_hash(self):
+    def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(Institutions, self).to_hash()
+        obj = super(Institutions, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['name'] = unicode_type(self.name)
         obj['association_cd'] = str(self.association_cd)
