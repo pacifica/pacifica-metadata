@@ -4,6 +4,7 @@ from unittest import TestCase
 from json import dumps
 import httpretty
 from metadata.elastic import create_elastic_index, try_es_connect
+from metadata.elastic.test import ES_CLUSTER_BODY
 
 
 class TestElasticUtils(TestCase):
@@ -15,6 +16,9 @@ class TestElasticUtils(TestCase):
         response_body = {
             'status': 'created!'
         }
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
+                               content_type='application/json')
         httpretty.register_uri(httpretty.PUT, 'http://127.0.0.1:9200/pacifica',
                                body=dumps(response_body),
                                content_type='application/json')
@@ -28,6 +32,9 @@ class TestElasticUtils(TestCase):
         created_body = {
             'status': 'Created!'
         }
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
+                               content_type='application/json')
         httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/pacifica',
                                body=dumps(response_body),
                                content_type='application/json', status=404)
@@ -45,6 +52,9 @@ class TestElasticUtils(TestCase):
         created_body = {
             'status': 'ERROR'
         }
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
+                               content_type='application/json')
         httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/pacifica',
                                body=dumps(response_body),
                                content_type='application/json',
@@ -67,6 +77,9 @@ class TestElasticUtils(TestCase):
     def test_elastic_connect(self):
         """Test the create elastic index."""
         response_body = {}
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
+                               content_type='application/json')
         httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/',
                                body=dumps(response_body),
                                content_type='application/json')
@@ -77,15 +90,14 @@ class TestElasticUtils(TestCase):
     def test_error_es_connect(self):
         """Test the create elastic index."""
         hit_exception = False
-        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/',
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
                                body='Trying to connect',
                                status=404)
         # pylint: disable=broad-except
         try:
-            try_es_connect()
+            try_es_connect(30)
         except Exception as ex:
             hit_exception = True
             self.assertEqual(httpretty.last_request().method, 'GET')
-            self.assertEqual(str(ex), 'TransportError(404, u\'Trying to connect\')')
         # pylint: enable=broad-except
         self.assertTrue(hit_exception)
