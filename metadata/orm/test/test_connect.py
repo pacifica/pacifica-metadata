@@ -7,6 +7,7 @@ from playhouse.test_utils import test_database
 import httpretty
 from metadata.orm import try_db_connect, DATABASE_CONNECT_ATTEMPTS, ORM_OBJECTS
 import metadata.orm as metaorm
+from metadata.elastic.test import ES_CLUSTER_BODY
 
 
 class TestConnections(TestCase):
@@ -33,6 +34,9 @@ class TestConnections(TestCase):
         status_body = {}
         httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/',
                                body=dumps(status_body),
+                               content_type='application/json')
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body=dumps(ES_CLUSTER_BODY),
                                content_type='application/json')
         notfound_body = {}
         created_body = {
