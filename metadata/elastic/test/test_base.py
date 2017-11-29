@@ -6,6 +6,12 @@ import httpretty
 from metadata.elastic import create_elastic_index, try_es_connect
 from metadata.elastic.test import ES_CLUSTER_BODY
 
+try:
+    import http.client as http_client
+except ImportError:
+    # Python 2
+    import httplib as http_client
+http_client.HTTPConnection.debuglevel = 1
 
 class TestElasticUtils(TestCase):
     """This tests the utility functions in metadata.elastic."""
@@ -91,6 +97,9 @@ class TestElasticUtils(TestCase):
         """Test the create elastic index."""
         hit_exception = False
         httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/_nodes/_all/http',
+                               body='Trying to connect',
+                               status=404)
+        httpretty.register_uri(httpretty.GET, 'http://127.0.0.1:9200/',
                                body='Trying to connect',
                                status=404)
         # pylint: disable=broad-except
