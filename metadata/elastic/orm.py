@@ -2,7 +2,6 @@
 """Elastic search core class to convert db object."""
 from elasticsearch import Elasticsearch, helpers
 from metadata.elastic import ELASTIC_ENDPOINT, ELASTIC_INDEX, ES_CLIENT_ARGS
-from peewee import ReverseRelationDescriptor
 
 
 class ElasticAPI(object):
