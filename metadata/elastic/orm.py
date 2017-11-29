@@ -63,9 +63,5 @@ class ElasticAPI(object):
         ret = {}
         obj = {}
         cls.elastic_mapping_builder(obj)
-        for attr, value in cls.__dict__.items():
-            if isinstance(value, ReverseRelationDescriptor):
-                obj[attr] = {'type': 'array'}
-
         ret['properties'] = obj
         return ret
