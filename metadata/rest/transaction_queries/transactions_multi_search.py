@@ -1,5 +1,6 @@
 """CherryPy Status Metadata object class."""
 import datetime
+from calendar import monthrange
 from cherrypy import tools
 from dateutil.parser import parse
 from peewee import Expression, OP
@@ -46,9 +47,8 @@ class TransactionsMultiSearch(QueryBase):
     @staticmethod
     def _get_first_last_day():
         today = datetime.datetime.today()
-        first_day_of_month = today.replace(day=1).date()
-        last_day_of_month = datetime.date(today.year, today.month + 1, 1) - datetime.timedelta(days=1)
-        return first_day_of_month, last_day_of_month
+        last_day = monthrange(today.year, today.month)[1]
+        return (today.replace(day=1).date(), today.replace(day=last_day).date())
 
     @staticmethod
     def _check_keywords(kwargs):
