@@ -29,4 +29,4 @@ def main():
         'server.socket_host': args.address,
         'server.socket_port': args.port
     })
-    cherrypy.quickstart(Root(), '/', CHERRYPY_CONFIG)
+    cherrypy.quickstart(Root(), '/', args.config)
