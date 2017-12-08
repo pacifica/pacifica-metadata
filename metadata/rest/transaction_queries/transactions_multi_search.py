@@ -47,7 +47,8 @@ class TransactionsMultiSearch(QueryBase):
     @staticmethod
     def _get_first_last_day():
         today = datetime.datetime.today()
-        return monthrange(today.year, today.month)
+        first_day, last_day = monthrange(today.year, today.month)
+        return (today.replace(day=first_day).date(), today.replace(day=last_day).date())
 
     @staticmethod
     def _check_keywords(kwargs):
