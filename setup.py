@@ -30,4 +30,7 @@ setup(name='PacificaMetadata',
           'metadata.rest.user_queries'
       ],
       scripts=['MetadataServer.py', 'DatabaseCreate.py'],
+      entry_point={
+          'console_scripts': ['MetadataServer=metadata:main']
+      },
       install_requires=[str(ir.req) for ir in INSTALL_REQS])
