@@ -2,9 +2,8 @@
 """Main metadata server script."""
 from json import dumps
 import cherrypy
-from metadata import CHERRYPY_CONFIG
+from metadata import CHERRYPY_CONFIG, main
 from metadata.rest.root import Root
-from metadata.orm import create_tables
 
 
 def error_page_default(**kwargs):
@@ -16,12 +15,6 @@ def error_page_default(**kwargs):
         'traceback': kwargs['traceback'],
         'version': kwargs['version']
     })
-
-
-def main():
-    """Main method to start the httpd server."""
-    create_tables()
-    cherrypy.quickstart(Root(), '/', CHERRYPY_CONFIG)
 
 
 cherrypy.config.update({'error_page.default': error_page_default})
