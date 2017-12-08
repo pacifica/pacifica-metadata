@@ -1,9 +1,9 @@
 """CherryPy Status Metadata object class."""
 import datetime
+from calendar import monthrange
 from cherrypy import tools
 from dateutil.parser import parse
 from peewee import Expression, OP
-from calendar import monthrange
 from metadata.rest.transaction_queries.query_base import QueryBase
 from metadata.orm import Transactions, InstrumentGroup
 from metadata.orm.base import db_connection_decorator
