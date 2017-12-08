@@ -25,7 +25,7 @@ setup(name='PacificaMetadata',
           'metadata.rest.reporting_queries',
           'metadata.rest.test',
           'metadata.rest.tkvinfo_queries',
-          'metadata.rest.tkupload_queries',
+          'metadata.rest.tkvupload_queries',
           'metadata.rest.transaction_queries',
           'metadata.rest.user_queries'
       ],
