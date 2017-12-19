@@ -79,7 +79,9 @@ class TestElasticAPI(TestCase):
         """Test the delete class method."""
         url = 'http://127.0.0.1:9200/pacifica/ElasticAPI/127'
         obj = ElasticAPI()
+        # pylint: disable=invalid-name
         obj.id = 127
+        # pylint: enable=invalid-name
         response_body = {
             'status': 'deleted!'
         }
