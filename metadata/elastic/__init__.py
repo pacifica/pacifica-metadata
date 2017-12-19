@@ -21,7 +21,7 @@ ES_CLIENT_ARGS = {
 
 def create_elastic_index():
     """Create the elastic search index for all our data."""
-    cli = Elasticsearch([ELASTIC_ENDPOINT])
+    cli = Elasticsearch([ELASTIC_ENDPOINT], **ES_CLIENT_ARGS)
     # pylint: disable=unexpected-keyword-arg
     cli.indices.create(index=ELASTIC_INDEX, ignore=400)
     # pylint: enable=unexpected-keyword-arg

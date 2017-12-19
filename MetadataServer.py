@@ -2,6 +2,7 @@
 """Main metadata server script."""
 from json import dumps
 import cherrypy
+from metadata import CHERRYPY_CONFIG
 from metadata.rest.root import Root
 from metadata.orm import create_tables
 
@@ -20,13 +21,13 @@ def error_page_default(**kwargs):
 def main():
     """Main method to start the httpd server."""
     create_tables()
-    cherrypy.quickstart(Root(), '/', 'server.conf')
+    cherrypy.quickstart(Root(), '/', CHERRYPY_CONFIG)
 
 
 cherrypy.config.update({'error_page.default': error_page_default})
 # pylint doesn't realize that application is actually a callable
 # pylint: disable=invalid-name
-application = cherrypy.Application(Root(), '/', 'server.conf')
+application = cherrypy.Application(Root(), '/', CHERRYPY_CONFIG)
 # pylint: enable=invalid-name
 if __name__ == '__main__':
     main()

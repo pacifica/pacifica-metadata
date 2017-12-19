@@ -18,7 +18,7 @@ class TestElastic(TestCase):
             elastic_mapping = orm_cls.elastic_mapping()
             self.assertEqual(type(elastic_mapping), dict)
             properties = elastic_mapping['properties']
-            elastic_mapping_types = ['nested', 'integer', 'text', 'keyword', 'date', 'boolean', 'float', 'long']
+            elastic_mapping_types = ['integer', 'text', 'keyword', 'date', 'boolean', 'float', 'long']
             for column in properties.keys():
                 self.assertEqual(properties[column]['type'] in elastic_mapping_types, True)
 # pylint: enable=too-few-public-methods
