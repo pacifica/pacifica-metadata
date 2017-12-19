@@ -82,5 +82,12 @@ class Users(CherryPyAPI):
         return self._where_attr_clause(
             where_clause,
             kwargs,
-            ['first_name', 'middle_initial', 'last_name', 'network_id', 'encoding', 'email_address']
+            [
+                'first_name',
+                'middle_initial',
+                'last_name',
+                'network_id',
+                'encoding',
+                'email_address'
+            ]
         )

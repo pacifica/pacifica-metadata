@@ -90,13 +90,17 @@ class SummarizeByDate(QueryBase):
 
     @staticmethod
     def _update_transaction_info_block(info_block, item, t_info):
-        if t_info['proposal'] not in info_block['proposal'].keys():
-            info_block['proposal'][t_info['proposal']] = item.transaction.proposal.title
-        if t_info['instrument'] not in info_block['instrument'].keys():
-            info_block['instrument'][t_info['instrument']] = item.transaction.instrument.name
-        if t_info['submitter'] not in info_block['user'].keys():
-            info_block['user'][t_info['submitter']] = u'{0} {1}'.format(
-                item.transaction.submitter.first_name, item.transaction.submitter.last_name)
+        prop = t_info['proposal']
+        inst = t_info['instrument']
+        submitter = t_info['submitter']
+        if prop not in info_block['proposal'].keys():
+            info_block['proposal'][prop] = item.transaction.proposal.title
+        if inst not in info_block['instrument'].keys():
+            info_block['instrument'][inst] = item.transaction.instrument.name
+        if submitter not in info_block['user'].keys():
+            info_block['user'][submitter] = u'{0} {1}'.format(
+                item.transaction.submitter.first_name, item.transaction.submitter.last_name
+            )
 
     @staticmethod
     def _summarize_upload_stats(upload_stats_block, transaction_info):

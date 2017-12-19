@@ -18,20 +18,20 @@ class DetailedTransactionList(QueryBase):
     @staticmethod
     def get_transaction_list_details(transaction_list):
         """Return complete data set on a specified transaction."""
-        query = (Files().select(
-            Files.transaction.alias('upload_id'),
-            fn.Max(Transactions.updated).alias('upload_date'),
-            fn.Min(Files.mtime).alias('file_date_start'),
-            fn.Max(Files.mtime).alias('file_date_end'),
-            fn.Min(Transactions.submitter).alias('uploaded_by_id'),
-            fn.Sum(Files.size).alias('bundle_size'),
-            fn.Count(Files.id).alias('file_count'),
-            fn.Min(Transactions.updated).alias('upload_datetime'),
-            fn.Min(Transactions.proposal).alias('proposal_id'),
-            fn.Min(Transactions.instrument).alias('instrument_id'))
-                 .join(Transactions)
-                 .where(Files.transaction << transaction_list)
-                 .group_by(Files.transaction))
+        query = (
+            Files().select(
+                Files.transaction.alias('upload_id'),
+                fn.Max(Transactions.updated).alias('upload_date'),
+                fn.Min(Files.mtime).alias('file_date_start'),
+                fn.Max(Files.mtime).alias('file_date_end'),
+                fn.Min(Transactions.submitter).alias('uploaded_by_id'),
+                fn.Sum(Files.size).alias('bundle_size'),
+                fn.Count(Files.id).alias('file_count'),
+                fn.Min(Transactions.updated).alias('upload_datetime'),
+                fn.Min(Transactions.proposal).alias('proposal_id'),
+                fn.Min(Transactions.instrument).alias('instrument_id')
+            ).join(Transactions).where(Files.transaction << transaction_list).group_by(Files.transaction)
+        )
 
         return {str(r['upload_id']): {
             'upload_id': str(r['upload_id']),

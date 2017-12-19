@@ -99,5 +99,12 @@ class Contributors(CherryPyAPI):
         return self._where_attr_clause(
             where_clause,
             kwargs,
-            ['author_id', 'first_name', 'last_name', 'encoding', 'middle_initial', 'dept_code']
+            [
+                'author_id',
+                'first_name',
+                'last_name',
+                'encoding',
+                'middle_initial',
+                'dept_code'
+            ]
         )

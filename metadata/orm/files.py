@@ -133,6 +133,14 @@ class Files(CherryPyAPI):
         where_clause = self._where_attr_clause(
             where_clause,
             kwargs,
-            ['name', 'subdir', 'mimetype', 'size', 'encoding', 'hashtype', 'hashsum']
+            [
+                'name',
+                'subdir',
+                'mimetype',
+                'size',
+                'encoding',
+                'hashtype',
+                'hashsum'
+            ]
         )
         return where_clause

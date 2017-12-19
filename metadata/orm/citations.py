@@ -113,5 +113,12 @@ class Citations(CherryPyAPI):
         return self._where_attr_clause(
             where_clause,
             kwargs,
-            ['article_title', 'journal_volume', 'journal_issue', 'page_range', 'doi_reference', 'encoding']
+            [
+                'article_title',
+                'journal_volume',
+                'journal_issue',
+                'page_range',
+                'doi_reference',
+                'encoding'
+            ]
         )
