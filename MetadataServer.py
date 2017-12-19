@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Main metadata server script."""
 from json import dumps
 import cherrypy

@@ -7,7 +7,7 @@ nose
 peewee
 pep257
 psycopg2
-pylint
+pylint<1.8
 pytest
 python-dateutil
 radon

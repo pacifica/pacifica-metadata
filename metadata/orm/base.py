@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Pacifica Metadata ORM Base Class.
 
@@ -69,8 +70,10 @@ class PacificaModel(Model):
     # pylint: disable=invalid-name
     id = PrimaryKeyField()
     # pylint: enable=invalid-name
-    created = ExtendDateTimeField(default=datetime_now_nomicrosecond, index=True)
-    updated = ExtendDateTimeField(default=datetime_now_nomicrosecond, index=True)
+    created = ExtendDateTimeField(
+        default=datetime_now_nomicrosecond, index=True)
+    updated = ExtendDateTimeField(
+        default=datetime_now_nomicrosecond, index=True)
     deleted = ExtendDateTimeField(null=True, index=True)
 
     # pylint: disable=too-few-public-methods
@@ -115,13 +118,15 @@ class PacificaModel(Model):
         obj = {}
         obj['created'] = self.created.isoformat()
         obj['updated'] = self.updated.isoformat()
-        obj['deleted'] = self.deleted.isoformat() if self.deleted is not None else None
+        obj['deleted'] = self.deleted.isoformat(
+        ) if self.deleted is not None else None
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         if recursion_depth:
             for attr in set(self.cls_revforeignkeys()) - set(flags.get('recursion_exclude', [])):
                 rec_flags = flags.copy()
                 rec_flags['recursion_depth'] -= 1
-                obj[attr] = [obj_ref.to_hash(**rec_flags)['_id'] for obj_ref in getattr(self, attr)]
+                obj[attr] = [obj_ref.to_hash(**rec_flags)['_id']
+                             for obj_ref in getattr(self, attr)]
         return obj
 
     def from_hash(self, obj):
@@ -153,7 +158,8 @@ class PacificaModel(Model):
     @staticmethod
     def _date_operator_compare(date, kwargs, dt_converts=datetime_converts):
         if '{0}_operator'.format(date) in kwargs:
-            date_oper = getattr(OP, kwargs['{0}_operator'.format(date)].upper())
+            date_oper = getattr(
+                OP, kwargs['{0}_operator'.format(date)].upper())
         else:
             date_oper = OP.EQ
         if date_oper == OP.BETWEEN:
@@ -179,10 +185,22 @@ class PacificaModel(Model):
         for date in ['updated', 'created']:
             if date in kwargs:
                 # pylint: disable=protected-access
-                date_obj, date_oper = my_class._date_operator_compare(date, kwargs)
+                date_obj, date_oper = my_class._date_operator_compare(
+                    date, kwargs)
                 # pylint: enable=protected-access
                 where_clause &= Expression(
                     getattr(my_class, date), date_oper, date_obj)
+        return where_clause
+
+    @classmethod
+    def _where_attr_clause(cls, where_clause, kwargs, keys):
+        """Grab keys and operators out of kwargs and return where clause."""
+        for key in keys:
+            if key in kwargs:
+                key_oper = OP.EQ
+                if '{0}_operator'.format(key) in kwargs:
+                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
+                where_clause &= Expression(getattr(cls, key), key_oper, kwargs[key])
         return where_clause
 
     @classmethod

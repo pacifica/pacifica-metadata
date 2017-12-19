@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Utilities for common metadata tools."""
 from hashlib import md5
 from datetime import datetime, date

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Proposal person relationship."""
 from peewee import ForeignKeyField, Expression, OP, CompositeKey, unicode_type
 from metadata.orm.utils import index_hash
@@ -38,12 +39,14 @@ class ProposalParticipant(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(ProposalParticipant, ProposalParticipant).elastic_mapping_builder(obj)
         obj['person_id'] = {'type': 'integer'}
-        obj['proposal_id'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+        obj['proposal_id'] = {'type': 'text', 'fields': {
+            'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(ProposalParticipant, self).to_hash(**flags)
-        obj['_id'] = index_hash(unicode_type(self.proposal.id), int(self.person.id))
+        obj['_id'] = index_hash(unicode_type(
+            self.proposal.id), int(self.person.id))
         obj['person_id'] = int(self.person.id)
         obj['proposal_id'] = unicode_type(self.proposal.id)
         return obj
@@ -61,8 +64,10 @@ class ProposalParticipant(CherryPyAPI):
         where_clause = super(ProposalParticipant, self).where_clause(kwargs)
         if 'person_id' in kwargs:
             member = Users.get(Users.id == kwargs['person_id'])
-            where_clause &= Expression(ProposalParticipant.person, OP.EQ, member)
+            where_clause &= Expression(
+                ProposalParticipant.person, OP.EQ, member)
         if 'proposal_id' in kwargs:
             proposal = Proposals.get(Proposals.id == kwargs['proposal_id'])
-            where_clause &= Expression(ProposalParticipant.proposal, OP.EQ, proposal)
+            where_clause &= Expression(
+                ProposalParticipant.proposal, OP.EQ, proposal)
         return where_clause

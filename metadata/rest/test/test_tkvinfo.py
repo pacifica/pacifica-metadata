@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the ORM interface SummaryInfoAPI."""
 import datetime
 from os.path import realpath

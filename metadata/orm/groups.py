@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Contains model for groups."""
 from peewee import CharField, BooleanField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
@@ -30,7 +31,8 @@ class Groups(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(Groups, Groups).elastic_mapping_builder(obj)
         obj['name'] = obj['encoding'] = \
-            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            {'type': 'text', 'fields': {'keyword': {
+                'type': 'keyword', 'ignore_above': 256}}}
         obj['is_admin'] = {'type': 'boolean'}
 
     def to_hash(self, **flags):
@@ -56,16 +58,6 @@ class Groups(CherryPyAPI):
         if 'is_admin' in obj:
             self.is_admin = self._bool_translate(obj['is_admin'])
 
-    @staticmethod
-    def _where_attr_clause(where_clause, kwargs):
-        for key in ['name', 'is_admin', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Groups, key), key_oper, kwargs[key])
-        return where_clause
-
     def where_clause(self, kwargs):
         """PeeWee specific where clause used for search."""
         where_clause = super(Groups, self).where_clause(kwargs)
@@ -73,4 +65,8 @@ class Groups(CherryPyAPI):
             where_clause &= Expression(Groups.id, OP.EQ, kwargs['_id'])
         if 'is_admin' in kwargs:
             kwargs['is_admin'] = self._bool_translate(kwargs['is_admin'])
-        return self._where_attr_clause(where_clause, kwargs)
+        return self._where_attr_clause(
+            where_clause,
+            kwargs,
+            ['name', 'is_admin', 'encoding']
+        )

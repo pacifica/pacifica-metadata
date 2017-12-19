@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Users data model."""
 from peewee import CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
@@ -40,7 +41,8 @@ class Users(CherryPyAPI):
         super(Users, Users).elastic_mapping_builder(obj)
         obj['first_name'] = obj['last_name'] = obj['network_id'] = \
             obj['middle_initial'] = obj['encoding'] = \
-            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            {'type': 'text', 'fields': {'keyword': {
+                'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
@@ -65,18 +67,10 @@ class Users(CherryPyAPI):
             # pylint: disable=cell-var-from-loop
             self._set_only_if(attr, obj, attr, lambda: unicode_type(obj[attr]))
             # pylint: enable=cell-var-from-loop
-        self._set_only_if('network_id', obj, 'network_id', lambda: unicode_type(obj['network_id']).lower())
-        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
-
-    @staticmethod
-    def _where_clause_if_available(where_clause, key, kwargs):
-        """Return the where clause if the key is in the kwargs."""
-        if key in kwargs:
-            key_oper = OP.EQ
-            if '{0}_operator'.format(key) in kwargs:
-                key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-            where_clause &= Expression(getattr(Users, key), key_oper, kwargs[key])
-        return where_clause
+        self._set_only_if('network_id', obj, 'network_id',
+                          lambda: unicode_type(obj['network_id']).lower())
+        self._set_only_if('encoding', obj, 'encoding',
+                          lambda: str(obj['encoding']))
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
@@ -85,7 +79,8 @@ class Users(CherryPyAPI):
             where_clause &= Expression(Users.id, OP.EQ, kwargs['_id'])
         if 'network_id' in kwargs:
             kwargs['network_id'] = kwargs['network_id'].lower()
-        for key in ['first_name', 'middle_initial', 'last_name', 'network_id',
-                    'encoding', 'email_address']:
-            where_clause &= self._where_clause_if_available(where_clause, key, kwargs)
-        return where_clause
+        return self._where_attr_clause(
+            where_clause,
+            kwargs,
+            ['first_name', 'middle_initial', 'last_name', 'network_id', 'encoding', 'email_address']
+        )

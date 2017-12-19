@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Citations model for tracking journal articles."""
 from peewee import IntegerField, TextField, CharField, ForeignKeyField, Expression, OP
 from metadata.orm.journals import Journals
@@ -63,7 +64,8 @@ class Citations(CherryPyAPI):
             obj['page_range'] = obj['release_authorization_id'] = \
             {'type': 'text'}
         obj['article_title'] = obj['encoding'] = \
-            obj['doi_reference'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            obj['doi_reference'] = {'type': 'text', 'fields': {
+                'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the citation fields to a serializable hash."""
@@ -97,18 +99,8 @@ class Citations(CherryPyAPI):
                     'doi_reference']:
             self._set_only_if(key, obj, key, lambda k=key: str(obj[k]))
         for key in ['article_title', 'xml_text', 'abstract_text']:
-            self._set_only_if(key, obj, key, lambda k=key: unicode_type(obj[k]))
-
-    @staticmethod
-    def _where_attr_clause(where_clause, kwargs):
-        for key in ['article_title', 'journal_volume', 'journal_issue', 'page_range',
-                    'doi_reference', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Citations, key), key_oper, kwargs[key])
-        return where_clause
+            self._set_only_if(
+                key, obj, key, lambda k=key: unicode_type(obj[k]))
 
     def where_clause(self, kwargs):
         """Generate the PeeWee where clause used in searching."""
@@ -118,4 +110,8 @@ class Citations(CherryPyAPI):
             where_clause &= Expression(Citations.journal, OP.EQ, journal)
         if '_id' in kwargs:
             where_clause &= Expression(Citations.id, OP.EQ, int(kwargs['_id']))
-        return self._where_attr_clause(where_clause, kwargs)
+        return self._where_attr_clause(
+            where_clause,
+            kwargs,
+            ['article_title', 'journal_volume', 'journal_issue', 'page_range', 'doi_reference', 'encoding']
+        )

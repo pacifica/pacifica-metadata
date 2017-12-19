@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """This is used to generically load the test data."""
 from os import getenv
 from os.path import dirname, realpath, join
@@ -40,7 +41,8 @@ def main():
         'user_group'
     ]
     for obj in object_order:
-        mdclient.create(obj, loads(open('{0}.json'.format(join(test_data_dir, obj))).read()))
+        mdclient.create(obj, loads(
+            open('{0}.json'.format(join(test_data_dir, obj))).read()))
 
 
 if __name__ == '__main__':

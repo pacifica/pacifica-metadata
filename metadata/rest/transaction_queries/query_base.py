@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Status Metadata proposalinfo base class."""
 from peewee import DoesNotExist, fn, JOIN
 from metadata.orm import TransactionKeyValue, Keys, Values

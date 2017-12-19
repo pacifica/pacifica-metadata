@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """TransactionKeyValue links Transactions and Keys and Values objects."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.base import DB
@@ -59,7 +60,8 @@ class TransactionKeyValue(CherryPyAPI):
         """Convert the hash into the object."""
         super(TransactionKeyValue, self).from_hash(obj)
         if 'transaction_id' in obj:
-            self.transaction = Transactions.get(Transactions.id == obj['transaction_id'])
+            self.transaction = Transactions.get(
+                Transactions.id == obj['transaction_id'])
         if 'value_id' in obj:
             self.value = Values.get(Values.id == obj['value_id'])
         if 'key_id' in obj:
@@ -69,8 +71,10 @@ class TransactionKeyValue(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(TransactionKeyValue, self).where_clause(kwargs)
         if 'transaction_id' in kwargs:
-            trans = Transactions.get(Transactions.id == kwargs['transaction_id'])
-            where_clause &= Expression(TransactionKeyValue.transaction, OP.EQ, trans)
+            trans = Transactions.get(
+                Transactions.id == kwargs['transaction_id'])
+            where_clause &= Expression(
+                TransactionKeyValue.transaction, OP.EQ, trans)
         if 'key_id' in kwargs:
             key = Keys.get(Keys.id == kwargs['key_id'])
             where_clause &= Expression(TransactionKeyValue.key, OP.EQ, key)

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Metadata Migration Class for User Entities."""
 from cherrypy import tools
 from peewee import prefetch
@@ -29,9 +31,12 @@ class MigrateUsers(object):
 
         for user in users_expanded:
             user_entry = UserQueryBase.format_user_block(user, 'simple')
-            user_entry['proposals'] = [prop.proposal.id for prop in user.proposals_prefetch]
-            user_entry['custodian_list'] = [inst.instrument.id for inst in user.instruments_prefetch]
-            user_entry['institutions'] = [place.institution.id for place in user.institutions_prefetch]
+            user_entry['proposals'] = [
+                prop.proposal.id for prop in user.proposals_prefetch]
+            user_entry['custodian_list'] = [
+                inst.instrument.id for inst in user.instruments_prefetch]
+            user_entry['institutions'] = [
+                place.institution.id for place in user.institutions_prefetch]
             user_list[user.id] = user_entry
 
         return user_list

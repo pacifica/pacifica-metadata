@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the ORM interface MigrationInfo."""
 import requests
 from metadata.rest.test import CPCommonTest

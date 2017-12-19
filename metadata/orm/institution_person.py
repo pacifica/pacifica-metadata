@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Connects a User with an Institution."""
 from peewee import ForeignKeyField, Expression, OP, CompositeKey
 from metadata.orm.utils import index_hash
@@ -64,6 +65,8 @@ class InstitutionPerson(CherryPyAPI):
             person = Users.get(Users.id == kwargs['person_id'])
             where_clause &= Expression(InstitutionPerson.person, OP.EQ, person)
         if 'institution_id' in kwargs:
-            institution = Institutions.get(Institutions.id == kwargs['institution_id'])
-            where_clause &= Expression(InstitutionPerson.institution, OP.EQ, institution)
+            institution = Institutions.get(
+                Institutions.id == kwargs['institution_id'])
+            where_clause &= Expression(
+                InstitutionPerson.institution, OP.EQ, institution)
         return where_clause

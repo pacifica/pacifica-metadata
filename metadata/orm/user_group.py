@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """UserGroup links Groups and Users and objects."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.utils import index_hash

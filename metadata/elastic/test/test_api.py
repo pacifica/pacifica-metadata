@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the ElasticAPI object for managing data in ES."""
 from unittest import TestCase
 from json import dumps, loads
@@ -112,7 +113,8 @@ class TestElasticAPI(TestCase):
             ElasticAPI.elastic_delete(obj)
         except Exception as ex:
             self.assertEqual(httpretty.last_request().method, 'DELETE')
-            self.assertEqual(str(ex), 'TransportError(500, u\'{0}\')'.format(dumps(response_body)))
+            self.assertEqual(
+                str(ex), 'TransportError(500, u\'{0}\')'.format(dumps(response_body)))
         # pylint: enable=broad-except
 
     @httpretty.activate
@@ -154,5 +156,6 @@ class TestElasticAPI(TestCase):
             ElasticAPI.create_elastic_mapping()
         except Exception as ex:
             self.assertEqual(httpretty.last_request().method, 'PUT')
-            self.assertEqual(str(ex), 'TransportError(500, u\'{0}\')'.format(dumps(response_body)))
+            self.assertEqual(
+                str(ex), 'TransportError(500, u\'{0}\')'.format(dumps(response_body)))
         # pylint: enable=broad-except

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the ORM interface InstrumentInfo."""
 import requests
 from metadata.rest.test import CPCommonTest
@@ -11,7 +12,8 @@ class TestInstrumentInfoAPI(CPCommonTest):
 
     def _get_instrument_details(self, instrument_id):
         header_list = {'Content-Type': 'application/json'}
-        url = '{0}/instrumentinfo/by_instrument_id/{1}'.format(self.url, instrument_id)
+        url = '{0}/instrumentinfo/by_instrument_id/{1}'.format(
+            self.url, instrument_id)
         req = requests.get(url=url, headers=header_list)
         return req
 

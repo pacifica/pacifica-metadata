@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the user_group ORM object."""
 from json import dumps
 from metadata.orm.test.base import TestBase

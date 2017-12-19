@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy TKV Metadata object class."""
 from cherrypy import tools, request
 from metadata.orm import TransactionKeyValue, Keys, Values
@@ -20,11 +22,14 @@ class UploadEntries(object):
             item = item_list[transaction]
             key_diff = list(set(item.keys()) - set(key_cache.keys()))
             if key_diff:
-                key_cache = UploadEntries._update_id_list(item.keys(), Keys, 'key')
+                key_cache = UploadEntries._update_id_list(
+                    item.keys(), Keys, 'key')
             value_diff = list(set(item.values()) - set(value_cache.keys()))
             if value_diff:
-                value_cache = UploadEntries._update_id_list(item.values(), Values, 'value')
-            UploadEntries._insert_kv_mappings(item, key_cache, value_cache, transaction)
+                value_cache = UploadEntries._update_id_list(
+                    item.values(), Values, 'value')
+            UploadEntries._insert_kv_mappings(
+                item, key_cache, value_cache, transaction)
         return {'status': 'success'}
 
     # we should have a complete set of key ids now
@@ -42,7 +47,8 @@ class UploadEntries(object):
     @staticmethod
     def _update_id_list(names_list, model_obj, field_name):
         names_list = map(str, names_list)
-        local_list = UploadEntries._get_id_list(names_list, model_obj, field_name)
+        local_list = UploadEntries._get_id_list(
+            names_list, model_obj, field_name)
         diff = list(set(names_list) - set(local_list.keys()))
         insert_list = [{field_name: str(o)} for o in diff]
         if insert_list:

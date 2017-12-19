@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for the proposalinfo metadata objects to interface with CherryPy."""
 from metadata.rest.proposal_queries.proposal_lookup import ProposalLookup
 from metadata.rest.proposal_queries.proposal_term_search import ProposalTermSearch

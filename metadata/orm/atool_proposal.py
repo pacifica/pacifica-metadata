@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """TransactionKeyValue links Transactions and Keys and Values objects."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP, unicode_type
 from metadata.orm.base import DB
@@ -23,7 +24,8 @@ class AToolProposal(CherryPyAPI):
     """
 
     proposal = ForeignKeyField(Proposals, related_name='atools')
-    analytical_tool = ForeignKeyField(AnalyticalTools, related_name='proposals')
+    analytical_tool = ForeignKeyField(
+        AnalyticalTools, related_name='proposals')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
@@ -37,7 +39,8 @@ class AToolProposal(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(AToolProposal, AToolProposal).elastic_mapping_builder(obj)
-        obj['proposal_id'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+        obj['proposal_id'] = {'type': 'text', 'fields': {
+            'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['analytical_tool_id'] = {'type': 'integer'}
 
     def to_hash(self, **flags):
@@ -66,6 +69,8 @@ class AToolProposal(CherryPyAPI):
             prop = Proposals.get(Proposals.id == kwargs['proposal_id'])
             where_clause &= Expression(AToolProposal.proposal, OP.EQ, prop)
         if 'analytical_tool_id' in kwargs:
-            atool = AnalyticalTools.get(AnalyticalTools.id == kwargs['analytical_tool_id'])
-            where_clause &= Expression(AToolProposal.analytical_tool, OP.EQ, atool)
+            atool = AnalyticalTools.get(
+                AnalyticalTools.id == kwargs['analytical_tool_id'])
+            where_clause &= Expression(
+                AToolProposal.analytical_tool, OP.EQ, atool)
         return where_clause

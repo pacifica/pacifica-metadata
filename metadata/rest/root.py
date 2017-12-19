@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy root object class."""
 from metadata.orm import ORM_OBJECTS
 from metadata.elastic.elasticupdate import ElasticSearchUpdateAPI

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Status Metadata proposalinfo base class."""
 from metadata.orm.instrument_group import InstrumentGroup
 from metadata.orm.groups import Groups

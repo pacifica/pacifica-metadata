@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Transactions model."""
 from peewee import ForeignKeyField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
@@ -34,7 +35,8 @@ class Transactions(CherryPyAPI):
         super(Transactions, Transactions).elastic_mapping_builder(obj)
         obj['submitter'] = {'type': 'integer'}
         obj['instrument'] = {'type': 'integer'}
-        obj['proposal'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+        obj['proposal'] = {'type': 'text', 'fields': {
+            'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
@@ -55,7 +57,8 @@ class Transactions(CherryPyAPI):
         if 'submitter' in obj:
             self.submitter = Users.get(Users.id == obj['submitter'])
         if 'instrument' in obj:
-            self.instrument = Instruments.get(Instruments.id == obj['instrument'])
+            self.instrument = Instruments.get(
+                Instruments.id == obj['instrument'])
         if 'proposal' in obj:
             self.proposal = Proposals.get(Proposals.id == obj['proposal'])
 

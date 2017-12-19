@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Citation proposal relationship."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP, unicode_type
 from metadata.orm.utils import index_hash
@@ -38,12 +39,14 @@ class CitationProposal(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(CitationProposal, CitationProposal).elastic_mapping_builder(obj)
         obj['citation_id'] = {'type': 'integer'}
-        obj['proposal_id'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+        obj['proposal_id'] = {'type': 'text', 'fields': {
+            'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(CitationProposal, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self.citation.id), unicode_type(self.proposal.id))
+        obj['_id'] = index_hash(int(self.citation.id),
+                                unicode_type(self.proposal.id))
         obj['citation_id'] = int(self.citation.id)
         obj['proposal_id'] = unicode_type(self.proposal.id)
         return obj
@@ -61,8 +64,10 @@ class CitationProposal(CherryPyAPI):
         where_clause = super(CitationProposal, self).where_clause(kwargs)
         if 'citation_id' in kwargs:
             citation = Citations.get(Citations.id == kwargs['citation_id'])
-            where_clause &= Expression(CitationProposal.citation, OP.EQ, citation)
+            where_clause &= Expression(
+                CitationProposal.citation, OP.EQ, citation)
         if 'proposal_id' in kwargs:
             proposal = Proposals.get(Proposals.id == kwargs['proposal_id'])
-            where_clause &= Expression(CitationProposal.proposal, OP.EQ, proposal)
+            where_clause &= Expression(
+                CitationProposal.proposal, OP.EQ, proposal)
         return where_clause

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Tests for the Elastic Search module."""
 
 ES_CLUSTER_BODY = {

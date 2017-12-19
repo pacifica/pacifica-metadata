@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for transactioninfo metadata objects to interface with CherryPy."""
 from metadata.rest.transaction_queries.transaction_lookup import TransactionLookup
 from metadata.rest.transaction_queries.transaction_search import TransactionSearch

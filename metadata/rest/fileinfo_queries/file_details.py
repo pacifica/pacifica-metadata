@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy File Details object class."""
 from cherrypy import tools, HTTPError, request
 from metadata.orm import Files
@@ -13,7 +15,8 @@ class FileDetailsLookup(object):
     def _get_file_details(file_list):
         query = Files().select().where(Files.id << file_list)
         if query.count() == 0:
-            message = 'No files from the list {0} were located'.format(file_list)
+            message = 'No files from the list {0} were located'.format(
+                file_list)
             raise HTTPError('404 Not Found', message)
         return [{
             'file_id': f.id,

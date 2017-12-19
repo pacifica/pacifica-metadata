@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the metadata.orm.utils methods."""
 from unittest import TestCase
 from datetime import datetime, date

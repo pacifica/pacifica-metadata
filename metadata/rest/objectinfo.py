@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for the uploader metadata objects to interface with CherryPy."""
 import cherrypy
 from cherrypy import tools

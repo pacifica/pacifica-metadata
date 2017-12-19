@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the ORM interface TransactionInfo."""
 from json import loads
 import datetime
@@ -49,7 +50,8 @@ class TestTransactionInfoAPI(CPCommonTest):
         )
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
-        self.assertEqual(req_json['transactions'][str(transaction_id)]['status']['trans_id'], transaction_id)
+        self.assertEqual(req_json['transactions'][str(
+            transaction_id)]['status']['trans_id'], transaction_id)
         self.assertEqual(len(req_json['transactions']), 1)
 
         # test date search with multiple return with details
@@ -65,7 +67,8 @@ class TestTransactionInfoAPI(CPCommonTest):
         )
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
-        self.assertEqual(req_json['transactions'][str(transaction_id)]['status']['trans_id'], transaction_id)
+        self.assertEqual(req_json['transactions'][str(
+            transaction_id)]['status']['trans_id'], transaction_id)
         self.assertEqual(len(req_json['transactions']), 1)
 
         # test search with single return with simple

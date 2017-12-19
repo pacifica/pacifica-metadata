@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
 import datetime
 from calendar import monthrange
@@ -31,7 +33,8 @@ class TransactionsMultiSearch(QueryBase):
             where_clause &= (Transactions.instrument << instrument_list)
         if proposal_id:
             where_clause &= (Transactions.proposal == proposal_id)
-        transactions_list_query = Transactions.select(Transactions.id).where(where_clause)
+        transactions_list_query = Transactions.select(
+            Transactions.id).where(where_clause)
 
         transactions_list = [t['id'] for t in transactions_list_query.dicts()]
         return transactions_list
@@ -52,7 +55,8 @@ class TransactionsMultiSearch(QueryBase):
 
     @staticmethod
     def _check_keywords(kwargs):
-        valid_keywords = ['proposal_id', 'instrument_group_id', 'start_time', 'end_time']
+        valid_keywords = ['proposal_id',
+                          'instrument_group_id', 'start_time', 'end_time']
         return {k: v for (k, v) in kwargs.items() if k in valid_keywords}
 
     # Cherrypy requires these named methods.
@@ -67,8 +71,10 @@ class TransactionsMultiSearch(QueryBase):
 
         instrument_group_id = kwargs['instrument_group_id'] if 'instrument_group_id' in kwargs else None
         proposal_id = kwargs['proposal_id'] if 'proposal_id' in kwargs else None
-        start_time = parse(kwargs['start_time']) if 'start_time' in kwargs else first_day_of_month
-        end_time = parse(kwargs['end_time']) if 'end_time' in kwargs else last_day_of_month
+        start_time = parse(
+            kwargs['start_time']) if 'start_time' in kwargs else first_day_of_month
+        end_time = parse(
+            kwargs['end_time']) if 'end_time' in kwargs else last_day_of_month
 
         transaction_list = TransactionsMultiSearch._get_transactions_from_group(
             instrument_group_id, proposal_id,

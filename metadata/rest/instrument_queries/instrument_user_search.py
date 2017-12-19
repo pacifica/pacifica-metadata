@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
 from cherrypy import tools
 from metadata.orm import Instruments, ProposalParticipant, ProposalInstrument
@@ -36,5 +38,6 @@ class InstrumentUserSearch(QueryBase):
     @db_connection_decorator
     def GET(user_id):
         """Return a set of instruments for a given user."""
-        inst_list = InstrumentUserSearch.get_instruments_for_user(user_id=user_id)
+        inst_list = InstrumentUserSearch.get_instruments_for_user(
+            user_id=user_id)
         return inst_list
