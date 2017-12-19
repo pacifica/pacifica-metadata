@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Setup and install the metadata."""
 from pip.req import parse_requirements
 from setuptools import setup
@@ -7,7 +8,8 @@ from setuptools import setup
 INSTALL_REQS = parse_requirements('requirements.txt', session='hack')
 
 setup(name='PacificaMetadata',
-      version='1.0',
+      use_scm_version=True,
+      setup_requires=['setuptools_scm'],
       description='Pacifica Metadata',
       author='David Brown',
       author_email='david.brown@pnnl.gov',

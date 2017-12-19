@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Contains the model for metadata values."""
 from peewee import CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
@@ -27,7 +28,8 @@ class Values(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(Values, Values).elastic_mapping_builder(obj)
         obj['value'] = obj['encoding'] = \
-            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            {'type': 'text', 'fields': {'keyword': {
+                'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
@@ -54,10 +56,4 @@ class Values(CherryPyAPI):
         where_clause = super(Values, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Values.id, OP.EQ, kwargs['_id'])
-        for key in ['value', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Values, key), key_oper, kwargs[key])
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs, ['value', 'encoding'])

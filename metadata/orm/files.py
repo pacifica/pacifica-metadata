@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Contains the Files object model primary unit of metadata for Pacifica."""
 from peewee import ForeignKeyField, CharField, BigIntegerField
 from peewee import Expression, OP
@@ -49,7 +50,8 @@ class Files(CherryPyAPI):
     hashsum = CharField(default='', index=True)
     hashtype = CharField(default='sha1', index=True)
     size = BigIntegerField(default=-1)
-    transaction = ForeignKeyField(Transactions, related_name='files', index=True)
+    transaction = ForeignKeyField(
+        Transactions, related_name='files', index=True)
     mimetype = CharField(default='')
     encoding = CharField(default='UTF8')
 
@@ -62,7 +64,8 @@ class Files(CherryPyAPI):
         obj['ctime'] = obj['mtime'] = \
             {'type': 'date', 'format': 'yyyy-mm-dd\'T\'HH:mm:ss'}
         obj['name'] = obj['subdir'] = obj['mimetype'] = \
-            obj['encoding'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            obj['encoding'] = {'type': 'text', 'fields': {
+                'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['hashsum'] = obj['hashtype'] = {'type': 'text'}
 
     def to_hash(self, **flags):
@@ -87,15 +90,21 @@ class Files(CherryPyAPI):
         """Convert the hash to an object."""
         super(Files, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
-        self._set_only_if('name', obj, 'name', lambda: unicode_type(obj['name']))
-        self._set_only_if('subdir', obj, 'subdir', lambda: unicode_type(obj['subdir']))
-        self._set_only_if('mimetype', obj, 'mimetype', lambda: str(obj['mimetype']))
+        self._set_only_if('name', obj, 'name',
+                          lambda: unicode_type(obj['name']))
+        self._set_only_if('subdir', obj, 'subdir',
+                          lambda: unicode_type(obj['subdir']))
+        self._set_only_if('mimetype', obj, 'mimetype',
+                          lambda: str(obj['mimetype']))
         self._set_datetime_part('ctime', obj)
         self._set_datetime_part('mtime', obj)
-        self._set_only_if('hashtype', obj, 'hashtype', lambda: str(obj['hashtype']))
-        self._set_only_if('hashsum', obj, 'hashsum', lambda: str(obj['hashsum']))
+        self._set_only_if('hashtype', obj, 'hashtype',
+                          lambda: str(obj['hashtype']))
+        self._set_only_if('hashsum', obj, 'hashsum',
+                          lambda: str(obj['hashsum']))
         self._set_only_if('size', obj, 'size', lambda: int(obj['size']))
-        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
+        self._set_only_if('encoding', obj, 'encoding',
+                          lambda: str(obj['encoding']))
 
         def trans_func():
             """Return the transaction for the obj id."""
@@ -106,17 +115,8 @@ class Files(CherryPyAPI):
         for date in ['mtime', 'ctime']:
             if date in kwargs:
                 date_obj, date_oper = self._date_operator_compare(date, kwargs)
-                where_clause &= Expression(getattr(Files, date), date_oper, date_obj)
-        return where_clause
-
-    @staticmethod
-    def _where_attr_clause(where_clause, kwargs):
-        for key in ['name', 'subdir', 'mimetype', 'size', 'encoding', 'hashtype', 'hashsum']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Files, key), key_oper, kwargs[key])
+                where_clause &= Expression(
+                    getattr(Files, date), date_oper, date_obj)
         return where_clause
 
     def where_clause(self, kwargs):
@@ -130,5 +130,17 @@ class Files(CherryPyAPI):
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
         where_clause = self._where_date_clause(where_clause, kwargs)
-        where_clause = self._where_attr_clause(where_clause, kwargs)
+        where_clause = self._where_attr_clause(
+            where_clause,
+            kwargs,
+            [
+                'name',
+                'subdir',
+                'mimetype',
+                'size',
+                'encoding',
+                'hashtype',
+                'hashsum'
+            ]
+        )
         return where_clause

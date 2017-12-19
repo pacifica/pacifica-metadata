@@ -38,7 +38,8 @@ class TestAnalyticalTools(TestBase):
 
     def test_tools_where_search_expr(self):
         """Test the hash portion using base object method."""
-        self.base_where_clause_search_expr(SAMPLE_TOOL_HASH, name_operator='ILIKE', name='%prop%')
+        self.base_where_clause_search_expr(
+            SAMPLE_TOOL_HASH, name_operator='ILIKE', name='%prop%')
 
     def test_tools_where(self):
         """Test the hash portion using base object method."""

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Core interface for the ingest of metadata objects.
 
@@ -61,7 +62,7 @@ class IngestAPI(object):
         ]
         validated = False
         for prefix in valid_prefixes:
-            if prefix + '/' == mimetype[:len(prefix)+1]:
+            if prefix + '/' == mimetype[:len(prefix) + 1]:
                 validated = True
         return validated
 
@@ -125,7 +126,8 @@ class IngestAPI(object):
                     for key in parts:
                         ret[key] = part[key]
                     if not IngestAPI.validate_file_meta(ret):
-                        raise ValueError('Invalid metadata for file {0}'.format(ret['_id']))
+                        raise ValueError(
+                            'Invalid metadata for file {0}'.format(ret['_id']))
                     yield ret
 
         def generate_tkvs(json):

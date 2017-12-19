@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
 import re
 import cherrypy

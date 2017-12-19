@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the ORM interface IngestAPI."""
 from json import loads
 import requests

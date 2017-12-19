@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for the fileinfo metadataobjects."""
 from metadata.rest.fileinfo_queries.file_details import FileDetailsLookup
 from metadata.rest.fileinfo_queries.earliest_latest import EarliestLatestFiles

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for the summaryInfo metadata objects to interface with CherryPy."""
 from metadata.rest.reporting_queries.summarize_by_date import SummarizeByDate
 from metadata.rest.reporting_queries.detailed_transactions_list import DetailedTransactionList

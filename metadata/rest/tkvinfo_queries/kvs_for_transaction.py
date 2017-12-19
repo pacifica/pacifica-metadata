@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy File Details object class."""
 from cherrypy import tools
 from metadata.orm import TransactionKeyValue, Keys, Values

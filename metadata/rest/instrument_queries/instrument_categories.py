@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Metadata Instrument Categories Class."""
 from cherrypy import tools
 from metadata.orm import InstrumentGroup, Groups
@@ -25,7 +27,8 @@ class InstrumentCategories(QueryBase):
                     'category': cat['name'],
                     'instrument_list': []
                 }
-            category_list[cat['id']]['instrument_list'].append(cat['instrument'])
+            category_list[cat['id']]['instrument_list'].append(
+                cat['instrument'])
         return category_list.values()
 
     # CherryPy requires these named methods

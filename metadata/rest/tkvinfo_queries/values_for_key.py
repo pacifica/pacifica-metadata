@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy File Details object class."""
 from datetime import datetime
 from dateutil.parser import parse

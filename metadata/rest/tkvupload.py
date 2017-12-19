@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for the tkvupload metadata objects to interface with CherryPy."""
 from metadata.rest.tkvupload_queries.upload_entries import UploadEntries
 

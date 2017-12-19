@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
 import re
 import cherrypy
@@ -27,7 +29,7 @@ class InstrumentLookup(QueryBase):
                 Instruments.id, Instruments.display_name,
                 Instruments.name, Instruments.name_short,
                 Instruments.active
-                ).where(Instruments.id == instrument_id).get()
+            ).where(Instruments.id == instrument_id).get()
 
         except DoesNotExist:
             message = 'No Instrument with an ID of {0} was found'.format(

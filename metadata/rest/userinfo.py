@@ -1,10 +1,11 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for the userinfo metadata objects to interface with CherryPy."""
+from peewee import DoesNotExist
+from cherrypy import HTTPError
 from metadata.rest.user_queries.user_search import UserSearch
 from metadata.rest.user_queries.user_lookup import UserLookup
 from metadata.orm import Users
-from peewee import DoesNotExist
-from cherrypy import HTTPError
 
 
 def user_exists_decorator(func):

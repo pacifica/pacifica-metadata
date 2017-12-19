@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Status Usersearch object class."""
 import re
 import cherrypy
@@ -28,14 +30,16 @@ class UserSearch(QueryBase):
                         where_clause_part |= Expression(
                             Users.id, OP.EQ, user_term)
                         where_clause_part |= (
-                            fn.TO_CHAR(Users.id, '99999999999').contains(user_term)
+                            fn.TO_CHAR(Users.id, '99999999999').contains(
+                                user_term)
                         )
                 else:
                     where_clause_part |= (
                         getattr(Users, k).contains(user_term)
                     )
             where_clause &= (where_clause_part)
-        objs = Users.select().where(where_clause).order_by(Users.last_name, Users.first_name)
+        objs = Users.select().where(where_clause).order_by(
+            Users.last_name, Users.first_name)
         if not objs:
             message = "No user entries were retrieved using the terms: '"
             message += '\' and \''.join(terms) + '\''

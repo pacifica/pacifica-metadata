@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for the uploader metadata objects to interface with CherryPy."""
 from cherrypy import tools, request
 from elasticsearch import Elasticsearch, helpers
@@ -17,7 +18,8 @@ class ElasticSearchUpdateAPI(object):
     @db_connection_decorator
     def push_elastic_updates(object_class_name, id_list, recursion_depth):
         """Push out updates to the ES cluster for updated MD records."""
-        myclass = ObjectInfoAPI.get_class_object_from_name(object_class_name=object_class_name)
+        myclass = ObjectInfoAPI.get_class_object_from_name(
+            object_class_name=object_class_name)
         records = myclass.select()
         if id_list:
             records.where(myclass.id << id_list)

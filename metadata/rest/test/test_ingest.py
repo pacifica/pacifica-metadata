@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the ORM interface IngestAPI."""
 from json import dumps, loads
 import requests
@@ -49,9 +50,21 @@ class TestIngestAPI(CPCommonTest):
             {'destinationTable': 'Transactions.submitter', 'value': 10},
             {'destinationTable': 'Transactions.proposal', 'value': '1234a'},
             {'destinationTable': 'Transactions.instrument', 'value': 54},
-            {'destinationTable': 'TransactionKeyValue', 'key': 'Temp C', 'value': '27'},
-            {'destinationTable': 'TransactionKeyValue', 'key': 'Temp F', 'value': '27'},
-            {'destinationTable': 'TransactionKeyValue', 'key': 'Tag', 'value': 'foo'},
+            {
+                'destinationTable': 'TransactionKeyValue',
+                'key': 'Temp C',
+                'value': '27'
+            },
+            {
+                'destinationTable': 'TransactionKeyValue',
+                'key': 'Temp F',
+                'value': '27'
+            },
+            {
+                'destinationTable': 'TransactionKeyValue',
+                'key': 'Tag',
+                'value': 'foo'
+            },
             {
                 'destinationTable': 'Files',
                 '_id': 34, 'name': 'foo.txt', 'subdir': 'a/b/',

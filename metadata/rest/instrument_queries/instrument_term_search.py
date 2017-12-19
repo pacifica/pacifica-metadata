@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
 import re
 import cherrypy
@@ -42,7 +44,8 @@ class InstrumentTermSearch(QueryBase):
         if not objs:
             message = 'No instrument entries were retrieved using the terms: \''
             message += '\' and \''.join(terms) + '\''
-            raise cherrypy.HTTPError('404 No Valid Instruments Located', message)
+            raise cherrypy.HTTPError(
+                '404 No Valid Instruments Located', message)
 
         return [QueryBase.format_instrument_block(obj) for obj in objs]
 

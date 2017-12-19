@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for the tkvinfo metadata objects to interface with CherryPy."""
 from metadata.rest.tkvinfo_queries.values_for_key import ValuesForKey
 from metadata.rest.tkvinfo_queries.kvs_for_transaction import KVsForTransaction

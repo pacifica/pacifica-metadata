@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Contains model for Journal."""
 from peewee import CharField, FloatField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
@@ -33,7 +34,8 @@ class Journals(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(Journals, Journals).elastic_mapping_builder(obj)
         obj['name'] = obj['website_url'] = obj['encoding'] = \
-            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            {'type': 'text', 'fields': {'keyword': {
+                'type': 'keyword', 'ignore_above': 256}}}
         obj['impact_factor'] = {'type': 'float'}
 
     def to_hash(self, **flags):
@@ -50,22 +52,18 @@ class Journals(CherryPyAPI):
         """Convert the hash into the object."""
         super(Journals, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
-        self._set_only_if('name', obj, 'name', lambda: unicode_type(obj['name']))
+        self._set_only_if('name', obj, 'name',
+                          lambda: unicode_type(obj['name']))
         self._set_only_if('impact_factor', obj, 'impact_factor',
                           lambda: float(obj['impact_factor']))
         self._set_only_if('website_url', obj, 'website_url',
                           lambda: str(obj['website_url']))
-        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
+        self._set_only_if('encoding', obj, 'encoding',
+                          lambda: str(obj['encoding']))
 
     def where_clause(self, kwargs):
         """PeeWee specific where clause used for search."""
         where_clause = super(Journals, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Journals.id, OP.EQ, kwargs['_id'])
-        for key in ['name', 'impact_factor', 'website_url', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Journals, key), key_oper, kwargs[key])
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs, ['name', 'impact_factor', 'website_url', 'encoding'])

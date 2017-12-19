@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """This module tests the metadata.elastic module bits."""
 from unittest import TestCase
 from json import dumps
@@ -69,7 +70,8 @@ class TestElasticUtils(TestCase):
         except Exception as ex:
             hit_exception = True
             self.assertEqual(httpretty.last_request().method, 'PUT')
-            self.assertEqual(str(ex), 'TransportError(500, u\'{"status": "ERROR"}\')')
+            self.assertEqual(
+                str(ex), 'TransportError(500, u\'{"status": "ERROR"}\')')
         # pylint: enable=broad-except
         self.assertTrue(hit_exception)
 

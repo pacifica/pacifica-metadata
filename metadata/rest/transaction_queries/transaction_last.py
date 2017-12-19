@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Status Transaction Metadata object class."""
 from cherrypy import tools
 from peewee import fn

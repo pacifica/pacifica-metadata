@@ -1,8 +1,10 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy File Details object class."""
+from peewee import fn
 from cherrypy import tools, HTTPError, request
 from metadata.orm import Files, Transactions
 from metadata.rest.reporting_queries.query_base import QueryBase
-from peewee import fn
 
 # pylint: disable=too-few-public-methods
 
@@ -15,7 +17,8 @@ class EarliestLatestFiles(QueryBase):
     @staticmethod
     def _get_earliest_latest(item_type, item_list, time_basis):
         accepted_item_types = list(
-            set(QueryBase.object_type_mappings.keys() + QueryBase.object_type_mappings.values())
+            set(QueryBase.object_type_mappings.keys() +
+                QueryBase.object_type_mappings.values())
         )
         accepted_time_basis_types = [
             'submitted', 'modified', 'created',

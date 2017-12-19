@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Metadata Migration Class for Instrument Entities."""
 from cherrypy import tools
 from peewee import prefetch
@@ -20,13 +22,16 @@ class MigrateInstruments(object):
                            .order_by(Instruments.id)
                            .where(Instruments.deleted.is_null()))
 
-        proposal_collection = (ProposalInstrument.select().order_by(ProposalInstrument.proposal))
+        proposal_collection = (ProposalInstrument.select(
+        ).order_by(ProposalInstrument.proposal))
 
-        instruments_with_proposals = prefetch(inst_collection, proposal_collection)
+        instruments_with_proposals = prefetch(
+            inst_collection, proposal_collection)
 
         for inst in instruments_with_proposals:
             inst_entry = InstQueryBase.format_instrument_block(inst)
-            inst_entry['proposals'] = [prop.proposal.id for prop in inst.proposals_prefetch]
+            inst_entry['proposals'] = [
+                prop.proposal.id for prop in inst.proposals_prefetch]
             instrument_list[inst.id] = inst_entry
 
         return instrument_list

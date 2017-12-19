@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 This module tests the specific class method from PacificaModel.
 

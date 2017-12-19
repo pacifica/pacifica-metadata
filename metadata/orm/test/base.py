@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Base testing module implements the temporary database to be used."""
 from datetime import datetime
 from unittest import TestCase
@@ -37,7 +38,8 @@ class TestBase(TestCase):
         obj.from_hash(obj_hash)
         obj.save(force_insert=True)
         if 'updated' not in obj_hash:
-            self.assertEqual(obj.last_change_date(), unicode_type(change_date_chk.isoformat(' ')))
+            self.assertEqual(obj.last_change_date(), unicode_type(
+                change_date_chk.isoformat(' ')))
         return obj
 
     def base_test_hash(self, obj_hash):
@@ -52,7 +54,8 @@ class TestBase(TestCase):
         """
         with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             obj = self.base_create_obj(self.obj_cls, obj_hash)
-            new_obj = self.obj_cls.get(self.obj_id == getattr(obj, self.obj_id.db_column))
+            new_obj = self.obj_cls.get(
+                self.obj_id == getattr(obj, self.obj_id.db_column))
             chk_obj_hash = new_obj.to_hash()
             self.assertTrue('_id' in chk_obj_hash)
             for key in obj_hash.keys():
@@ -73,7 +76,8 @@ class TestBase(TestCase):
             obj = self.obj_cls()
             obj.from_json(json_str)
             obj.save(force_insert=True)
-            new_obj = self.obj_cls.get(self.obj_id == getattr(obj, self.obj_id.db_column))
+            new_obj = self.obj_cls.get(
+                self.obj_id == getattr(obj, self.obj_id.db_column))
             chk_obj_json = new_obj.to_json()
             self.assertEqual(type(chk_obj_json), str)
 

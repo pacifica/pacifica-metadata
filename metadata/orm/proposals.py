@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Proposals data model."""
 from peewee import TextField, CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
@@ -43,7 +44,8 @@ class Proposals(CherryPyAPI):
     abstract = TextField(default='')
     science_theme = CharField(null=True)
     proposal_type = CharField(default='')
-    submitted_date = ExtendDateTimeField(default=datetime_now_nomicrosecond, index=True)
+    submitted_date = ExtendDateTimeField(
+        default=datetime_now_nomicrosecond, index=True)
     accepted_date = ExtendDateField(null=True, index=True)
     actual_start_date = ExtendDateField(null=True, index=True)
     actual_end_date = ExtendDateField(null=True, index=True)
@@ -56,7 +58,8 @@ class Proposals(CherryPyAPI):
         super(Proposals, Proposals).elastic_mapping_builder(obj)
         obj['abstract'] = {'type': 'text'}
         obj['title'] = obj['science_theme'] = obj['proposal_type'] = \
-            obj['encoding'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            obj['encoding'] = {'type': 'text', 'fields': {
+                'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
         obj['submitted_date'] = \
             {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
@@ -78,16 +81,20 @@ class Proposals(CherryPyAPI):
         obj['proposal_type'] = unicode_type(self.proposal_type)
         obj['submitted_date'] = self.submitted_date.isoformat()
         # pylint: disable=unnecessary-lambda
-        _set_only_if('abstract', exclude_text, None, lambda: unicode_type(self.abstract))
+        _set_only_if('abstract', exclude_text, None,
+                     lambda: unicode_type(self.abstract))
         _set_only_if(
             'actual_start_date',
             self.actual_start_date is None,
             None,
             lambda: self.actual_start_date.isoformat()
         )
-        _set_only_if('accepted_date', self.accepted_date is None, None, lambda: self.accepted_date.isoformat())
-        _set_only_if('actual_end_date', self.actual_end_date is None, None, lambda: self.actual_end_date.isoformat())
-        _set_only_if('closed_date', self.closed_date is None, None, lambda: self.closed_date.isoformat())
+        _set_only_if('accepted_date', self.accepted_date is None,
+                     None, lambda: self.accepted_date.isoformat())
+        _set_only_if('actual_end_date', self.actual_end_date is None,
+                     None, lambda: self.actual_end_date.isoformat())
+        _set_only_if('closed_date', self.closed_date is None,
+                     None, lambda: self.closed_date.isoformat())
         # pylint: enable=unnecessary-lambda
         obj['encoding'] = str(self.encoding)
         return obj
@@ -96,13 +103,16 @@ class Proposals(CherryPyAPI):
         """Convert the hash to the object."""
         super(Proposals, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: unicode_type(obj['_id']))
-        self._set_only_if('title', obj, 'title', lambda: unicode_type(obj['title']))
-        self._set_only_if('abstract', obj, 'abstract', lambda: unicode_type(obj['abstract']))
+        self._set_only_if('title', obj, 'title',
+                          lambda: unicode_type(obj['title']))
+        self._set_only_if('abstract', obj, 'abstract',
+                          lambda: unicode_type(obj['abstract']))
         self._set_only_if('science_theme', obj, 'science_theme',
                           lambda: unicode_type(obj['science_theme']))
         self._set_only_if('proposal_type', obj, 'proposal_type',
                           lambda: unicode_type(obj['proposal_type']))
-        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
+        self._set_only_if('encoding', obj, 'encoding',
+                          lambda: str(obj['encoding']))
         self._set_datetime_part('submitted_date', obj)
         self._set_date_part('accepted_date', obj)
         self._set_date_part('actual_start_date', obj)
@@ -113,15 +123,19 @@ class Proposals(CherryPyAPI):
         date_keys = ['accepted_date', 'actual_start_date', 'actual_end_date']
         for date_key in date_keys:
             if date_key in kwargs:
-                date_obj, date_oper = self._date_operator_compare(date_key, kwargs, date_converts)
-                where_clause &= Expression(getattr(Proposals, date_key), date_oper, date_obj)
+                date_obj, date_oper = self._date_operator_compare(
+                    date_key, kwargs, date_converts)
+                where_clause &= Expression(
+                    getattr(Proposals, date_key), date_oper, date_obj)
         return where_clause
 
     def _where_datetime_clause(self, where_clause, kwargs):
         for date_key in ['submitted_date']:
             if date_key in kwargs:
-                date_obj, date_oper = self._date_operator_compare(date_key, kwargs)
-                where_clause &= Expression(getattr(Proposals, date_key), date_oper, date_obj)
+                date_obj, date_oper = self._date_operator_compare(
+                    date_key, kwargs)
+                where_clause &= Expression(
+                    getattr(Proposals, date_key), date_oper, date_obj)
         return where_clause
 
     def where_clause(self, kwargs):
@@ -131,10 +145,8 @@ class Proposals(CherryPyAPI):
         where_clause = self._where_datetime_clause(where_clause, kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Proposals.id, OP.EQ, kwargs['_id'])
-        for key in ['title', 'abstract', 'science_theme', 'proposal_type', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Proposals, key), key_oper, kwargs[key])
-        return where_clause
+        return self._where_attr_clause(
+            where_clause,
+            kwargs,
+            ['title', 'abstract', 'science_theme', 'proposal_type', 'encoding']
+        )

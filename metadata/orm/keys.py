@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Contains the model for metadata keys."""
 from peewee import CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
@@ -26,7 +27,8 @@ class Keys(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(Keys, Keys).elastic_mapping_builder(obj)
-        obj['key'] = obj['encoding'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+        obj['key'] = obj['encoding'] = {'type': 'text', 'fields': {
+            'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
@@ -53,10 +55,4 @@ class Keys(CherryPyAPI):
         where_clause = super(Keys, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Keys.id, OP.EQ, kwargs['_id'])
-        for key in ['key', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Keys, key), key_oper, kwargs[key])
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs, ['key', 'encoding'])

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Metadata Module."""
 from os import getenv
 from argparse import ArgumentParser

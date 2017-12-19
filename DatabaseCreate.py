@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Create the database tables."""
 from metadata.orm import create_tables
 

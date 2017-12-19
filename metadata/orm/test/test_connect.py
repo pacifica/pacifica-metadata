@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the connection logic see that it works as expected."""
 from unittest import TestCase
 from json import dumps
@@ -18,7 +19,7 @@ class TestConnections(TestCase):
         metaorm.DB = SqliteDatabase('file:///root/foo.db')
         hit_exception = False
         try:
-            try_db_connect(DATABASE_CONNECT_ATTEMPTS-1)
+            try_db_connect(DATABASE_CONNECT_ATTEMPTS - 1)
         except OperationalError:
             hit_exception = True
         self.assertTrue(hit_exception)

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Keywords linked to citations."""
 from peewee import CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
@@ -29,7 +30,8 @@ class Keywords(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(Keywords, Keywords).elastic_mapping_builder(obj)
         obj['keyword'] = obj['encoding'] = \
-            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            {'type': 'text', 'fields': {'keyword': {
+                'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
@@ -43,22 +45,14 @@ class Keywords(CherryPyAPI):
         """Convert the hash to the object."""
         super(Keywords, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
-        self._set_only_if('keyword', obj, 'keyword', lambda: unicode_type(obj['keyword']))
-        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
-
-    @staticmethod
-    def _where_attr_clause(where_clause, kwargs):
-        for key in ['keyword', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Keywords, key), key_oper, kwargs[key])
-        return where_clause
+        self._set_only_if('keyword', obj, 'keyword',
+                          lambda: unicode_type(obj['keyword']))
+        self._set_only_if('encoding', obj, 'encoding',
+                          lambda: str(obj['encoding']))
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
         where_clause = super(Keywords, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Keywords.id, OP.EQ, kwargs['_id'])
-        return self._where_attr_clause(where_clause, kwargs)
+        return self._where_attr_clause(where_clause, kwargs, ['keyword', 'encoding'])

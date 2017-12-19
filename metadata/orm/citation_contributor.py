@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CitationContributor links citations and their authors."""
 from peewee import IntegerField, ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.utils import index_hash
@@ -67,11 +68,14 @@ class CitationContributor(CherryPyAPI):
         where_clause = super(CitationContributor, self).where_clause(kwargs)
         if 'citation_id' in kwargs:
             citation = Citations.get(Citations.id == kwargs['citation_id'])
-            where_clause &= Expression(CitationContributor.citation, OP.EQ, citation)
+            where_clause &= Expression(
+                CitationContributor.citation, OP.EQ, citation)
         if 'author_id' in kwargs:
             author = Contributors.get(Contributors.id == kwargs['author_id'])
-            where_clause &= Expression(CitationContributor.author, OP.EQ, author)
+            where_clause &= Expression(
+                CitationContributor.author, OP.EQ, author)
         if 'author_precedence' in kwargs:
             auth_prec = int(kwargs['author_precedence'])
-            where_clause &= Expression(CitationContributor.author_precedence, OP.EQ, auth_prec)
+            where_clause &= Expression(
+                CitationContributor.author_precedence, OP.EQ, auth_prec)
         return where_clause

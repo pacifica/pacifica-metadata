@@ -1,7 +1,6 @@
 #!/bin/bash -xe
 
 if [ "$RUN_LINTS" = "true" ] ; then
-  pre-commit run --all-files
   bash -xe ./travis/static-analysis.sh
 else
   bash -xe ./travis/unit-tests.sh

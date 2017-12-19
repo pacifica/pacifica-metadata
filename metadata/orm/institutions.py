@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Describes an institution and its attributes."""
 from peewee import BooleanField, TextField, CharField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
@@ -33,7 +34,8 @@ class Institutions(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(Institutions, Institutions).elastic_mapping_builder(obj)
         obj['name'] = obj['association_cd'] = \
-            obj['encoding'] = {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            obj['encoding'] = {'type': 'text', 'fields': {
+                'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['is_foreign'] = {'type': 'boolean'}
 
     def to_hash(self, **flags):
@@ -50,22 +52,14 @@ class Institutions(CherryPyAPI):
         """Convert the hash into the object."""
         super(Institutions, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
-        self._set_only_if('name', obj, 'name', lambda: unicode_type(obj['name']))
+        self._set_only_if('name', obj, 'name',
+                          lambda: unicode_type(obj['name']))
         self._set_only_if('association_cd', obj, 'association_cd',
                           lambda: str(obj['association_cd']))
         self._set_only_if('is_foreign', obj, 'is_foreign',
                           lambda: self._bool_translate((obj['is_foreign'])))
-        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
-
-    @staticmethod
-    def _where_attr_clause(where_clause, kwargs):
-        for key in ['name', 'is_foreign', 'association_cd', 'encoding']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Institutions, key), key_oper, kwargs[key])
-        return where_clause
+        self._set_only_if('encoding', obj, 'encoding',
+                          lambda: str(obj['encoding']))
 
     def where_clause(self, kwargs):
         """PeeWee specific where clause used for search."""
@@ -74,4 +68,8 @@ class Institutions(CherryPyAPI):
             where_clause &= Expression(Institutions.id, OP.EQ, kwargs['_id'])
         if 'is_foreign' in kwargs:
             kwargs['is_foreign'] = self._bool_translate(kwargs['is_foreign'])
-        return self._where_attr_clause(where_clause, kwargs)
+        return self._where_attr_clause(
+            where_clause,
+            kwargs,
+            ['name', 'is_foreign', 'association_cd', 'encoding']
+        )

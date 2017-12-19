@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """
 Create the METADATA_MODEL.md file.
 
@@ -53,7 +54,8 @@ for obj_cls in ORM_OBJECTS:
                 points_to = '{0}.{1}'.format(points_to_class, points_to_column)
                 if column_name.endswith('_id'):
                     continue
-            column_tuples.append((column_name, column_type, points_to, sql_attrs))
+            column_tuples.append(
+                (column_name, column_type, points_to, sql_attrs))
 
     # pylint: disable=invalid-name
     # pylint: disable=too-many-return-statements

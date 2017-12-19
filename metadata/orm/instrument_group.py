@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """InstrumentGroup links Groups and Instruments and objects."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.utils import index_hash
@@ -51,7 +52,8 @@ class InstrumentGroup(CherryPyAPI):
         """Convert the hash into the object."""
         super(InstrumentGroup, self).from_hash(obj)
         if 'instrument_id' in obj:
-            self.instrument = Instruments.get(Instruments.id == obj['instrument_id'])
+            self.instrument = Instruments.get(
+                Instruments.id == obj['instrument_id'])
         if 'group_id' in obj:
             self.group = Groups.get(Groups.id == obj['group_id'])
 
@@ -59,8 +61,10 @@ class InstrumentGroup(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(InstrumentGroup, self).where_clause(kwargs)
         if 'instrument_id' in kwargs:
-            instrument = Instruments.get(Instruments.id == kwargs['instrument_id'])
-            where_clause &= Expression(InstrumentGroup.instrument, OP.EQ, instrument)
+            instrument = Instruments.get(
+                Instruments.id == kwargs['instrument_id'])
+            where_clause &= Expression(
+                InstrumentGroup.instrument, OP.EQ, instrument)
         if 'group_id' in kwargs:
             group = Groups.get(Groups.id == kwargs['group_id'])
             where_clause &= Expression(InstrumentGroup.group, OP.EQ, group)

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for each ORM object to interface with CherryPy."""
 from json import loads, dumps
 from cherrypy import request, HTTPError
@@ -21,14 +22,16 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """Internal select method."""
         primary_keys = []
         copy_flags = self.es_recursive_flags.copy()
-        copy_flags['recursion_depth'] = CherryPyAPI._check_recursion_depth(kwargs)
+        copy_flags['recursion_depth'] = CherryPyAPI._check_recursion_depth(
+            kwargs)
         for key in self.get_primary_keys():
             primary_keys.append(getattr(self.__class__, key))
         objs = (self.select()
                 .where(self.where_clause(kwargs))
                 .order_by(*primary_keys))
         if 'page_number' in kwargs and 'items_per_page' in kwargs:
-            objs = objs.paginate(int(kwargs['page_number']), int(kwargs['items_per_page']))
+            objs = objs.paginate(
+                int(kwargs['page_number']), int(kwargs['items_per_page']))
         return dumps([obj.to_hash(**copy_flags) for obj in objs])
 
     @staticmethod
@@ -47,7 +50,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
     def _update(self, update_json, **kwargs):
         """Internal update method for an object."""
         update_hash = loads(update_json)
-        update_hash['updated'] = update_hash.get('updated', datetime_now_nomicrosecond())
+        update_hash['updated'] = update_hash.get(
+            'updated', datetime_now_nomicrosecond())
         did_something = False
         updated_objs = []
         for obj in self.select().where(self.where_clause(kwargs)):
@@ -90,7 +94,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             objs = [objs]
         bad_id_list = self.__class__.check_for_key_existence(objs)
         if bad_id_list:
-            message = 'Could not insert records [ID: {0}] due to duplicated ID values. '.format(','.join(bad_id_list))
+            message = 'Could not insert records [ID: {0}] due to duplicated ID values. '.format(
+                ','.join(bad_id_list))
             message += 'Remove or change the duplicated id values'
             raise HTTPError(400, message)
 
@@ -98,15 +103,18 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             """Fix the dates for insert."""
             for date_key in ['created', 'updated', 'deleted']:
                 if date_key in orig_obj:
-                    es_obj[date_key] = db_obj[date_key] = datetime_converts(orig_obj[date_key])
+                    es_obj[date_key] = db_obj[date_key] = datetime_converts(
+                        orig_obj[date_key])
             for date_key in ['created', 'updated']:
                 if date_key not in orig_obj:
-                    es_obj[date_key] = db_obj[date_key] = datetime_converts(datetime_now_nomicrosecond())
+                    es_obj[date_key] = db_obj[date_key] = datetime_converts(
+                        datetime_now_nomicrosecond())
             if 'deleted' not in orig_obj:
                 db_obj['deleted'] = es_obj['deleted'] = None
         clean_objs = self._clean_for_bulk_upload(objs, fix_dates)
         es_objs = []
-        insert_query = self.__class__.insert_many(clean_objs['upload_objs']).returning(self.__class__)
+        insert_query = self.__class__.insert_many(
+            clean_objs['upload_objs']).returning(self.__class__)
         for item in insert_query.execute():
             es_objs.append(item.to_hash(**self.es_recursive_flags))
         self.elastic_upload(es_objs)

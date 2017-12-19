@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test class for the client api."""
 from unittest import TestCase
 from json import dumps, loads
@@ -64,7 +65,8 @@ class TestClient(TestCase):
         try:
             client.get(class_type, params)
         except PMClientError as ex:
-            self.assertEqual(str(ex), 'Internal Server Error (501) This is the error.')
+            self.assertEqual(
+                str(ex), 'Internal Server Error (501) This is the error.')
 
     @httpretty.activate
     def test_client_get_unknown_error(self):
@@ -91,7 +93,8 @@ class TestClient(TestCase):
         params = {
             '_id': 127
         }
-        httpretty.register_uri(httpretty.DELETE, '{0}/{1}'.format(endpoint_url, class_type))
+        httpretty.register_uri(
+            httpretty.DELETE, '{0}/{1}'.format(endpoint_url, class_type))
         client = PMClient(endpoint_url)
         response = client.delete(class_type, params)
         self.assertTrue(response)
@@ -104,7 +107,8 @@ class TestClient(TestCase):
         params = {
             '_id': 127
         }
-        httpretty.register_uri(httpretty.DELETE, '{0}/{1}'.format(endpoint_url, class_type), status=404)
+        httpretty.register_uri(
+            httpretty.DELETE, '{0}/{1}'.format(endpoint_url, class_type), status=404)
         client = PMClient(endpoint_url)
         response = client.delete(class_type, params)
         self.assertTrue(response)
@@ -124,7 +128,8 @@ class TestClient(TestCase):
         try:
             client.delete(class_type, params)
         except PMClientError as ex:
-            self.assertEqual(str(ex), 'Internal Server Error (501) This is the error.')
+            self.assertEqual(
+                str(ex), 'Internal Server Error (501) This is the error.')
 
     @httpretty.activate
     def test_client_delete_unk_error(self):
@@ -161,7 +166,8 @@ class TestClient(TestCase):
         try:
             client.create(class_type, response_body)
         except PMClientError as ex:
-            self.assertEqual(str(ex), 'Internal Server Error (501) This is the error.')
+            self.assertEqual(
+                str(ex), 'Internal Server Error (501) This is the error.')
 
     @httpretty.activate
     def test_client_create_unk_error(self):
@@ -194,7 +200,8 @@ class TestClient(TestCase):
             'first_name': 'John',
             'network_id': 'johndoe'
         }
-        httpretty.register_uri(httpretty.PUT, '{0}/{1}'.format(endpoint_url, class_type))
+        httpretty.register_uri(
+            httpretty.PUT, '{0}/{1}'.format(endpoint_url, class_type))
         client = PMClient(endpoint_url)
         response = client.create(class_type, response_body)
         self.assertTrue(response)
@@ -216,7 +223,8 @@ class TestClient(TestCase):
             'first_name': 'John',
             'network_id': 'johndoe'
         }
-        httpretty.register_uri(httpretty.POST, '{0}/{1}'.format(endpoint_url, class_type))
+        httpretty.register_uri(
+            httpretty.POST, '{0}/{1}'.format(endpoint_url, class_type))
         client = PMClient(endpoint_url)
         response = client.update(class_type, params, response_body)
         self.assertTrue(response)
@@ -265,7 +273,8 @@ class TestClient(TestCase):
         try:
             client.update(class_type, params, post_body)
         except PMClientError as ex:
-            self.assertEqual(str(ex), 'Internal Server Error (501) This is the error.')
+            self.assertEqual(
+                str(ex), 'Internal Server Error (501) This is the error.')
 
     @httpretty.activate
     def test_client_update_unk_error(self):

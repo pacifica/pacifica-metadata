@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
 import cherrypy
 # import re
@@ -24,10 +26,12 @@ class TransactionSearch(QueryBase):
         for term in search_terms:
             value = str(search_terms[term]).replace('+', ' ')
             if term in ['proposal', 'proposal_id'] and value != '-1':
-                where_clause &= Transactions().where_clause({'proposal': value})
+                where_clause &= Transactions().where_clause(
+                    {'proposal': value})
                 continue
             if term in ['instrument', 'instrument_id'] and value != '-1':
-                where_clause &= Transactions().where_clause({'instrument': value})
+                where_clause &= Transactions().where_clause(
+                    {'instrument': value})
                 continue
             if term in ['start', 'start_time']:
                 where_clause &= Transactions().where_clause(
@@ -39,7 +43,8 @@ class TransactionSearch(QueryBase):
                 continue
             if term in ['user', 'user_id', 'person',
                         'person_id', 'submitter', 'submitter_id'] and value != '-1':
-                where_clause &= Transactions().where_clause({'submitter': value})
+                where_clause &= Transactions().where_clause(
+                    {'submitter': value})
                 continue
             if term in ['transaction_id'] and value != '-1':
                 where_clause &= Transactions().where_clause({'_id': value})
@@ -69,7 +74,8 @@ class TransactionSearch(QueryBase):
         """Return transactions for the search params."""
         option = 'details' if option not in ['list', 'details'] else option
 
-        kwargs = {k: v for (k, v) in kwargs.items() if k in QueryBase.valid_keywords}
+        kwargs = {k: v for (k, v) in kwargs.items()
+                  if k in QueryBase.valid_keywords}
         if not kwargs:
             message = 'Invalid transaction details search request. '
             cherrypy.log.error(message)
@@ -78,7 +84,8 @@ class TransactionSearch(QueryBase):
                 QueryBase.compose_help_block_message()
             )
         else:
-            transactions, transaction_search_stats = TransactionSearch._search_transactions(kwargs)
+            transactions, transaction_search_stats = TransactionSearch._search_transactions(
+                kwargs)
 
         results = QueryBase._get_transaction_info_blocks(transactions, option)
         results.update(transaction_search_stats)

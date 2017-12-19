@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Core interface for the proposalinfo metadata objects to interface with CherryPy."""
 from metadata.rest.migration_queries.migrate_instruments import MigrateInstruments
 from metadata.rest.migration_queries.migrate_proposals import MigrateProposals

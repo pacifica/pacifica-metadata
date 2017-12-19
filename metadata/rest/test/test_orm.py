@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the ORM interface CherryPyAPI."""
 from time import time
 from datetime import datetime

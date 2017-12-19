@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Elastic search orm classes and utilities."""
 from os import getenv
 from time import sleep
@@ -7,7 +8,8 @@ from elasticsearch.exceptions import ElasticsearchException
 
 ELASTIC_CONNECT_ATTEMPTS = 40
 ELASTIC_WAIT = 3
-DEFAULT_ELASTIC_ENDPOINT = getenv('ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
+DEFAULT_ELASTIC_ENDPOINT = getenv(
+    'ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 ELASTIC_INDEX = getenv('ELASTIC_INDEX', 'pacifica')
 ES_INDEX_URL = '{0}/{1}'.format(ELASTIC_ENDPOINT, ELASTIC_INDEX)

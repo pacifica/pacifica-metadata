@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Base testing module implements the temporary database to be used."""
 from datetime import datetime, timedelta
 from time import mktime
@@ -86,8 +87,8 @@ class TestDBDates(TestBase):
             self.base_create_obj(PacificaModel, SAMPLE_REP_HASH)
             self.base_create_obj(PacificaModel, SAMPLE_ZERO_ISO_HASH)
             third_obj = PacificaModel()
-            date_check_max = datetime.utcnow()+timedelta(minutes=2)
-            date_check_min = datetime.utcnow()-timedelta(minutes=2)
+            date_check_max = datetime.utcnow() + timedelta(minutes=2)
+            date_check_min = datetime.utcnow() - timedelta(minutes=2)
             search_expr = {
                 'created': date_check_max.replace(microsecond=0).isoformat(),
                 'created_operator': 'LT'

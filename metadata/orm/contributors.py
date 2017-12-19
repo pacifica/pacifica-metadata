@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Contributors model describes an author to a journal article."""
 from peewee import CharField, ForeignKeyField, Expression, OP
 from metadata.orm.users import Users
@@ -53,7 +54,8 @@ class Contributors(CherryPyAPI):
         obj['person_id'] = obj['institution_id'] = {'type': 'integer'}
         obj['first_name'] = obj['middle_initial'] = obj['last_name'] = \
             obj['dept_code'] = obj['encoding'] = \
-            {'type': 'text', 'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            {'type': 'text', 'fields': {'keyword': {
+                'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object fields into a serializable hash."""
@@ -75,23 +77,14 @@ class Contributors(CherryPyAPI):
         super(Contributors, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
         for attr in ['first_name', 'middle_initial', 'last_name', 'dept_code']:
-            self._set_only_if(attr, obj, attr, lambda k=attr: unicode_type(obj[k]))
+            self._set_only_if(
+                attr, obj, attr, lambda k=attr: unicode_type(obj[k]))
         self._set_only_if('person_id', obj, 'person',
                           lambda: Users.get(Users.id == int(obj['person_id'])))
         self._set_only_if('institution_id', obj, 'institution',
                           lambda: Institutions.get(Institutions.id == int(obj['institution_id'])))
-        self._set_only_if('encoding', obj, 'encoding', lambda: str(obj['encoding']))
-
-    @staticmethod
-    def _where_attr_clause(where_clause, kwargs):
-        for key in ['author_id', 'first_name', 'last_name', 'encoding'
-                    'middle_initial', 'dept_code']:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(getattr(Contributors, key), key_oper, kwargs[key])
-        return where_clause
+        self._set_only_if('encoding', obj, 'encoding',
+                          lambda: str(obj['encoding']))
 
     def where_clause(self, kwargs):
         """Generate the PeeWee where clause used in searching."""
@@ -100,6 +93,18 @@ class Contributors(CherryPyAPI):
             user = Users.get(Users.id == kwargs['person_id'])
             where_clause &= Expression(Contributors.person, OP.EQ, user)
         if 'institution_id' in kwargs:
-            inst = Institutions.get(Institutions.id == kwargs['institution_id'])
+            inst = Institutions.get(
+                Institutions.id == kwargs['institution_id'])
             where_clause &= Expression(Contributors.institution, OP.EQ, inst)
-        return self._where_attr_clause(where_clause, kwargs)
+        return self._where_attr_clause(
+            where_clause,
+            kwargs,
+            [
+                'author_id',
+                'first_name',
+                'last_name',
+                'encoding',
+                'middle_initial',
+                'dept_code'
+            ]
+        )

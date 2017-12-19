@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the atool_proposal ORM object."""
 from json import dumps
 from metadata.orm.test.base import TestBase

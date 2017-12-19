@@ -71,7 +71,7 @@ class TestFiles(TestBase):
             name_operator='ILIKE',
             name=u'%é%'
         )
-        date_time_chk = datetime.utcnow()-timedelta(minutes=10)
+        date_time_chk = datetime.utcnow() - timedelta(minutes=10)
         self.base_where_clause_search_expr(
             SAMPLE_FILE_HASH,
             mtime_operator='GT',

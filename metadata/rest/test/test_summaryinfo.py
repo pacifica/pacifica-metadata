@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the ORM interface SummaryInfoAPI."""
 import datetime
 import requests
@@ -26,7 +27,8 @@ class TestSummaryInfoAPI(CPCommonTest):
         url = '{0}/summaryinfo/by_date/submitted/instrument/'.format(self.url)
         tomorrow = datetime.datetime.utcnow().date() + datetime.timedelta(days=1)
         yesterday = datetime.datetime.utcnow().date() - datetime.timedelta(days=1)
-        url += '{0}/{1}'.format(tomorrow.strftime('%Y-%m-%d'), yesterday.strftime('%Y-%m-%d'))
+        url += '{0}/{1}'.format(tomorrow.strftime('%Y-%m-%d'),
+                                yesterday.strftime('%Y-%m-%d'))
 
         req = requests.post(
             url=url, json=instrument_list, headers=header_list

@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """TransactionKeyValue links Transactions and Keys and Values objects."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.base import DB
@@ -23,7 +24,8 @@ class AToolTransaction(CherryPyAPI):
     """
 
     transaction = ForeignKeyField(Transactions, related_name='atools')
-    analytical_tool = ForeignKeyField(AnalyticalTools, related_name='transactions')
+    analytical_tool = ForeignKeyField(
+        AnalyticalTools, related_name='transactions')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
@@ -57,15 +59,20 @@ class AToolTransaction(CherryPyAPI):
                 AnalyticalTools.id == obj['analytical_tool_id']
             )
         if 'transaction_id' in obj:
-            self.transaction = Transactions.get(Transactions.id == obj['transaction_id'])
+            self.transaction = Transactions.get(
+                Transactions.id == obj['transaction_id'])
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
         where_clause = super(AToolTransaction, self).where_clause(kwargs)
         if 'analytical_tool_id' in kwargs:
-            atool = AnalyticalTools.get(AnalyticalTools.id == kwargs['analytical_tool_id'])
-            where_clause &= Expression(AToolTransaction.analytical_tool, OP.EQ, atool)
+            atool = AnalyticalTools.get(
+                AnalyticalTools.id == kwargs['analytical_tool_id'])
+            where_clause &= Expression(
+                AToolTransaction.analytical_tool, OP.EQ, atool)
         if 'transaction_id' in kwargs:
-            trans = Transactions.get(Transactions.id == kwargs['transaction_id'])
-            where_clause &= Expression(AToolTransaction.transaction, OP.EQ, trans)
+            trans = Transactions.get(
+                Transactions.id == kwargs['transaction_id'])
+            where_clause &= Expression(
+                AToolTransaction.transaction, OP.EQ, trans)
         return where_clause

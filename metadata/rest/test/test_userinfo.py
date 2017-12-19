@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 """Test the UserInfoAPI object."""
 from json import loads
 import requests
@@ -62,7 +63,8 @@ class TestUserInfoAPI(CPCommonTest):
     def test_bad_userinfo_api(self):
         """Test the GET method with bad data."""
         str_user_id = 'bob'
-        req = requests.get('{0}/userinfo/by_id/{1}'.format(self.url, str_user_id))
+        req = requests.get(
+            '{0}/userinfo/by_id/{1}'.format(self.url, str_user_id))
         self.assertEqual(req.status_code, 400)
         self.assertTrue('Invalid Lookup Options' in req.text)
 
