@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """CherryPy File Details object class."""
+from peewee import fn
 from cherrypy import tools, HTTPError, request
 from metadata.orm import Files, Transactions
 from metadata.rest.reporting_queries.query_base import QueryBase
-from peewee import fn
 
 # pylint: disable=too-few-public-methods
 

@@ -17,6 +17,7 @@ class SummarizeByDate(QueryBase):
 
     exposed = True
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def _search_by_dates(object_type, object_id_list, start_date, end_date, time_basis):
         time_column_name = QueryBase.time_basis_mappings.get(time_basis)
@@ -87,6 +88,7 @@ class SummarizeByDate(QueryBase):
             results['summary_totals']['total_file_count'] += 1
             results['summary_totals']['total_size_bytes'] += item.size
         return results
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def _update_transaction_info_block(info_block, item, t_info):

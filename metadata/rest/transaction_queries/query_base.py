@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """CherryPy Status Metadata proposalinfo base class."""
+from cherrypy import HTTPError
 from peewee import DoesNotExist, fn, JOIN
 from metadata.orm import TransactionKeyValue, Keys, Values
 from metadata.orm import Files, FileKeyValue, Transactions
 from metadata.orm import Users, Instruments, Proposals
-from cherrypy import HTTPError
 
 
 # pylint: disable=too-few-public-methods
