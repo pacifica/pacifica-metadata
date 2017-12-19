@@ -7,7 +7,8 @@ from setuptools import setup
 INSTALL_REQS = parse_requirements('requirements.txt', session='hack')
 
 setup(name='PacificaMetadata',
-      version='1.0',
+      use_scm_version=True,
+      setup_requires=['setuptools_scm'],
       description='Pacifica Metadata',
       author='David Brown',
       author_email='david.brown@pnnl.gov',
