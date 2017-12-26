@@ -34,6 +34,7 @@ test_script:
       echo 'Running Server.';
       $proc = Start-Process $env:PYTHON\python.exe -ArgumentList '-m', 'coverage', 'run', '-a', 'MetadataServer.py' -WorkingDirectory $PWD -PassThru;
       sleep 15;
+      Invoke-WebRequest -Uri http://localhost:8121/users;
       echo 'Killing Server.';
       $proc.CloseMainWindow();
       sleep 4;
