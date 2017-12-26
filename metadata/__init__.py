@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Metadata Module."""
 from os import getenv
+from json import dumps
 from argparse import ArgumentParser
 import cherrypy
 from metadata.rest.root import Root
@@ -9,6 +10,17 @@ from metadata.orm import create_tables
 
 
 CHERRYPY_CONFIG = getenv('CHERRYPY_CONFIG', 'server.conf')
+
+
+def error_page_default(**kwargs):
+    """The default error page should always enforce json."""
+    cherrypy.response.headers['Content-Type'] = 'application/json'
+    return dumps({
+        'status': kwargs['status'],
+        'message': kwargs['message'],
+        'traceback': kwargs['traceback'],
+        'version': kwargs['version']
+    })
 
 
 def main():
@@ -26,6 +38,7 @@ def main():
     args = parser.parse_args()
     create_tables()
 
+    cherrypy.config.update({'error_page.default': error_page_default})
     cherrypy.config.update({
         'server.socket_host': args.address,
         'server.socket_port': args.port
