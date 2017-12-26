@@ -46,7 +46,7 @@ class TestSummaryTkvAPI(CPCommonTest):
         # Test value retrieval
         getreq = requests.get(
             url='{0}/tkvinfo/values_for_key/{1}/{2}'.format(
-                self.url, 'organism_name', datetime.datetime.now().isoformat()
+                self.url, 'organism_name', datetime.datetime.now().replace(microsecond=0).isoformat()
             ),
             headers=header_list
         )
