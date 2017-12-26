@@ -27,7 +27,7 @@ def error_page_default(**kwargs):
 
 def stop_later(doit=False):
     """Used for unit testing stop after 10 seconds."""
-    if not doit:
+    if not doit:  # pragma: no cover
         return
 
     def sleep_then_exit():
