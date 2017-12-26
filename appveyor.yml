@@ -31,8 +31,11 @@ test_script:
   - ps: >
       & "$env:PYTHON\python.exe" -m coverage run --include="metadata/*" -m pytest -v metadata/orm metadata/elastic metadata/test_client.py;
       & "$env:PYTHON\python.exe" -m coverage run --include="metadata/*" -a -m pytest -v metadata/rest;
+      echo 'Running Server.';
       $proc = Start-Process $env:PYTHON\python.exe -ArgumentList '-m', 'coverage', 'run', '-a', 'MetadataServer.py' -WorkingDirectory $PWD -PassThru;
       sleep 4;
-      $proc | kill;
+      echo 'Killing Server.';
+      $proc.Kill();
       sleep 4;
+      echo $proc.ExitCode;
       & "$env:PYTHON\python.exe" -m coverage report --show-missing --fail-under 100;
