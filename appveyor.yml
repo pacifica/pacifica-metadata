@@ -31,8 +31,8 @@ test_script:
   - ps: >
       & "$env:PYTHON\python.exe" -m coverage run --include="metadata/*" -m pytest -v metadata/orm metadata/elastic metadata/test_client.py;
       & "$env:PYTHON\python.exe" -m coverage run --include="metadata/*" -a -m pytest -v metadata/rest;
-      $proc = Start-Process $env:PYTHON\python.exe -ArgumentList "-m coverage run  -a MetadataServer.py" -PassThru;
-      $timedout = $null;
-      $proc | Wait-Process -Timeout 4 -ea 0 -ev timedout;
+      $proc = Start-Process $env:PYTHON\python.exe -ArgumentList "-m coverage run -a MetadataServer.py" -PassThru;
+      sleep 4;
       $proc | kill;
+      sleep 4;
       & "$env:PYTHON\python.exe" -m coverage report --show-missing --fail-under 100;
