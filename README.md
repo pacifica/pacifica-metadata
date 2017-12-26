@@ -1,5 +1,6 @@
 # Pacifica Metadata Services
 [![Build Status](https://travis-ci.org/pacifica/pacifica-metadata.svg?branch=master)](https://travis-ci.org/pacifica/pacifica-metadata)
+[![Build status](https://ci.appveyor.com/api/projects/status/ekicw5d4yxfmq1x4?svg=true)](https://ci.appveyor.com/project/dmlb2000/pacifica-metadata)
 [![Code Climate](https://codeclimate.com/github/pacifica/pacifica-metadata/badges/gpa.svg)](https://codeclimate.com/github/pacifica/pacifica-metadata)
 [![Test Coverage](https://codeclimate.com/github/pacifica/pacifica-metadata/badges/coverage.svg)](https://codeclimate.com/github/pacifica/pacifica-metadata/coverage)
 [![Issue Count](https://codeclimate.com/github/pacifica/pacifica-metadata/badges/issue_count.svg)](https://codeclimate.com/github/pacifica/pacifica-metadata)
