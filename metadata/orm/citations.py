@@ -77,7 +77,7 @@ class Citations(CherryPyAPI):
             obj['abstract_text'] = unicode_type(self.abstract_text)
             obj['xml_text'] = unicode_type(self.xml_text)
         # pylint: disable=no-member
-        obj['journal_id'] = int(self.journal.id)
+        obj['journal_id'] = int(self._data['journal'])
         # pylint: enable=no-member
         obj['journal_volume'] = int(self.journal_volume)
         obj['journal_issue'] = int(self.journal_issue)
@@ -106,7 +106,7 @@ class Citations(CherryPyAPI):
         """Generate the PeeWee where clause used in searching."""
         where_clause = super(Citations, self).where_clause(kwargs)
         if 'journal_id' in kwargs:
-            journal = Journals.get(Journals.id == int(kwargs['journal_id']))
+            journal = int(kwargs['journal_id'])
             where_clause &= Expression(Citations.journal, OP.EQ, journal)
         if '_id' in kwargs:
             where_clause &= Expression(Citations.id, OP.EQ, int(kwargs['_id']))

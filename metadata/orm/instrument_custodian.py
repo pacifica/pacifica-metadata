@@ -43,10 +43,10 @@ class InstrumentCustodian(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(InstrumentCustodian, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self.custodian.id),
-                                int(self.instrument.id))
-        obj['instrument_id'] = int(self.instrument.id)
-        obj['custodian_id'] = int(self.custodian.id)
+        obj['_id'] = index_hash(int(self._data['custodian']),
+                                int(self._data['instrument']))
+        obj['instrument_id'] = int(self._data['instrument'])
+        obj['custodian_id'] = int(self._data['custodian'])
         return obj
 
     def from_hash(self, obj):
@@ -62,12 +62,11 @@ class InstrumentCustodian(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(InstrumentCustodian, self).where_clause(kwargs)
         if 'instrument_id' in kwargs:
-            instrument = Instruments.get(
-                Instruments.id == kwargs['instrument_id'])
+            instrument = int(kwargs['instrument_id'])
             where_clause &= Expression(
                 InstrumentCustodian.instrument, OP.EQ, instrument)
         if 'custodian_id' in kwargs:
-            user = Users.get(Users.id == kwargs['custodian_id'])
+            user = int(kwargs['custodian_id'])
             where_clause &= Expression(
                 InstrumentCustodian.custodian, OP.EQ, user)
         return where_clause

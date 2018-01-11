@@ -44,11 +44,12 @@ class ProposalInstrument(CherryPyAPI):
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
+        fast = flags.get('fast', False)
         obj = super(ProposalInstrument, self).to_hash(**flags)
         obj['_id'] = index_hash(unicode_type(
-            self.proposal.id), int(self.instrument.id))
-        obj['instrument_id'] = int(self.instrument.id)
-        obj['proposal_id'] = unicode_type(self.proposal.id)
+            self._data['proposal']), int(self._data['instrument']))
+        obj['instrument_id'] = int(self._data['instrument'])
+        obj['proposal_id'] = unicode_type(self._data['proposal'])
         return obj
 
     def from_hash(self, obj):
@@ -64,12 +65,11 @@ class ProposalInstrument(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(ProposalInstrument, self).where_clause(kwargs)
         if 'instrument_id' in kwargs:
-            instrument = Instruments.get(
-                Instruments.id == kwargs['instrument_id'])
+            instrument = int(kwargs['instrument_id'])
             where_clause &= Expression(
                 ProposalInstrument.instrument, OP.EQ, instrument)
         if 'proposal_id' in kwargs:
-            proposal = Proposals.get(Proposals.id == kwargs['proposal_id'])
+            proposal = kwargs['proposal_id']
             where_clause &= Expression(
                 ProposalInstrument.proposal, OP.EQ, proposal)
         return where_clause

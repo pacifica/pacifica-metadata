@@ -43,9 +43,9 @@ class UserGroup(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(UserGroup, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self.person.id), int(self.group.id))
-        obj['person_id'] = int(self.person.id)
-        obj['group_id'] = int(self.group.id)
+        obj['_id'] = index_hash(int(self._data['person']), int(self._data['group']))
+        obj['person_id'] = int(self._data['person'])
+        obj['group_id'] = int(self._data['group'])
         return obj
 
     def from_hash(self, obj):
@@ -60,9 +60,9 @@ class UserGroup(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(UserGroup, self).where_clause(kwargs)
         if 'person_id' in kwargs:
-            user = Users.get(Users.id == kwargs['person_id'])
+            user = int(kwargs['person_id'])
             where_clause &= Expression(UserGroup.person, OP.EQ, user)
         if 'group_id' in kwargs:
-            group = Groups.get(Groups.id == kwargs['group_id'])
+            group = int(kwargs['group_id'])
             where_clause &= Expression(UserGroup.group, OP.EQ, group)
         return where_clause

@@ -43,9 +43,9 @@ class InstrumentGroup(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(InstrumentGroup, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self.group.id), int(self.instrument.id))
-        obj['instrument_id'] = int(self.instrument.id)
-        obj['group_id'] = int(self.group.id)
+        obj['_id'] = index_hash(int(self._data['group']), int(self._data['instrument']))
+        obj['instrument_id'] = int(self._data['instrument'])
+        obj['group_id'] = int(self._data['group'])
         return obj
 
     def from_hash(self, obj):
@@ -61,11 +61,10 @@ class InstrumentGroup(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(InstrumentGroup, self).where_clause(kwargs)
         if 'instrument_id' in kwargs:
-            instrument = Instruments.get(
-                Instruments.id == kwargs['instrument_id'])
+            instrument = int(kwargs['instrument_id'])
             where_clause &= Expression(
                 InstrumentGroup.instrument, OP.EQ, instrument)
         if 'group_id' in kwargs:
-            group = Groups.get(Groups.id == kwargs['group_id'])
+            group = int(kwargs['group_id'])
             where_clause &= Expression(InstrumentGroup.group, OP.EQ, group)
         return where_clause

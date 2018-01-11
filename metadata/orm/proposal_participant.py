@@ -44,11 +44,12 @@ class ProposalParticipant(CherryPyAPI):
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
+        fast = flags.get('fast', False)
         obj = super(ProposalParticipant, self).to_hash(**flags)
         obj['_id'] = index_hash(unicode_type(
-            self.proposal.id), int(self.person.id))
-        obj['person_id'] = int(self.person.id)
-        obj['proposal_id'] = unicode_type(self.proposal.id)
+            self._data['proposal']), int(self._data['person']))
+        obj['person_id'] = int(self._data['person'])
+        obj['proposal_id'] = unicode_type(self._data['proposal'])
         return obj
 
     def from_hash(self, obj):
@@ -63,11 +64,11 @@ class ProposalParticipant(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(ProposalParticipant, self).where_clause(kwargs)
         if 'person_id' in kwargs:
-            member = Users.get(Users.id == kwargs['person_id'])
+            member = int(kwargs['person_id'])
             where_clause &= Expression(
                 ProposalParticipant.person, OP.EQ, member)
         if 'proposal_id' in kwargs:
-            proposal = Proposals.get(Proposals.id == kwargs['proposal_id'])
+            proposal = kwargs['proposal_id']
             where_clause &= Expression(
                 ProposalParticipant.proposal, OP.EQ, proposal)
         return where_clause

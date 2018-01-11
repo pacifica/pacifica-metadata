@@ -22,6 +22,7 @@ from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, 
 
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
+import logging
 
 # Primary PeeWee database connection object constant
 DB = pgdb(getenv('POSTGRES_ENV_POSTGRES_DB', 'pacifica_metadata'),
@@ -33,6 +34,11 @@ DB = pgdb(getenv('POSTGRES_ENV_POSTGRES_DB', 'pacifica_metadata'),
 DEFAULT_ELASTIC_ENDPOINT = getenv(
     'ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
+
+# Print all queries to stderr.
+logger = logging.getLogger('peewee')
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.StreamHandler())
 
 
 def db_connection_decorator(func):
@@ -104,6 +110,12 @@ class PacificaModel(Model):
         # pylint: enable=no-member
 
     @classmethod
+    def cls_foreignkey_rel_mods(cls):
+        # pylint: disable=no-member
+        return {cls._meta.rel[fk].rel_model: fk for fk in cls._meta.rel}
+        # pylint: enable=no-member
+
+    @classmethod
     def cls_revforeignkeys(cls):
         """Provide the rev foreign keys of the class as a list of attrs."""
         ret = []
@@ -125,8 +137,39 @@ class PacificaModel(Model):
             for attr in set(self.cls_revforeignkeys()) - set(flags.get('recursion_exclude', [])):
                 rec_flags = flags.copy()
                 rec_flags['recursion_depth'] -= 1
-                obj[attr] = [obj_ref.to_hash(**rec_flags)['_id']
-                             for obj_ref in getattr(self, attr)]
+                fk_obj_list = {}
+                key_present = False
+                value_present = False
+                fk_item_name = 'id'
+                for obj_ref in getattr(self, attr):
+                    if not fk_obj_list:
+                        obj[attr] = []
+                        fk_obj_list = obj_ref.cls_foreignkey_rel_mods()
+                        fk_list = obj_ref.cls_foreignkeys()
+                        valid_fk_obj_list = list(set(fk_obj_list) - set([self.__class__]))
+                        if valid_fk_obj_list:
+                            if len(valid_fk_obj_list) == 1:
+                                fk_class = valid_fk_obj_list.pop()
+                                fk_item_name = fk_obj_list[fk_class]
+                            else:
+                                for valid_fk_obj in valid_fk_obj_list:
+                                    fk_obj = fk_obj_list[valid_fk_obj]
+                                    if fk_obj == 'key':
+                                        key_present = True
+                                    if fk_obj == 'value':
+                                        value_present = True
+                        else:
+                            fk_item_name = "id"
+                    if key_present and value_present:
+                        obj[attr] = [
+                            {
+                                'key_id': obj_ref._data['key'],
+                                'value_id': obj_ref._data['value']
+                            }
+                        ]
+                    else:
+                        obj[attr].append(obj_ref._data[fk_item_name])
+
         return obj
 
     def from_hash(self, obj):
