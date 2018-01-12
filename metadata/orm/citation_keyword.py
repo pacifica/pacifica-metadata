@@ -45,7 +45,8 @@ class CitationKeyword(CherryPyAPI):
         """Convert the object to a hash."""
         obj = super(CitationKeyword, self).to_hash(**flags)
         # pylint: disable=no-member
-        obj['_id'] = index_hash(int(self._data['citation']), int(self._data['keyword']))
+        obj['_id'] = index_hash(
+            int(self._data['citation']), int(self._data['keyword']))
         obj['citation_id'] = int(self._data['citation'])
         obj['keyword_id'] = int(self._data['keyword'])
         # pylint: enable=no-member

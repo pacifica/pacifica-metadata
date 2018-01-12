@@ -155,7 +155,8 @@ class PacificaModel(Model):
             if not fk_obj_list:
                 obj[attr] = []
                 fk_obj_list = obj_ref.cls_foreignkey_rel_mods()
-                valid_fk_obj_list = list(set(fk_obj_list) - set([self.__class__]))
+                valid_fk_obj_list = list(
+                    set(fk_obj_list) - set([self.__class__]))
                 if len(valid_fk_obj_list) == 1:
                     fk_class = valid_fk_obj_list.pop()
                     fk_item_name = fk_obj_list[fk_class]

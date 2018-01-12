@@ -43,7 +43,8 @@ class UserGroup(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(UserGroup, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self._data['person']), int(self._data['group']))
+        obj['_id'] = index_hash(
+            int(self._data['person']), int(self._data['group']))
         obj['person_id'] = int(self._data['person'])
         obj['group_id'] = int(self._data['group'])
         return obj
