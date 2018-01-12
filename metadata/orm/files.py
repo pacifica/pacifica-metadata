@@ -70,7 +70,6 @@ class Files(CherryPyAPI):
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
-        fast = flags.get('fast', False)
         obj = super(Files, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['name'] = unicode_type(self.name)

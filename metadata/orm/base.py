@@ -17,12 +17,12 @@ and deleting these objects in from a web service layer.
 """
 from os import getenv
 from json import dumps, loads
+import logging
 from peewee import PostgresqlDatabase as pgdb, ReverseRelationDescriptor
 from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause
 
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
-import logging
 
 # Primary PeeWee database connection object constant
 DB = pgdb(getenv('POSTGRES_ENV_POSTGRES_DB', 'pacifica_metadata'),
@@ -36,7 +36,9 @@ DEFAULT_ELASTIC_ENDPOINT = getenv(
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 
 # Print all queries to stderr.
+# pylint: disable=invalid-name
 logger = logging.getLogger('peewee')
+# pylint: enable=invalid-name
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler())
 
@@ -111,6 +113,7 @@ class PacificaModel(Model):
 
     @classmethod
     def cls_foreignkey_rel_mods(cls):
+        """Return a collection of related models for a given foreignkey."""
         # pylint: disable=no-member
         return {cls._meta.rel[fk].rel_model: fk for fk in cls._meta.rel}
         # pylint: enable=no-member
@@ -137,39 +140,43 @@ class PacificaModel(Model):
             for attr in set(self.cls_revforeignkeys()) - set(flags.get('recursion_exclude', [])):
                 rec_flags = flags.copy()
                 rec_flags['recursion_depth'] -= 1
-                fk_obj_list = {}
-                key_present = False
-                value_present = False
-                fk_item_name = 'id'
-                for obj_ref in getattr(self, attr):
-                    if not fk_obj_list:
-                        obj[attr] = []
-                        fk_obj_list = obj_ref.cls_foreignkey_rel_mods()
-                        fk_list = obj_ref.cls_foreignkeys()
-                        valid_fk_obj_list = list(set(fk_obj_list) - set([self.__class__]))
-                        if valid_fk_obj_list:
-                            if len(valid_fk_obj_list) == 1:
-                                fk_class = valid_fk_obj_list.pop()
-                                fk_item_name = fk_obj_list[fk_class]
-                            else:
-                                for valid_fk_obj in valid_fk_obj_list:
-                                    fk_obj = fk_obj_list[valid_fk_obj]
-                                    if fk_obj == 'key':
-                                        key_present = True
-                                    if fk_obj == 'value':
-                                        value_present = True
-                        else:
-                            fk_item_name = "id"
-                    if key_present and value_present:
-                        obj[attr] = [
-                            {
-                                'key_id': obj_ref._data['key'],
-                                'value_id': obj_ref._data['value']
-                            }
-                        ]
-                    else:
-                        obj[attr].append(obj_ref._data[fk_item_name])
+                obj = self._build_object(attr)
 
+        return obj
+
+    def _build_object(self, attr):
+        fk_obj_list = {}
+        key_present = False
+        value_present = False
+        fk_item_name = 'id'
+        obj = {}
+
+        for obj_ref in getattr(self, attr):
+            if not fk_obj_list:
+                obj[attr] = []
+                fk_obj_list = obj_ref.cls_foreignkey_rel_mods()
+                valid_fk_obj_list = list(set(fk_obj_list) - set([self.__class__]))
+                if len(valid_fk_obj_list) == 1:
+                    fk_class = valid_fk_obj_list.pop()
+                    fk_item_name = fk_obj_list[fk_class]
+                else:
+                    for valid_fk_obj in valid_fk_obj_list:
+                        fk_obj = fk_obj_list[valid_fk_obj]
+                        if fk_obj == 'key':
+                            key_present = True
+                        if fk_obj == 'value':
+                            value_present = True
+            # pylint: disable=protected-access
+            if key_present and value_present:
+                obj[attr] = [
+                    {
+                        'key_id': obj_ref._data['key'],
+                        'value_id': obj_ref._data['value']
+                    }
+                ]
+            else:
+                obj[attr].append(obj_ref._data[fk_item_name])
+            # pylint: enable=protected-access
         return obj
 
     def from_hash(self, obj):

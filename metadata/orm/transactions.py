@@ -42,7 +42,6 @@ class Transactions(CherryPyAPI):
         """Convert the object to a hash."""
         obj = super(Transactions, self).to_hash(**flags)
         obj['_id'] = int(self.id) if self.id is not None else obj['_id']
-        fast = flags.get('fast', False)
         obj['submitter'] = int(self._data['submitter'])
         obj['instrument'] = int(self._data['instrument'])
         obj['proposal'] = unicode_type(self._data['proposal'])

@@ -44,7 +44,6 @@ class ProposalParticipant(CherryPyAPI):
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
-        fast = flags.get('fast', False)
         obj = super(ProposalParticipant, self).to_hash(**flags)
         obj['_id'] = index_hash(unicode_type(
             self._data['proposal']), int(self._data['person']))
