@@ -140,7 +140,7 @@ class PacificaModel(Model):
             for attr in set(self.cls_revforeignkeys()) - set(flags.get('recursion_exclude', [])):
                 rec_flags = flags.copy()
                 rec_flags['recursion_depth'] -= 1
-                obj = self._build_object(attr)
+                obj.update(self._build_object(attr))
 
         return obj
 
@@ -167,6 +167,7 @@ class PacificaModel(Model):
                             key_present = True
                         if fk_obj == 'value':
                             value_present = True
+
             # pylint: disable=protected-access
             if key_present and value_present:
                 obj[attr] = [
