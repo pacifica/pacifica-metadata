@@ -17,7 +17,6 @@ and deleting these objects in from a web service layer.
 """
 from os import getenv
 from json import dumps, loads
-import logging
 from peewee import PostgresqlDatabase as pgdb
 from peewee import Model, Expression, OP, PrimaryKeyField, fn
 from peewee import CompositeKey, R, Clause, ReverseRelationDescriptor
@@ -35,13 +34,6 @@ DB = pgdb(getenv('POSTGRES_ENV_POSTGRES_DB', 'pacifica_metadata'),
 DEFAULT_ELASTIC_ENDPOINT = getenv(
     'ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
-
-# Print all queries to stderr.
-# pylint: disable=invalid-name
-logger = logging.getLogger('peewee')
-# pylint: enable=invalid-name
-logger.setLevel(logging.ERROR)
-logger.addHandler(logging.StreamHandler())
 
 
 def db_connection_decorator(func):
@@ -153,16 +145,15 @@ class PacificaModel(Model):
                 fk_item_name, fk_obj_list = self._generate_fk_obj_list(obj_ref)
 
             if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
-                obj[attr].append(
-                    {
-                        'key_id': obj_ref._data['key'],
-                        'value_id': obj_ref._data['value']
-                    }
-                )
+                append_item = {
+                    'key_id': obj_ref._data['key'],
+                    'value_id': obj_ref._data['value']
+                }
             else:
                 # pylint: disable=protected-access
-                obj[attr].append(obj_ref._data[fk_item_name])
+                append_item = obj_ref._data[fk_item_name]
                 # pylint: enable=protected-access
+            obj[attr].append(append_item)
         return obj
 
     def _generate_fk_obj_list(self, obj_ref):
