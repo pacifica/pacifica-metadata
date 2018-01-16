@@ -249,7 +249,8 @@ class PacificaModel(Model):
     @classmethod
     def last_change_date(cls):
         """Find the last changed date for the object."""
-        return cls.select(fn.Max(cls.updated)).scalar()
+        last_change_date = cls.select(fn.Max(cls.updated)).scalar()
+        return last_change_date.isoformat(' ') if last_change_date is not None else '1970-01-01 00:00:00'
 
     @classmethod
     def available_hash_list(cls):
@@ -286,8 +287,7 @@ class PacificaModel(Model):
     @classmethod
     def get_object_info(cls):
         """Get model and field information about the model class."""
-        last_changed = cls.last_change_date().isoformat(' ')
-        if cls.last_change_date() is not None else '1970-01-01 00:00:00'
+        last_changed = cls.last_change_date()
         related_model_info = {}
         # pylint: disable=no-member
         for rel_mod_name in cls._meta.rel:
