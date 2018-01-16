@@ -18,8 +18,9 @@ and deleting these objects in from a web service layer.
 from os import getenv
 from json import dumps, loads
 import logging
-from peewee import PostgresqlDatabase as pgdb, ReverseRelationDescriptor
-from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause
+from peewee import PostgresqlDatabase as pgdb
+from peewee import Model, Expression, OP, PrimaryKeyField, fn
+from peewee import CompositeKey, R, Clause, ReverseRelationDescriptor
 
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
@@ -145,11 +146,9 @@ class PacificaModel(Model):
         return obj
 
     def _build_object(self, attr):
-        fk_obj_list = {}
-        key_present = False
-        value_present = False
+        kv_present = False
         fk_item_name = 'id'
-        obj = {}
+        fk_obj_list = obj = {}
 
         for obj_ref in getattr(self, attr):
             if not fk_obj_list:
@@ -161,15 +160,11 @@ class PacificaModel(Model):
                     fk_class = valid_fk_obj_list.pop()
                     fk_item_name = fk_obj_list[fk_class]
                 else:
-                    for valid_fk_obj in valid_fk_obj_list:
-                        fk_obj = fk_obj_list[valid_fk_obj]
-                        if fk_obj == 'key':
-                            key_present = True
-                        if fk_obj == 'value':
-                            value_present = True
+                    if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
+                        kv_present = True
 
             # pylint: disable=protected-access
-            if key_present and value_present:
+            if kv_present:
                 obj[attr] = [
                     {
                         'key_id': obj_ref._data['key'],
@@ -200,12 +195,7 @@ class PacificaModel(Model):
     @staticmethod
     def _bool_translate(thing):
         """Translate the thing into a boolean."""
-        ret = bool(thing)
-        if thing == 'False':
-            ret = False
-        elif thing == 'false':
-            ret = False
-        return ret
+        return False if str(thing).lower() == 'false' else bool(thing)
 
     @staticmethod
     def _date_operator_compare(date, kwargs, dt_converts=datetime_converts):
