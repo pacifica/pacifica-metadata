@@ -174,16 +174,6 @@ class PacificaModel(Model):
         self._set_datetime_part('updated', obj)
         self._set_datetime_part('deleted', obj)
 
-    def from_json(self, json_str):
-        """Convert the json string into the current object."""
-        if not isinstance(loads(json_str), dict):
-            raise ValueError('json_str not dict')
-        self.from_hash(loads(json_str))
-
-    def to_json(self):
-        """Convert the object into a json object."""
-        return dumps(self.to_hash())
-
     @staticmethod
     def _bool_translate(thing):
         """Translate the thing into a boolean."""
