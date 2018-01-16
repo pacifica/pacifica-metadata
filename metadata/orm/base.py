@@ -141,8 +141,7 @@ class PacificaModel(Model):
         obj = {attr: []}
 
         for obj_ref in getattr(self, attr):
-            if not fk_obj_list:
-                fk_item_name, fk_obj_list = self._generate_fk_obj_list(obj_ref)
+            fk_item_name, fk_obj_list = self._generate_fk_obj_list(obj_ref) if not fk_obj_list
 
             if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
                 append_item = {
