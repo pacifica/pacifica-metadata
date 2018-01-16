@@ -16,7 +16,6 @@ There are also CherryPy methods for creating, updating, getting
 and deleting these objects in from a web service layer.
 """
 from os import getenv
-from json import dumps, loads
 from peewee import PostgresqlDatabase as pgdb
 from peewee import Model, Expression, OP, PrimaryKeyField, fn
 from peewee import CompositeKey, R, Clause, ReverseRelationDescriptor
