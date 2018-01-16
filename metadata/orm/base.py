@@ -146,18 +146,11 @@ class PacificaModel(Model):
         return obj
 
     def _build_object(self, attr):
-        fk_obj_list = obj = {}
+        obj = {attr: []}
 
         for obj_ref in getattr(self, attr):
             if not fk_obj_list:
-                obj[attr] = []
-                fk_obj_list = obj_ref.cls_foreignkey_rel_mods()
-                valid_fk_obj_list = list(
-                    set(fk_obj_list) - set([self.__class__]))
-                if len(valid_fk_obj_list) == 1:
-                    fk_item_name = fk_obj_list[valid_fk_obj_list.pop()]
-                else:
-                    fk_item_name = 'id'
+                fk_item_name, fk_obj_list = self._generate_fk_obj_list(obj_ref)
 
             if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
                 obj[attr].append(
@@ -171,6 +164,16 @@ class PacificaModel(Model):
                 obj[attr].append(obj_ref._data[fk_item_name])
                 # pylint: enable=protected-access
         return obj
+
+    def _generate_fk_obj_list(self, obj_ref):
+        fk_obj_list = obj_ref.cls_foreignkey_rel_mods()
+        valid_fk_obj_list = list(
+            set(fk_obj_list) - set([self.__class__]))
+        if len(valid_fk_obj_list) == 1:
+            fk_item_name = fk_obj_list[valid_fk_obj_list.pop()]
+        else:
+            fk_item_name = 'id'
+        return fk_item_name, fk_obj_list
 
     def from_hash(self, obj):
         """Convert the hash objects into object fields if they are present."""
