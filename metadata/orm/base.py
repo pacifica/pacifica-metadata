@@ -131,29 +131,27 @@ class PacificaModel(Model):
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         if recursion_depth:
             for attr in set(self.cls_revforeignkeys()) - set(flags.get('recursion_exclude', [])):
+                obj[attr] = []
                 rec_flags = flags.copy()
+                fk_obj_list = None
                 rec_flags['recursion_depth'] -= 1
-                obj.update(self._build_object(attr))
+                for obj_ref in getattr(self, attr):
+                    if not fk_obj_list:
+                        fk_item_name, fk_obj_list = self._generate_fk_obj_list(obj_ref)
+                    obj[attr].append(self._build_object(obj_ref, fk_item_name, fk_obj_list))
 
         return obj
 
-    def _build_object(self, attr):
-        obj = {attr: []}
-
-        for obj_ref in getattr(self, attr):
-            fk_item_name, fk_obj_list = self._generate_fk_obj_list(obj_ref) if not fk_obj_list
-
-            if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
-                append_item = {
-                    'key_id': obj_ref._data['key'],
-                    'value_id': obj_ref._data['value']
-                }
-            else:
-                # pylint: disable=protected-access
-                append_item = obj_ref._data[fk_item_name]
-                # pylint: enable=protected-access
-            obj[attr].append(append_item)
-        return obj
+    def _build_object(self, obj_ref, fk_item_name, fk_obj_list):
+        if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
+            return {
+                'key_id': obj_ref._data['key'],
+                'value_id': obj_ref._data['value']
+            }
+        else:
+            # pylint: disable=protected-access
+            return obj_ref._data[fk_item_name]
+            # pylint: enable=protected-access
 
     def _generate_fk_obj_list(self, obj_ref):
         fk_obj_list = obj_ref.cls_foreignkey_rel_mods()
