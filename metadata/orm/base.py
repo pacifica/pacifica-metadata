@@ -146,8 +146,6 @@ class PacificaModel(Model):
         return obj
 
     def _build_object(self, attr):
-        kv_present = False
-        fk_item_name = 'id'
         fk_obj_list = obj = {}
 
         for obj_ref in getattr(self, attr):
