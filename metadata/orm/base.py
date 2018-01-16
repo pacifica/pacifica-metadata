@@ -157,23 +157,21 @@ class PacificaModel(Model):
                 valid_fk_obj_list = list(
                     set(fk_obj_list) - set([self.__class__]))
                 if len(valid_fk_obj_list) == 1:
-                    fk_class = valid_fk_obj_list.pop()
-                    fk_item_name = fk_obj_list[fk_class]
+                    fk_item_name = fk_obj_list[valid_fk_obj_list.pop()]
                 else:
-                    if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
-                        kv_present = True
+                    fk_item_name = 'id'
 
-            # pylint: disable=protected-access
-            if kv_present:
-                obj[attr] = [
+            if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
+                obj[attr].append(
                     {
                         'key_id': obj_ref._data['key'],
                         'value_id': obj_ref._data['value']
                     }
-                ]
+                )
             else:
+                # pylint: disable=protected-access
                 obj[attr].append(obj_ref._data[fk_item_name])
-            # pylint: enable=protected-access
+                # pylint: enable=protected-access
         return obj
 
     def from_hash(self, obj):
