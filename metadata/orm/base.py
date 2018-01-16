@@ -284,17 +284,10 @@ class PacificaModel(Model):
         return [primary_key.name]
 
     @classmethod
-    def get_last_changed_date(cls):
-        """Return the last changed date or 0 epoch time."""
-        ret = cls.last_change_date()
-        if ret is not None:
-            return ret.isoformat(' ')
-        return '1970-01-01 00:00:00'
-
-    @classmethod
     def get_object_info(cls):
         """Get model and field information about the model class."""
-        last_changed = cls.get_last_changed_date()
+        last_changed = cls.last_change_date().isoformat(' ')
+        if cls.last_change_date() is not None else '1970-01-01 00:00:00'
         related_model_info = {}
         # pylint: disable=no-member
         for rel_mod_name in cls._meta.rel:
