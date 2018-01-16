@@ -39,7 +39,7 @@ ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
 # pylint: disable=invalid-name
 logger = logging.getLogger('peewee')
 # pylint: enable=invalid-name
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.ERROR)
 logger.addHandler(logging.StreamHandler())
 
 
