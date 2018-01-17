@@ -19,7 +19,7 @@ from os import getenv
 from peewee import PostgresqlDatabase as pgdb
 from peewee import Model, Expression, OP, PrimaryKeyField, fn
 from peewee import CompositeKey, R, Clause, ReverseRelationDescriptor
-
+import datetime
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
 
@@ -236,9 +236,9 @@ class PacificaModel(Model):
     def last_change_date(cls):
         """Find the last changed date for the object."""
         last_change_date = cls.select(fn.Max(cls.updated)).scalar()
-        if last_change_date is None:
-            return '1970-01-01 00:00:00'
-        return last_change_date.isoformat(' ')
+        if last_change_date is not None and isinstance(last_change_date, datetime.datetime):
+            return last_change_date.isoformat(' ')
+        return '1970-01-01 00:00:00'
 
     @classmethod
     def available_hash_list(cls):
