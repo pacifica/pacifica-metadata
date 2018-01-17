@@ -236,6 +236,8 @@ class PacificaModel(Model):
     def last_change_date(cls):
         """Find the last changed date for the object."""
         last_change_date = cls.select(fn.Max(cls.updated)).scalar()
+        if isinstance(last_change_date, basestring):
+            last_change_date = parser.parse(last_change_date)
         if last_change_date is not None and isinstance(last_change_date, datetime.datetime):
             return last_change_date.isoformat(' ')
         return '1970-01-01 00:00:00'
