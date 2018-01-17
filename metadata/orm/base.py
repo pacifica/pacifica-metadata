@@ -143,11 +143,12 @@ class PacificaModel(Model):
         for obj_ref in getattr(self, attr):
             if not fk_obj_list:
                 fk_item_name, fk_obj_list = self._generate_fk_obj_list(obj_ref)
-            obj[attr].append(my_class._get_append_item(obj_ref, fk_item_name, fk_obj_list))
+            obj[attr].append(my_class.get_append_item(obj_ref, fk_item_name, fk_obj_list))
         return obj
 
     @staticmethod
-    def _get_append_item(obj_ref, fk_item_name, fk_obj_list):
+    def get_append_item(obj_ref, fk_item_name, fk_obj_list):
+        """Generate the proper item to append to the newly built object."""
         # pylint: disable=protected-access
         if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
             append_item = {
