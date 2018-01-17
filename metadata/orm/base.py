@@ -236,7 +236,9 @@ class PacificaModel(Model):
     def last_change_date(cls):
         """Find the last changed date for the object."""
         last_change_date = cls.select(fn.Max(cls.updated)).scalar()
-        return last_change_date.isoformat(' ') if last_change_date is not None else '1970-01-01 00:00:00'
+        if last_change_date is None:
+            return '1970-01-01 00:00:00'
+        return last_change_date.isoformat(' ')
 
     @classmethod
     def available_hash_list(cls):
