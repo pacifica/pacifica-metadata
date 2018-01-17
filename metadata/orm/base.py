@@ -239,8 +239,9 @@ class PacificaModel(Model):
         last_change_date = cls.select(fn.Max(cls.updated)).scalar()
         if last_change_date is None:
             return '1970-01-01 00:00:00'
-        last_change_string = last_change_date.isoformat(' ')
-        if isinstance(last_change_date, datetime.datetime) else last_change_date
+        last_change_string = last_change_date.isoformat(' ') if isinstance(last_change_date, datetime.datetime)
+        else last_change_date
+
         return last_change_string
 
     @classmethod
