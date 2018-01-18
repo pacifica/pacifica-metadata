@@ -241,7 +241,6 @@ class PacificaModel(Model):
             if last_change_date is not None else '1970-01-01 00:00:00'
         last_change_string = last_change_date.isoformat(' ') \
             if isinstance(last_change_date, datetime.datetime) else parser.parse(last_change_string).isoformat()
-
         return last_change_string
 
     @classmethod
@@ -279,7 +278,6 @@ class PacificaModel(Model):
     @classmethod
     def get_object_info(cls):
         """Get model and field information about the model class."""
-        last_changed = cls.last_change_date()
         related_model_info = {}
         # pylint: disable=no-member
         for rel_mod_name in cls._meta.rel:
@@ -297,7 +295,7 @@ class PacificaModel(Model):
                 }
         js_object = {
             'callable_name': cls.__module__.split('.')[2],
-            'last_changed_date': last_changed,
+            'last_changed_date': cls.last_change_date(),
             'primary_keys': cls.get_primary_keys(),
             'field_list': cls._meta.sorted_field_names,
             'foreign_keys': cls.cls_foreignkeys(),
