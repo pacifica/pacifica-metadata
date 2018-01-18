@@ -241,7 +241,7 @@ class PacificaModel(Model):
             if last_change_date is not None else '1970-01-01 00:00:00'
         last_change_string = last_change_date.isoformat(' ') \
             if isinstance(last_change_date, datetime.datetime) else parser.parse(last_change_string).isoformat()
-        return last_change_string
+        return unicode(last_change_string)
 
     @classmethod
     def available_hash_list(cls):
