@@ -242,7 +242,7 @@ class PacificaModel(Model):
         last_change_string = last_change_date.isoformat(' ') \
             if isinstance(last_change_date, datetime.datetime) else parser.parse(last_change_string).isoformat()
 
-    return last_change_string
+        return last_change_string
 
     @classmethod
     def available_hash_list(cls):
