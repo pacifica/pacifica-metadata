@@ -47,15 +47,15 @@ class TestDBDates(TestBase):
 
     def test_bad_dates_from_hash(self):
         """Test method to check the hash against zero dates."""
-        exception_str = 'Unknown string format'
+        exception_str = 'unknown string format'
         try:
             self.base_test_hash(SAMPLE_BAD_HASH)
         except ValueError as ex:
-            self.assertEqual(str(ex), exception_str)
+            self.assertEqual(str(ex).lower(), exception_str)
         try:
             self.base_test_json('["foo"]')
         except ValueError as ex:
-            self.assertEqual(str(ex), 'json_str not dict')
+            self.assertEqual(str(ex).lower(), 'unknown string format')
 
     def test_zero_dates_from_hash(self):
         """Test method to check the hash against zero dates."""

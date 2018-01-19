@@ -38,8 +38,8 @@ from metadata.orm.analytical_tools import AnalyticalTools
 from metadata.orm.atool_proposal import AToolProposal
 from metadata.orm.atool_transaction import AToolTransaction
 
-DATABASE_CONNECT_ATTEMPTS = 40
-DATABASE_WAIT = 3
+DATABASE_CONNECT_ATTEMPTS = 4
+DATABASE_WAIT = 2
 
 ORM_OBJECTS = [
     Journals,
