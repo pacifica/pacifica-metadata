@@ -6,8 +6,8 @@ from time import sleep
 from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import ElasticsearchException
 
-ELASTIC_CONNECT_ATTEMPTS = 4
-ELASTIC_WAIT = 1
+ELASTIC_CONNECT_ATTEMPTS = 40
+ELASTIC_WAIT = 3
 DEFAULT_ELASTIC_ENDPOINT = getenv(
     'ELASTICDB_PORT', 'tcp://127.0.0.1:9200').replace('tcp', 'http')
 ELASTIC_ENDPOINT = getenv('ELASTIC_ENDPOINT', DEFAULT_ELASTIC_ENDPOINT)
