@@ -74,6 +74,8 @@ class TestBase(TestCase):
         with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             self.assertEqual(type(json_str), str)
             self.base_create_dep_objs()
+            if not isinstance(loads(json_str), dict):
+                raise ValueError('json_str not dict')
             obj = self.obj_cls()
             obj.from_hash(loads(json_str))
             obj.save(force_insert=True)
