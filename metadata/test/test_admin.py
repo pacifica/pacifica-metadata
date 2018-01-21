@@ -5,6 +5,9 @@ import os
 from argparse import Namespace
 from unittest import TestCase
 from mock import patch
+from peewee import SqliteDatabase
+from playhouse.test_utils import test_database
+from metadata.orm import ORM_OBJECTS
 from metadata.admin_cmd import main, essync, escreate
 
 
@@ -29,7 +32,8 @@ class TestAdminTool(TestCase):
         setattr(reg_args, 'skip_mappings', False)
         setattr(skip_args, 'threads', 8)
         setattr(reg_args, 'threads', 8)
-        escreate(skip_args)
-        escreate(reg_args)
-        essync(reg_args)
+        with test_database(SqliteDatabase(':memory:'), ORM_OBJECTS):
+            escreate(skip_args)
+            escreate(reg_args)
+            essync(reg_args)
         self.assertTrue(test_patch.called)
