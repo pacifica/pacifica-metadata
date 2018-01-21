@@ -18,7 +18,7 @@ setup(
     scripts=['MetadataServer.py', 'DatabaseCreate.py'],
     entry_points={
         'console_scripts': [
-            'MetadataServer=metadata:main'
+            'MetadataServer=metadata:main',
             'MDAdmin=metadata.admin_cmd:main'
         ]
     },

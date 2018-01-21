@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Admin Module for Admin Commands."""
 from __future__ import print_function
+from sys import argv as sys_argv
 from argparse import ArgumentParser
 from metadata.orm import ORM_OBJECTS, try_db_connect
 from metadata.elastic import create_elastic_index, try_es_connect
@@ -23,7 +24,7 @@ def essync(args):
     print(args.threads)
 
 
-def main():
+def main(*argv):
     """Main method for admin command line tool."""
     parser = ArgumentParser()
     subparsers = parser.add_subparsers(help='sub-command help')
@@ -54,5 +55,7 @@ def main():
     )
     escreate_parser.set_defaults(func=escreate)
     essync_parser.set_defaults(func=essync)
-    args = parser.parse_args()
+    if not argv:  # pragma: no cover
+        argv = sys_argv[1:]
+    args = parser.parse_args(argv)
     args.func(args)
