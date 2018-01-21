@@ -15,7 +15,7 @@ class TestAdminTool(TestCase):
     def test_main(self, test_patch):
         """Test the main method."""
         test_patch.return_value = 'Return a test thing'
-        main(['essync'])
+        main('essync')
         self.assertTrue(test_patch.called)
 
     def test_es_commands(self):
