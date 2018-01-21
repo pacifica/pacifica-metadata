@@ -5,6 +5,9 @@ import os
 from argparse import Namespace
 from unittest import TestCase
 from mock import patch
+from peewee import SqliteDatabase
+from playhouse.test_utils import test_database
+import metadata.orm as metaorm
 from metadata.admin_cmd import main, essync, escreate
 
 
@@ -24,8 +27,10 @@ class TestAdminTool(TestCase):
         args = Namespace()
         setattr(args, 'skip_mappings', False)
         setattr(args, 'threads', 8)
-        escreate(args)
-        essync(args)
+        with test_database(SqliteDatabase(':memory:'), metaorm.ORM_OBJECTS):
+            metaorm.DB = SqliteDatabase(':memory:')
+            escreate(args)
+            essync(args)
         # pylint: disable=no-member
         self.assertEqual(args.threads, 8)
         # pylint: enable=no-member
