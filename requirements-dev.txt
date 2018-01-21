@@ -1,13 +1,13 @@
 cherrypy
 codeclimate-test-reporter
-coverage>=4.0,<4.4
+coverage
 elasticsearch
 httpretty
 nose
 peewee
 pep257
 psycopg2
-pylint<1.8
+pylint
 pytest
 python-dateutil
 radon
