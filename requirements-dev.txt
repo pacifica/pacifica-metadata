@@ -3,6 +3,7 @@ codeclimate-test-reporter
 coverage>=4.0,<4.4
 elasticsearch
 httpretty
+mock
 nose
 peewee
 pep257
