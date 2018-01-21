@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# pylint: disable=invalid-name
 """
 Create the METADATA_MODEL.md file.
 
