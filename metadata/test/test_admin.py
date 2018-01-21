@@ -24,13 +24,17 @@ class TestAdminTool(TestCase):
     def test_es_commands(self):
         """Test the essync sub command."""
         os.environ['ELASTIC_INDEX'] = 'test_pacifica_index'
-        args = Namespace()
-        setattr(args, 'skip_mappings', False)
-        setattr(args, 'threads', 8)
+        skip_args = Namespace()
+        reg_args = Namespace()
+        setattr(skip_args, 'skip_mappings', True)
+        setattr(reg_args, 'skip_mappings', False)
+        setattr(skip_args, 'threads', 8)
+        setattr(reg_args, 'threads', 8)
         with test_database(SqliteDatabase(':memory:'), metaorm.ORM_OBJECTS):
             metaorm.DB = SqliteDatabase(':memory:')
-            escreate(args)
-            essync(args)
+            escreate(skip_args)
+            escreate(reg_args)
+            essync(reg_args)
         # pylint: disable=no-member
-        self.assertEqual(args.threads, 8)
+        self.assertEqual(skip_args.threads, 8)
         # pylint: enable=no-member
