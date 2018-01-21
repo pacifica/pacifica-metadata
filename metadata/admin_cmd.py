@@ -6,6 +6,7 @@ from sys import argv as sys_argv
 from argparse import ArgumentParser
 from metadata.orm import ORM_OBJECTS, try_db_connect
 from metadata.elastic import create_elastic_index, try_es_connect
+from metadata.elastic.elasticupdate import ElasticSearchUpdateAPI
 
 
 def escreate(args):
@@ -22,6 +23,9 @@ def escreate(args):
 def essync(args):
     """Sync the elastic search data from sql to es."""
     print(args.threads)
+    for obj in ORM_OBJECTS:
+        id_list = obj.select(obj.id).scalar(as_tuple=True)
+        ElasticSearchUpdateAPI.push_elastic_updates(obj, id_list, 1)
 
 
 def main(*argv):
