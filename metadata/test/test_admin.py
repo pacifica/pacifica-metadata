@@ -33,6 +33,7 @@ class TestAdminTool(TestCase):
         with test_database(SqliteDatabase(':memory:'), metaorm.ORM_OBJECTS):
             metaorm.DB = SqliteDatabase(':memory:')
             escreate(skip_args)
+            metaorm.DB = SqliteDatabase(':memory:')
             escreate(reg_args)
             essync(reg_args)
         # pylint: disable=no-member
