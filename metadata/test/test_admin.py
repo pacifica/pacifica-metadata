@@ -47,6 +47,7 @@ class TestAdminTool(TestCase):
         args = Namespace()
         setattr(args, 'object', Keys)
         setattr(args, 'where_clause', {'key': 'test_key'})
+        setattr(args, 'recursion', 1)
         with test_database(SqliteDatabase(':memory:'), ORM_OBJECTS):
             test_obj = Keys()
             test_obj.key = 'test_key'
