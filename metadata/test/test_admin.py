@@ -8,6 +8,7 @@ from mock import patch
 from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
 from metadata.orm import ORM_OBJECTS
+from metadata.orm.keys import Keys
 from metadata.admin_cmd import main, essync, escreate
 
 
@@ -33,6 +34,9 @@ class TestAdminTool(TestCase):
         setattr(skip_args, 'threads', 8)
         setattr(reg_args, 'threads', 8)
         with test_database(SqliteDatabase(':memory:'), ORM_OBJECTS):
+            test_obj = Keys()
+            test_obj.key = 'test_key'
+            test_obj.save()
             escreate(skip_args)
             escreate(reg_args)
             essync(reg_args)
