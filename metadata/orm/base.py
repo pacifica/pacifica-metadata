@@ -19,8 +19,7 @@ from os import getenv
 import datetime
 from dateutil import parser
 from peewee import PostgresqlDatabase as pgdb
-from peewee import Model, Expression, OP, PrimaryKeyField, fn
-from peewee import CompositeKey, R, Clause, ReverseRelationDescriptor
+from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause, ReverseRelationDescriptor
 from six import text_type
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
