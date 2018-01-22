@@ -9,7 +9,6 @@ from playhouse.test_utils import test_database
 from metadata.orm import ORM_OBJECTS
 from metadata.orm.keys import Keys
 from metadata.admin_cmd import main, essync, escreate
-import metadata.elastic as mdes
 
 
 class TestAdminTool(TestCase):
@@ -25,7 +24,6 @@ class TestAdminTool(TestCase):
     @patch('metadata.orm.try_db_connect')
     def test_es_commands(self, test_patch):
         """Test the essync sub command."""
-        mdes.ELASTIC_INDEX = 'test_pacifica_index'
         test_patch.return_value = True
         skip_args = Namespace()
         reg_args = Namespace()
