@@ -122,7 +122,7 @@ class TestElasticAPI(TestCase):
     @httpretty.activate
     def test_elastic_mapping(self):
         """Test the elastic_mapping class method."""
-        url = 'http://127.0.0.1:9200/_mapping/ElasticAPI'
+        url = 'http://127.0.0.1:9200/pacifica/_mapping/ElasticAPI'
         obj = ElasticAPI()
         obj.id = 127
         response_body = {
@@ -140,7 +140,7 @@ class TestElasticAPI(TestCase):
     @httpretty.activate
     def test_failed_elastic_mapping(self):
         """Test the elastic mapping class method failed upload."""
-        url = 'http://127.0.0.1:9200/_mapping/ElasticAPI'
+        url = 'http://127.0.0.1:9200/pacifica/_mapping/ElasticAPI'
         obj = ElasticAPI()
         obj.id = 127
         response_body = {
