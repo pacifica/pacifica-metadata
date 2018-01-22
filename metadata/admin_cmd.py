@@ -45,6 +45,7 @@ def essync(args):
 
 def render_obj(args):
     """Render an object based on args."""
+    try_db_connect()
     test_obj = args.object()
     print(
         dumps(
