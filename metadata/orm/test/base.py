@@ -3,6 +3,7 @@
 """Base testing module implements the temporary database to be used."""
 from datetime import datetime
 from unittest import TestCase
+from json import dumps, loads
 from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
 from metadata.orm.base import PacificaModel
@@ -73,12 +74,14 @@ class TestBase(TestCase):
         with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
             self.assertEqual(type(json_str), str)
             self.base_create_dep_objs()
+            if not isinstance(loads(json_str), dict):
+                raise ValueError('json_str not dict')
             obj = self.obj_cls()
-            obj.from_json(json_str)
+            obj.from_hash(loads(json_str))
             obj.save(force_insert=True)
             new_obj = self.obj_cls.get(
                 self.obj_id == getattr(obj, self.obj_id.db_column))
-            chk_obj_json = new_obj.to_json()
+            chk_obj_json = dumps(new_obj.to_hash())
             self.assertEqual(type(chk_obj_json), str)
 
     @staticmethod

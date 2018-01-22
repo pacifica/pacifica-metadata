@@ -78,7 +78,7 @@ class Files(CherryPyAPI):
         # pylint: disable=no-member
         obj['ctime'] = self.ctime.isoformat()
         obj['mtime'] = self.mtime.isoformat()
-        obj['transaction_id'] = int(self.transaction.id)
+        obj['transaction_id'] = int(self._data['transaction'])
         # pylint: enable=no-member
         obj['size'] = int(self.size)
         obj['hashsum'] = str(self.hashsum)
@@ -123,9 +123,7 @@ class Files(CherryPyAPI):
         """PeeWee specific where expression."""
         where_clause = super(Files, self).where_clause(kwargs)
         if 'transaction_id' in kwargs:
-            trans = Transactions.get(
-                Transactions.id == kwargs['transaction_id']
-            )
+            trans = int(kwargs['transaction_id'])
             where_clause &= Expression(Files.transaction, OP.EQ, trans)
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])

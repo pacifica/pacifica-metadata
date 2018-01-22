@@ -48,12 +48,13 @@ class TransactionKeyValue(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(TransactionKeyValue, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self.key.id),
-                                int(self.transaction.id),
-                                int(self.value.id))
-        obj['transaction_id'] = int(self.transaction.id)
-        obj['key_id'] = int(self.key.id)
-        obj['value_id'] = int(self.value.id)
+        obj['_id'] = index_hash(int(self._data['key']),
+                                int(self._data['transaction']),
+                                int(self._data['value']))
+        obj['transaction_id'] = int(self._data['transaction'])
+        obj['key_id'] = int(self._data['key'])
+        obj['value_id'] = int(self._data['value'])
+        # obj['kv_pair'] = {'key': int(self.key_id), 'value': int(self.value_id)}
         return obj
 
     def from_hash(self, obj):
@@ -71,14 +72,13 @@ class TransactionKeyValue(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(TransactionKeyValue, self).where_clause(kwargs)
         if 'transaction_id' in kwargs:
-            trans = Transactions.get(
-                Transactions.id == kwargs['transaction_id'])
+            trans = int(kwargs['transaction_id'])
             where_clause &= Expression(
                 TransactionKeyValue.transaction, OP.EQ, trans)
         if 'key_id' in kwargs:
-            key = Keys.get(Keys.id == kwargs['key_id'])
+            key = int(kwargs['key_id'])
             where_clause &= Expression(TransactionKeyValue.key, OP.EQ, key)
         if 'value_id' in kwargs:
-            value = Values.get(Values.id == kwargs['value_id'])
+            value = int(kwargs['value_id'])
             where_clause &= Expression(TransactionKeyValue.value, OP.EQ, value)
         return where_clause
