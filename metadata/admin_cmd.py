@@ -45,7 +45,8 @@ def essync(args):
 
 def render_obj(args):
     """Render an object based on args."""
-    print(dumps(args.object.get(args.object.where_clause(args.where_clause)), indent=4))
+    test_obj = args.object()
+    print(dumps(args.object.get(test_obj.where_clause(args.where_clause)), indent=4))
 
 
 def create_subcommands(subparsers):
