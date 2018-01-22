@@ -45,10 +45,10 @@ class CitationProposal(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(CitationProposal, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self.citation.id),
-                                unicode_type(self.proposal.id))
-        obj['citation_id'] = int(self.citation.id)
-        obj['proposal_id'] = unicode_type(self.proposal.id)
+        obj['_id'] = index_hash(int(self._data['citation']),
+                                unicode_type(self._data['proposal']))
+        obj['citation_id'] = int(self._data['citation'])
+        obj['proposal_id'] = unicode_type(self._data['proposal'])
         return obj
 
     def from_hash(self, obj):
@@ -63,11 +63,11 @@ class CitationProposal(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(CitationProposal, self).where_clause(kwargs)
         if 'citation_id' in kwargs:
-            citation = Citations.get(Citations.id == kwargs['citation_id'])
+            citation = int(kwargs['citation_id'])
             where_clause &= Expression(
                 CitationProposal.citation, OP.EQ, citation)
         if 'proposal_id' in kwargs:
-            proposal = Proposals.get(Proposals.id == kwargs['proposal_id'])
+            proposal = kwargs['proposal_id']
             where_clause &= Expression(
                 CitationProposal.proposal, OP.EQ, proposal)
         return where_clause

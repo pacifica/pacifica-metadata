@@ -14,7 +14,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
 
     es_recursive_flags = {
         'recursion_depth': 1,
-        'recursion_exclude': ['transactions', 'trans_links']
+        'recursion_exclude': ['transactions', 'trans_links', 'file_links']
     }
     exposed = True
 
@@ -156,9 +156,9 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                         new_obj[name] = new_obj.pop(db_col)
             if '_id' in obj.keys() and obj['_id'] is not None:
                 new_obj['id'] = obj.get('_id')
-            for attr in model_info.get('related_names'):
-                if attr in new_obj:
-                    del new_obj[attr]
+                for attr in model_info.get('related_names'):
+                    if attr in new_obj:
+                        del new_obj[attr]
             new_obj.pop('_id')
             clean_objs['upload_objs'].append(new_obj)
 

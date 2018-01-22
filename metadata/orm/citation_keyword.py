@@ -45,9 +45,10 @@ class CitationKeyword(CherryPyAPI):
         """Convert the object to a hash."""
         obj = super(CitationKeyword, self).to_hash(**flags)
         # pylint: disable=no-member
-        obj['_id'] = index_hash(int(self.citation.id), int(self.keyword.id))
-        obj['citation_id'] = int(self.citation.id)
-        obj['keyword_id'] = int(self.keyword.id)
+        obj['_id'] = index_hash(
+            int(self._data['citation']), int(self._data['keyword']))
+        obj['citation_id'] = int(self._data['citation'])
+        obj['keyword_id'] = int(self._data['keyword'])
         # pylint: enable=no-member
         return obj
 
@@ -63,10 +64,10 @@ class CitationKeyword(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(CitationKeyword, self).where_clause(kwargs)
         if 'citation_id' in kwargs:
-            citation = Citations.get(Citations.id == kwargs['citation_id'])
+            citation = int(kwargs['citation_id'])
             where_clause &= Expression(
                 CitationKeyword.citation, OP.EQ, citation)
         if 'keyword_id' in kwargs:
-            keyword = Keywords.get(Keywords.id == kwargs['keyword_id'])
+            keyword = int(kwargs['keyword_id'])
             where_clause &= Expression(CitationKeyword.keyword, OP.EQ, keyword)
         return where_clause

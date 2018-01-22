@@ -46,10 +46,11 @@ class AToolProposal(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(AToolProposal, self).to_hash(**flags)
-        obj['_id'] = index_hash(unicode_type(self.proposal.id),
-                                int(self.analytical_tool.id))
-        obj['proposal_id'] = unicode_type(self.proposal.id)
-        obj['analytical_tool_id'] = int(self.analytical_tool.id)
+        obj['_id'] = index_hash(unicode_type(self._data['proposal']),
+                                int(self._data['analytical_tool']))
+        obj['proposal_id'] = unicode_type(self._data['proposal'])
+        obj['analytical_tool_id'] = int(self._data['analytical_tool'])
+
         return obj
 
     def from_hash(self, obj):
@@ -66,7 +67,7 @@ class AToolProposal(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(AToolProposal, self).where_clause(kwargs)
         if 'proposal_id' in kwargs:
-            prop = Proposals.get(Proposals.id == kwargs['proposal_id'])
+            prop = kwargs['proposal_id']
             where_clause &= Expression(AToolProposal.proposal, OP.EQ, prop)
         if 'analytical_tool_id' in kwargs:
             atool = AnalyticalTools.get(
