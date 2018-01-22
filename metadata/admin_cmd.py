@@ -25,7 +25,7 @@ def essync(args):
     print(args.threads)
     for obj in ORM_OBJECTS:
         id_list = obj.select(obj.id).scalar(as_tuple=True)
-        ElasticSearchUpdateAPI.push_elastic_updates(obj, id_list, 1)
+        ElasticSearchUpdateAPI.push_elastic_updates(obj.__name__, id_list, 1)
 
 
 def main(*argv):
