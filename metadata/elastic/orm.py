@@ -50,7 +50,7 @@ class ElasticAPI(object):
         class_name = cls.__name__
         esclient = Elasticsearch([ELASTIC_ENDPOINT], **ES_CLIENT_ARGS)
         esclient.indices.put_mapping(
-            class_name, cls.elastic_mapping(), index=ELASTIC_INDEX)
+            class_name, cls.elastic_mapping(), ELASTIC_INDEX)
 
     @staticmethod
     def elastic_mapping_builder(obj):
