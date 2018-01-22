@@ -236,6 +236,11 @@ class PacificaModel(Model):
     @classmethod
     def last_change_date(cls):
         """Find the last changed date for the object."""
+        try:
+            UNICODE_EXISTS = bool(type(unicode))
+        except NameError:
+            def unicode(x):
+                return str(x)
         last_change_date = cls.select(fn.Max(cls.updated)).scalar()
         last_change_string = last_change_date \
             if last_change_date is not None else '1970-01-01 00:00:00'
