@@ -43,9 +43,10 @@ class InstitutionPerson(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(InstitutionPerson, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self.person.id), int(self.institution.id))
-        obj['person_id'] = int(self.person.id)
-        obj['institution_id'] = int(self.institution.id)
+        obj['_id'] = index_hash(int(self._data['person']),
+                                int(self._data['institution']))
+        obj['person_id'] = int(self._data['person'])
+        obj['institution_id'] = int(self._data['institution'])
         return obj
 
     def from_hash(self, obj):
@@ -62,11 +63,10 @@ class InstitutionPerson(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(InstitutionPerson, self).where_clause(kwargs)
         if 'person_id' in kwargs:
-            person = Users.get(Users.id == kwargs['person_id'])
+            person = int(kwargs['person_id'])
             where_clause &= Expression(InstitutionPerson.person, OP.EQ, person)
         if 'institution_id' in kwargs:
-            institution = Institutions.get(
-                Institutions.id == kwargs['institution_id'])
+            institution = int(kwargs['institution_id'])
             where_clause &= Expression(
                 InstitutionPerson.institution, OP.EQ, institution)
         return where_clause

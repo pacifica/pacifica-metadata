@@ -47,9 +47,10 @@ class CitationContributor(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(CitationContributor, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self.citation.id), int(self.author.id))
-        obj['citation_id'] = int(self.citation.id)
-        obj['author_id'] = int(self.author.id)
+        obj['_id'] = index_hash(
+            int(self._data['citation']), int(self._data['author']))
+        obj['citation_id'] = int(self._data['citation'])
+        obj['author_id'] = int(self._data['author'])
         obj['author_precedence'] = int(self.author_precedence)
         return obj
 
@@ -71,7 +72,7 @@ class CitationContributor(CherryPyAPI):
             where_clause &= Expression(
                 CitationContributor.citation, OP.EQ, citation)
         if 'author_id' in kwargs:
-            author = Contributors.get(Contributors.id == kwargs['author_id'])
+            author = int(kwargs['author_id'])
             where_clause &= Expression(
                 CitationContributor.author, OP.EQ, author)
         if 'author_precedence' in kwargs:

@@ -42,9 +42,9 @@ class Transactions(CherryPyAPI):
         """Convert the object to a hash."""
         obj = super(Transactions, self).to_hash(**flags)
         obj['_id'] = int(self.id) if self.id is not None else obj['_id']
-        obj['submitter'] = int(self.submitter.id)
-        obj['instrument'] = int(self.instrument.id)
-        obj['proposal'] = unicode_type(self.proposal.id)
+        obj['submitter'] = int(self._data['submitter'])
+        obj['instrument'] = int(self._data['instrument'])
+        obj['proposal'] = unicode_type(self._data['proposal'])
         return obj
 
     def from_hash(self, obj):
@@ -68,12 +68,12 @@ class Transactions(CherryPyAPI):
         if '_id' in kwargs:
             where_clause &= Expression(Transactions.id, OP.EQ, kwargs['_id'])
         if 'submitter' in kwargs:
-            user = Users.get(Users.id == kwargs['submitter'])
+            user = int(kwargs['submitter'])
             where_clause &= Expression(Transactions.submitter, OP.EQ, user)
         if 'instrument' in kwargs:
-            inst = Instruments.get(Instruments.id == kwargs['instrument'])
+            inst = int(kwargs['instrument'])
             where_clause &= Expression(Transactions.instrument, OP.EQ, inst)
         if 'proposal' in kwargs:
-            prop = Proposals.get(Proposals.id == kwargs['proposal'])
+            prop = kwargs['proposal']
             where_clause &= Expression(Transactions.proposal, OP.EQ, prop)
         return where_clause

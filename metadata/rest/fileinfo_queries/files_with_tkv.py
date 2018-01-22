@@ -23,8 +23,10 @@ class FilesWithTransactionKeyValue(object):
         try:
             k = Keys().select(Keys.id).where(fn.Lower(Keys.key) == key.lower()).get()
             val = Values().select(Values.id).where(Values.value == value).get()
+            # pylint: disable=protected-access
             tkv_where_clause = TransactionKeyValue().where_clause(
-                {'key_id': k, 'value_id': val})
+                {'key_id': k._data['id'], 'value_id': val._data['id']})
+            # pylint: enable=protected-access
             tkv_list = TransactionKeyValue().select().where(tkv_where_clause)
             transaction_list = [t.transaction_id for t in tkv_list]
             files_query = Files().select().where(Files.transaction << transaction_list)

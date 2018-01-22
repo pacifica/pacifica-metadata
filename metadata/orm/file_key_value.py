@@ -48,12 +48,12 @@ class FileKeyValue(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(FileKeyValue, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self.key.id),
-                                int(self.file.id),
-                                int(self.value.id))
-        obj['file_id'] = int(self.file.id)
-        obj['key_id'] = int(self.key.id)
-        obj['value_id'] = int(self.value.id)
+        obj['_id'] = index_hash(int(self._data['key']),
+                                int(self._data['file']),
+                                int(self._data['value']))
+        obj['file_id'] = int(self._data['file'])
+        obj['key_id'] = int(self._data['key'])
+        obj['value_id'] = int(self._data['value'])
         return obj
 
     def from_hash(self, obj):
@@ -70,12 +70,12 @@ class FileKeyValue(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(FileKeyValue, self).where_clause(kwargs)
         if 'file_id' in kwargs:
-            file_ = Files.get(Files.id == kwargs['file_id'])
+            file_ = int(kwargs['file_id'])
             where_clause &= Expression(FileKeyValue.file, OP.EQ, file_)
         if 'key_id' in kwargs:
-            key = Keys.get(Keys.id == kwargs['key_id'])
+            key = int(kwargs['key_id'])
             where_clause &= Expression(FileKeyValue.key, OP.EQ, key)
         if 'value_id' in kwargs:
-            value = Values.get(Values.id == kwargs['value_id'])
+            value = int(kwargs['value_id'])
             where_clause &= Expression(FileKeyValue.value, OP.EQ, value)
         return where_clause

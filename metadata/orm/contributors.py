@@ -66,8 +66,8 @@ class Contributors(CherryPyAPI):
         obj['last_name'] = unicode_type(self.last_name)
         obj['dept_code'] = unicode_type(self.dept_code)
         # pylint: disable=no-member
-        obj['person_id'] = int(self.person.id)
-        obj['institution_id'] = int(self.institution.id)
+        obj['person_id'] = int(self._data['person'])
+        obj['institution_id'] = int(self._data['institution'])
         # pylint: enable=no-member
         obj['encoding'] = str(self.encoding)
         return obj
@@ -90,11 +90,10 @@ class Contributors(CherryPyAPI):
         """Generate the PeeWee where clause used in searching."""
         where_clause = super(Contributors, self).where_clause(kwargs)
         if 'person_id' in kwargs:
-            user = Users.get(Users.id == kwargs['person_id'])
+            user = int(kwargs['person_id'])
             where_clause &= Expression(Contributors.person, OP.EQ, user)
         if 'institution_id' in kwargs:
-            inst = Institutions.get(
-                Institutions.id == kwargs['institution_id'])
+            inst = int(kwargs['institution_id'])
             where_clause &= Expression(Contributors.institution, OP.EQ, inst)
         return self._where_attr_clause(
             where_clause,

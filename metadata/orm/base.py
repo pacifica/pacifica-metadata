@@ -16,10 +16,11 @@ There are also CherryPy methods for creating, updating, getting
 and deleting these objects in from a web service layer.
 """
 from os import getenv
-from json import dumps, loads
-from peewee import PostgresqlDatabase as pgdb, ReverseRelationDescriptor
-from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause
-
+import datetime
+from dateutil import parser
+from peewee import PostgresqlDatabase as pgdb
+from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause, ReverseRelationDescriptor
+from six import text_type
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
 
@@ -104,6 +105,13 @@ class PacificaModel(Model):
         # pylint: enable=no-member
 
     @classmethod
+    def cls_foreignkey_rel_mods(cls):
+        """Return a collection of related models for a given foreignkey."""
+        # pylint: disable=no-member
+        return {cls._meta.rel[fk].rel_model: fk for fk in cls._meta.rel}
+        # pylint: enable=no-member
+
+    @classmethod
     def cls_revforeignkeys(cls):
         """Provide the rev foreign keys of the class as a list of attrs."""
         ret = []
@@ -125,9 +133,44 @@ class PacificaModel(Model):
             for attr in set(self.cls_revforeignkeys()) - set(flags.get('recursion_exclude', [])):
                 rec_flags = flags.copy()
                 rec_flags['recursion_depth'] -= 1
-                obj[attr] = [obj_ref.to_hash(**rec_flags)['_id']
-                             for obj_ref in getattr(self, attr)]
+                obj.update(self._build_object(attr))
+
         return obj
+
+    def _build_object(self, attr):
+        obj = {attr: []}
+        fk_obj_list = {}
+        my_class = self.__class__
+        for obj_ref in getattr(self, attr):
+            if not fk_obj_list:
+                fk_item_name, fk_obj_list = self._generate_fk_obj_list(obj_ref)
+            obj[attr].append(my_class.get_append_item(
+                obj_ref, fk_item_name, fk_obj_list))
+        return obj
+
+    @staticmethod
+    def get_append_item(obj_ref, fk_item_name, fk_obj_list):
+        """Generate the proper item to append to the newly built object."""
+        # pylint: disable=protected-access
+        if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
+            append_item = {
+                'key_id': obj_ref._data['key'],
+                'value_id': obj_ref._data['value']
+            }
+        else:
+            append_item = obj_ref._data[fk_item_name]
+        # pylint: enable=protected-access
+        return append_item
+
+    def _generate_fk_obj_list(self, obj_ref):
+        fk_obj_list = obj_ref.cls_foreignkey_rel_mods()
+        valid_fk_obj_list = list(
+            set(fk_obj_list) - set([self.__class__]))
+        if len(valid_fk_obj_list) == 1:
+            fk_item_name = fk_obj_list[valid_fk_obj_list.pop()]
+        else:
+            fk_item_name = 'id'
+        return fk_item_name, fk_obj_list
 
     def from_hash(self, obj):
         """Convert the hash objects into object fields if they are present."""
@@ -135,25 +178,10 @@ class PacificaModel(Model):
         self._set_datetime_part('updated', obj)
         self._set_datetime_part('deleted', obj)
 
-    def from_json(self, json_str):
-        """Convert the json string into the current object."""
-        if not isinstance(loads(json_str), dict):
-            raise ValueError('json_str not dict')
-        self.from_hash(loads(json_str))
-
-    def to_json(self):
-        """Convert the object into a json object."""
-        return dumps(self.to_hash())
-
     @staticmethod
     def _bool_translate(thing):
         """Translate the thing into a boolean."""
-        ret = bool(thing)
-        if thing == 'False':
-            ret = False
-        elif thing == 'false':
-            ret = False
-        return ret
+        return False if str(thing).lower() == 'false' else bool(thing)
 
     @staticmethod
     def _date_operator_compare(date, kwargs, dt_converts=datetime_converts):
@@ -208,7 +236,12 @@ class PacificaModel(Model):
     @classmethod
     def last_change_date(cls):
         """Find the last changed date for the object."""
-        return cls.select(fn.Max(cls.updated)).scalar()
+        last_change_date = cls.select(fn.Max(cls.updated)).scalar()
+        last_change_string = last_change_date \
+            if last_change_date is not None else '1970-01-01 00:00:00'
+        last_change_string = last_change_date.isoformat(' ') \
+            if isinstance(last_change_date, datetime.datetime) else parser.parse(last_change_string).isoformat(' ')
+        return text_type(last_change_string)
 
     @classmethod
     def available_hash_list(cls):
@@ -243,17 +276,8 @@ class PacificaModel(Model):
         return [primary_key.name]
 
     @classmethod
-    def get_last_changed_date(cls):
-        """Return the last changed date or 0 epoch time."""
-        ret = cls.last_change_date()
-        if ret is not None:
-            return ret.isoformat(' ')
-        return '1970-01-01 00:00:00'
-
-    @classmethod
     def get_object_info(cls):
         """Get model and field information about the model class."""
-        last_changed = cls.get_last_changed_date()
         related_model_info = {}
         # pylint: disable=no-member
         for rel_mod_name in cls._meta.rel:
@@ -271,7 +295,7 @@ class PacificaModel(Model):
                 }
         js_object = {
             'callable_name': cls.__module__.split('.')[2],
-            'last_changed_date': last_changed,
+            'last_changed_date': cls.last_change_date(),
             'primary_keys': cls.get_primary_keys(),
             'field_list': cls._meta.sorted_field_names,
             'foreign_keys': cls.cls_foreignkeys(),
