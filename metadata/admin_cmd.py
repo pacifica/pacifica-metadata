@@ -137,6 +137,7 @@ def render_options(render_parser):
     render_parser.add_argument(
         '--recursion',
         default=1,
+        dest='recursion',
         type=int,
         help='recursive level to go',
         required=False
