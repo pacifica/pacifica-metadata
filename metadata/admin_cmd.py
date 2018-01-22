@@ -36,7 +36,8 @@ def essync(args):
                     '_index': ELASTIC_INDEX,
                     '_type': obj.__name__,
                     '_id': record_hash.pop('_id'),
-                    'doc': record_hash
+                    'doc': record_hash,
+                    'doc_as_upsert': True
                 }
     helpers.bulk(es_client, yield_data())
 
