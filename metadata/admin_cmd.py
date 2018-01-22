@@ -50,7 +50,7 @@ def render_obj(args):
         dumps(
             args.object.get(
                 test_obj.where_clause(args.where_clause)
-            ).to_hash(args.recursion),
+            ).to_hash(recursion_depth=args.recursion),
             indent=4
         )
     )
