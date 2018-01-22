@@ -55,6 +55,7 @@ objects in the model.
 | encoding | VARCHAR |  | NOT NULL |
 | proposal_type | VARCHAR |  | NOT NULL |
 | science_theme | VARCHAR |  | NULL |
+| short_name | VARCHAR |  | NOT NULL |
 | submitted_date | TIMESTAMP |  | NOT NULL |
 | title | TEXT |  | NOT NULL |
 | created | TIMESTAMP |  | NOT NULL |

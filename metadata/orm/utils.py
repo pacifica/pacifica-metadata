@@ -31,6 +31,7 @@ def date_converts(date_obj):
         return date_obj
     elif isinstance(date_obj, int):
         return datetime.fromtimestamp(date_obj).date()
+    return None
 
 
 def datetime_now_nomicrosecond():
@@ -46,6 +47,7 @@ def datetime_converts(time_obj):
         return time_obj.replace(microsecond=0)
     elif isinstance(time_obj, int):
         return datetime.fromtimestamp(time_obj).replace(microsecond=0)
+    return None
 
 
 class ExtendDateTimeField(DateTimeField):

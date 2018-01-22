@@ -31,6 +31,8 @@ class TestUtils(TestCase):
         str_date = '2016-07-05T09:22:12'
         self.assertEqual(datetime_converts(uni_date), chk_date)
         self.assertEqual(datetime_converts(str_date), chk_date)
+        # error state something it can't deal with
+        self.assertEqual(datetime_converts({}), None)
 
     def test_date_converts(self):
         """
@@ -48,3 +50,5 @@ class TestUtils(TestCase):
         str_date = '2016-07-05'
         self.assertEqual(date_converts(uni_date), chk_date)
         self.assertEqual(date_converts(str_date), chk_date)
+        # error state something it can't deal with
+        self.assertEqual(date_converts({}), None)

@@ -10,6 +10,7 @@ from metadata.orm.proposals import Proposals
 SAMPLE_PROPOSAL_HASH = {
     '_id': '17a',
     'title': 'My Proposal Title',
+    'short_name': 'Short Name for Display',
     'abstract': """
 This is my proposal that's really cool and you should accept it. ;)
 """,
@@ -26,6 +27,7 @@ This is my proposal that's really cool and you should accept it. ;)
 SAMPLE_UNICODE_PROPOSAL_HASH = {
     '_id': u'17é',
     'title': u'My Proposal Titlé',
+    'short_name': u'Short Namé for Display',
     'abstract': u"""
 This is my proposal that's réally cool and you should accept it. ;)
 """,

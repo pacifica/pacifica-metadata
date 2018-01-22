@@ -41,6 +41,7 @@ class Proposals(CherryPyAPI):
 
     id = CharField(primary_key=True)
     title = TextField(default='', index=True)
+    short_name = CharField(default='', index=True)
     abstract = TextField(default='')
     science_theme = CharField(null=True)
     proposal_type = CharField(default='')
@@ -58,8 +59,8 @@ class Proposals(CherryPyAPI):
         super(Proposals, Proposals).elastic_mapping_builder(obj)
         obj['abstract'] = {'type': 'text'}
         obj['title'] = obj['science_theme'] = obj['proposal_type'] = \
-            obj['encoding'] = {'type': 'text', 'fields': {
-                'keyword': {'type': 'keyword', 'ignore_above': 256}}}
+            obj['encoding'] = obj['short_name'] = {'type': 'text',
+                                                   'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
 
         obj['submitted_date'] = \
             {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
@@ -74,6 +75,7 @@ class Proposals(CherryPyAPI):
         obj = super(Proposals, self).to_hash(**flags)
         obj['_id'] = unicode_type(self.id)
         obj['title'] = unicode_type(self.title)
+        obj['short_name'] = unicode_type(self.short_name)
 
         def _set_only_if(attr, expr, true_value, else_func):
             obj[attr] = true_value if expr else else_func()
@@ -105,6 +107,8 @@ class Proposals(CherryPyAPI):
         self._set_only_if('_id', obj, 'id', lambda: unicode_type(obj['_id']))
         self._set_only_if('title', obj, 'title',
                           lambda: unicode_type(obj['title']))
+        self._set_only_if('short_name', obj, 'short_name',
+                          lambda: unicode_type(obj['short_name']))
         self._set_only_if('abstract', obj, 'abstract',
                           lambda: unicode_type(obj['abstract']))
         self._set_only_if('science_theme', obj, 'science_theme',
@@ -148,5 +152,12 @@ class Proposals(CherryPyAPI):
         return self._where_attr_clause(
             where_clause,
             kwargs,
-            ['title', 'abstract', 'science_theme', 'proposal_type', 'encoding']
+            [
+                'title',
+                'short_name',
+                'abstract',
+                'science_theme',
+                'proposal_type',
+                'encoding'
+            ]
         )
