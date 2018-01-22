@@ -46,7 +46,14 @@ def essync(args):
 def render_obj(args):
     """Render an object based on args."""
     test_obj = args.object()
-    print(dumps(args.object.get(test_obj.where_clause(args.where_clause)), indent=4))
+    print(
+        dumps(
+            args.object.get(
+                test_obj.where_clause(args.where_clause)
+            ).to_hash(args.recursion),
+            indent=4
+        )
+    )
 
 
 def create_subcommands(subparsers):
@@ -128,7 +135,7 @@ def render_options(render_parser):
         required=True
     )
     render_parser.add_argument(
-        '--recursive',
+        '--recursion',
         default=1,
         type=int,
         help='recursive level to go',
