@@ -8,7 +8,7 @@ from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
 from metadata.orm import ORM_OBJECTS
 from metadata.orm.keys import Keys
-from metadata.admin_cmd import main, essync, escreate, render_obj, objstr_to_ormobj, objstr_to_whereclause
+from metadata.admin_cmd import main, essync, escreate, render_obj, create_obj, objstr_to_ormobj, objstr_to_whereclause
 
 
 class TestAdminTool(TestCase):
@@ -75,4 +75,14 @@ class TestAdminTool(TestCase):
             test_obj.key = 'test_key'
             test_obj.save()
             render_obj(args)
+        self.assertTrue(test_patch.called)
+
+    @patch('metadata.orm.try_db_connect')
+    def test_create(self, test_patch):
+        """Test the create obj."""
+        test_patch.return_value = True
+        args = Namespace()
+        setattr(args, 'object', Keys)
+        with test_database(SqliteDatabase(':memory:'), ORM_OBJECTS, create_tables=False):
+            create_obj(args)
         self.assertTrue(test_patch.called)

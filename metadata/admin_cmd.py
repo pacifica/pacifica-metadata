@@ -5,7 +5,7 @@ from __future__ import print_function
 from sys import argv as sys_argv
 from json import loads, dumps
 from argparse import ArgumentParser
-from metadata.orm import ORM_OBJECTS, try_db_connect
+from metadata.orm import ORM_OBJECTS, try_db_connect, try_es_connect
 from metadata.essync import escreate, essync
 
 
@@ -23,8 +23,22 @@ def render_obj(args):
     )
 
 
+def create_obj(args):
+    """Create a specific object."""
+    try_db_connect()
+    try_es_connect()
+    if not args.object.table_exists():
+        args.object.create_table()
+        args.object.create_elastic_mapping()
+
+
 def create_subcommands(subparsers):
     """Create the subcommands from the subparsers."""
+    create_obj_parser = subparsers.add_parser(
+        'create_obj',
+        help='create_obj help',
+        description='create an object in the DB'
+    )
     render_parser = subparsers.add_parser(
         'render',
         help='render help',
@@ -40,7 +54,7 @@ def create_subcommands(subparsers):
         help='essync help',
         description='sync sql data to elastic search'
     )
-    return render_parser, escreate_parser, essync_parser
+    return render_parser, escreate_parser, essync_parser, create_obj_parser
 
 
 def escreate_options(escreate_parser):
@@ -85,6 +99,18 @@ def objstr_to_whereclause(obj_str):
     return json_obj
 
 
+def create_obj_options(create_obj_parser):
+    """Add the create object command line options."""
+    create_obj_parser.add_argument(
+        '--object-name',
+        dest='object',
+        type=objstr_to_ormobj,
+        help='object type to query.',
+        required=True
+    )
+    create_obj_parser.set_defaults(func=create_obj)
+
+
 def render_options(render_parser):
     """Add the essync command line options."""
     render_parser.add_argument(
@@ -116,11 +142,13 @@ def main(*argv):
     """Main method for admin command line tool."""
     parser = ArgumentParser()
     subparsers = parser.add_subparsers(help='sub-command help')
-    render_parser, escreate_parser, essync_parser = create_subcommands(
-        subparsers)
+    render_parser, escreate_parser, essync_parser, create_obj_parser = create_subcommands(
+        subparsers
+    )
     escreate_options(escreate_parser)
     essync_options(essync_parser)
     render_options(render_parser)
+    create_obj_options(create_obj_parser)
     if not argv:  # pragma: no cover
         argv = sys_argv[1:]
     args = parser.parse_args(argv)
