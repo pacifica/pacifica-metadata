@@ -5,7 +5,7 @@ from __future__ import print_function
 from sys import argv as sys_argv
 from json import loads, dumps
 from argparse import ArgumentParser
-from metadata.orm import ORM_OBJECTS, try_db_connect, try_es_connect
+from metadata.orm import ORM_OBJECTS, try_db_connect, try_es_connect, create_elastic_index
 from metadata.essync import escreate, essync
 
 
@@ -27,6 +27,7 @@ def create_obj(args):
     """Create a specific object."""
     try_db_connect()
     try_es_connect()
+    create_elastic_index()
     if not args.object.table_exists():
         args.object.create_table()
         args.object.create_elastic_mapping()
