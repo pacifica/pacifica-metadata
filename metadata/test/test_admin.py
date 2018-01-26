@@ -8,11 +8,33 @@ from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
 from metadata.orm import ORM_OBJECTS
 from metadata.orm.keys import Keys
-from metadata.admin_cmd import main, essync, escreate, render_obj
+from metadata.admin_cmd import main, essync, escreate, render_obj, objstr_to_ormobj, objstr_to_whereclause
 
 
 class TestAdminTool(TestCase):
     """Test the admin tool cli."""
+
+    def test_objstr_to_ormobj(self):
+        """Test the string object to ORM object type check."""
+        cls = objstr_to_ormobj('Keys')
+        self.assertEqual(cls, Keys)
+        hit_exception = False
+        try:
+            objstr_to_ormobj('Blah!')
+        except ValueError:
+            hit_exception = True
+        self.assertTrue(hit_exception)
+
+    def test_objstr_to_whereclause(self):
+        """Test the string object to ORM where clause parsing."""
+        where_clause = objstr_to_whereclause('{"_id": 1234}')
+        self.assertTrue(isinstance(where_clause, dict))
+        hit_exception = False
+        try:
+            objstr_to_whereclause('[]')
+        except ValueError:
+            hit_exception = True
+        self.assertTrue(hit_exception)
 
     @patch('metadata.admin_cmd.essync')
     def test_main(self, test_patch):
