@@ -1,8 +1,9 @@
 cherrypy
 codeclimate-test-reporter
-coverage
+coverage>=4.0,<4.4
 elasticsearch
 httpretty
+mock
 nose
 peewee
 pep257
