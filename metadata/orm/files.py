@@ -6,7 +6,7 @@ from peewee import Expression, OP
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.transactions import Transactions
 from metadata.orm.utils import datetime_now_nomicrosecond, ExtendDateTimeField
-from metadata.orm.utils import unicode_type, ExtendDateField
+from metadata.orm.utils import unicode_type, ExtendDateField, date_converts
 
 
 # pylint: disable=too-many-instance-attributes
@@ -118,7 +118,15 @@ class Files(CherryPyAPI):
         self._set_only_if('transaction_id', obj, 'transaction', trans_func)
 
     def _where_date_clause(self, where_clause, kwargs):
-        for date in ['mtime', 'ctime', 'suspense_date']:
+        if 'suspense_date' in kwargs:
+            date_obj, date_oper = self._date_operator_compare(
+                'suspense_date',
+                kwargs,
+                dt_converts=date_converts
+            )
+            where_clause &= Expression(
+                Files.suspense_date, date_oper, date_obj)
+        for date in ['mtime', 'ctime']:
             if date in kwargs:
                 date_obj, date_oper = self._date_operator_compare(date, kwargs)
                 where_clause &= Expression(
