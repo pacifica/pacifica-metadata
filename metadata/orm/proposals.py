@@ -101,7 +101,7 @@ class Proposals(CherryPyAPI):
         _set_only_if('closed_date', self.closed_date is None,
                      None, lambda: self.closed_date.isoformat())
         _set_only_if('suspense_date', self.suspense_date is None,
-                     None, lambda: self.supense_date.isoformat())
+                     None, lambda: self.suspense_date.isoformat())
         # pylint: enable=unnecessary-lambda
         obj['encoding'] = str(self.encoding)
         return obj
