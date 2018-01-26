@@ -6,7 +6,7 @@ from metadata.rest.orm import CherryPyAPI
 from metadata.orm.users import Users
 from metadata.orm.proposals import Proposals
 from metadata.orm.instruments import Instruments
-from metadata.orm.utils import unicode_type, ExtendDateField
+from metadata.orm.utils import unicode_type, ExtendDateField, date_converts
 
 
 class Transactions(CherryPyAPI):
@@ -69,7 +69,8 @@ class Transactions(CherryPyAPI):
     def _where_date_clause(self, where_clause, kwargs):
         for date in ['suspense_date']:
             if date in kwargs:
-                date_obj, date_oper = self._date_operator_compare(date, kwargs)
+                date_obj, date_oper = self._date_operator_compare(
+                    date, kwargs, dt_converts=date_converts)
                 where_clause &= Expression(
                     getattr(Transactions, date), date_oper, date_obj)
         return where_clause
