@@ -123,6 +123,7 @@ class PacificaModel(Model):
     def to_hash(self, **flags):
         """Convert the base object fields into serializable attributes in a hash."""
         recursion_depth = flags.get('recursion_depth', 0)
+        recursion_limit = flags.get('recursion_limit', 1000)
         obj = {}
         obj['created'] = self.created.isoformat()
         obj['updated'] = self.updated.isoformat()
@@ -131,20 +132,19 @@ class PacificaModel(Model):
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         if recursion_depth:
             for attr in set(self.cls_revforeignkeys()) - set(flags.get('recursion_exclude', [])):
-                rec_flags = flags.copy()
-                rec_flags['recursion_depth'] -= 1
-                obj.update(self._build_object(attr))
-
+                if getattr(self, attr).count() > recursion_limit:
+                    obj[attr] = None
+                else:
+                    obj.update(self._build_object(attr))
         return obj
 
     def _build_object(self, attr):
         obj = {attr: []}
         fk_obj_list = {}
-        my_class = self.__class__
         for obj_ref in getattr(self, attr):
             if not fk_obj_list:
                 fk_item_name, fk_obj_list = self._generate_fk_obj_list(obj_ref)
-            obj[attr].append(my_class.get_append_item(
+            obj[attr].append(self.get_append_item(
                 obj_ref, fk_item_name, fk_obj_list))
         return obj
 
