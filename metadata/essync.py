@@ -39,44 +39,57 @@ def yield_data(obj, page_number, items_per_page):
         }
 
 
+def try_doing_work(es_client, job):
+    """Try doing some work even if you fail."""
+    tries_left = 5
+    success = False
+    while not success and tries_left:
+        try:
+            helpers.bulk(es_client, yield_data(*job))
+            success = True
+        except ElasticsearchException:
+            tries_left -= 1
+    return success
+
+
 def start_work(work_queue):
     """The main thread for the work."""
     es_client = Elasticsearch([ELASTIC_ENDPOINT], **ES_CLIENT_ARGS)
     job = work_queue.get()
     while job:
-        tries_left = 5
-        success = False
-        while not success and tries_left:
-            try:
-                helpers.bulk(es_client, yield_data(*job))
-                success = True
-            except ElasticsearchException:
-                tries_left -= 1
-        if not tries_left and not success:
-            print('We really failed')
+        try_doing_work(es_client, job)
         work_queue.task_done()
         print('{}: {}'.format(job[0].__name__, job[1]))
         job = work_queue.get()
     work_queue.task_done()
 
 
-def essync(args):
-    """Sync the elastic search data from sql to es."""
-    work_queue = Queue(32)
+def create_worker_threads(threads, work_queue):
+    """Create the worker threads and return the list."""
     work_threads = []
-
-    for i in range(args.threads):
+    for i in range(threads):
         wthread = Thread(target=start_work, args=(work_queue,))
         wthread.daemon = True
         wthread.start()
         work_threads.append(wthread)
+    return work_threads
 
-    for obj in args.objects:
+
+def generate_work(objects, items_per_page, work_queue):
+    """Generate the work from the db and send it to the work queue."""
+    for obj in objects:
         total_count = obj.select().count()
-        num_pages = (total_count / args.items_per_page) + 1
+        num_pages = (total_count / items_per_page) + 1
         for page in range(1, num_pages + 1):
-            work_queue.put((obj, page, args.items_per_page))
+            work_queue.put((obj, page, items_per_page))
 
+
+def essync(args):
+    """Sync the elastic search data from sql to es."""
+    work_queue = Queue(32)
+    work_threads = create_worker_threads(args.threads, work_queue)
+
+    generate_work(args.objects, args.items_per_page, work_queue)
     for i in range(args.threads):
         work_queue.put(False)
     for wthread in work_threads:
