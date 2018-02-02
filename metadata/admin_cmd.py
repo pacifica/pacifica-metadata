@@ -74,11 +74,28 @@ def escreate_options(escreate_parser):
 def essync_options(essync_parser):
     """Add the essync command line options."""
     essync_parser.add_argument(
+        '--objects-per-page',
+        default=40000,
+        type=int,
+        help='objects per bulk upload.',
+        required=False,
+        dest='items_per_page'
+    )
+    essync_parser.add_argument(
         '--threads',
         default=4,
         type=int,
         help='number of threads to sync data',
         required=False
+    )
+    essync_parser.add_argument(
+        '--object-name',
+        dest='objects',
+        type=objstr_to_ormobj,
+        help='object type to sync.',
+        required=False,
+        nargs='*',
+        default=ORM_OBJECTS
     )
     essync_parser.set_defaults(func=essync)
 
