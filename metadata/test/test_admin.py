@@ -51,8 +51,8 @@ class TestAdminTool(TestCase):
         reg_args = Namespace()
         setattr(skip_args, 'skip_mappings', True)
         setattr(reg_args, 'skip_mappings', False)
-        setattr(skip_args, 'threads', 8)
-        setattr(reg_args, 'threads', 8)
+        setattr(skip_args, 'threads', 1)
+        setattr(reg_args, 'threads', 1)
         setattr(reg_args, 'items_per_page', 1)
         setattr(reg_args, 'objects', [Keys])
         with test_database(SqliteDatabase(':memory:'), ORM_OBJECTS):
