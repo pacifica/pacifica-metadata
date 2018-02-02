@@ -21,7 +21,6 @@ class TransactionLast(QueryBase):
                   .where(Transactions.deleted >> None)
                   .dicts()
                   .get())
-        print txn_id
         return {'latest_transaction_id': txn_id['max']}
 
     # Cherrypy requires these named methods.

@@ -7,12 +7,6 @@ from peewee import DoesNotExist
 from metadata.orm.base import PacificaModel, db_connection_decorator
 from metadata.elastic.orm import ElasticAPI
 from metadata.orm.utils import datetime_now_nomicrosecond, datetime_converts
-import logging
-
-# Print all queries to stderr.
-logger = logging.getLogger('peewee')
-logger.setLevel(logging.DEBUG)
-logger.addHandler(logging.StreamHandler())
 
 
 class CherryPyAPI(PacificaModel, ElasticAPI):
