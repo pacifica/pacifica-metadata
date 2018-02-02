@@ -200,24 +200,20 @@ class PacificaModel(Model):
 
     def where_clause(self, kwargs):
         """PeeWee specific extension meant to be passed to a PeeWee get or select."""
-        my_class = self.__class__
         where_clause = Expression(1, OP.EQ, 1)
         if 'deleted' in kwargs:
             if kwargs['deleted'] is None:
                 where_clause &= Expression(
-                    getattr(my_class, 'deleted'), OP.IS, None)
+                    getattr(self, 'deleted'), OP.IS, None)
             else:
                 date_obj = datetime_converts(kwargs['deleted'])
                 where_clause &= Expression(
-                    getattr(my_class, 'deleted'), OP.EQ, date_obj)
+                    getattr(self, 'deleted'), OP.EQ, date_obj)
         for date in ['updated', 'created']:
             if date in kwargs:
-                # pylint: disable=protected-access
-                date_obj, date_oper = my_class._date_operator_compare(
-                    date, kwargs)
-                # pylint: enable=protected-access
+                date_obj, date_oper = self._date_operator_compare(date, kwargs)
                 where_clause &= Expression(
-                    getattr(my_class, date), date_oper, date_obj)
+                    getattr(self, date), date_oper, date_obj)
         return where_clause
 
     @classmethod
