@@ -204,16 +204,16 @@ class PacificaModel(Model):
         if 'deleted' in kwargs:
             if kwargs['deleted'] is None:
                 where_clause &= Expression(
-                    getattr(self, 'deleted'), OP.IS, None)
+                    getattr(self.__class__, 'deleted'), OP.IS, None)
             else:
                 date_obj = datetime_converts(kwargs['deleted'])
                 where_clause &= Expression(
-                    getattr(self, 'deleted'), OP.EQ, date_obj)
+                    getattr(self.__class__, 'deleted'), OP.EQ, date_obj)
         for date in ['updated', 'created']:
             if date in kwargs:
                 date_obj, date_oper = self._date_operator_compare(date, kwargs)
                 where_clause &= Expression(
-                    getattr(self, date), date_oper, date_obj)
+                    getattr(self.__class__, date), date_oper, date_obj)
         return where_clause
 
     @classmethod
