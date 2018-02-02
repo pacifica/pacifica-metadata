@@ -1,6 +1,6 @@
 cherrypy
 elasticsearch
-peewee==2.7.2
+peewee==2.7.*
 psycopg2
 python-dateutil
 requests
