@@ -38,8 +38,7 @@ class EarliestLatestFiles(QueryBase):
             'modif': lambda x: 'modified',
             'creat': lambda x: 'created'
         }[short_time_basis](short_time_basis)
-
-        search_field = getattr(Transactions, '{0}_id'.format(item_type))
+        search_field = getattr(Transactions, '{0}'.format(item_type))
         if time_basis == 'submitted':
             query = Transactions().select(
                 fn.Min(Transactions.updated).alias('earliest'),
