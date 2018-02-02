@@ -23,8 +23,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """Internal select method."""
         primary_keys = []
         copy_flags = self.es_recursive_flags.copy()
-        copy_flags['recursion_depth'] = CherryPyAPI._check_recursion_depth(
-            kwargs)
+        self._set_recursion_depth(copy_flags, kwargs)
+        self._set_recursion_limit(copy_flags, kwargs)
         for key in self.get_primary_keys():
             primary_keys.append(getattr(self.__class__, key))
         objs = (self.select()
@@ -36,11 +36,16 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         return dumps([obj.to_hash(**copy_flags) for obj in objs])
 
     @staticmethod
-    def _check_recursion_depth(kwargs):
+    def _set_recursion_limit(flags, kwargs):
+        recursion_limit = int(kwargs.get('recursion_limit', 1000))
+        flags['recursion_limit'] = recursion_limit
+
+    @staticmethod
+    def _set_recursion_depth(flags, kwargs):
         recursion_depth = int(kwargs.get('recursion_depth', 1))
         if recursion_depth not in range(0, 2):
             raise ValueError('Recursion depth must be in the range of 0->2.')
-        return recursion_depth
+        flags['recursion_depth'] = recursion_depth
 
     @staticmethod
     def _update_dep_objs(obj, updated_objs):
