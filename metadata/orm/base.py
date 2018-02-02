@@ -132,8 +132,7 @@ class PacificaModel(Model):
         obj['_id'] = index_hash(obj['created'], obj['updated'], obj['deleted'])
         if recursion_depth:
             for attr in set(self.cls_revforeignkeys()) - set(flags.get('recursion_exclude', [])):
-                list_count = getattr(self, attr).count(
-                    *self.get_primary_keys())
+                list_count = getattr(self, attr).count()
                 if list_count > recursion_limit:
                     obj[attr] = None
                 elif list_count == 0:
