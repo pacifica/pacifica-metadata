@@ -14,17 +14,22 @@ class QueryBase(object):
         proposal_xref = ProposalParticipant()
         where_exp = proposal_xref.where_clause({'person_id': user_entry.id})
         proposal_person_query = (
-            ProposalParticipant.select().where(where_exp))
+            ProposalParticipant.select().where(where_exp)).dicts()
 
-        proposals = Proposals.select().where(
-            Proposals.id << [prop.proposal.id for prop in proposal_person_query])
+        proposal_list = [prop['proposal'] for prop in proposal_person_query]
 
         clean_proposals = {}
-        for prop in proposals:
-            info = prop.to_hash()
-            info.pop('abstract')
-            prop_id = prop.id
-            clean_proposals[prop_id] = info
+
+        if proposal_list:
+            proposals = Proposals.select(
+                Proposals.id, Proposals.title, Proposals.short_name,
+                Proposals.proposal_type, Proposals.science_theme
+            ).where(
+                Proposals.id << proposal_list).dicts()
+
+            for prop in proposals:
+                prop_id = prop['id']
+                clean_proposals[prop_id] = prop
 
         display_name = u'[User ID {0}] {1} {2} &lt;{3}&gt;'.format(
             user_entry.id,

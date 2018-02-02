@@ -30,6 +30,7 @@ class MigrateProposals(object):
             prop_collection, instrument_collection, person_collection)
 
         for prop in proposals_with_links:
+
             prop_entry = PropQueryBase.format_proposal_block(prop)
             prop_entry['abstract'] = prop.abstract
             prop_entry['instruments'] = [

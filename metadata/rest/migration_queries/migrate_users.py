@@ -30,6 +30,7 @@ class MigrateUsers(object):
             custodian_collection, institution_collection)
 
         for user in users_expanded:
+
             user_entry = UserQueryBase.format_user_block(user, 'simple')
             user_entry['proposals'] = [
                 prop.proposal.id for prop in user.proposals_prefetch]
