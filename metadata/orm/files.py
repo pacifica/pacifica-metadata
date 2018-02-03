@@ -87,7 +87,8 @@ class Files(CherryPyAPI):
         obj['size'] = int(self.size)
         obj['hashsum'] = str(self.hashsum)
         obj['hashtype'] = str(self.hashtype)
-        obj['suspense_date'] = str(self.suspense_date.isoformat())
+        obj['suspense_date'] = str(self.suspense_date.isoformat(
+        )) if self.suspense_date is not None else None
         obj['encoding'] = str(self.encoding)
         return obj
 

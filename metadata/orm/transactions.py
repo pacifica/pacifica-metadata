@@ -49,7 +49,8 @@ class Transactions(CherryPyAPI):
         obj['submitter'] = int(self._data['submitter'])
         obj['instrument'] = int(self._data['instrument'])
         obj['proposal'] = unicode_type(self._data['proposal'])
-        obj['suspense_date'] = str(self.suspense_date.isoformat())
+        obj['suspense_date'] = str(self.suspense_date.isoformat(
+        )) if self.suspense_date is not None else None
         return obj
 
     def from_hash(self, obj):
