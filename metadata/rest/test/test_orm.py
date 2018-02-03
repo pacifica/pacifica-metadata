@@ -15,8 +15,15 @@ class TestCherryPyAPI(CPCommonTest):
 
     __test__ = True
 
-    def test_methods(self):
-        """Test the PUT (insert) method."""
+    def test_get_recursion_flags(self):
+        """Test the recursion flags you can pass to get objects."""
+        req = requests.get(
+            '{0}/users?_id=10&recursion_limit=1'.format(self.url))
+        self.assertEqual(req.status_code, 200)
+        users = loads(req.content)
+        self.assertEqual(len(users), 1)
+        self.assertEqual(users[0]['proposals'], None)
+
         req = requests.get(
             '{0}/files?page_number=1&items_per_page=1&recursion_depth=0'.format(self.url))
         self.assertEqual(req.status_code, 200)
@@ -27,6 +34,8 @@ class TestCherryPyAPI(CPCommonTest):
             '{0}/files?page_number=1&items_per_page=1&recursion_depth=4'.format(self.url))
         self.assertEqual(req.status_code, 500)
 
+    def test_methods(self):
+        """Test the PUT (insert) method."""
         set_hash = {'name': 'Renamed File', 'updated': None}
         req = requests.post('{0}/files'.format(self.url),
                             data=dumps(set_hash), headers=self.headers)
