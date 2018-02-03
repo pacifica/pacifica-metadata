@@ -8,6 +8,7 @@
     "closed_date": null,
     "science_theme": "g\u00e9neral",
     "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "suspense_date": "Sat Nov 12 2016",
     "title": "Pacifica D\u00e9velopment (active no close)"
   },
   {
@@ -19,6 +20,7 @@
     "closed_date": null,
     "science_theme": "g\u00e9neral",
     "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "suspense_date": "Sat Nov 12 2016",
     "title": "Pacifica D\u00e9velopment (no close or end)"
   },
   {
@@ -30,6 +32,7 @@
     "closed_date": "Mon Sep 29 2014",
     "science_theme": "g\u00e9neral",
     "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "suspense_date": "Sat Nov 12 2016",
     "title": "Pacifica D\u00e9velopment (expired closed and end)"
   },
   {
@@ -41,6 +44,7 @@
     "closed_date": "Mon Sep 29 2014",
     "science_theme": "g\u00e9neral",
     "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "suspense_date": "Sat Nov 12 2016",
     "title": "Pacifica D\u00e9velopment (expired closed no end)"
   },
   {
@@ -52,6 +56,7 @@
     "closed_date": null,
     "science_theme": "g\u00e9neral",
     "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "suspense_date": "Sat Nov 12 2016",
     "title": "Pacifica D\u00e9velopment (pre-active)"
   }
 ]

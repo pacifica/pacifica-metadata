@@ -6,7 +6,7 @@ from peewee import Expression, OP
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.transactions import Transactions
 from metadata.orm.utils import datetime_now_nomicrosecond, ExtendDateTimeField
-from metadata.orm.utils import unicode_type
+from metadata.orm.utils import unicode_type, ExtendDateField, date_converts
 
 
 # pylint: disable=too-many-instance-attributes
@@ -18,29 +18,31 @@ class Files(CherryPyAPI):
     it came from.
 
     Attributes:
-        +-------------+-------------------------------------------+
-        | Name        | Description                               |
-        +=============+===========================================+
-        | name        | Name of the file                          |
-        +-------------+-------------------------------------------+
-        | subdir      | Subdirectory the file is in               |
-        +-------------+-------------------------------------------+
-        | ctime       | Creation time for the file                |
-        +-------------+-------------------------------------------+
-        | mtime       | User modified time for the file           |
-        +-------------+-------------------------------------------+
-        | hashsum     | Hash sum string                           |
-        +-------------+-------------------------------------------+
-        | hashtype    | Hash sum type string                      |
-        +-------------+-------------------------------------------+
-        | size        | Size of the file in bytes                 |
-        +-------------+-------------------------------------------+
-        | transaction | Link to the transaction model             |
-        +-------------+-------------------------------------------+
-        | mimetype    | mimetype of the file, if any              |
-        +-------------+-------------------------------------------+
-        | encoding    | encoding in the file name or subdir field |
-        +-------------+-------------------------------------------+
+        +---------------+-------------------------------------------+
+        | Name          | Description                               |
+        +===============+===========================================+
+        | name          | Name of the file                          |
+        +---------------+-------------------------------------------+
+        | subdir        | Subdirectory the file is in               |
+        +---------------+-------------------------------------------+
+        | ctime         | Creation time for the file                |
+        +---------------+-------------------------------------------+
+        | mtime         | User modified time for the file           |
+        +---------------+-------------------------------------------+
+        | hashsum       | Hash sum string                           |
+        +---------------+-------------------------------------------+
+        | hashtype      | Hash sum type string                      |
+        +---------------+-------------------------------------------+
+        | size          | Size of the file in bytes                 |
+        +---------------+-------------------------------------------+
+        | transaction   | Link to the transaction model             |
+        +---------------+-------------------------------------------+
+        | mimetype      | mimetype of the file, if any              |
+        +---------------+-------------------------------------------+
+        | suspense_date | date the proposal is made available       |
+        +---------------+-------------------------------------------+
+        | encoding      | encoding in the file name or subdir field |
+        +---------------+-------------------------------------------+
     """
 
     name = CharField(default='', index=True)
@@ -54,6 +56,7 @@ class Files(CherryPyAPI):
         Transactions, related_name='files', index=True)
     mimetype = CharField(default='')
     encoding = CharField(default='UTF8')
+    suspense_date = ExtendDateField(null=True, index=True)
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -67,6 +70,7 @@ class Files(CherryPyAPI):
             obj['encoding'] = {'type': 'text', 'fields': {
                 'keyword': {'type': 'keyword', 'ignore_above': 256}}}
         obj['hashsum'] = obj['hashtype'] = {'type': 'text'}
+        obj['suspense_date'] = {'type': 'date', 'format': 'yyyy-mm-dd'}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
@@ -83,6 +87,8 @@ class Files(CherryPyAPI):
         obj['size'] = int(self.size)
         obj['hashsum'] = str(self.hashsum)
         obj['hashtype'] = str(self.hashtype)
+        obj['suspense_date'] = str(self.suspense_date.isoformat(
+        )) if self.suspense_date is not None else None
         obj['encoding'] = str(self.encoding)
         return obj
 
@@ -105,6 +111,7 @@ class Files(CherryPyAPI):
         self._set_only_if('size', obj, 'size', lambda: int(obj['size']))
         self._set_only_if('encoding', obj, 'encoding',
                           lambda: str(obj['encoding']))
+        self._set_date_part('suspense_date', obj)
 
         def trans_func():
             """Return the transaction for the obj id."""
@@ -112,6 +119,14 @@ class Files(CherryPyAPI):
         self._set_only_if('transaction_id', obj, 'transaction', trans_func)
 
     def _where_date_clause(self, where_clause, kwargs):
+        if 'suspense_date' in kwargs:
+            date_obj, date_oper = self._date_operator_compare(
+                'suspense_date',
+                kwargs,
+                dt_converts=date_converts
+            )
+            where_clause &= Expression(
+                Files.suspense_date, date_oper, date_obj)
         for date in ['mtime', 'ctime']:
             if date in kwargs:
                 date_obj, date_oper = self._date_operator_compare(date, kwargs)

@@ -21,7 +21,8 @@ This is my proposal that's really cool and you should accept it. ;)
     'accepted_date': datetime.utcnow().date().isoformat(),
     'actual_start_date': datetime.utcnow().date().isoformat(),
     'actual_end_date': datetime.utcnow().date().isoformat(),
-    'closed_date': datetime.utcnow().date().isoformat()
+    'closed_date': datetime.utcnow().date().isoformat(),
+    'suspense_date': datetime.utcnow().date().isoformat()
 }
 
 SAMPLE_UNICODE_PROPOSAL_HASH = {
@@ -38,7 +39,8 @@ This is my proposal that's réally cool and you should accept it. ;)
     'accepted_date': datetime.utcnow().date().isoformat(),
     'actual_start_date': datetime.utcnow().date().isoformat(),
     'actual_end_date': datetime.utcnow().date().isoformat(),
-    'closed_date': datetime.utcnow().date().isoformat()
+    'closed_date': datetime.utcnow().date().isoformat(),
+    'suspense_date': datetime.utcnow().date().isoformat()
 }
 
 
