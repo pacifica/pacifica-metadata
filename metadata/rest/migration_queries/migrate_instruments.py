@@ -29,7 +29,6 @@ class MigrateInstruments(object):
             inst_collection, proposal_collection)
 
         for inst in instruments_with_proposals:
-
             inst_entry = InstQueryBase.format_instrument_block(inst)
             inst_entry['proposals'] = [
                 prop.proposal.id for prop in inst.proposals_prefetch]
