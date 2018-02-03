@@ -5,7 +5,7 @@ from __future__ import print_function
 from threading import Thread
 try:
     from Queue import Queue
-except ImportError:
+except ImportError:  # pragma: no cover
     from queue import Queue
 from elasticsearch import Elasticsearch, helpers, ElasticsearchException
 from metadata.orm import ORM_OBJECTS, try_db_connect
@@ -47,7 +47,7 @@ def try_doing_work(es_client, job):
         try:
             helpers.bulk(es_client, yield_data(*job))
             success = True
-        except ElasticsearchException:
+        except ElasticsearchException:  # pragma: no cover
             tries_left -= 1
     return success
 
