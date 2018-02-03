@@ -88,7 +88,6 @@ def essync(args):
     """Sync the elastic search data from sql to es."""
     work_queue = Queue(32)
     work_threads = create_worker_threads(args.threads, work_queue)
-
     generate_work(args.objects, args.items_per_page, work_queue)
     for i in range(args.threads):
         work_queue.put(False)

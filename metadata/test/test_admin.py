@@ -54,8 +54,8 @@ class TestAdminTool(TestCase):
         setattr(skip_args, 'threads', 1)
         setattr(reg_args, 'threads', 1)
         setattr(reg_args, 'items_per_page', 1)
-        setattr(reg_args, 'objects', [Keys])
-        with test_database(SqliteDatabase(':memory:'), ORM_OBJECTS):
+        with test_database(SqliteDatabase('file:cachedb?mode=memory&cache=shared'), ORM_OBJECTS):
+            setattr(reg_args, 'objects', [Keys])
             test_obj = Keys()
             test_obj.key = 'test_key'
             test_obj.save()
