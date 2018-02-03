@@ -51,9 +51,11 @@ class TestAdminTool(TestCase):
         reg_args = Namespace()
         setattr(skip_args, 'skip_mappings', True)
         setattr(reg_args, 'skip_mappings', False)
-        setattr(skip_args, 'threads', 8)
-        setattr(reg_args, 'threads', 8)
-        with test_database(SqliteDatabase(':memory:'), ORM_OBJECTS):
+        setattr(skip_args, 'threads', 1)
+        setattr(reg_args, 'threads', 1)
+        setattr(reg_args, 'items_per_page', 1)
+        with test_database(SqliteDatabase('file:cachedb?mode=memory&cache=shared'), ORM_OBJECTS):
+            setattr(reg_args, 'objects', [Keys])
             test_obj = Keys()
             test_obj.key = 'test_key'
             test_obj.save()
