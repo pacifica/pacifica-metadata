@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Test the keys ORM object."""
 from json import dumps
+from datetime import datetime
 from metadata.orm.test.base import TestBase
 from metadata.orm.transactions import Transactions
 from metadata.orm.test.test_users import SAMPLE_USER_HASH as SAMPLE_SUBMITTER_HASH
@@ -16,7 +17,8 @@ SAMPLE_TRANSACTION_HASH = {
     '_id': 127,
     'submitter': SAMPLE_SUBMITTER_HASH['_id'],
     'proposal': SAMPLE_PROPOSAL_HASH['_id'],
-    'instrument': SAMPLE_INSTRUMENT_HASH['_id']
+    'instrument': SAMPLE_INSTRUMENT_HASH['_id'],
+    'suspense_date': datetime.utcnow().date().isoformat()
 }
 
 

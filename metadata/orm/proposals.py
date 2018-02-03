@@ -35,6 +35,8 @@ class Proposals(CherryPyAPI):
         +-------------------+-------------------------------------+
         | closed_date       | date the proposal was terminated    |
         +-------------------+-------------------------------------+
+        | suspense_date     | date the proposal is made available |
+        +-------------------+-------------------------------------+
         | encoding          | encoding of the other text attrs    |
         +-------------------+-------------------------------------+
     """
@@ -51,6 +53,7 @@ class Proposals(CherryPyAPI):
     actual_start_date = ExtendDateField(null=True, index=True)
     actual_end_date = ExtendDateField(null=True, index=True)
     closed_date = ExtendDateField(null=True, index=True)
+    suspense_date = ExtendDateField(null=True, index=True)
     encoding = CharField(default='UTF8')
 
     @staticmethod
@@ -67,7 +70,7 @@ class Proposals(CherryPyAPI):
 
         obj['actual_start_date'] = obj['accepted_date'] = \
             obj['actual_end_date'] = obj['closed_date'] = \
-            {'type': 'date', 'format': 'yyyy-mm-dd'}
+            obj['suspense_date'] = {'type': 'date', 'format': 'yyyy-mm-dd'}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
@@ -97,6 +100,8 @@ class Proposals(CherryPyAPI):
                      None, lambda: self.actual_end_date.isoformat())
         _set_only_if('closed_date', self.closed_date is None,
                      None, lambda: self.closed_date.isoformat())
+        _set_only_if('suspense_date', self.suspense_date is None,
+                     None, lambda: self.suspense_date.isoformat())
         # pylint: enable=unnecessary-lambda
         obj['encoding'] = str(self.encoding)
         return obj
@@ -122,9 +127,16 @@ class Proposals(CherryPyAPI):
         self._set_date_part('actual_start_date', obj)
         self._set_date_part('actual_end_date', obj)
         self._set_date_part('closed_date', obj)
+        self._set_date_part('suspense_date', obj)
 
     def _where_date_clause(self, where_clause, kwargs):
-        date_keys = ['accepted_date', 'actual_start_date', 'actual_end_date']
+        date_keys = [
+            'accepted_date',
+            'actual_start_date',
+            'actual_end_date',
+            'closed_date',
+            'suspense_date'
+        ]
         for date_key in date_keys:
             if date_key in kwargs:
                 date_obj, date_oper = self._date_operator_compare(

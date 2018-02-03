@@ -7,6 +7,7 @@
     "name": "foo.txt",
     "size": 123,
     "subdir": "a/b",
+    "suspense_date": "Sat Nov 12 2016",
     "transaction_id": 67
   },
   {
@@ -17,6 +18,7 @@
     "name": "bar.txt",
     "size": 3221225472,
     "subdir": "a/b",
+    "suspense_date": "Sat Nov 12 2016",
     "transaction_id": 67
   }
 ]
