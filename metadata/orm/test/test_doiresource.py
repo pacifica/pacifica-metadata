@@ -11,7 +11,7 @@ from metadata.orm.doidatasets import DOIDataSets
 
 SAMPLE_DOIRESOURCE_HASH = {
     'transaction_id': SAMPLE_TRANSACTION_HASH['_id'],
-    'key_id': SAMPLE_DOIDATASET_HASH['doi']
+    'doi': SAMPLE_DOIDATASET_HASH['doi']
 }
 
 
