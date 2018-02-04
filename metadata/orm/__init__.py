@@ -37,6 +37,8 @@ from metadata.orm.instrument_group import InstrumentGroup
 from metadata.orm.analytical_tools import AnalyticalTools
 from metadata.orm.atool_proposal import AToolProposal
 from metadata.orm.atool_transaction import AToolTransaction
+from metadata.orm.doidatasets import DOIDataSets
+from metadata.orm.doiresource import DOIResource
 
 DATABASE_CONNECT_ATTEMPTS = 40
 DATABASE_WAIT = 3
@@ -68,7 +70,9 @@ ORM_OBJECTS = [
     InstrumentGroup,
     AnalyticalTools,
     AToolProposal,
-    AToolTransaction
+    AToolTransaction,
+    DOIDataSets,
+    DOIResource
 ]
 
 
