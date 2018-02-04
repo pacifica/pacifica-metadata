@@ -5,7 +5,7 @@ from peewee import ForeignKeyField, Expression, OP
 from metadata.orm.transactions import Transactions
 from metadata.orm.doidatasets import DOIDataSets
 from metadata.rest.orm import CherryPyAPI
-from metadata.orm.utils import index_hash
+from metadata.orm.utils import index_hash, unicode_type
 
 
 class DOIResource(CherryPyAPI):
@@ -29,17 +29,18 @@ class DOIResource(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(DOIResource, DOIResource).elastic_mapping_builder(obj)
-        obj['doi'] = obj['transaction'] = \
-            {'type': 'integer'}
+        obj['doi'] = {'type': 'text', 'fields': {'keyword': {
+            'type': 'keyword', 'ignore_above': 256}}}
+        obj['transaction'] = {'type': 'integer'}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOIResource, self).to_hash(**flags)
         obj['_id'] = index_hash(
-            int(self._data['doi']),
+            unicode_type(self._data['doi']),
             int(self._data['transaction'])
         )
-        obj['doi'] = int(self.doi.doi)
+        obj['doi'] = unicode_type(self.doi.doi)
         obj['transaction_id'] = int(self._data['transaction'])
         return obj
 
