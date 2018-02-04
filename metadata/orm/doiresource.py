@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
-from peewee import ForeignKeyField, Expression, OP
+from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from metadata.orm.base import DB
 from metadata.orm.transactions import Transactions
 from metadata.orm.doidatasets import DOIDataSets
 from metadata.rest.orm import CherryPyAPI
@@ -24,6 +25,14 @@ class DOIResource(CherryPyAPI):
 
     transaction = ForeignKeyField(Transactions, related_name='doi')
     doi = ForeignKeyField(DOIDataSets, related_name='resources')
+
+    # pylint: disable=too-few-public-methods
+    class Meta(object):
+        """PeeWee meta class contains the database and the primary key."""
+
+        database = DB
+        primary_key = CompositeKey('transaction', 'doi')
+    # pylint: enable=too-few-public-methods
 
     @staticmethod
     def elastic_mapping_builder(obj):
