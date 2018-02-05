@@ -69,7 +69,7 @@ class DOIResource(CherryPyAPI):
         if 'doi' in kwargs:
             where_clause &= Expression(
                 DOIResource.doi, OP.EQ,
-                DOIDataSets.get(DOIDataSets.doi == kwargs['doi']).id
+                DOIDataSets.get(DOIDataSets.doi == kwargs['doi'])
             )
         if 'transaction_id' in kwargs:
             where_clause &= Expression(
