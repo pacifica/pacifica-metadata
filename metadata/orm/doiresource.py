@@ -24,7 +24,8 @@ class DOIResource(CherryPyAPI):
     """
 
     transaction = ForeignKeyField(Transactions, related_name='doi')
-    doi = ForeignKeyField(DOIDataSets, related_name='resources')
+    doi = ForeignKeyField(
+        DOIDataSets, related_name='resources', to_field='doi')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
