@@ -38,7 +38,9 @@ def main():
         'proposal_instrument',
         'proposal_participant',
         'trans_key_value',
-        'user_group'
+        'user_group',
+        'doidatasets',
+        'doiresource'
     ]
     for obj in object_order:
         mdclient.create(obj, loads(
