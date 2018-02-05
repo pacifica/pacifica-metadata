@@ -339,7 +339,7 @@ objects in the model.
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
 | id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| doi | INTEGER | DOIDataSets.id | NOT NULL |
+| doi | VARCHAR | DOIDataSets.doi | NOT NULL |
 | transaction | INTEGER | Transactions.id | NOT NULL |
 | created | TIMESTAMP |  | NOT NULL |
 | deleted | TIMESTAMP |  | NULL |
