@@ -57,6 +57,7 @@ objects in the model.
 | science_theme | VARCHAR |  | NULL |
 | short_name | VARCHAR |  | NOT NULL |
 | submitted_date | TIMESTAMP |  | NOT NULL |
+| suspense_date | DATE |  | NULL |
 | title | TEXT |  | NOT NULL |
 | created | TIMESTAMP |  | NOT NULL |
 | deleted | TIMESTAMP |  | NULL |
@@ -196,6 +197,7 @@ objects in the model.
 | instrument | INTEGER | Instruments.id | NOT NULL |
 | proposal | VARCHAR | Proposals.id | NOT NULL |
 | submitter | INTEGER | Users.id | NOT NULL |
+| suspense_date | DATE |  | NULL |
 | created | TIMESTAMP |  | NOT NULL |
 | deleted | TIMESTAMP |  | NULL |
 | updated | TIMESTAMP |  | NOT NULL |
@@ -213,6 +215,7 @@ objects in the model.
 | name | VARCHAR |  | NOT NULL |
 | size | BIGINT |  | NOT NULL |
 | subdir | VARCHAR |  | NOT NULL |
+| suspense_date | DATE |  | NULL |
 | transaction | INTEGER | Transactions.id | NOT NULL |
 | created | TIMESTAMP |  | NOT NULL |
 | deleted | TIMESTAMP |  | NULL |
@@ -316,6 +319,27 @@ objects in the model.
 | --- | --- | --- | --- |
 | id | SERIAL |  | NOT NULL, PRIMARY KEY |
 | analytical_tool | INTEGER | AnalyticalTools.id | NOT NULL |
+| transaction | INTEGER | Transactions.id | NOT NULL |
+| created | TIMESTAMP |  | NOT NULL |
+| deleted | TIMESTAMP |  | NULL |
+| updated | TIMESTAMP |  | NOT NULL |
+
+### DOIDataSets
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| id | SERIAL |  | NOT NULL, PRIMARY KEY |
+| doi | VARCHAR |  | NOT NULL |
+| encoding | VARCHAR |  | NOT NULL |
+| name | VARCHAR |  | NOT NULL |
+| created | TIMESTAMP |  | NOT NULL |
+| deleted | TIMESTAMP |  | NULL |
+| updated | TIMESTAMP |  | NOT NULL |
+
+### DOIResource
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| id | SERIAL |  | NOT NULL, PRIMARY KEY |
+| doi | VARCHAR | DOIDataSets.doi | NOT NULL |
 | transaction | INTEGER | Transactions.id | NOT NULL |
 | created | TIMESTAMP |  | NOT NULL |
 | deleted | TIMESTAMP |  | NULL |
