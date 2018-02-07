@@ -91,7 +91,7 @@ def essync_options(essync_parser):
     essync_parser.add_argument(
         '--time-ago', dest='time_ago', type=objstr_to_timedelta,
         help='only objects newer than X days ago.', required=False,
-        default=timedelta(years=100)
+        default=timedelta(days=36500)
     )
     essync_parser.set_defaults(func=essync)
 
