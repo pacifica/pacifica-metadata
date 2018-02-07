@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Test the admin tools methods."""
 from argparse import Namespace
+from datetime import timedelta
 from unittest import TestCase
 from mock import patch
 from peewee import SqliteDatabase
@@ -54,6 +55,7 @@ class TestAdminTool(TestCase):
         setattr(skip_args, 'threads', 1)
         setattr(reg_args, 'threads', 1)
         setattr(reg_args, 'items_per_page', 1)
+        setattr(reg_args, 'time_ago', timedelta(days=100))
         with test_database(SqliteDatabase('file:cachedb?mode=memory&cache=shared'), ORM_OBJECTS):
             setattr(reg_args, 'objects', [Keys])
             test_obj = Keys()
