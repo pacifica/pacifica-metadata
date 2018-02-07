@@ -7,6 +7,7 @@ try:
     from Queue import Queue
 except ImportError:  # pragma: no cover
     from queue import Queue
+from datetime import datetime
 from elasticsearch import Elasticsearch, helpers, ElasticsearchException
 from metadata.orm import ORM_OBJECTS, try_db_connect
 from metadata.elastic import create_elastic_index, try_es_connect
@@ -24,10 +25,16 @@ def escreate(args):
         obj.create_elastic_mapping()
 
 
-def yield_data(obj, page_number, items_per_page):
+def yield_data(obj, page_number, items_per_page, time_ago):
     """yield objects from obj for bulk ingest."""
     key_list = [getattr(obj, attr) for attr in obj.get_primary_keys()]
-    for record in obj.select().order_by(*key_list).paginate(page_number, items_per_page):
+    created_attr = getattr(obj, 'created')
+    query = (obj
+             .select()
+             .where(created_attr > (datetime.now() - time_ago))
+             .order_by(*key_list)
+             .paginate(page_number, items_per_page))
+    for record in query:
         record_hash = record.to_hash(recursion_depth=1)
         yield {
             '_op_type': 'update',
@@ -75,20 +82,24 @@ def create_worker_threads(threads, work_queue):
     return work_threads
 
 
-def generate_work(objects, items_per_page, work_queue):
+def generate_work(objects, items_per_page, work_queue, time_ago):
     """Generate the work from the db and send it to the work queue."""
     for obj in objects:
-        total_count = obj.select().count()
+        created_attr = getattr(obj, 'created')
+        total_count = (obj
+                       .select()
+                       .where(created_attr > (datetime.now() - time_ago))
+                       .count())
         num_pages = (total_count / items_per_page) + 1
         for page in range(1, num_pages + 1):
-            work_queue.put((obj, page, items_per_page))
+            work_queue.put((obj, page, items_per_page, time_ago))
 
 
 def essync(args):
     """Sync the elastic search data from sql to es."""
     work_queue = Queue(32)
     work_threads = create_worker_threads(args.threads, work_queue)
-    generate_work(args.objects, args.items_per_page, work_queue)
+    generate_work(args.objects, args.items_per_page, work_queue, args.time_ago)
     for i in range(args.threads):
         work_queue.put(False)
     for wthread in work_threads:
