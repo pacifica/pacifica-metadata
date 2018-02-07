@@ -89,7 +89,7 @@ def essync_options(essync_parser):
         default=ORM_OBJECTS
     )
     essync_parser.add_argument(
-        '--time-delta', dest='timedelta', type=objstr_to_timedelta,
+        '--time-ago', dest='time_ago', type=objstr_to_timedelta,
         help='only objects newer than X days ago.', required=False,
         default=timedelta(years=100)
     )
