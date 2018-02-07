@@ -9,11 +9,17 @@ from peewee import SqliteDatabase
 from playhouse.test_utils import test_database
 from metadata.orm import ORM_OBJECTS
 from metadata.orm.keys import Keys
-from metadata.admin_cmd import main, essync, escreate, render_obj, create_obj, objstr_to_ormobj, objstr_to_whereclause
+from metadata.admin_cmd import main, essync, escreate, render_obj, create_obj
+from metadata.admin_cmd import objstr_to_ormobj, objstr_to_whereclause, objstr_to_timedelta
 
 
 class TestAdminTool(TestCase):
     """Test the admin tool cli."""
+
+    def test_objstr_to_timedelta(self):
+        """Test the string object to timedelta object."""
+        ten_minutes = objstr_to_timedelta('10 minutes ago')
+        self.assertEqual(ten_minutes, timedelta(minutes=10))
 
     def test_objstr_to_ormobj(self):
         """Test the string object to ORM object type check."""
