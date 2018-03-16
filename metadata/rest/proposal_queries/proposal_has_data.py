@@ -26,7 +26,7 @@ class ProposalHasData(QueryBase):
         return {
             proposal_id: [
                 {
-                    'instrument': tx.instrument,
+                    'instrument': tx.instrument.id,
                     'start_time': tx.start_time.isoformat(),
                     'end_time': tx.end_time.isoformat(),
                     'num_results': tx.count
