@@ -40,5 +40,5 @@ class ProposalHasData(QueryBase):
                 ).order_by(
                     Transactions.created
                 ).limit(10)
-            ] for proposal_id in cherrypy.request.body.json()
+            ] for proposal_id in cherrypy.request.json
         }
