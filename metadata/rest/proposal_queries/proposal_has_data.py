@@ -37,6 +37,8 @@ class ProposalHasData(QueryBase):
                     fn.count(Transactions.id).alias('count')
                 ).where(
                     Transactions.proposal == proposal_id
+                ).group_by(
+                    Transactions.instrument
                 ).order_by(
                     Transactions.created
                 ).limit(10)
