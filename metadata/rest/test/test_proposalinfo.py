@@ -90,3 +90,11 @@ class TestProposalInfoAPI(CPCommonTest):
             '{0}/proposalinfo/search/{1}'.format(self.url, search_terms))
         self.assertEqual(req.status_code, 404)
         self.assertTrue('No Valid Proposals' in req.text)
+
+    def test_has_data(self):
+        """Test the proposal has data definition."""
+        req = requests.post(
+            '{0}/proposalinfo/has_data'.format(self.url),
+            json=['1234']
+        )
+        self.assertEqual(req.status_code, 200)

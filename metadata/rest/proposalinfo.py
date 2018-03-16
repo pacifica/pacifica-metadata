@@ -4,6 +4,7 @@
 from metadata.rest.proposal_queries.proposal_lookup import ProposalLookup
 from metadata.rest.proposal_queries.proposal_term_search import ProposalTermSearch
 from metadata.rest.proposal_queries.proposal_user_search import ProposalUserSearch
+from metadata.rest.proposal_queries.proposal_has_data import ProposalHasData
 
 
 # pylint: disable=too-few-public-methods
@@ -17,3 +18,4 @@ class ProposalInfoAPI(object):
         self.by_user_id = ProposalUserSearch()
         self.search = ProposalTermSearch()
         self.by_proposal_id = ProposalLookup()
+        self.has_data = ProposalHasData()
