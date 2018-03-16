@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Test the REST interfaces."""
-import logging
 import cherrypy
 from cherrypy.test import helper
 from metadata.orm import create_tables, ORM_OBJECTS, DB
@@ -38,9 +37,13 @@ class CPCommonTest(helper.CPWebCase):
     @staticmethod
     def setup_server():
         """Start all the services."""
-        logger = logging.getLogger('urllib2')
-        logger.setLevel(logging.DEBUG)
-        logger.addHandler(logging.StreamHandler())
+        ########
+        # Uncomment the following four lines to get logging
+        # import logging
+        # logger = logging.getLogger('urllib2')
+        # logger.setLevel(logging.DEBUG)
+        # logger.addHandler(logging.StreamHandler())
+        ########
         create_tables()
         cherrypy.config.update({'error_page.default': error_page_default})
         cherrypy.config.update('server.conf')
