@@ -38,7 +38,8 @@ class ProposalHasData(QueryBase):
                 ).where(
                     Transactions.proposal == proposal_id
                 ).group_by(
-                    Transactions.instrument
+                    Transactions.instrument,
+                    Transactions.created
                 ).order_by(
                     Transactions.created
                 ).limit(10)
