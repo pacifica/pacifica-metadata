@@ -24,27 +24,25 @@ class ProposalHasData(QueryBase):
         """CherryPy GET method."""
         ret_hash = {}
         for proposal_id in cherrypy.request.json:
-            inst_query = Transactions.select(
+            ret_hash[proposal_id] = []
+            instlist = [trans.instrument for trans in Transactions.select(
                 Transactions.instrument
             ).where(
                 Transactions.proposal == proposal_id
-            ).distinct()
-            ret_hash[proposal_id] = []
-            for trans in inst_query:
-                instrument = trans.instrument
-                query = Transactions.select(
+            ).distinct()]
+            for instrument in instlist:
+                data = [x.created for x in Transactions.select(
                     Transactions.created
                 ).where(
                     (Transactions.proposal == proposal_id) &
                     (Transactions.instrument == instrument)
                 ).order_by(
                     Transactions.created.desc()
-                ).limit(10)
-                data = [x for x in query]
+                ).limit(10)]
                 ret_hash[proposal_id].append({
                     'instrument': instrument.id,
-                    'start_time': data[0].created.isoformat(),
-                    'end_time': data[-1].created.isoformat(),
-                    'num_results': len(query)
+                    'start_time': data[0].isoformat(),
+                    'end_time': data[-1].isoformat(),
+                    'num_results': len(data)
                 })
         return ret_hash
