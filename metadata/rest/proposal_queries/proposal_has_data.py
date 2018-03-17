@@ -42,7 +42,7 @@ class ProposalHasData(QueryBase):
                 ).order_by(
                     Transactions.created
                 ).limit(10)
-
+                query.execute()
                 ret_hash[proposal_id] = {
                     'instrument': instrument.id,
                     'start_time': query[0].created.isoformat(),
