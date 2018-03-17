@@ -34,7 +34,8 @@ class ProposalHasData(QueryBase):
             ).order_by(
                 Transactions.instrument
             )
-            for instrument in inst_query:
+            for trans in inst_query:
+                instrument = trans.instrument
                 print(instrument)
                 query = Transactions.select(
                     Transactions.created
