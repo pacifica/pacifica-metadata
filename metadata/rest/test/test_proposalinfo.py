@@ -11,9 +11,8 @@ class TestProposalInfoAPI(CPCommonTest):
 
     __test__ = True
 
-    def test_proposalinfo_api(self):
+    def test_proposalinfo_by_user_id(self):
         """Test the GET method."""
-        # test by_user_id
         user_id = 10
         req = requests.get(
             '{0}/proposalinfo/by_user_id/{1}'.format(self.url, user_id))
@@ -21,7 +20,8 @@ class TestProposalInfoAPI(CPCommonTest):
         req_json = loads(req.text)
         self.assertEqual(len(req_json), 2)
 
-        # test individual lookup
+    def test_proposalinfo_by_id(self):
+        """Test the GET method."""
         proposal_id = '1234a'
         req = requests.get(
             '{0}/proposalinfo/by_proposal_id/{1}'.format(self.url, proposal_id))
@@ -29,17 +29,19 @@ class TestProposalInfoAPI(CPCommonTest):
         req_json = loads(req.text)
         self.assertEqual(req_json['id'], proposal_id)
 
-        # test proposal search
+    def test_proposalinfo_search(self):
+        """Test the GET method."""
         search_terms = u'pac+d\u00e9vel'
         req = requests.get(
             u'{0}/proposalinfo/search/{1}'.format(self.url, search_terms))
         self.assertEqual(req.status_code, 200)
         req_json = loads(req.text)
         self.assertTrue(len(req_json) >= 1)
-        # obj = req_json.pop()
-        # self.assertEqual(obj['id'], proposal_id)
 
+    def test_proposalinfo_search_id(self):
+        """Test the GET method."""
         search_terms_string = '1234a'
+        proposal_id = '1234a'
         req = requests.get(
             '{0}/proposalinfo/search/{1}'.format(self.url, search_terms_string))
         self.assertEqual(req.status_code, 200)
