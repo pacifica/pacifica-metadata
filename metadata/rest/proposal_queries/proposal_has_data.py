@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
-from __future__ import print_function
 import cherrypy
 from cherrypy import tools
 from metadata.orm import Transactions
@@ -33,7 +32,6 @@ class ProposalHasData(QueryBase):
             ret_hash[proposal_id] = []
             for trans in inst_query:
                 instrument = trans.instrument
-                print(instrument.id)
                 query = Transactions.select(
                     Transactions.created
                 ).where(
@@ -43,7 +41,6 @@ class ProposalHasData(QueryBase):
                     Transactions.created.desc()
                 ).limit(10)
                 data = [x for x in query]
-                print(data)
                 ret_hash[proposal_id].append({
                     'instrument': instrument.id,
                     'start_time': data[0].created.isoformat(),
