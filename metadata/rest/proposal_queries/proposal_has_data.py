@@ -29,28 +29,25 @@ class ProposalHasData(QueryBase):
                 Transactions.instrument
             ).where(
                 Transactions.proposal == proposal_id
-            ).group_by(
-                Transactions.instrument
-            ).order_by(
-                Transactions.instrument
-            )
+            ).distinct()
+            ret_hash[proposal_id] = []
             for trans in inst_query:
                 instrument = trans.instrument
-                print(instrument)
+                print(instrument.id)
                 query = Transactions.select(
                     Transactions.created
                 ).where(
                     (Transactions.proposal == proposal_id) &
                     (Transactions.instrument == instrument)
                 ).order_by(
-                    Transactions.created
+                    Transactions.created.desc()
                 ).limit(10)
                 data = [x for x in query]
                 print(data)
-                ret_hash[proposal_id] = {
+                ret_hash[proposal_id].append({
                     'instrument': instrument.id,
                     'start_time': data[0].created.isoformat(),
                     'end_time': data[-1].created.isoformat(),
                     'num_results': len(query)
-                }
+                })
         return ret_hash
