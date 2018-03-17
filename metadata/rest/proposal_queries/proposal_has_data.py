@@ -3,7 +3,6 @@
 """CherryPy Status Metadata object class."""
 import cherrypy
 from cherrypy import tools
-from peewee import fn
 from metadata.orm import Transactions
 from metadata.rest.proposal_queries.query_base import QueryBase
 from metadata.orm.base import db_connection_decorator
@@ -23,25 +22,31 @@ class ProposalHasData(QueryBase):
     @db_connection_decorator
     def POST():
         """CherryPy GET method."""
-        return {
-            proposal_id: [
-                {
-                    'instrument': tx.instrument.id,
-                    'start_time': tx.start_time.isoformat(),
-                    'end_time': tx.end_time.isoformat(),
-                    'num_results': tx.count
-                } for tx in Transactions.select(
-                    Transactions.instrument,
-                    fn.Max(Transactions.created).alias('start_time'),
-                    fn.Min(Transactions.created).alias('end_time'),
-                    fn.count(Transactions.id).alias('count')
-                ).where(
-                    Transactions.proposal == proposal_id
-                ).group_by(
-                    Transactions.instrument,
+        ret_hash = {}
+        for proposal_id in cherrypy.request.json:
+            inst_query = Transactions.select(
+                Transactions.instrument
+            ).where(
+                Transactions.proposal == proposal_id
+            ).group_by(
+                Transactions.instrument
+            ).order_by(
+                Transactions.instrument
+            )
+            for instrument in inst_query:
+                query = Transactions.select(
                     Transactions.created
+                ).where(
+                    Transactions.proposal == proposal_id,
+                    Transactions.instrument == instrument
                 ).order_by(
                     Transactions.created
                 ).limit(10)
-            ] for proposal_id in cherrypy.request.json
-        }
+
+                ret_hash[proposal_id] = {
+                    'instrument': instrument.id,
+                    'start_time': query[0].created.isoformat(),
+                    'end_time': query[-1].created.isoformat(),
+                    'num_results': len(query)
+                }
+        return ret_hash
