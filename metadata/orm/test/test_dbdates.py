@@ -47,7 +47,7 @@ class TestDBDates(TestBase):
 
     def test_bad_dates_from_hash(self):
         """Test method to check the hash against zero dates."""
-        exception_str = 'unknown string format'
+        exception_str = '(u\'unknown string format:\', \'blarg\')'
         try:
             self.base_test_hash(SAMPLE_BAD_HASH)
         except ValueError as ex:
