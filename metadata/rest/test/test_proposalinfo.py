@@ -95,6 +95,8 @@ class TestProposalInfoAPI(CPCommonTest):
         """Test the proposal has data definition."""
         req = requests.post(
             '{0}/proposalinfo/has_data'.format(self.url),
-            json=['1234']
+            json=['1234a']
         )
         self.assertEqual(req.status_code, 200)
+        self.assertTrue('1234a' in req.json())
+        self.assertEqual(len(req.json()['1234a']), 1)
