@@ -50,26 +50,36 @@ class TestProposalInfoAPI(CPCommonTest):
         obj = req_json.pop()
         self.assertEqual(obj['id'], proposal_id)
 
-    def test_bad_proposalinfo_api(self):
+    def test_proposalinfo_no_user(self):
         """Test the GET method with bad data."""
         str_user_id = 'bob'
         req = requests.get(
             '{0}/proposalinfo/by_user_id/{1}'.format(self.url, str_user_id))
         self.assertEqual(req.status_code, 400)
         self.assertTrue('not a valid user ID' in req.text)
+
+    def test_proposalinfo_uid_root(self):
+        """Test the GET method with bad data."""
         req = requests.get('{0}/proposalinfo/by_user_id'.format(self.url))
         self.assertEqual(req.status_code, 400)
         self.assertTrue('No user ID specified' in req.text)
+
+    def test_proposalinfo_no_userid(self):
+        """Test the GET method with bad data."""
         user_id = 21
         req = requests.get(
             '{0}/proposalinfo/by_user_id/{1}'.format(self.url, user_id))
         self.assertEqual(req.status_code, 404)
 
+    def test_proposalinfo_no_proposal(self):
+        """Test the GET method with bad data."""
         proposal_id = 'my_proposal'
         req = requests.get(
             '{0}/proposalinfo/by_proposal_id/{1}'.format(self.url, proposal_id))
         self.assertEqual(req.status_code, 400)
 
+    def test_proposalinfo_no_proposalid(self):
+        """Test the GET method with bad data."""
         proposal_id = '2345b'
         req = requests.get(
             '{0}/proposalinfo/by_proposal_id/{1}'.format(self.url, proposal_id))
@@ -77,16 +87,21 @@ class TestProposalInfoAPI(CPCommonTest):
         self.assertTrue(
             'No Proposal with an ID of 2345b was found' in req.text)
 
+    def test_proposalinfo_pid_root(self):
+        """Test the GET method with bad data."""
         req = requests.get('{0}/proposalinfo/by_proposal_id'.format(self.url))
         self.assertEqual(req.status_code, 400)
         self.assertTrue('Invalid Request' in req.text)
 
-        search_terms = ''
+    def test_proposalinfo_no_search(self):
+        """Test the GET method with bad data."""
         req = requests.get(
             '{0}/proposalinfo/search'.format(self.url))
         self.assertEqual(req.status_code, 400)
         self.assertTrue('No Search Terms Provided' in req.text)
 
+    def test_proposalinfo_search_not(self):
+        """Test the GET method with bad data."""
         search_terms = 'bob+uncle'
         req = requests.get(
             '{0}/proposalinfo/search/{1}'.format(self.url, search_terms))
