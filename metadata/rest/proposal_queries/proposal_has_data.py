@@ -41,8 +41,8 @@ class ProposalHasData(QueryBase):
                 ).limit(10)]
                 ret_hash[proposal_id].append({
                     'instrument': instrument.id,
-                    'start_time': data[0].isoformat(),
-                    'end_time': data[-1].isoformat(),
+                    'end_time': data[0].isoformat(),
+                    'start_time': data[-1].isoformat(),
                     'num_results': len(data)
                 })
         return ret_hash
