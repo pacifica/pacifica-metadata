@@ -3,15 +3,15 @@
 """Keywords linked to citations."""
 from peewee import ForeignKeyField, CompositeKey, Expression, OP
 from metadata.orm.base import DB
-from metadata.orm.transactions import Transactions
+from metadata.orm.citations import Citations
 from metadata.orm.doidatasets import DOIDataSets
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.utils import index_hash, unicode_type
 
 
-class DOIResource(CherryPyAPI):
+class CitationResourceDOI(CherryPyAPI):
     """
-    Keywords Model.
+    CitationResourceDOI Model.
 
     Attributes:
         +-------------------+-------------------------------------+
@@ -19,11 +19,11 @@ class DOIResource(CherryPyAPI):
         +===================+=====================================+
         | doi               | Link to the DOIDataSets model       |
         +-------------------+-------------------------------------+
-        | transaction       | Link to the Transactions model      |
+        | citation          | Link to the Citations model         |
         +-------------------+-------------------------------------+
     """
 
-    transaction = ForeignKeyField(Transactions, related_name='doi')
+    citation = ForeignKeyField(Citations, related_name='doi')
     doi = ForeignKeyField(
         DOIDataSets, related_name='resources', to_field='doi')
 
@@ -32,46 +32,46 @@ class DOIResource(CherryPyAPI):
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB
-        primary_key = CompositeKey('transaction', 'doi')
+        primary_key = CompositeKey('citation', 'doi')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
-        super(DOIResource, DOIResource).elastic_mapping_builder(obj)
+        super(CitationResourceDOI, CitationResourceDOI).elastic_mapping_builder(obj)
         obj['doi'] = {'type': 'text', 'fields': {'keyword': {
             'type': 'keyword', 'ignore_above': 256}}}
-        obj['transaction'] = {'type': 'integer'}
+        obj['citation_id'] = {'type': 'integer'}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(DOIResource, self).to_hash(**flags)
+        obj = super(CitationResourceDOI, self).to_hash(**flags)
         obj['_id'] = index_hash(
             unicode_type(self._data['doi']),
-            int(self._data['transaction'])
+            int(self._data['citation'])
         )
         obj['doi'] = unicode_type(self.doi.doi)
-        obj['transaction_id'] = int(self._data['transaction'])
+        obj['citation_id'] = int(self._data['citation'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash to the object."""
-        super(DOIResource, self).from_hash(obj)
-        if 'transaction_id' in obj:
-            self.transaction = Transactions.get(
-                Transactions.id == obj['transaction_id'])
+        super(CitationResourceDOI, self).from_hash(obj)
+        if 'citation_id' in obj:
+            self.citation = Citations.get(
+                Citations.id == obj['citation_id'])
         if 'doi' in obj:
             self.doi = DOIDataSets.get(DOIDataSets.doi == obj['doi'])
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(DOIResource, self).where_clause(kwargs)
+        where_clause = super(CitationResourceDOI, self).where_clause(kwargs)
         if 'doi' in kwargs:
             where_clause &= Expression(
-                DOIResource.doi, OP.EQ, unicode_type(kwargs['doi']))
-        if 'transaction_id' in kwargs:
+                CitationResourceDOI.doi, OP.EQ, unicode_type(kwargs['doi']))
+        if 'citation_id' in kwargs:
             where_clause &= Expression(
-                DOIResource.transaction, OP.EQ,
-                int(kwargs['transaction_id'])
+                CitationResourceDOI.citation, OP.EQ,
+                int(kwargs['citation_id'])
             )
         return where_clause
