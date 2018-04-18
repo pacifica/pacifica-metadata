@@ -23,7 +23,7 @@ class CitationProposal(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    citation = ForeignKeyField(Citations, related_name='propoasls')
+    citation = ForeignKeyField(Citations, related_name='proposals')
     proposal = ForeignKeyField(Proposals, related_name='citations')
 
     # pylint: disable=too-few-public-methods
