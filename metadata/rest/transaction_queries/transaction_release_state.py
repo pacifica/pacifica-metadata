@@ -47,13 +47,13 @@ class TransactionReleaseState(QueryBase):
 
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
+    # pylint: disable=duplicate-code
     @staticmethod
     @tools.json_out()
     @db_connection_decorator
     def GET(transaction_id=None):
         """Return release details about the specified transaction entity."""
-        if transaction_id is not None and re.match('[0-9]+', transaction_id):
-            cherrypy.log.error('transaction details request')
+        if transaction_id and re.match('[0-9]+', transaction_id):
             return TransactionReleaseState._get_release_state(transaction_id)
         else:
             message = "Invalid transaction release lookup request. '{0}' is not a valid transaction_id".format(
