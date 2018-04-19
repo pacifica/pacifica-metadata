@@ -26,6 +26,7 @@ class DataReleaseStates(CherryPyAPI):
     display_name = CharField(default='')
     encoding = CharField(default='UTF8')
 
+    # pylint: disable=arbuments-differ
     @classmethod
     def create_table(cls):
         """Add in pre-populated values."""
@@ -42,6 +43,7 @@ class DataReleaseStates(CherryPyAPI):
                 'name': name,
                 'display_name': names[name]['identifier']
             } for name in names]).execute()
+    # pylint: enable=arbuments-differ
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -81,11 +83,8 @@ class DataReleaseStates(CherryPyAPI):
             where_clause &= Expression(
                 DataReleaseStates.id, OP.EQ, kwargs['_id'])
         if 'name' in kwargs:
-            name_oper = OP.EQ
-            if 'name_operator' in kwargs:
-                name_oper = getattr(OP, kwargs['name_operator'])
             where_clause &= Expression(
-                DataReleaseStates.name, name_oper, kwargs['name'])
+                DataReleaseStates.name, OP.EQ, kwargs['name'])
         if 'encoding' in kwargs:
             where_clause &= Expression(
                 DataReleaseStates.encoding, OP.EQ, kwargs['encoding'])
