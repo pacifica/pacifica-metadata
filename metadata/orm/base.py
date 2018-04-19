@@ -235,7 +235,9 @@ class PacificaModel(Model):
     @classmethod
     def last_change_date(cls):
         """Find the last changed date for the object."""
+        # pylint: disable=no-value-for-parameter
         last_change_date = cls.select(fn.Max(cls.updated)).scalar()
+        # pylint: enable=no-value-for-parameter
         last_change_string = last_change_date \
             if last_change_date is not None else '1970-01-01 00:00:00'
         last_change_string = last_change_date.isoformat(' ') \
@@ -254,7 +256,9 @@ class PacificaModel(Model):
         hash_dict = {}
         all_keys_query = cls.select(*[getattr(cls, key)
                                       for key in cls.get_primary_keys()]).dicts()
+        # pylint: disable=no-value-for-parameter
         for obj in all_keys_query.execute():
+            # pylint: enable=no-value-for-parameter
             inst_key = index_hash(*obj.values())
             hash_list.append(inst_key)
             entry = {
@@ -269,7 +273,7 @@ class PacificaModel(Model):
         """Return the primary keys for the object."""
         # pylint: disable=no-member
         primary_key = cls._meta.primary_key
-        if isinstance(primary_key, CompositeKey) and cls._meta.rel:
+        if isinstance(primary_key, CompositeKey) and cls._meta.refs:
             return list(primary_key.field_names)
         # pylint: enable=no-member
         return [primary_key.name]
@@ -292,6 +296,7 @@ class PacificaModel(Model):
                     'db_table': table,
                     'primary_key': pkey
                 }
+        # pylint: disable=no-value-for-parameter
         js_object = {
             'callable_name': cls.__module__.split('.')[2],
             'last_changed_date': cls.last_change_date(),
@@ -302,5 +307,6 @@ class PacificaModel(Model):
             'related_names': cls.cls_revforeignkeys(),
             'record_count': cls.select().count()
         }
+        # pylint: enable=no-value-for-parameter
         # pylint: enable=no-member
         return js_object

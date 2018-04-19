@@ -4,6 +4,7 @@
 from unittest import TestCase
 from json import dumps, loads
 import httpretty
+from elasticsearch import TransportError
 from metadata.orm.utils import unicode_type
 from metadata.elastic.orm import ElasticAPI
 from metadata.elastic.test import ES_CLUSTER_BODY
@@ -113,10 +114,10 @@ class TestElasticAPI(TestCase):
         # pylint: disable=broad-except
         try:
             ElasticAPI.elastic_delete(obj)
-        except Exception as ex:
+        except TransportError as ex:
             self.assertEqual(httpretty.last_request().method, 'DELETE')
-            self.assertEqual(
-                str(ex), 'TransportError(500, u\'{0}\')'.format(dumps(response_body)))
+            self.assertEqual(ex.__class__, TransportError)
+            self.assertEqual(ex.status_code, 500)
         # pylint: enable=broad-except
 
     @httpretty.activate
@@ -156,8 +157,8 @@ class TestElasticAPI(TestCase):
         # pylint: disable=broad-except
         try:
             ElasticAPI.create_elastic_mapping()
-        except Exception as ex:
+        except TransportError as ex:
             self.assertEqual(httpretty.last_request().method, 'PUT')
-            self.assertEqual(
-                str(ex), 'TransportError(500, u\'{0}\')'.format(dumps(response_body)))
+            self.assertEqual(ex.__class__, TransportError)
+            self.assertEqual(ex.status_code, 500)
         # pylint: enable=broad-except
