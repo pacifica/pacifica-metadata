@@ -65,8 +65,8 @@ class TestClient(TestCase):
         try:
             client.get(class_type, params)
         except PMClientError as ex:
-            self.assertEqual(
-                str(ex), 'Internal Server Error (501) This is the error.')
+            self.assertTrue(501 in str(ex))
+            self.assertTrue('This is the error.' in str(ex))
 
     @httpretty.activate
     def test_client_get_unknown_error(self):
