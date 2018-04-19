@@ -38,11 +38,11 @@ from metadata.orm.analytical_tools import AnalyticalTools
 from metadata.orm.atool_proposal import AToolProposal
 from metadata.orm.atool_transaction import AToolTransaction
 from metadata.orm.doidatasets import DOIDataSets
+from metadata.orm.data_release_states import DataReleaseStates
+from metadata.orm.transaction_release import TransactionRelease
 from metadata.orm.doi_release import DOIRelease
 from metadata.orm.citation_resource_doi import CitationResourceDOI
 from metadata.orm.citation_release import CitationRelease
-from metadata.orm.data_release_states import DataReleaseStates
-from metadata.orm.transaction_release import TransactionRelease
 
 DATABASE_CONNECT_ATTEMPTS = 40
 DATABASE_WAIT = 3
@@ -76,11 +76,11 @@ ORM_OBJECTS = [
     AToolProposal,
     AToolTransaction,
     DOIDataSets,
+    DataReleaseStates,
+    TransactionRelease,
     DOIRelease,
     CitationResourceDOI,
-    CitationRelease,
-    DataReleaseStates,
-    TransactionRelease
+    CitationRelease
 ]
 
 

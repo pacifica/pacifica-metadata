@@ -25,7 +25,7 @@ class TestCitationRelease(TestBase):
     def base_create_dep_objs(cls):
         """Create all objects that TransactionKeyValue need."""
         release = TransactionRelease()
-        doi = DOIDataSets()
+        citation = Citations()
         TestTransactionRelease.base_create_dep_objs()
         release.from_hash(SAMPLE_TRANSACTION_RELEASE_HASH)
         release.save(force_insert=True)

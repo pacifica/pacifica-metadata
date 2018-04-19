@@ -26,17 +26,17 @@ class DataReleaseStates(CherryPyAPI):
     display_name = CharField(default='')
     encoding = CharField(default='UTF8')
 
-    @staticmethod
-    def create_table():
+    @classmethod
+    def create_table(cls):
         """Add in pre-populated values."""
-        super(DataReleaseStates, DataReleaseStates).create_table()
+        super(DataReleaseStates, cls).create_table()
         names = {
             'not_released': {'index': 0, 'identifier': 'Not Released'},
             'released': {'index': 1, 'identifier': 'Released'},
             'minted': {'index': 2, 'identifier': 'Minted'},
             'published': {'index': 5, 'identifier': 'Published'},
         }
-        DataReleaseStates.insert_many([
+        cls.insert_many([
             {
                 'id': names[name]['index'],
                 'name': name,
@@ -56,6 +56,7 @@ class DataReleaseStates(CherryPyAPI):
         obj = super(DataReleaseStates, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['name'] = unicode_type(self.name)
+        obj['display_name'] = unicode_type(self.display_name)
         obj['encoding'] = str(self.encoding)
         return obj
 
@@ -68,6 +69,8 @@ class DataReleaseStates(CherryPyAPI):
             # pylint: enable=invalid-name
         if 'name' in obj:
             self.name = unicode_type(obj['name'])
+        if 'display_name' in obj:
+            self.display_name = unicode_type(obj['display_name'])
         if 'encoding' in obj:
             self.encoding = str(obj['encoding'])
 

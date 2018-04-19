@@ -12,7 +12,7 @@ from metadata.orm.users import Users
 
 SAMPLE_TRANSACTION_RELEASE_HASH = {
     '_id': 1,
-    'transaction': SAMPLE_TRANSACTION_HASH['_id']
+    'transaction': SAMPLE_TRANSACTION_HASH['_id'],
     'release_state': 1,
     'person': SAMPLE_PERSON_HASH['_id']
 }
