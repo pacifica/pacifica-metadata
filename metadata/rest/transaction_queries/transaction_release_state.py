@@ -8,6 +8,7 @@ from metadata.rest.transaction_queries.query_base import QueryBase
 from metadata.orm import TransactionRelease, DataReleaseStates
 from metadata.rest.user_queries.user_lookup import UserLookup
 from metadata.orm.base import db_connection_decorator
+from metadata.orm.utils import unicode_type
 
 
 class TransactionReleaseState(QueryBase):
@@ -17,9 +18,8 @@ class TransactionReleaseState(QueryBase):
 
     @staticmethod
     def _get_release_state(transaction_list):
-        if not hasattr(transaction_list, '__iter__'):
-            transaction_list = [transaction_list]
-        output_results = user_lookup_cache = {}
+        output_results = {}
+        user_lookup_cache = {}
         releases = (TransactionRelease
                     .select(
                         TransactionRelease.transaction,
@@ -32,12 +32,12 @@ class TransactionReleaseState(QueryBase):
 
         found_transactions = []
         for release in releases:
-            found_transactions.append(release['transaction'])
+            found_transactions.append(unicode_type(release['transaction']))
             if release['person'] not in user_lookup_cache:
                 user_lookup_cache[release['person']] = UserLookup.get_user_info_block(
                     release['person'], 'simple')
-            person_id = release['person']
-            release['person_name'] = user_lookup_cache[person_id]['display_name']
+            release['person_name'] = user_lookup_cache[release['person']]['display_name']
+
             output_results[release['transaction']] = release
 
         missing_transactions = list(
@@ -55,7 +55,7 @@ class TransactionReleaseState(QueryBase):
     def GET(transaction_id=None):
         """Return release details about the specified transaction entity."""
         if transaction_id and re.match('[0-9]+', transaction_id):
-            return TransactionReleaseState._get_release_state(transaction_id)
+            return TransactionReleaseState._get_release_state([transaction_id])
         else:
             message = "Invalid transaction release lookup request. '{0}' is not a valid transaction_id".format(
                 transaction_id)
@@ -73,5 +73,6 @@ class TransactionReleaseState(QueryBase):
     @db_connection_decorator
     def POST():
         """Return transaction release state details for the list of transaction_id's."""
-        transaction_list = request.json
+        transaction_list = map(str, request.json)
+
         return TransactionReleaseState._get_release_state(transaction_list)
