@@ -41,10 +41,13 @@ class TransactionRelease(CherryPyAPI):
         obj = super(TransactionRelease, self).to_hash(**flags)
         obj['_id'] = int(self.id)
         obj['transaction_id'] = int(self.transaction.id)
+        # pylint: disable=no-member
         obj['release_state'] = unicode_type(self.release_state.name)
         obj['release_state_display_name'] = unicode_type(
             self.release_state.display_name)
         obj['person_id'] = int(self.person.id)
+        # pylint: enable=no-member
+
         return obj
 
     def from_hash(self, obj):

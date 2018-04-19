@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 """Test the keys ORM object."""
 from json import dumps
-from datetime import datetime
 from metadata.orm.test.base import TestBase
+from metadata.orm.transaction_release import TransactionRelease
 from metadata.orm.transactions import Transactions
+from metadata.orm.test.test_transactions import TestTransactions
 from metadata.orm.test.test_transactions import SAMPLE_TRANSACTION_HASH
 from metadata.orm.test.test_users import SAMPLE_USER_HASH as SAMPLE_PERSON_HASH
 from metadata.orm.test.test_users import TestUsers
