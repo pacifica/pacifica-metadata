@@ -26,7 +26,7 @@ class DataReleaseStates(CherryPyAPI):
     display_name = CharField(default='')
     encoding = CharField(default='UTF8')
 
-    # pylint: disable=arbuments-differ
+    # pylint: disable=arguments-differ
     @classmethod
     def create_table(cls):
         """Add in pre-populated values."""
@@ -43,7 +43,7 @@ class DataReleaseStates(CherryPyAPI):
                 'name': name,
                 'display_name': names[name]['identifier']
             } for name in names]).execute()
-    # pylint: enable=arbuments-differ
+    # pylint: enable=arguments-differ
 
     @staticmethod
     def elastic_mapping_builder(obj):
