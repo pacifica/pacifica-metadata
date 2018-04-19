@@ -1,7 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Setup and install the metadata."""
-from pip.req import parse_requirements
+try:  # pip version 9
+    from pip.req import parse_requirements
+except ImportError:
+    from pip._internal.req import parse_requirements
 from setuptools import setup, find_packages
 
 # parse_requirements() returns generator of pip.req.InstallRequirement objects

@@ -7,8 +7,6 @@ python:
  - 3.6
 
 matrix:
-  exclude:
-    - python: 3.6
   include:
     - python: 3.6
       env: RUN_LINTS=true
@@ -19,7 +17,7 @@ cache: pip
 addons:
   apt:
     sources:
-      - elasticsearch-5.x
+      - elasticsearch-6.x
     packages:
       - elasticsearch
       - oracle-java8-set-default
