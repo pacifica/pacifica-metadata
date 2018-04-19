@@ -59,7 +59,8 @@ class DOIRelease(CherryPyAPI):
         if 'doi_reference' in obj:
             self.doi = DOIDataSets.get(DOIDataSets.doi == obj['doi_reference'])
         if 'release_id' in obj:
-            self.release = TransactionRelease.get(TransactionRelease.id == obj['release_id'])
+            self.release = TransactionRelease.get(
+                TransactionRelease.id == obj['release_id'])
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""

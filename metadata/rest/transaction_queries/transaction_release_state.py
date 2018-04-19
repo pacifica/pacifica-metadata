@@ -17,7 +17,7 @@ class TransactionReleaseState(QueryBase):
 
     @staticmethod
     def _get_release_state(transaction_list):
-        if not hasattr(transaction_list, "__iter__"):
+        if not hasattr(transaction_list, '__iter__'):
             transaction_list = [transaction_list]
         output_results = {}
         releases = (TransactionRelease
@@ -41,7 +41,8 @@ class TransactionReleaseState(QueryBase):
             release['person_name'] = display_name
             output_results[release['transaction']] = release
 
-        missing_transactions = list(set(transaction_list) - set(found_transactions))
+        missing_transactions = list(
+            set(transaction_list) - set(found_transactions))
         for txn in missing_transactions:
             output_results[txn] = {}
         return output_results
@@ -51,15 +52,15 @@ class TransactionReleaseState(QueryBase):
     @staticmethod
     @tools.json_out()
     @db_connection_decorator
-    def GET(trans_id=None):
+    def GET(transaction_id=None):
         """Return release details about the specified transaction entity."""
-        if trans_id is not None and re.match('[0-9]+', trans_id):
+        if transaction_id is not None and re.match('[0-9]+', transaction_id):
             cherrypy.log.error('transaction details request')
-            return TransactionReleaseState._get_release_state(trans_id)
+            return TransactionReleaseState._get_release_state(transaction_id)
         else:
-            message = 'Invalid transaction details lookup request. '
+            message = 'Invalid transaction release lookup request. '
             message += "'{0}' is not a valid transaction_id".format(
-                trans_id)
+                transaction_id)
             cherrypy.log.error(message)
             raise HTTPError(
                 '400 Invalid Transaction ID',

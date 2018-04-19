@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Contains the model for metadata analytical tools."""
-from peewee import CharField, ForeignKeyField, Expression, OP, CompositeKey
+from peewee import ForeignKeyField, Expression, OP
 from metadata.rest.orm import CherryPyAPI
-from metadata.orm.utils import unicode_type, index_hash
+from metadata.orm.utils import unicode_type
 from metadata.orm.users import Users
-from metadata.orm.base import DB
 from metadata.orm.transactions import Transactions
 from metadata.orm.data_release_states import DataReleaseStates
 
@@ -43,7 +42,8 @@ class TransactionRelease(CherryPyAPI):
         obj['_id'] = int(self.id)
         obj['transaction_id'] = int(self.transaction.id)
         obj['release_state'] = unicode_type(self.release_state.name)
-        obj['release_state_display_name'] = unicode_type(self.release_state.display_name)
+        obj['release_state_display_name'] = unicode_type(
+            self.release_state.display_name)
         obj['person_id'] = int(self.person.id)
         return obj
 

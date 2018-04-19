@@ -2,13 +2,8 @@
 # -*- coding: utf-8 -*-
 """Contains the model for metadata analytical tools."""
 from peewee import CharField, Expression, OP
-from metadata.orm.base import DB
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.utils import unicode_type
-
-
-class Meta:
-    database = DB
 
 
 class DataReleaseStates(CherryPyAPI):
@@ -31,9 +26,10 @@ class DataReleaseStates(CherryPyAPI):
     display_name = CharField(default='')
     encoding = CharField(default='UTF8')
 
-    @classmethod
-    def create_table(cls):
-        super(DataReleaseStates, DataReleaseStates).create_table(cls)
+    @staticmethod
+    def create_table():
+        """Add in pre-populated values."""
+        super(DataReleaseStates, DataReleaseStates).create_table()
         names = {
             'not_released': {'index': 0, 'identifier': 'Not Released'},
             'released': {'index': 1, 'identifier': 'Released'},

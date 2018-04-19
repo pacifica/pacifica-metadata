@@ -143,7 +143,8 @@ class QueryBase(object):
     def _get_base_transaction_metadata(transaction_entry, option=None):
         transaction_id = transaction_entry.get('_id')
         files = QueryBase._get_file_list(transaction_id)
-        release_state_obj = TransactionRelease.select().where(TransactionRelease.transaction == transaction_id).first()
+        release_state_obj = TransactionRelease.select().where(
+            TransactionRelease.transaction == transaction_id).first()
         if release_state_obj:
             release_state_info = release_state_obj.to_hash()
         else:

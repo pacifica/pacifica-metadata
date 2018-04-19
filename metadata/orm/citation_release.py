@@ -6,7 +6,7 @@ from metadata.orm.base import DB
 from metadata.orm.citations import Citations
 from metadata.orm.transaction_release import TransactionRelease
 from metadata.rest.orm import CherryPyAPI
-from metadata.orm.utils import index_hash, unicode_type
+from metadata.orm.utils import index_hash
 
 
 class CitationRelease(CherryPyAPI):
@@ -58,7 +58,8 @@ class CitationRelease(CherryPyAPI):
             self.citation = Citations.get(
                 Citations.id == obj['citation_id'])
         if 'release_id' in obj:
-            self.release = TransactionRelease.get(TransactionRelease.id == obj['release_id'])
+            self.release = TransactionRelease.get(
+                TransactionRelease.id == obj['release_id'])
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
