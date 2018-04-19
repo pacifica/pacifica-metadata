@@ -6,22 +6,18 @@ python:
  - 2.7
  - 3.6
 
-matrix:
-  include:
-    - python: 3.6
-      env: RUN_LINTS=true
-    - python: 2.7
-      env: RUN_LINTS=true
+env:
+- RUN_LINTS=true
+- ES_VERSION=6.2.4
+- ES_VERSION=5.6.8
+
 cache: pip
 
-addons:
-  apt:
-    sources:
-      - elasticsearch-6.x
-    packages:
-      - elasticsearch
-      - oracle-java8-set-default
-
 before_install: bash -xe travis/before-install.sh
-install: pip install -r requirements-dev.txt
+install:
+- ES_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz
+- curl -Lo /tmp/estarball.tgz ${ES_DOWNLOAD_URL}
+- tar -C /tmp -xzf estarball.tgz
+- pushd /tmp/elasticsearch-${ES_VERSION}; ./bin/elasticsearch & popd
+- pip install -r requirements-dev.txt
 script: bash -xe travis/test-script.sh
