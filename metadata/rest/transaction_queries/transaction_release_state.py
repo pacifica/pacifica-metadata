@@ -19,7 +19,7 @@ class TransactionReleaseState(QueryBase):
     def _get_release_state(transaction_list):
         if not hasattr(transaction_list, '__iter__'):
             transaction_list = [transaction_list]
-        output_results = {}
+        output_results = user_lookup_cache = {}
         releases = (TransactionRelease
                     .select(
                         TransactionRelease.transaction,
@@ -30,15 +30,13 @@ class TransactionReleaseState(QueryBase):
                     .join(DataReleaseStates)
                     .where(TransactionRelease.transaction << transaction_list).dicts())
 
-        user_lookup_cache = {}
         found_transactions = []
         for release in releases:
             found_transactions.append(release['transaction'])
             if release['person'] not in user_lookup_cache:
                 user_lookup_cache[release['person']] = UserLookup.get_user_info_block(
                     release['person'], 'simple')
-            display_name = user_lookup_cache[release['person']]['display_name']
-            release['person_name'] = display_name
+            release['person_name'] = user_lookup_cache[release['person']]['display_name']
             output_results[release['transaction']] = release
 
         missing_transactions = list(
