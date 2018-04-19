@@ -90,7 +90,7 @@ def generate_work(objects, items_per_page, work_queue, time_ago):
                        .select()
                        .where(created_attr > (datetime.now() - time_ago))
                        .count())
-        num_pages = (total_count / items_per_page) + 1
+        num_pages = int((total_count / items_per_page)) + 1
         for page in range(1, num_pages + 1):
             work_queue.put((obj, page, items_per_page, time_ago))
 
