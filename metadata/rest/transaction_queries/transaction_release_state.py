@@ -58,7 +58,7 @@ class TransactionReleaseState(QueryBase):
             cherrypy.log.error('transaction details request')
             return TransactionReleaseState._get_release_state(transaction_id)
         else:
-            message = 'Invalid transaction release lookup request. '{0}' is not a valid transaction_id".format(
+            message = "Invalid transaction release lookup request. '{0}' is not a valid transaction_id".format(
                 transaction_id)
             cherrypy.log.error(message)
             raise HTTPError(
