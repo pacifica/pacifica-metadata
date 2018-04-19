@@ -77,13 +77,16 @@ class TestCitations(TestBase):
         """Test the hash portion using base object method."""
         self.base_test_json(dumps(SAMPLE_CITATION_HASH))
 
-    def test_citations_search_expr(self):
+    def test_citations_sexpr_article(self):
         """Test the hash portion using base object method."""
         self.base_where_clause_search_expr(
             SAMPLE_CITATION_HASH,
             article_title_operator='ILIKE',
             article_title='%Dove%'
         )
+
+    def test_citations_sexpr_abstract(self):
+        """Test the hash portion using base object method."""
         self.base_where_clause_search_expr(
             SAMPLE_CITATION_HASH,
             abstract_operator='ILIKE',

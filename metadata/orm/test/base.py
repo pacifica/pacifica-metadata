@@ -5,7 +5,6 @@ from datetime import datetime
 from unittest import TestCase
 from json import dumps, loads
 from peewee import SqliteDatabase
-from playhouse.test_utils import test_database
 from metadata.orm.base import PacificaModel
 from metadata.orm import ORM_OBJECTS
 from metadata.orm.utils import unicode_type
@@ -18,6 +17,21 @@ class TestBase(TestCase):
     # pylint: disable=no-member
     obj_id = PacificaModel.id
     # pylint: enable=no-member
+
+    def setUp(self):
+        """Setup the database with in memory sqlite."""
+        self._test_db = SqliteDatabase(':memory:')
+        self._models = self.dependent_cls()
+        for model in self._models:
+            model.bind(self._test_db, bind_refs=False, bind_backrefs=False)
+        self._test_db.connect()
+        self._test_db.create_tables(self._models)
+
+    def tearDown(self):
+        """Tear down the database."""
+        self._test_db.drop_tables(self._models)
+        self._test_db.close()
+        self._test_db = None
 
     @staticmethod
     def dependent_cls():
@@ -53,14 +67,13 @@ class TestBase(TestCase):
         create a new hash from the new object
         check all keys in the new hash from the obj_hash passed
         """
-        with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
-            obj = self.base_create_obj(self.obj_cls, obj_hash)
-            new_obj = self.obj_cls.get(
-                self.obj_id == getattr(obj, self.obj_id.db_column))
-            chk_obj_hash = new_obj.to_hash()
-            self.assertTrue('_id' in chk_obj_hash)
-            for key in obj_hash.keys():
-                self.assertEqual(chk_obj_hash[key], obj_hash[key])
+        obj = self.base_create_obj(self.obj_cls, obj_hash)
+        new_obj = self.obj_cls.get(
+            self.obj_id == getattr(obj, self.obj_id.column_name))
+        chk_obj_hash = new_obj.to_hash()
+        self.assertTrue('_id' in chk_obj_hash)
+        for key in obj_hash.keys():
+            self.assertEqual(chk_obj_hash[key], obj_hash[key])
 
     def base_test_json(self, json_str):
         """
@@ -71,18 +84,17 @@ class TestBase(TestCase):
         get the new object using column in obj_id
         convert the object to json
         """
-        with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
-            self.assertEqual(type(json_str), str)
-            self.base_create_dep_objs()
-            if not isinstance(loads(json_str), dict):
-                raise ValueError('json_str not dict')
-            obj = self.obj_cls()
-            obj.from_hash(loads(json_str))
-            obj.save(force_insert=True)
-            new_obj = self.obj_cls.get(
-                self.obj_id == getattr(obj, self.obj_id.db_column))
-            chk_obj_json = dumps(new_obj.to_hash())
-            self.assertEqual(type(chk_obj_json), str)
+        self.assertEqual(type(json_str), str)
+        self.base_create_dep_objs()
+        if not isinstance(loads(json_str), dict):
+            raise ValueError('json_str not dict')
+        obj = self.obj_cls()
+        obj.from_hash(loads(json_str))
+        obj.save(force_insert=True)
+        new_obj = self.obj_cls.get(
+            self.obj_id == getattr(obj, self.obj_id.column_name))
+        chk_obj_json = dumps(new_obj.to_hash())
+        self.assertEqual(type(chk_obj_json), str)
 
     @staticmethod
     def base_where_clause_search(obj, kwargs):
@@ -92,12 +104,11 @@ class TestBase(TestCase):
 
     def base_where_clause_search_expr(self, obj_hash, **kwargs):
         """Search for a objects on single search parameters."""
-        with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
-            obj = self.base_create_obj(self.obj_cls, obj_hash)
-            chk_obj = self.base_where_clause_search(obj, kwargs)[0]
-            chk_obj_hash = chk_obj.to_hash()
-            for key in obj_hash.keys():
-                self.assertEqual(chk_obj_hash[key], obj_hash[key])
+        obj = self.base_create_obj(self.obj_cls, obj_hash)
+        chk_obj = self.base_where_clause_search(obj, kwargs)[0]
+        chk_obj_hash = chk_obj.to_hash()
+        for key in obj_hash.keys():
+            self.assertEqual(chk_obj_hash[key], obj_hash[key])
 
     def base_where_clause(self, obj_hash):
         """
@@ -109,10 +120,9 @@ class TestBase(TestCase):
         query a new object using that key and value in obj_hash
         compare the pulled object hash with obj_hash
         """
-        with test_database(SqliteDatabase(':memory:'), self.dependent_cls()):
-            obj = self.base_create_obj(self.obj_cls, obj_hash)
-            for (key, val) in obj_hash.iteritems():
-                chk_obj = self.base_where_clause_search(obj, {key: val})[0]
-                chk_obj_hash = chk_obj.to_hash()
-                for chkkey in obj_hash.keys():
-                    self.assertEqual(chk_obj_hash[chkkey], obj_hash[chkkey])
+        obj = self.base_create_obj(self.obj_cls, obj_hash)
+        for (key, val) in obj_hash.items():
+            chk_obj = self.base_where_clause_search(obj, {key: val})[0]
+            chk_obj_hash = chk_obj.to_hash()
+            for chkkey in obj_hash.keys():
+                self.assertEqual(chk_obj_hash[chkkey], obj_hash[chkkey])

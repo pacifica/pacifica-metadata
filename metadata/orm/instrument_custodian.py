@@ -43,10 +43,10 @@ class InstrumentCustodian(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(InstrumentCustodian, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self._data['custodian']),
-                                int(self._data['instrument']))
-        obj['instrument_id'] = int(self._data['instrument'])
-        obj['custodian_id'] = int(self._data['custodian'])
+        obj['_id'] = index_hash(int(self.__data__['custodian']),
+                                int(self.__data__['instrument']))
+        obj['instrument_id'] = int(self.__data__['instrument'])
+        obj['custodian_id'] = int(self.__data__['custodian'])
         return obj
 
     def from_hash(self, obj):

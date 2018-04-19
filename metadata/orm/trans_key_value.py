@@ -48,12 +48,12 @@ class TransactionKeyValue(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(TransactionKeyValue, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self._data['key']),
-                                int(self._data['transaction']),
-                                int(self._data['value']))
-        obj['transaction_id'] = int(self._data['transaction'])
-        obj['key_id'] = int(self._data['key'])
-        obj['value_id'] = int(self._data['value'])
+        obj['_id'] = index_hash(int(self.__data__['key']),
+                                int(self.__data__['transaction']),
+                                int(self.__data__['value']))
+        obj['transaction_id'] = int(self.__data__['transaction'])
+        obj['key_id'] = int(self.__data__['key'])
+        obj['value_id'] = int(self.__data__['value'])
         # obj['kv_pair'] = {'key': int(self.key_id), 'value': int(self.value_id)}
         return obj
 

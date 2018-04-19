@@ -39,13 +39,16 @@ class TestJournals(TestBase):
         """Test the hash portion using base object method."""
         self.base_test_json(dumps(SAMPLE_JOURNAL_HASH))
 
-    def test_journals_search_expr(self):
+    def test_journals_sexpr_ilike(self):
         """Test the hash portion using base object method."""
         self.base_where_clause_search_expr(
             SAMPLE_UNICODE_JOURNAL_HASH,
             name_operator='ILIKE',
             name=u'%é%'
         )
+
+    def test_journals_sexpr_gt(self):
+        """Test the hash portion using base object method."""
         self.base_where_clause_search_expr(
             SAMPLE_JOURNAL_HASH,
             impact_factor_operator='GT',

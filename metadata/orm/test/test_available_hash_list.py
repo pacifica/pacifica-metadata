@@ -8,7 +8,6 @@ PacificaModel since they both require primary
 keys and the PacificaModel doesn't have any...
 """
 from peewee import SqliteDatabase
-from playhouse.test_utils import test_database
 from metadata.orm.test.base import TestBase
 from metadata.orm.keys import Keys
 from metadata.orm.user_group import UserGroup
@@ -49,18 +48,17 @@ class TestKeysHashList(TestBase):
             'key': 'proposal',
             'encoding': 'UTF8'
         }
-        with test_database(SqliteDatabase(':memory:'), [Keys]):
-            self.base_create_obj(Keys, sample_key1)
-            self.base_create_obj(Keys, sample_key2)
-            self.base_create_obj(Keys, sample_key3)
-            third_obj = Keys()
-            hash_list, hash_dict = third_obj.available_hash_list()
-            self.assertTrue(len(hash_list) == 3)
-            # some sanity checking for the layout of the two objects
-            for hashed_key in hash_list:
-                self.assertTrue(hashed_key in hash_dict)
-                obj_key_meta = hash_dict[hashed_key]
-                self.assertTrue('index_hash' in obj_key_meta)
-                self.assertTrue('key_list' in obj_key_meta)
-                self.assertTrue('id' in obj_key_meta['key_list'])
-                self.assertTrue(hashed_key == obj_key_meta['index_hash'])
+        self.base_create_obj(Keys, sample_key1)
+        self.base_create_obj(Keys, sample_key2)
+        self.base_create_obj(Keys, sample_key3)
+        third_obj = Keys()
+        hash_list, hash_dict = third_obj.available_hash_list()
+        self.assertTrue(len(hash_list) == 3)
+        # some sanity checking for the layout of the two objects
+        for hashed_key in hash_list:
+            self.assertTrue(hashed_key in hash_dict)
+            obj_key_meta = hash_dict[hashed_key]
+            self.assertTrue('index_hash' in obj_key_meta)
+            self.assertTrue('key_list' in obj_key_meta)
+            self.assertTrue('id' in obj_key_meta['key_list'])
+            self.assertTrue(hashed_key == obj_key_meta['index_hash'])

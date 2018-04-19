@@ -5,7 +5,7 @@ elasticsearch
 httpretty
 mock
 nose
-peewee<3.0
+peewee
 pep257
 psycopg2
 pylint

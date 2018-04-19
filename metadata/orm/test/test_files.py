@@ -73,6 +73,9 @@ class TestFiles(TestBase):
             name_operator='ILIKE',
             name=u'%é%'
         )
+
+    def test_files_search_time(self):
+        """Test the hash portion using base object method."""
         date_time_chk = datetime.utcnow() - timedelta(minutes=10)
         self.base_where_clause_search_expr(
             SAMPLE_FILE_HASH,

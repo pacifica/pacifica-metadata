@@ -3,11 +3,11 @@
 """Utilities for common metadata tools."""
 from hashlib import md5
 from datetime import datetime, date
-from peewee import DateTimeField, DateField, unicode_type
+from peewee import DateTimeField, DateField, text_type
 from dateutil import parser
 
 # pylint: disable=invalid-name
-unicode_type = unicode_type
+unicode_type = text_type
 # pylint: enable=invalid-name
 
 

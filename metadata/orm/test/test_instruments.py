@@ -41,13 +41,16 @@ class TestInstruments(TestBase):
         """Test the hash portion using base object method."""
         self.base_test_json(dumps(SAMPLE_INSTRUMENT_HASH))
 
-    def test_instruments_search_expr(self):
+    def test_instruments_sexpr_uni(self):
         """Test the hash portion using base object method."""
         self.base_where_clause_search_expr(
             SAMPLE_UNICODE_INSTRUMENT_HASH,
             name_operator='ILIKE',
             name=u'%é%'
         )
+
+    def test_instruments_sexpr_txt(self):
+        """Test the hash portion using base object method."""
         self.base_where_clause_search_expr(
             SAMPLE_INSTRUMENT_HASH,
             name_operator='ILIKE',

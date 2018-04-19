@@ -77,7 +77,7 @@ class Citations(CherryPyAPI):
             obj['abstract_text'] = unicode_type(self.abstract_text)
             obj['xml_text'] = unicode_type(self.xml_text)
         # pylint: disable=no-member
-        obj['journal_id'] = int(self._data['journal'])
+        obj['journal_id'] = int(self.__data__['journal'])
         # pylint: enable=no-member
         obj['journal_volume'] = int(self.journal_volume)
         obj['journal_issue'] = int(self.journal_issue)

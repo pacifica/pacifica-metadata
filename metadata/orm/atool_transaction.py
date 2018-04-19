@@ -45,10 +45,10 @@ class AToolTransaction(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(AToolTransaction, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self._data['transaction']),
-                                int(self._data['analytical_tool']))
-        obj['transaction_id'] = int(self._data['transaction'])
-        obj['analytical_tool_id'] = int(self._data['analytical_tool'])
+        obj['_id'] = index_hash(int(self.__data__['transaction']),
+                                int(self.__data__['analytical_tool']))
+        obj['transaction_id'] = int(self.__data__['transaction'])
+        obj['analytical_tool_id'] = int(self.__data__['analytical_tool'])
         return obj
 
     def from_hash(self, obj):

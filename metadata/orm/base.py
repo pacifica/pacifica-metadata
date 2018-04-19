@@ -19,7 +19,7 @@ from os import getenv
 import datetime
 from dateutil import parser
 from peewee import PostgresqlDatabase as pgdb
-from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause, ReverseRelationDescriptor
+from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, SQL, NodeList, BackrefAccessor
 from six import text_type
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
@@ -116,7 +116,7 @@ class PacificaModel(Model):
         """Provide the rev foreign keys of the class as a list of attrs."""
         ret = []
         for attr, value in cls.__dict__.items():
-            if isinstance(value, ReverseRelationDescriptor):
+            if isinstance(value, BackrefAccessor):
                 ret.append(attr)
         return ret
 
@@ -157,11 +157,11 @@ class PacificaModel(Model):
         # pylint: disable=protected-access
         if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
             append_item = {
-                'key_id': obj_ref._data['key'],
-                'value_id': obj_ref._data['value']
+                'key_id': obj_ref.__data__['key'],
+                'value_id': obj_ref.__data__['value']
             }
         else:
-            append_item = obj_ref._data[fk_item_name]
+            append_item = obj_ref.__data__[fk_item_name]
         # pylint: enable=protected-access
         return append_item
 
@@ -196,7 +196,7 @@ class PacificaModel(Model):
         if date_oper == OP.BETWEEN:
             date_obj_min = dt_converts(kwargs[date][0])
             date_obj_max = dt_converts(kwargs[date][1])
-            date_obj = Clause(date_obj_min, R('AND'), date_obj_max)
+            date_obj = NodeList((date_obj_min, SQL('AND'), date_obj_max))
         else:
             date_obj = dt_converts(kwargs[date])
         return (date_obj, date_oper)

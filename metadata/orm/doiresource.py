@@ -47,11 +47,11 @@ class DOIResource(CherryPyAPI):
         """Convert the object to a hash."""
         obj = super(DOIResource, self).to_hash(**flags)
         obj['_id'] = index_hash(
-            unicode_type(self._data['doi']),
-            int(self._data['transaction'])
+            unicode_type(self.__data__['doi']),
+            int(self.__data__['transaction'])
         )
         obj['doi'] = unicode_type(self.doi.doi)
-        obj['transaction_id'] = int(self._data['transaction'])
+        obj['transaction_id'] = int(self.__data__['transaction'])
         return obj
 
     def from_hash(self, obj):
