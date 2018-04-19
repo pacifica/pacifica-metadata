@@ -36,8 +36,8 @@ class TransactionReleaseState(QueryBase):
             if release['person'] not in user_lookup_cache:
                 user_lookup_cache[release['person']] = UserLookup.get_user_info_block(
                     release['person'], 'simple')
-            release['person_name'] = user_lookup_cache[release['person']
-                                                       ]['display_name']
+            person_id = release['person']
+            release['person_name'] = user_lookup_cache[person_id]['display_name']
             output_results[release['transaction']] = release
 
         missing_transactions = list(
