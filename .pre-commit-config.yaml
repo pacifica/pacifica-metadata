@@ -50,3 +50,4 @@ repos:
     sha: v1.1.4
     hooks:
     -   id: remove-tabs
+    -   id: remove-crlf
