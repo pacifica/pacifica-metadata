@@ -63,27 +63,6 @@ class TestAdminTool(TestCase):
         self.assertTrue(test_patch.called)
 
     @patch('metadata.orm.try_db_connect')
-    def test_es_commands(self, test_patch):
-        """Test the essync sub command."""
-        test_patch.return_value = True
-        skip_args = Namespace()
-        reg_args = Namespace()
-        setattr(skip_args, 'skip_mappings', True)
-        setattr(reg_args, 'skip_mappings', False)
-        setattr(skip_args, 'threads', 1)
-        setattr(reg_args, 'threads', 1)
-        setattr(reg_args, 'items_per_page', 1)
-        setattr(reg_args, 'time_ago', timedelta(days=100))
-        setattr(reg_args, 'objects', [metaorm.Keys])
-        test_obj = metaorm.Keys()
-        test_obj.key = 'test_key'
-        test_obj.save()
-        escreate(skip_args)
-        escreate(reg_args)
-        essync(reg_args)
-        self.assertTrue(test_patch.called)
-
-    @patch('metadata.orm.try_db_connect')
     def test_render(self, test_patch):
         """Test render an object."""
         test_patch.return_value = True
@@ -104,4 +83,43 @@ class TestAdminTool(TestCase):
         args = Namespace()
         setattr(args, 'object', metaorm.Keys)
         create_obj(args)
+        self.assertTrue(test_patch.called)
+
+
+class TestAdminToolThreaded(TestCase):
+    """Test the admin tool cli."""
+
+    def setUp(self):
+        """Setup the database with in memory sqlite."""
+        metaorm.DB = SqliteDatabase('file:cachedb?mode=memory&cache=shared')
+        for model in metaorm.ORM_OBJECTS:
+            model.bind(metaorm.DB, bind_refs=False, bind_backrefs=False)
+        metaorm.DB.connect()
+        metaorm.DB.create_tables(metaorm.ORM_OBJECTS)
+
+    def tearDown(self):
+        """Tear down the database."""
+        metaorm.DB.drop_tables(metaorm.ORM_OBJECTS)
+        metaorm.DB.close()
+        metaorm.DB = None
+
+    @patch('metadata.orm.try_db_connect')
+    def test_es_commands(self, test_patch):
+        """Test the essync sub command."""
+        test_patch.return_value = True
+        skip_args = Namespace()
+        reg_args = Namespace()
+        setattr(skip_args, 'skip_mappings', True)
+        setattr(reg_args, 'skip_mappings', False)
+        setattr(skip_args, 'threads', 1)
+        setattr(reg_args, 'threads', 1)
+        setattr(reg_args, 'items_per_page', 1)
+        setattr(reg_args, 'time_ago', timedelta(days=100))
+        setattr(reg_args, 'objects', [metaorm.Keys])
+        test_obj = metaorm.Keys()
+        test_obj.key = 'test_key'
+        test_obj.save()
+        escreate(skip_args)
+        escreate(reg_args)
+        essync(reg_args)
         self.assertTrue(test_patch.called)
