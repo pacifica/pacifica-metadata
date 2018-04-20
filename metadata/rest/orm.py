@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Core interface for each ORM object to interface with CherryPy."""
-from json import loads, dumps
-from cherrypy import request, HTTPError
+from copy import deepcopy
+import cherrypy
+from cherrypy import HTTPError
 from peewee import DoesNotExist
 from metadata.orm.base import PacificaModel, db_connection_decorator
 from metadata.elastic.orm import ElasticAPI
@@ -33,7 +34,7 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         if 'page_number' in kwargs and 'items_per_page' in kwargs:
             objs = objs.paginate(
                 int(kwargs['page_number']), int(kwargs['items_per_page']))
-        return dumps([obj.to_hash(**copy_flags) for obj in objs])
+        return [obj.to_hash(**copy_flags) for obj in objs]
 
     @staticmethod
     def _set_recursion_limit(flags, kwargs):
@@ -53,9 +54,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         for attr in obj.cls_foreignkeys():
             updated_objs.append(getattr(obj, attr))
 
-    def _update(self, update_json, **kwargs):
+    def _update(self, update_hash, **kwargs):
         """Internal update method for an object."""
-        update_hash = loads(update_json)
         update_hash['updated'] = update_hash.get(
             'updated', datetime_now_nomicrosecond())
         did_something = False
@@ -76,9 +76,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         for obj in updated_objs:
             obj.elastic_upload([obj.to_hash(**self.es_recursive_flags)])
 
-    def _set_or_create(self, insert_json):
+    def _set_or_create(self, objs):
         """Set or create the object if it doesn't already exist."""
-        objs = loads(insert_json)
         if isinstance(objs, dict):
             objs = [objs]
         complete_objs = []
@@ -90,9 +89,21 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                 complete_objs.append(obj.to_hash(**self.es_recursive_flags))
         self.elastic_upload(complete_objs)
 
-    def _insert(self, insert_json):
+    @staticmethod
+    def __fix_dates(orig_obj, db_obj):
+        """Fix the dates for insert."""
+        for date_key in ['created', 'updated', 'deleted']:
+            if date_key in orig_obj:
+                db_obj[date_key] = datetime_converts(orig_obj[date_key])
+        for date_key in ['created', 'updated']:
+            if date_key not in orig_obj:
+                db_obj[date_key] = datetime_converts(
+                    datetime_now_nomicrosecond())
+        if 'deleted' not in orig_obj:
+            db_obj['deleted'] = None
+
+    def _insert(self, objs):
         """Insert object from json into the system."""
-        objs = loads(insert_json)
         if not objs:
             # nothing to upload
             return
@@ -105,24 +116,16 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             message += 'Remove or change the duplicated id values'
             raise HTTPError(400, message)
 
-        def fix_dates(orig_obj, db_obj, es_obj):
-            """Fix the dates for insert."""
-            for date_key in ['created', 'updated', 'deleted']:
-                if date_key in orig_obj:
-                    es_obj[date_key] = db_obj[date_key] = datetime_converts(
-                        orig_obj[date_key])
-            for date_key in ['created', 'updated']:
-                if date_key not in orig_obj:
-                    es_obj[date_key] = db_obj[date_key] = datetime_converts(
-                        datetime_now_nomicrosecond())
-            if 'deleted' not in orig_obj:
-                db_obj['deleted'] = es_obj['deleted'] = None
-        clean_objs = self._clean_for_bulk_upload(objs, fix_dates)
+        clean_objs = self._insert_many_format(objs)
         es_objs = []
-        insert_query = self.__class__.insert_many(
-            clean_objs['upload_objs']).returning(self.__class__)
+        insert_query = self.__class__.insert_many(clean_objs)
+        # pylint: disable=no-value-for-parameter
         for item in insert_query.execute():
+            query = [getattr(self.__class__, field) == value for field,
+                     value in zip(self.get_primary_keys(), item)]
+            item = self.get(*query)
             es_objs.append(item.to_hash(**self.es_recursive_flags))
+        # pylint: enable=no-value-for-parameter
         self.elastic_upload(es_objs)
 
     @classmethod
@@ -140,17 +143,15 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                     obj = None
         return [str(x) for x in bad_id_list]
 
-    def _clean_for_bulk_upload(self, obj_hashes, fix_dates):
-        model_info = self.__class__.get_object_info()
-        clean_objs = {'es_objs': [], 'upload_objs': []}
+    @classmethod
+    def _insert_many_format(cls, obj_hashes):
+        model_info = cls.get_object_info()
+        clean_objs = []
         for obj in obj_hashes:
-            if '_id' in obj.keys():
-                obj['id'] = obj['_id']
-            self.from_hash(obj)
-            new_obj = self.to_hash(**self.es_recursive_flags)
-            es_obj = self.to_hash(**self.es_recursive_flags)
-            fix_dates(obj, new_obj, es_obj)
-            clean_objs['es_objs'].append(es_obj)
+            new_obj = deepcopy(obj)
+            if '_id' in new_obj.keys():
+                new_obj['id'] = new_obj.pop('_id')
+            cls.__fix_dates(obj, new_obj)
 
             if model_info.get('related_models'):
                 rel_models = model_info.get('related_models')
@@ -161,13 +162,10 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                     if db_col in new_obj.keys():
                         new_obj[name] = new_obj.pop(db_col)
             if '_id' in obj.keys() and obj['_id'] is not None:
-                new_obj['id'] = obj.get('_id')
                 for attr in model_info.get('related_names'):
                     if attr in new_obj:
                         del new_obj[attr]
-            new_obj.pop('_id')
-            clean_objs['upload_objs'].append(new_obj)
-
+            clean_objs.append(new_obj)
         return clean_objs
 
     def _delete(self, **kwargs):
@@ -175,13 +173,15 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         update_hash = {
             'deleted': datetime_now_nomicrosecond().isoformat()
         }
-        self._update(dumps(update_hash), **kwargs)
+        self._update(update_hash, **kwargs)
 
     # CherryPy requires these named methods
     # Add HEAD (basically Get without returning body
     # pylint: disable=invalid-name
 
     @db_connection_decorator
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
     def GET(self, **kwargs):
         """
         Implement the GET HTTP method.
@@ -191,15 +191,22 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         return self._select(**kwargs)
 
     @db_connection_decorator
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
     def PUT(self):
         """
         Implement the PUT HTTP method.
 
         Creates an object based on the request body.
         """
-        self._insert(request.body.read())
+        from json import loads
+        data = cherrypy.request.body.read()
+        input_objs = loads(data.decode('UTF-8'))
+        self._insert(input_objs)
 
     @db_connection_decorator
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
     def POST(self, **kwargs):
         """
         Implement the POST HTTP method.
@@ -207,9 +214,11 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         Gets the object similar to GET() and uses the request body to update
         the object and saves it.
         """
-        self._update(request.body.read(), **kwargs)
+        self._update(cherrypy.request.json, **kwargs)
 
     @db_connection_decorator
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
     def DELETE(self, **kwargs):
         """
         Implement the DELETE HTTP method.

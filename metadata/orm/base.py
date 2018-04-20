@@ -101,14 +101,14 @@ class PacificaModel(Model):
     def cls_foreignkeys(cls):
         """Provide the foreign keys of the class as a list of attrs."""
         # pylint: disable=no-member
-        return cls._meta.rel.keys()
+        return [ref.column_name for ref in cls._meta.refs.keys()]
         # pylint: enable=no-member
 
     @classmethod
     def cls_foreignkey_rel_mods(cls):
         """Return a collection of related models for a given foreignkey."""
         # pylint: disable=no-member
-        return {cls._meta.rel[fk].rel_model: fk for fk in cls._meta.rel}
+        return {cls._meta.refs[fk].rel_model: fk for fk in cls._meta.refs}
         # pylint: enable=no-member
 
     @classmethod
@@ -283,16 +283,15 @@ class PacificaModel(Model):
         """Get model and field information about the model class."""
         related_model_info = {}
         # pylint: disable=no-member
-        for rel_mod_name in cls._meta.refs:
-            if rel_mod_name != cls.__name__:
-                fkf = cls._meta.rel.get(rel_mod_name)
-                rel_mod = fkf.rel_model
+        for fkf in cls._meta.refs:
+            rel_mod = fkf.rel_model
+            if rel_mod.__class__.__name__ != cls.__name__:
                 # pylint: disable=protected-access
-                table = rel_mod._meta.db_table
+                table = rel_mod._meta.table_name
                 pkey = rel_mod._meta.primary_key.name
                 # pylint: enable=protected-access
-                related_model_info[rel_mod_name] = {
-                    'db_column': fkf.db_column,
+                related_model_info[fkf.name] = {
+                    'db_column': fkf.column_name,
                     'db_table': table,
                     'primary_key': pkey
                 }
