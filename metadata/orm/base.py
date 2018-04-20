@@ -101,14 +101,14 @@ class PacificaModel(Model):
     def cls_foreignkeys(cls):
         """Provide the foreign keys of the class as a list of attrs."""
         # pylint: disable=no-member
-        return [ref.column_name for ref in cls._meta.refs.keys()]
+        return [ref.name for ref in cls._meta.refs.keys()]
         # pylint: enable=no-member
 
     @classmethod
     def cls_foreignkey_rel_mods(cls):
         """Return a collection of related models for a given foreignkey."""
         # pylint: disable=no-member
-        return {cls._meta.refs[fk].rel_model: fk for fk in cls._meta.refs}
+        return {fk.rel_model: fk.name for fk in cls._meta.refs}
         # pylint: enable=no-member
 
     @classmethod

@@ -3,7 +3,7 @@
 """Test the ORM interface CherryPyAPI."""
 from time import time
 from datetime import datetime
-from json import loads, dumps
+from json import dumps
 import requests
 from metadata.rest.test import CPCommonTest
 from metadata.orm.keys import Keys
@@ -20,14 +20,14 @@ class TestCherryPyAPI(CPCommonTest):
         req = requests.get(
             '{0}/users?_id=10&recursion_limit=1'.format(self.url))
         self.assertEqual(req.status_code, 200)
-        users = loads(req.content)
+        users = req.json()
         self.assertEqual(len(users), 1)
         self.assertEqual(users[0]['proposals'], None)
 
         req = requests.get(
             '{0}/files?page_number=1&items_per_page=1&recursion_depth=0'.format(self.url))
         self.assertEqual(req.status_code, 200)
-        files = loads(req.content)
+        files = req.json()
         self.assertEqual(len(files), 1)
 
         req = requests.get(
@@ -47,14 +47,14 @@ class TestCherryPyAPI(CPCommonTest):
         self.assertEqual(req.status_code, 200)
         req = requests.get('{0}/files'.format(self.url))
         self.assertEqual(req.status_code, 200)
-        files = loads(req.content)
+        files = req.json()
         self.assertEqual(len(files), 2)
         for file_hash in files:
             self.assertEqual(file_hash['name'], 'Renamed File')
 
         req = requests.get('{0}/files'.format(self.url))
         self.assertEqual(req.status_code, 200)
-        files = loads(req.content)
+        files = req.json()
         self.assertEqual(len(files), 2)
 
         # update a foreign key to Keys obj that isn't there
@@ -76,10 +76,10 @@ class TestCherryPyAPI(CPCommonTest):
         # just try invalid json
         req = requests.post('{0}/keys'.format(self.url),
                             data='{ some bad json}', headers=self.headers)
-        self.assertEqual(req.status_code, 500)
+        self.assertEqual(req.status_code, 400)
         req = requests.put('{0}/keys'.format(self.url),
                            data='{ some bad json}', headers=self.headers)
-        self.assertEqual(req.status_code, 500)
+        self.assertEqual(req.status_code, 400)
 
         # insert one item
         req = requests.put('{0}/keys'.format(self.url),
@@ -130,18 +130,16 @@ class TestCherryPyAPI(CPCommonTest):
 
     def test_set_or_create(self):
         """Test the internal set or create method."""
-        key = '{"_id": 4096, "key": "bigger"}'
+        key = {'_id': 4096, 'key': 'bigger'}
         obj = Keys()
         # pylint: disable=protected-access
         obj._set_or_create(key)
-        keys = '[{"_id": 4097, "key": "blah"}]'
+        keys = [{'_id': 4097, 'key': 'blah'}]
         obj._set_or_create(keys)
         obj._set_or_create(key)
-        hit_exception = False
-        try:
-            obj._set_or_create('{ bad json }')
-        except ValueError:
-            hit_exception = True
-        self.assertTrue(hit_exception)
+        chk_obj = Keys.get_by_id(4096)
+        self.assertEqual(chk_obj.id, 4096)
+        chk_obj = Keys.get_by_id(4097)
+        self.assertEqual(chk_obj.id, 4097)
         obj._meta.database.close()
         # pylint: enable=protected-access

@@ -179,9 +179,9 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
     # Add HEAD (basically Get without returning body
     # pylint: disable=invalid-name
 
-    @db_connection_decorator
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
+    @db_connection_decorator
     def GET(self, **kwargs):
         """
         Implement the GET HTTP method.
@@ -190,23 +190,20 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """
         return self._select(**kwargs)
 
-    @db_connection_decorator
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
+    @db_connection_decorator
     def PUT(self):
         """
         Implement the PUT HTTP method.
 
         Creates an object based on the request body.
         """
-        from json import loads
-        data = cherrypy.request.body.read()
-        input_objs = loads(data.decode('UTF-8'))
-        self._insert(input_objs)
+        self._insert(cherrypy.request.json)
 
-    @db_connection_decorator
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
+    @db_connection_decorator
     def POST(self, **kwargs):
         """
         Implement the POST HTTP method.
@@ -216,9 +213,9 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """
         self._update(cherrypy.request.json, **kwargs)
 
-    @db_connection_decorator
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
+    @db_connection_decorator
     def DELETE(self, **kwargs):
         """
         Implement the DELETE HTTP method.

@@ -25,7 +25,7 @@ class FilesWithTransactionKeyValue(object):
             val = Values().select(Values.id).where(Values.value == value).get()
             # pylint: disable=protected-access
             tkv_where_clause = TransactionKeyValue().where_clause(
-                {'key_id': k._data['id'], 'value_id': val._data['id']})
+                {'key_id': k.__data__['id'], 'value_id': val.__data__['id']})
             # pylint: enable=protected-access
             tkv_list = TransactionKeyValue().select().where(tkv_where_clause)
             transaction_list = [t.transaction_id for t in tkv_list]

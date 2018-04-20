@@ -139,8 +139,8 @@ class IngestAPI(object):
                 keys.append({'key': key})
                 values.append({'value': value})
             # pylint: disable=protected-access
-            Keys()._set_or_create(dumps(keys))
-            Values()._set_or_create(dumps(values))
+            Keys()._set_or_create(keys)
+            Values()._set_or_create(values)
             # pylint: enable=protected-access
             for key, value in pull_kv_by_attr(json):
                 # key_obj = Keys.get(key=key)
@@ -163,8 +163,8 @@ class IngestAPI(object):
                 file_values.append({'value': value})
 
             # pylint: disable=protected-access
-            Keys()._set_or_create(dumps(file_keys))
-            Values()._set_or_create(dumps(file_values))
+            Keys()._set_or_create(file_keys)
+            Values()._set_or_create(file_values)
             # pylint: enable=protected-access
 
             for key, value, file_id in pull_fkv_by_attr(json):
