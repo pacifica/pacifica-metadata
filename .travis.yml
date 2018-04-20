@@ -16,11 +16,11 @@ cache: pip
 before_install: bash -xe travis/before-install.sh
 install:
 - >
-if [[ -z $RUN_LINTS ]] ; then
-  ES_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz
-  curl -Lo /tmp/estarball.tgz ${ES_DOWNLOAD_URL}
-  tar -C /tmp -xzf /tmp/estarball.tgz
-  pushd /tmp/elasticsearch-${ES_VERSION}; ./bin/elasticsearch & popd
-fi
-pip install -r requirements-dev.txt
+  if [[ -z $RUN_LINTS ]] ; then
+    ES_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz
+    curl -Lo /tmp/estarball.tgz ${ES_DOWNLOAD_URL}
+    tar -C /tmp -xzf /tmp/estarball.tgz
+    pushd /tmp/elasticsearch-${ES_VERSION}; ./bin/elasticsearch & popd
+  fi
+  pip install -r requirements-dev.txt
 script: bash -xe travis/test-script.sh
