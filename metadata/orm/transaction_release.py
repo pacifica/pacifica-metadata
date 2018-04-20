@@ -39,13 +39,11 @@ class TransactionRelease(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(TransactionRelease, self).to_hash(**flags)
-        obj['_id'] = int(self.id)
-        obj['transaction_id'] = int(self.transaction.id)
+        obj['_id'] = int(self._data['id'])
+        obj['transaction_id'] = int(self._data['transaction'])
+        obj['release_state_id'] = int(self._data['release_state'])
         # pylint: disable=no-member
-        obj['release_state'] = unicode_type(self.release_state.name)
-        obj['release_state_display_name'] = unicode_type(
-            self.release_state.display_name)
-        obj['person_id'] = int(self.person.id)
+        obj['person_id'] = int(self._data['person'])
         # pylint: enable=no-member
 
         return obj
@@ -53,12 +51,16 @@ class TransactionRelease(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash to the object."""
         super(TransactionRelease, self).from_hash(obj)
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
         if 'transaction_id' in obj:
-            self.transaction = obj['transaction_id']
-        if 'release_state' in obj:
-            self.release_state = unicode_type(obj['release_state'])
+            self.transaction = Transactions.get(
+                Transactions.id == obj['transaction_id'])
+        if 'release_state_id' in obj:
+            self.release_state = DataReleaseStates.get(
+                DataReleaseStates.id == obj['release_state_id'])
         if 'person_id' in obj:
-            self.person = unicode_type(obj['person_id'])
+            self.person = Users.get(
+                Users.id == obj['person_id'])
 
     def where_clause(self, kwargs):
         """PeeWee specific where clause used for search."""
@@ -72,7 +74,7 @@ class TransactionRelease(CherryPyAPI):
         if 'person_id' in kwargs:
             where_clause &= Expression(
                 TransactionRelease.person, OP.EQ, kwargs['person_id'])
-        if 'release_state' in kwargs:
+        if 'release_state_id' in kwargs:
             where_clause &= Expression(
-                TransactionRelease.release_state, OP.EQ, kwargs['release_state'])
+                TransactionRelease.release_state, OP.EQ, kwargs['release_state_id'])
         return where_clause
