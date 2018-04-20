@@ -283,7 +283,7 @@ class PacificaModel(Model):
         """Get model and field information about the model class."""
         related_model_info = {}
         # pylint: disable=no-member
-        for rel_mod_name in cls._meta.rel:
+        for rel_mod_name in cls._meta.refs:
             if rel_mod_name != cls.__name__:
                 fkf = cls._meta.rel.get(rel_mod_name)
                 rel_mod = fkf.rel_model
