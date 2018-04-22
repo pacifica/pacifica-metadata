@@ -36,7 +36,6 @@ Example uploaded data:
 """
 from __future__ import print_function
 import hashlib
-from json import dumps
 from cherrypy import request, tools
 from metadata.orm.transactions import Transactions
 from metadata.orm.trans_key_value import TransactionKeyValue
@@ -194,9 +193,9 @@ class IngestAPI(object):
         }
 
         # pylint: disable=protected-access
-        Transactions()._insert(dumps(transaction_hash))
-        TransactionKeyValue()._insert(dumps(generate_tkvs(request.json)))
-        Files()._insert(dumps(extract_files(request.json)))
-        FileKeyValue()._insert(dumps(generate_fkvs(request.json)))
+        Transactions()._insert(transaction_hash)
+        TransactionKeyValue()._insert(generate_tkvs(request.json))
+        Files()._insert(extract_files(request.json))
+        FileKeyValue()._insert(generate_fkvs(request.json))
         # pylint: enable=protected-access
         return {'status': 'success'}
