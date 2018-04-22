@@ -7,7 +7,6 @@ Specifically, available_hash_list and get_primary_keys from
 PacificaModel since they both require primary
 keys and the PacificaModel doesn't have any...
 """
-from peewee import SqliteDatabase
 from metadata.orm.test.base import TestBase
 from metadata.orm.keys import Keys
 from metadata.orm.user_group import UserGroup

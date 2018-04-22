@@ -4,7 +4,6 @@
 from datetime import datetime, timedelta
 from time import mktime
 from json import dumps
-from peewee import SqliteDatabase
 from metadata.orm.utils import datetime_now_nomicrosecond
 from metadata.orm.base import PacificaModel
 from metadata.orm.test.base import TestBase

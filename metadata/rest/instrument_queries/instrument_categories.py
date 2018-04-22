@@ -14,12 +14,14 @@ class InstrumentCategories(QueryBase):
     @staticmethod
     def get_instrument_categories():
         """Pull the full list of instrument categories from the DB."""
+        # pylint: disable=no-member
         category_collection = (
             Groups
             .select(Groups, InstrumentGroup.instrument)
             .join(InstrumentGroup)
             .order_by(Groups.id)
         )
+        # pylint: enable=no-member
         category_list = {}
         for cat in category_collection.dicts():
             if cat['id'] not in category_list:

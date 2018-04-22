@@ -24,6 +24,7 @@ class QueryBase(object):
         where_clause = TransactionKeyValue().where_clause(
             {'transaction_id': transaction_id}
         )
+        # pylint: disable=no-member
         tkv_list = (TransactionKeyValue
                     .select(Keys.key, Values.value)
                     .join(Keys, on=(Keys.id == TransactionKeyValue.key))
@@ -31,6 +32,7 @@ class QueryBase(object):
                     .where(where_clause)
                     .order_by(TransactionKeyValue.key)
                     .dicts())
+        # pylint: enable=no-member
 
         return [tkv for tkv in tkv_list]
 
@@ -76,6 +78,7 @@ class QueryBase(object):
 
     @staticmethod
     def _get_transaction_info_blocks(transaction_list, option='details'):
+        # pylint: disable=no-member
         transactions = (Transactions
                         .select(
                             Transactions,
@@ -85,6 +88,7 @@ class QueryBase(object):
                         .join(Files, JOIN.LEFT_OUTER)
                         .group_by(Transactions)
                         .where(Transactions.id << transaction_list))
+        # pylint: enable=no-member
 
         transaction_results = {'transactions': {}, 'times': {}}
 
@@ -115,11 +119,13 @@ class QueryBase(object):
     def _get_file_key_values(file_entries):
         if not file_entries:
             return file_entries
+        # pylint: disable=no-member
         file_keys = FileKeyValue.select(
             Keys.key, Values.value, FileKeyValue.file
         ).join(Keys, on=(Keys.id == FileKeyValue.key)) \
          .join(Values, on=(Values.id == FileKeyValue.value)) \
          .where(FileKeyValue.file << file_entries.keys()).dicts()
+        # pylint: enable=no-member
 
         fkv_list = {}
         for fkv in file_keys:
