@@ -33,9 +33,9 @@ class MigrateProposals(object):
             prop_entry = PropQueryBase.format_proposal_block(prop)
             prop_entry['abstract'] = prop.abstract
             prop_entry['instruments'] = [
-                inst.instrument.id for inst in prop.instruments_prefetch]
+                inst.instrument.id for inst in prop.instruments]
             prop_entry['users'] = [
-                user_entry.person.id for user_entry in prop.users_prefetch]
+                user_entry.person.id for user_entry in prop.users]
             proposal_list[prop.id] = prop_entry
 
         return proposal_list
