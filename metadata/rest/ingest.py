@@ -37,6 +37,7 @@ Example uploaded data:
 from __future__ import print_function
 import hashlib
 from cherrypy import request, tools
+from metadata.orm.utils import unicode_type
 from metadata.orm.transactions import Transactions
 from metadata.orm.trans_key_value import TransactionKeyValue
 from metadata.orm.file_key_value import FileKeyValue
@@ -75,7 +76,7 @@ class IngestAPI(object):
         except ValueError:
             return False
         hashd = getattr(hashlib, hashtype)()
-        hashd.update('blah')
+        hashd.update(bytes(unicode_type('blah'), 'UTF-8'))
         if len(hashsum) != len(hashd.hexdigest()):
             return False
         return True
