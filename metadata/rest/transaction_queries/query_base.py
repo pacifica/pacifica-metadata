@@ -124,11 +124,11 @@ class QueryBase(object):
             Keys.key, Values.value, FileKeyValue.file
         ).join(Keys, on=(Keys.id == FileKeyValue.key)) \
          .join(Values, on=(Values.id == FileKeyValue.value)) \
-         .where(FileKeyValue.file << file_entries.keys()).dicts()
+         .where(FileKeyValue.file << list(file_entries.keys())).dicts()
         # pylint: enable=no-member
 
         fkv_list = {}
-        for fkv in file_keys:
+        for fkv in file_keys.execute():
             file_id = fkv.pop('file')
             if file_id not in fkv_list.keys():
                 fkv_list[file_id] = [fkv]
@@ -154,7 +154,7 @@ class QueryBase(object):
             'submitter_id': transaction_entry.get('submitter'),
             'proposal_id': transaction_entry.get('proposal'),
             'instrument_id': transaction_entry.get('instrument'),
-            'file_ids': files.keys()
+            'file_ids': list(files.keys())
         }
         if option == 'details':
             submitter = Users.get(
