@@ -31,7 +31,7 @@ class InstrumentCategories(QueryBase):
                 }
             category_list[cat['id']]['instrument_list'].append(
                 cat['instrument'])
-        return category_list.values()
+        return list(category_list.values())
 
     # CherryPy requires these named methods
     # pylint: disable=invalid-name
