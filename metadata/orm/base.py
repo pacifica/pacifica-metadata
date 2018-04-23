@@ -19,7 +19,7 @@ from os import getenv
 import datetime
 from dateutil import parser
 from peewee import PostgresqlDatabase as pgdb
-from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, R, Clause, ReverseRelationDescriptor
+from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, SQL, NodeList, BackrefAccessor
 from six import text_type
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
@@ -101,14 +101,14 @@ class PacificaModel(Model):
     def cls_foreignkeys(cls):
         """Provide the foreign keys of the class as a list of attrs."""
         # pylint: disable=no-member
-        return cls._meta.rel.keys()
+        return [ref.name for ref in cls._meta.refs.keys()]
         # pylint: enable=no-member
 
     @classmethod
     def cls_foreignkey_rel_mods(cls):
         """Return a collection of related models for a given foreignkey."""
         # pylint: disable=no-member
-        return {cls._meta.rel[fk].rel_model: fk for fk in cls._meta.rel}
+        return {fk.rel_model: fk.name for fk in cls._meta.refs}
         # pylint: enable=no-member
 
     @classmethod
@@ -116,7 +116,7 @@ class PacificaModel(Model):
         """Provide the rev foreign keys of the class as a list of attrs."""
         ret = []
         for attr, value in cls.__dict__.items():
-            if isinstance(value, ReverseRelationDescriptor):
+            if isinstance(value, BackrefAccessor):
                 ret.append(attr)
         return ret
 
@@ -157,11 +157,11 @@ class PacificaModel(Model):
         # pylint: disable=protected-access
         if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
             append_item = {
-                'key_id': obj_ref._data['key'],
-                'value_id': obj_ref._data['value']
+                'key_id': obj_ref.__data__['key'],
+                'value_id': obj_ref.__data__['value']
             }
         else:
-            append_item = obj_ref._data[fk_item_name]
+            append_item = obj_ref.__data__[fk_item_name]
         # pylint: enable=protected-access
         return append_item
 
@@ -196,7 +196,7 @@ class PacificaModel(Model):
         if date_oper == OP.BETWEEN:
             date_obj_min = dt_converts(kwargs[date][0])
             date_obj_max = dt_converts(kwargs[date][1])
-            date_obj = Clause(date_obj_min, R('AND'), date_obj_max)
+            date_obj = NodeList((date_obj_min, SQL('AND'), date_obj_max))
         else:
             date_obj = dt_converts(kwargs[date])
         return (date_obj, date_oper)
@@ -235,7 +235,9 @@ class PacificaModel(Model):
     @classmethod
     def last_change_date(cls):
         """Find the last changed date for the object."""
+        # pylint: disable=no-value-for-parameter
         last_change_date = cls.select(fn.Max(cls.updated)).scalar()
+        # pylint: enable=no-value-for-parameter
         last_change_string = last_change_date \
             if last_change_date is not None else '1970-01-01 00:00:00'
         last_change_string = last_change_date.isoformat(' ') \
@@ -254,7 +256,9 @@ class PacificaModel(Model):
         hash_dict = {}
         all_keys_query = cls.select(*[getattr(cls, key)
                                       for key in cls.get_primary_keys()]).dicts()
+        # pylint: disable=no-value-for-parameter
         for obj in all_keys_query.execute():
+            # pylint: enable=no-value-for-parameter
             inst_key = index_hash(*obj.values())
             hash_list.append(inst_key)
             entry = {
@@ -269,7 +273,7 @@ class PacificaModel(Model):
         """Return the primary keys for the object."""
         # pylint: disable=no-member
         primary_key = cls._meta.primary_key
-        if isinstance(primary_key, CompositeKey) and cls._meta.rel:
+        if isinstance(primary_key, CompositeKey) and cls._meta.refs:
             return list(primary_key.field_names)
         # pylint: enable=no-member
         return [primary_key.name]
@@ -279,19 +283,19 @@ class PacificaModel(Model):
         """Get model and field information about the model class."""
         related_model_info = {}
         # pylint: disable=no-member
-        for rel_mod_name in cls._meta.rel:
-            if rel_mod_name != cls.__name__:
-                fkf = cls._meta.rel.get(rel_mod_name)
-                rel_mod = fkf.rel_model
+        for fkf in cls._meta.refs:
+            rel_mod = fkf.rel_model
+            if rel_mod.__class__.__name__ != cls.__name__:
                 # pylint: disable=protected-access
-                table = rel_mod._meta.db_table
+                table = rel_mod._meta.table_name
                 pkey = rel_mod._meta.primary_key.name
                 # pylint: enable=protected-access
-                related_model_info[rel_mod_name] = {
-                    'db_column': fkf.db_column,
+                related_model_info[fkf.name] = {
+                    'db_column': fkf.column_name,
                     'db_table': table,
                     'primary_key': pkey
                 }
+        # pylint: disable=no-value-for-parameter
         js_object = {
             'callable_name': cls.__module__.split('.')[2],
             'last_changed_date': cls.last_change_date(),
@@ -302,5 +306,6 @@ class PacificaModel(Model):
             'related_names': cls.cls_revforeignkeys(),
             'record_count': cls.select().count()
         }
+        # pylint: enable=no-value-for-parameter
         # pylint: enable=no-member
         return js_object

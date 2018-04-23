@@ -4,7 +4,6 @@
 from unittest import TestCase
 from json import dumps
 from peewee import SqliteDatabase, OperationalError
-from playhouse.test_utils import test_database
 import httpretty
 from metadata.orm import try_db_connect, DATABASE_CONNECT_ATTEMPTS, ORM_OBJECTS
 import metadata.orm as metaorm
@@ -57,7 +56,6 @@ class TestConnections(TestCase):
             httpretty.register_uri(httpretty.PUT, es_mapping_url,
                                    body=dumps(created_body),
                                    content_type='application/json')
-        with test_database(SqliteDatabase(':memory:'), ORM_OBJECTS, create_tables=False):
-            metaorm.DB = SqliteDatabase(':memory:')
-            metaorm.create_tables()
-            self.assertTrue(httpretty.last_request().method, 'PUT')
+        metaorm.DB = SqliteDatabase(':memory:')
+        metaorm.create_tables()
+        self.assertTrue(httpretty.last_request().method, 'PUT')

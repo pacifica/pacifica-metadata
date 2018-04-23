@@ -3,6 +3,7 @@
 """CherryPy TKV Metadata object class."""
 from cherrypy import tools, request
 from metadata.orm import TransactionKeyValue, Keys, Values
+from metadata.orm.utils import unicode_type
 from metadata.orm.base import DB
 
 
@@ -40,16 +41,16 @@ class UploadEntries(object):
         query = (model_obj
                  .select()
                  .distinct()
-                 .where(field_attr << names_list)
+                 .where(field_attr << list(names_list))
                  .order_by(id_attr)).dicts()
         return {o[field_name]: o['id'] for o in query}
 
     @staticmethod
     def _update_id_list(names_list, model_obj, field_name):
-        names_list = map(str, names_list)
+        names_list = list(map(unicode_type, list(names_list)))
         local_list = UploadEntries._get_id_list(
             names_list, model_obj, field_name)
-        diff = list(set(names_list) - set(local_list.keys()))
+        diff = list(set(list(names_list)) - set(local_list.keys()))
         insert_list = [{field_name: str(o)} for o in diff]
         if insert_list:
             with DB.atomic():

@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Citation proposal relationship."""
-from peewee import ForeignKeyField, CompositeKey, Expression, OP, unicode_type
-from metadata.orm.utils import index_hash
+from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from metadata.orm.utils import index_hash, unicode_type
 from metadata.orm.proposals import Proposals
 from metadata.orm.citations import Citations
 from metadata.orm.base import DB
@@ -45,10 +45,10 @@ class CitationProposal(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(CitationProposal, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self._data['citation']),
-                                unicode_type(self._data['proposal']))
-        obj['citation_id'] = int(self._data['citation'])
-        obj['proposal_id'] = unicode_type(self._data['proposal'])
+        obj['_id'] = index_hash(int(self.__data__['citation']),
+                                unicode_type(self.__data__['proposal']))
+        obj['citation_id'] = int(self.__data__['citation'])
+        obj['proposal_id'] = unicode_type(self.__data__['proposal'])
         return obj
 
     def from_hash(self, obj):

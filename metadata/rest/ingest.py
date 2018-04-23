@@ -36,7 +36,7 @@ Example uploaded data:
 """
 from __future__ import print_function
 import hashlib
-from json import dumps
+from six import binary_type
 from cherrypy import request, tools
 from metadata.orm.transactions import Transactions
 from metadata.orm.trans_key_value import TransactionKeyValue
@@ -76,7 +76,7 @@ class IngestAPI(object):
         except ValueError:
             return False
         hashd = getattr(hashlib, hashtype)()
-        hashd.update('blah')
+        hashd.update(binary_type())
         if len(hashsum) != len(hashd.hexdigest()):
             return False
         return True
@@ -139,8 +139,8 @@ class IngestAPI(object):
                 keys.append({'key': key})
                 values.append({'value': value})
             # pylint: disable=protected-access
-            Keys()._set_or_create(dumps(keys))
-            Values()._set_or_create(dumps(values))
+            Keys()._set_or_create(keys)
+            Values()._set_or_create(values)
             # pylint: enable=protected-access
             for key, value in pull_kv_by_attr(json):
                 # key_obj = Keys.get(key=key)
@@ -163,8 +163,8 @@ class IngestAPI(object):
                 file_values.append({'value': value})
 
             # pylint: disable=protected-access
-            Keys()._set_or_create(dumps(file_keys))
-            Values()._set_or_create(dumps(file_values))
+            Keys()._set_or_create(file_keys)
+            Values()._set_or_create(file_values)
             # pylint: enable=protected-access
 
             for key, value, file_id in pull_fkv_by_attr(json):
@@ -194,9 +194,9 @@ class IngestAPI(object):
         }
 
         # pylint: disable=protected-access
-        Transactions()._insert(dumps(transaction_hash))
-        TransactionKeyValue()._insert(dumps(generate_tkvs(request.json)))
-        Files()._insert(dumps(extract_files(request.json)))
-        FileKeyValue()._insert(dumps(generate_fkvs(request.json)))
+        Transactions()._insert(transaction_hash)
+        TransactionKeyValue()._insert(generate_tkvs(request.json))
+        Files()._insert(extract_files(request.json))
+        FileKeyValue()._insert(generate_fkvs(request.json))
         # pylint: enable=protected-access
         return {'status': 'success'}

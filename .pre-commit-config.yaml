@@ -1,6 +1,6 @@
 repos:
 -   repo: git://github.com/pre-commit/pre-commit-hooks
-    sha: v1.1.1
+    rev: v1.2.3
     hooks:
             -   id: autopep8-wrapper
             -   id: fix-encoding-pragma
@@ -47,6 +47,7 @@ repos:
                 language: system
                 types: [python]
 -   repo: git://github.com/Lucas-C/pre-commit-hooks
-    sha: v1.1.4
+    rev: v1.1.5
     hooks:
     -   id: remove-tabs
+    -   id: remove-crlf

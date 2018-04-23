@@ -82,7 +82,7 @@ class Files(CherryPyAPI):
         # pylint: disable=no-member
         obj['ctime'] = self.ctime.isoformat()
         obj['mtime'] = self.mtime.isoformat()
-        obj['transaction_id'] = int(self._data['transaction'])
+        obj['transaction_id'] = int(self.__data__['transaction'])
         # pylint: enable=no-member
         obj['size'] = int(self.size)
         obj['hashsum'] = str(self.hashsum)

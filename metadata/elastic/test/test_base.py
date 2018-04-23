@@ -4,6 +4,7 @@
 from unittest import TestCase
 from json import dumps
 import httpretty
+from elasticsearch import TransportError
 from metadata.elastic import create_elastic_index, try_es_connect
 from metadata.elastic.test import ES_CLUSTER_BODY
 
@@ -67,11 +68,11 @@ class TestElasticUtils(TestCase):
         # pylint: disable=broad-except
         try:
             create_elastic_index()
-        except Exception as ex:
+        except TransportError as ex:
             hit_exception = True
             self.assertEqual(httpretty.last_request().method, 'PUT')
-            self.assertEqual(
-                str(ex), 'TransportError(500, u\'{"status": "ERROR"}\')')
+            self.assertEqual(ex.__class__, TransportError)
+            self.assertEqual(ex.status_code, 500)
         # pylint: enable=broad-except
         self.assertTrue(hit_exception)
 
