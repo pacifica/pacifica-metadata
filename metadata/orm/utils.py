@@ -30,7 +30,7 @@ def date_converts(date_obj):
     elif isinstance(date_obj, date):
         return date_obj
     elif isinstance(date_obj, int):
-        return datetime.fromtimestamp(date_obj).date()
+        return datetime.utcfromtimestamp(date_obj).date()
     return None
 
 
@@ -46,7 +46,7 @@ def datetime_converts(time_obj):
     elif isinstance(time_obj, datetime):
         return time_obj.replace(microsecond=0)
     elif isinstance(time_obj, int):
-        return datetime.fromtimestamp(time_obj).replace(microsecond=0)
+        return datetime.utcfromtimestamp(time_obj).replace(microsecond=0)
     return None
 
 
