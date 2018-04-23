@@ -39,7 +39,7 @@ class SummarizeByDate(QueryBase):
         ).join(Transactions)
 
         # pylint: disable=no-member
-        query = query.where(where_clause).order_by(time_column).naive()
+        query = query.where(where_clause).order_by(time_column).objects()
         # pylint: enable=no-member
 
         results = {

@@ -26,7 +26,8 @@ class ProposalUserSearch(QueryBase):
                      .select(
                          Proposals.id, Proposals.title, Proposals.actual_start_date,
                          Proposals.actual_end_date, Proposals.closed_date,
-                         Proposals.accepted_date, Proposals.submitted_date
+                         Proposals.accepted_date, Proposals.submitted_date,
+                         Proposals.proposal_type
                      )
                      .join(ProposalParticipant)
                      .where(where_clause)
