@@ -52,7 +52,7 @@ class PMClient(object):
             return True
         if int(ret.status_code / 100) == 4:
             return False
-        elif ret.status_code / 100 == 5:
+        elif int(ret.status_code / 100) == 5:
             raise PMClientError('Internal Server Error ({0}) {1}'.format(
                 ret.status_code, ret.content))
         else:
@@ -64,7 +64,7 @@ class PMClient(object):
         ret = requests.get('{0}/{1}'.format(self.url, cls_type),
                            params=query_hash, allow_redirects=True)
         if int(ret.status_code / 100) == 2:
-            return loads(ret.content)
+            return loads(ret.content.decode('UTF-8'))
         elif int(ret.status_code / 100) == 4:
             return {}
         elif ret.status_code / 100 == 5:

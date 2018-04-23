@@ -4,6 +4,7 @@
 from unittest import TestCase
 from json import dumps, loads
 import httpretty
+from metadata.orm.utils import unicode_type
 from metadata.client import PMClient, PMClientError
 
 
@@ -208,7 +209,7 @@ class TestClient(TestCase):
         client = PMClient(endpoint_url)
         response = client.create(class_type, response_body)
         self.assertTrue(response)
-        chk_body = loads(httpretty.last_request().body)
+        chk_body = loads(httpretty.last_request().body.decode('UTF-8'))
         for key, value in response_body.items():
             self.assertEqual(chk_body[key], value)
 
@@ -270,7 +271,7 @@ class TestClient(TestCase):
             'network_id': 'johndoe'
         }
         httpretty.register_uri(httpretty.POST, '{0}/{1}'.format(endpoint_url, class_type),
-                               body='This is the error.',
+                               body=unicode_type('This is the error.'),
                                status=501)
         client = PMClient(endpoint_url)
         try:
@@ -278,6 +279,7 @@ class TestClient(TestCase):
         except PMClientError as ex:
             self.assertTrue('501' in str(ex))
             self.assertTrue('This is the error.' in str(ex))
+            self.assertTrue('Internal Server Error' in str(ex))
 
     @httpretty.activate
     def test_client_update_unk_error(self):

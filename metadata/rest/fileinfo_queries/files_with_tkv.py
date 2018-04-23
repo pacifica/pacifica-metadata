@@ -7,7 +7,7 @@ from metadata.orm import Files, TransactionKeyValue, Keys, Values
 from metadata.orm.base import db_connection_decorator
 try:
     from urllib.parse import unquote
-except ImportError:
+except ImportError:  # pragma: no cover
     from urlparse import unquote
 
 
