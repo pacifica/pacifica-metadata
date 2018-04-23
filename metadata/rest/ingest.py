@@ -36,6 +36,7 @@ Example uploaded data:
 """
 from __future__ import print_function
 import hashlib
+from six import binary_type
 from cherrypy import request, tools
 from metadata.orm.transactions import Transactions
 from metadata.orm.trans_key_value import TransactionKeyValue
@@ -75,7 +76,7 @@ class IngestAPI(object):
         except ValueError:
             return False
         hashd = getattr(hashlib, hashtype)()
-        hashd.update(bytes('blah', 'UTF-8'))
+        hashd.update(binary_type())
         if len(hashsum) != len(hashd.hexdigest()):
             return False
         return True

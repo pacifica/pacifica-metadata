@@ -13,3 +13,4 @@ pytest
 python-dateutil
 radon
 requests
+six
