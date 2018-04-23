@@ -161,10 +161,6 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                     db_col = info.get('db_column')
                     if db_col in new_obj.keys():
                         new_obj[name] = new_obj.pop(db_col)
-            if '_id' in obj.keys() and obj['_id'] is not None:
-                for attr in model_info.get('related_names'):
-                    if attr in new_obj:
-                        del new_obj[attr]
             clean_objs.append(new_obj)
         return clean_objs
 

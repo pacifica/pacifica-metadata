@@ -86,6 +86,32 @@ class TestAdminTool(TestCase):
         self.assertTrue(test_patch.called)
 
 
+class TestAdminToolNoTables(TestCase):
+    """Test the admin tool cli."""
+
+    def setUp(self):
+        """Setup the database with in memory sqlite."""
+        metaorm.DB = SqliteDatabase('file:cachedb?mode=memory&cache=shared')
+        for model in metaorm.ORM_OBJECTS:
+            model.bind(metaorm.DB, bind_refs=False, bind_backrefs=False)
+        metaorm.DB.connect()
+
+    def tearDown(self):
+        """Tear down the database."""
+        metaorm.DB.drop_tables(metaorm.ORM_OBJECTS)
+        metaorm.DB.close()
+        metaorm.DB = None
+
+    @patch('metadata.orm.try_db_connect')
+    def test_create_no_tables(self, test_patch):
+        """Test the create obj."""
+        test_patch.return_value = True
+        args = Namespace()
+        setattr(args, 'object', metaorm.Keys)
+        create_obj(args)
+        self.assertTrue(test_patch.called)
+
+
 class TestAdminToolThreaded(TestCase):
     """Test the admin tool cli."""
 
