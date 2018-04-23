@@ -67,7 +67,7 @@ class PMClient(object):
             return loads(ret.content.decode('UTF-8'))
         elif int(ret.status_code / 100) == 4:
             return {}
-        elif ret.status_code / 100 == 5:
+        elif int(ret.status_code / 100) == 5:
             raise PMClientError('Internal Server Error ({0}) {1}'.format(
                 ret.status_code, ret.content))
         else:
