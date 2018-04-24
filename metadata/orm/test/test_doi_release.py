@@ -26,14 +26,14 @@ class TestDOIRelease(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """Build the object and make dependent user object."""
-        doi_ds = DOIDataSets()
-        TestDOIDataSets.base_create_dep_objs()
-        doi_ds.from_hash(SAMPLE_DOIDATASET_HASH)
-        doi_ds.save(force_insert=True)
         trans_rel = TransactionRelease()
         TestTransactionRelease.base_create_dep_objs()
         trans_rel.from_hash(SAMPLE_TRANS_RELEASE_HASH)
         trans_rel.save(force_insert=True)
+        doi_ds = DOIDataSets()
+        TestDOIDataSets.base_create_dep_objs()
+        doi_ds.from_hash(SAMPLE_DOIDATASET_HASH)
+        doi_ds.save(force_insert=True)
 
     def test_doirelease_hash(self):
         """Test the hash portion using base object method."""
