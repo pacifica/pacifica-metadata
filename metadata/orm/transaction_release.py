@@ -29,15 +29,15 @@ class TransactionRelease(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(TransactionRelease, TransactionRelease).elastic_mapping_builder(obj)
-        obj['transaction_id'] = obj['person_id'] = {'type': 'integer'}
+        obj['transaction'] = obj['authorized_person'] = {'type': 'integer'}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(TransactionRelease, self).to_hash(**flags)
         obj['_id'] = int(self.__data__['id'])
-        obj['transaction_id'] = int(self.__data__['transaction'])
+        obj['transaction'] = int(self.__data__['transaction'])
         # pylint: disable=no-member
-        obj['authorized_person_id'] = int(self.__data__['authorized_person'])
+        obj['authorized_person'] = int(self.__data__['authorized_person'])
         # pylint: enable=no-member
 
         return obj
@@ -46,10 +46,10 @@ class TransactionRelease(CherryPyAPI):
         """Convert the hash to the object."""
         super(TransactionRelease, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
-        self._set_only_if('transaction_id', obj, 'transaction', lambda: Transactions.get(
-            Transactions.id == obj['transaction_id']))
-        self._set_only_if('authorized_person_id', obj, 'authorized_person', lambda: Users.get(
-            Users.id == obj['authorized_person_id']))
+        self._set_only_if('transaction', obj, 'transaction', lambda: Transactions.get(
+            Transactions.id == obj['transaction']))
+        self._set_only_if('authorized_person', obj, 'authorized_person', lambda: Users.get(
+            Users.id == obj['authorized_person']))
 
     def where_clause(self, kwargs):
         """PeeWee specific where clause used for search."""
