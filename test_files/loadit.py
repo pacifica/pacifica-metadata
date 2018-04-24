@@ -40,7 +40,11 @@ def main():
         'trans_key_value',
         'user_group',
         'doidatasets',
-        'doiresource'
+        'doiresource',
+        'transaction_release',
+        'doi_release',
+        'citation_release',
+        'citation_doi'
     ]
     for obj in object_order:
         mdclient.create(obj, loads(
