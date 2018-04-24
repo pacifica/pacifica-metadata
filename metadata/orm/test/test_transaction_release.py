@@ -25,10 +25,10 @@ class TestTransactionRelease(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """Build the object and make dependent user object."""
-        trans = Transactions()
+        rel_trans = Transactions()
         TestTransactions.base_create_dep_objs()
-        trans.from_hash(SAMPLE_TRANSACTION_HASH)
-        trans.save(force_insert=True)
+        rel_trans.from_hash(SAMPLE_TRANSACTION_HASH)
+        rel_trans.save(force_insert=True)
 
     def test_transrelease_hash(self):
         """Test the hash portion using base object method."""
