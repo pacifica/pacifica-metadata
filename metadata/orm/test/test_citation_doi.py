@@ -26,14 +26,14 @@ class TestCitationDOI(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """Build the object and make dependent user object."""
-        cite = Citations()
-        TestCitations.base_create_dep_objs()
-        cite.from_hash(SAMPLE_CITATION_HASH)
-        cite.save(force_insert=True)
         doi_ds = DOIDataSets()
         TestDOIDataSets.base_create_dep_objs()
         doi_ds.from_hash(SAMPLE_DOIDATASET_HASH)
         doi_ds.save(force_insert=True)
+        cite = Citations()
+        TestCitations.base_create_dep_objs()
+        cite.from_hash(SAMPLE_CITATION_HASH)
+        cite.save(force_insert=True)
 
     def test_citationdoi_hash(self):
         """Test the hash portion using base object method."""
