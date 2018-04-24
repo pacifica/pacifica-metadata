@@ -50,8 +50,8 @@ class TransactionReleaseState(QueryBase):
         """Return release details about the specified transaction entity."""
         return TransactionReleaseState._get_release_state((int(trans_id),))
 
-    @tools.json_out()
     @staticmethod
+    @tools.json_out()
     @tools.json_in()
     @db_connection_decorator
     def POST():
