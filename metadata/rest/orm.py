@@ -151,8 +151,13 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             new_obj = deepcopy(obj)
             if '_id' in new_obj.keys():
                 new_obj['id'] = new_obj.pop('_id')
+            cls_obj = cls()
+            cls_obj.from_hash(new_obj)
+            db_obj = {}
+            for key in model_info['field_list']:
+                db_obj[key] = getattr(cls_obj, key)
+            new_obj = db_obj
             cls.__fix_dates(obj, new_obj)
-
             if model_info.get('related_models'):
                 rel_models = model_info.get('related_models')
                 for (name, info) in rel_models.items():
