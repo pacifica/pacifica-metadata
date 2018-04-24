@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
-from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.base import DB
 from metadata.orm.citations import Citations
 from metadata.orm.transaction_release import TransactionRelease
@@ -38,38 +38,28 @@ class CitationRelease(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(CitationRelease, CitationRelease).elastic_mapping_builder(obj)
-        obj['citation_id'] = obj['release_id'] = {'type': 'integer'}
+        obj['citation'] = obj['release'] = {'type': 'integer'}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(CitationRelease, self).to_hash(**flags)
         obj['_id'] = index_hash(
-            int(self._data['release']),
-            int(self._data['citation'])
+            int(self.__data__['release']),
+            int(self.__data__['citation'])
         )
-        obj['release_id'] = int(self._data['release'])
-        obj['citation_id'] = int(self._data['citation'])
+        obj['release'] = int(self.__data__['release'])
+        obj['citation'] = int(self.__data__['citation'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash to the object."""
         super(CitationRelease, self).from_hash(obj)
-        if 'citation_id' in obj:
-            self.citation = Citations.get(
-                Citations.id == obj['citation_id'])
-        if 'release_id' in obj:
-            self.release = TransactionRelease.get(
-                TransactionRelease.id == obj['release_id'])
+        self._set_only_if('citation', obj, 'citation', lambda: Citations.get(
+            Citations.id == obj['citation']))
+        self._set_only_if('release', obj, 'release', lambda: TransactionRelease.get(
+            TransactionRelease.id == obj['release']))
 
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
         where_clause = super(CitationRelease, self).where_clause(kwargs)
-        if 'release_id' in kwargs:
-            where_clause &= Expression(
-                CitationRelease.release, OP.EQ, int(kwargs['release_id']))
-        if 'citation_id' in kwargs:
-            where_clause &= Expression(
-                CitationRelease.citation, OP.EQ,
-                int(kwargs['citation_id'])
-            )
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs, ['citation', 'release'])
