@@ -36,7 +36,8 @@ class TestDOIDataSets(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """Build the object and make dependent user object."""
-        submitter = Users()
+        submitter, _created = Users().get_or_create(
+            id=SAMPLE_CREATOR_HASH['_id'])
         TestUsers.base_create_dep_objs()
         submitter.from_hash(SAMPLE_CREATOR_HASH)
         submitter.save(force_insert=True)
