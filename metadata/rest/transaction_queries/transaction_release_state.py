@@ -50,10 +50,12 @@ class TransactionReleaseState(QueryBase):
         """Return release details about the specified transaction entity."""
         return TransactionReleaseState._get_release_state((int(trans_id),))
 
+    # pylint: disable=duplicate-code
     @staticmethod
     @tools.json_out()
     @tools.json_in()
     @db_connection_decorator
+    # pylint: enable=duplicate-code
     def POST():
         """Return transaction release state details for the list of transaction_id's."""
         transaction_list = [int(trans_id) for trans_id in request.json]
