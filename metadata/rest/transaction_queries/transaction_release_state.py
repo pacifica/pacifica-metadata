@@ -1,9 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """CherryPy Status Transaction Metadata object class."""
-import re
-import cherrypy
-from cherrypy import tools, HTTPError, request
+from cherrypy import tools, request
 from metadata.rest.transaction_queries.query_base import QueryBase
 from metadata.orm import TransactionRelease
 from metadata.rest.user_queries.user_lookup import UserLookup
@@ -17,8 +15,6 @@ class TransactionReleaseState(QueryBase):
 
     @staticmethod
     def _get_release_state(transaction_list):
-        if not hasattr(transaction_list, '__iter__'):
-            transaction_list = [transaction_list]
         output_results = {}
         # pylint: disable=no-member
         releases = (TransactionRelease
@@ -52,18 +48,7 @@ class TransactionReleaseState(QueryBase):
     @db_connection_decorator
     def GET(trans_id=None):
         """Return release details about the specified transaction entity."""
-        if trans_id is not None and re.match('[0-9]+', trans_id):
-            cherrypy.log.error('transaction details request')
-            return TransactionReleaseState._get_release_state(trans_id)
-        else:
-            message = 'Invalid transaction details lookup request. '
-            message += "'{0}' is not a valid transaction_id".format(
-                trans_id)
-            cherrypy.log.error(message)
-            raise HTTPError(
-                '400 Invalid Transaction ID',
-                QueryBase.compose_help_block_message()
-            )
+        return TransactionReleaseState._get_release_state((int(trans_id),))
 
     @staticmethod
     @tools.json_in()
@@ -71,5 +56,5 @@ class TransactionReleaseState(QueryBase):
     @db_connection_decorator
     def POST():
         """Return transaction release state details for the list of transaction_id's."""
-        transaction_list = request.json
+        transaction_list = [int(trans_id) for trans_id in request.json]
         return TransactionReleaseState._get_release_state(transaction_list)
