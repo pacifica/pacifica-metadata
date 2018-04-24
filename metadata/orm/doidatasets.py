@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
-from peewee import CharField, Expression, OP
+from peewee import CharField, Expression, OP, ForeignKeyField
 from metadata.rest.orm import CherryPyAPI
+from metadata.orm.users import Users
 from metadata.orm.utils import unicode_type
 
 
@@ -25,11 +26,13 @@ class DOIDataSets(CherryPyAPI):
     doi = CharField(unique=True)
     name = CharField(default='')
     encoding = CharField(default='UTF8')
+    creator = ForeignKeyField(Users, related_name='dois_created')
 
     @staticmethod
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(DOIDataSets, DOIDataSets).elastic_mapping_builder(obj)
+        obj['creator'] = {'type': 'integer'}
         obj['doi'] = obj['name'] = obj['encoding'] = \
             {'type': 'text', 'fields': {'keyword': {
                 'type': 'keyword', 'ignore_above': 256}}}
@@ -40,6 +43,7 @@ class DOIDataSets(CherryPyAPI):
         obj['_id'] = int(self.id) if self.id is not None else obj['_id']
         obj['doi'] = unicode_type(self.doi)
         obj['name'] = unicode_type(self.name)
+        obj['creator'] = int(self.__data__['creator'])
         obj['encoding'] = str(self.encoding)
         return obj
 
@@ -51,6 +55,8 @@ class DOIDataSets(CherryPyAPI):
                           lambda: unicode_type(obj['doi']))
         self._set_only_if('name', obj, 'name',
                           lambda: unicode_type(obj['name']))
+        self._set_only_if('creator', obj, 'creator',
+                          lambda: Users.get(Users.id == obj['creator']))
         self._set_only_if('encoding', obj, 'encoding',
                           lambda: str(obj['encoding']))
 
@@ -59,4 +65,4 @@ class DOIDataSets(CherryPyAPI):
         where_clause = super(DOIDataSets, self).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(DOIDataSets.id, OP.EQ, kwargs['_id'])
-        return self._where_attr_clause(where_clause, kwargs, ['doi', 'name', 'encoding'])
+        return self._where_attr_clause(where_clause, kwargs, ['doi', 'name', 'encoding', 'creator'])

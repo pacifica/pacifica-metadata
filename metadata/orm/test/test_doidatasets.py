@@ -4,12 +4,16 @@
 from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.doidatasets import DOIDataSets
+from metadata.orm.test.test_users import SAMPLE_USER_HASH as SAMPLE_CREATOR_HASH
+from metadata.orm.test.test_users import TestUsers
+from metadata.orm.users import Users
 
 SAMPLE_DOIDATASET_HASH = {
     '_id': 142,
     'doi': 'halitosis',
     'name': 'halitosis',
-    'encoding': 'UTF8'
+    'encoding': 'UTF8',
+    'creator': SAMPLE_CREATOR_HASH['_id']
 }
 
 # yes a DOI can be unicode....
@@ -18,7 +22,8 @@ SAMPLE_UNICODE_DOIDATASET_HASH = {
     '_id': 143,
     'doi': u'blargééééé',
     'name': u'blargééééé',
-    'encoding': 'UTF8'
+    'encoding': 'UTF8',
+    'creator': SAMPLE_CREATOR_HASH['_id']
 }
 
 
@@ -27,6 +32,14 @@ class TestDOIDataSets(TestBase):
 
     obj_cls = DOIDataSets
     obj_id = DOIDataSets.id
+
+    @classmethod
+    def base_create_dep_objs(cls):
+        """Build the object and make dependent user object."""
+        submitter = Users()
+        TestUsers.base_create_dep_objs()
+        submitter.from_hash(SAMPLE_CREATOR_HASH)
+        submitter.save(force_insert=True)
 
     def test_doidatasets_hash(self):
         """Test the hash portion using base object method."""

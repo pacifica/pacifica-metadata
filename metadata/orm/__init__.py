@@ -39,6 +39,7 @@ from metadata.orm.atool_proposal import AToolProposal
 from metadata.orm.atool_transaction import AToolTransaction
 from metadata.orm.doidatasets import DOIDataSets
 from metadata.orm.doiresource import DOIResource
+from metadata.orm.transaction_release import TransactionRelease
 
 DATABASE_CONNECT_ATTEMPTS = 40
 DATABASE_WAIT = 3
@@ -72,7 +73,8 @@ ORM_OBJECTS = [
     AToolProposal,
     AToolTransaction,
     DOIDataSets,
-    DOIResource
+    DOIResource,
+    TransactionRelease
 ]
 
 

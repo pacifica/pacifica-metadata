@@ -9,7 +9,7 @@ from metadata.orm.transactions import Transactions
 
 class TransactionRelease(CherryPyAPI):
     """
-    Keys model class for data release workflow.
+    TransactionRelease model class for data release workflow.
 
     Attributes:
         +-------------------+-----------------------------------------------+
@@ -17,14 +17,13 @@ class TransactionRelease(CherryPyAPI):
         +===================+===============================================+
         | transaction       | transaction to be released                    |
         +-------------------+-----------------------------------------------|
-        | release_state     | current data release state of the transaction |
-        +-------------------+-----------------------------------------------+
-        | person            | person originating the release                |
+        | authorized_person | authorized person originating the release     |
         +-------------------+-----------------------------------------------+
     """
 
-    person = ForeignKeyField(Users, related_name='releases')
-    transaction = ForeignKeyField(Transactions, related_name='users')
+    authorized_person = ForeignKeyField(
+        Users, related_name='authorized_releases')
+    transaction = ForeignKeyField(Transactions, related_name='release_state')
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -35,10 +34,10 @@ class TransactionRelease(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(TransactionRelease, self).to_hash(**flags)
-        obj['_id'] = int(self._data['id'])
+        obj['_id'] = int(self.__data__['id'])
         obj['transaction_id'] = int(self.__data__['transaction'])
         # pylint: disable=no-member
-        obj['person_id'] = int(self.__data__['person'])
+        obj['authorized_person_id'] = int(self.__data__['authorized_person'])
         # pylint: enable=no-member
 
         return obj
@@ -47,12 +46,10 @@ class TransactionRelease(CherryPyAPI):
         """Convert the hash to the object."""
         super(TransactionRelease, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
-        if 'transaction_id' in obj:
-            self.transaction = Transactions.get(
-                Transactions.id == obj['transaction_id'])
-        if 'person_id' in obj:
-            self.person = Users.get(
-                Users.id == obj['person_id'])
+        self._set_only_if('transaction_id', obj, 'transaction', lambda: Transactions.get(
+            Transactions.id == obj['transaction_id']))
+        self._set_only_if('authorized_person_id', obj, 'authorized_person', lambda: Users.get(
+            Users.id == obj['authorized_person_id']))
 
     def where_clause(self, kwargs):
         """PeeWee specific where clause used for search."""
@@ -60,10 +57,4 @@ class TransactionRelease(CherryPyAPI):
         if '_id' in kwargs:
             where_clause &= Expression(
                 TransactionRelease.id, OP.EQ, kwargs['_id'])
-        if 'transaction_id' in kwargs:
-            where_clause &= Expression(
-                TransactionRelease.transaction, OP.EQ, kwargs['transaction_id'])
-        if 'person_id' in kwargs:
-            where_clause &= Expression(
-                TransactionRelease.person, OP.EQ, kwargs['person_id'])
-        return where_clause
+        return self._where_attr_clause(where_clause, kwargs, ['authorized_person', 'transaction'])
