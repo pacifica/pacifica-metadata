@@ -42,6 +42,7 @@ from metadata.orm.doiresource import DOIResource
 from metadata.orm.transaction_release import TransactionRelease
 from metadata.orm.doi_release import DOIRelease
 from metadata.orm.citation_release import CitationRelease
+from metadata.orm.citation_doi import CitationDOI
 
 DATABASE_CONNECT_ATTEMPTS = 40
 DATABASE_WAIT = 3
@@ -78,7 +79,8 @@ ORM_OBJECTS = [
     DOIResource,
     TransactionRelease,
     DOIRelease,
-    CitationRelease
+    CitationRelease,
+    CitationDOI
 ]
 
 
