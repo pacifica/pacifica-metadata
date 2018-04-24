@@ -40,7 +40,7 @@ class TestDOIDataSets(TestBase):
             id=SAMPLE_CREATOR_HASH['_id'])
         TestUsers.base_create_dep_objs()
         submitter.from_hash(SAMPLE_CREATOR_HASH)
-        submitter.save(force_insert=True)
+        submitter.save()
 
     def test_doidatasets_hash(self):
         """Test the hash portion using base object method."""
