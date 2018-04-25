@@ -6,6 +6,7 @@ from metadata.rest.transaction_queries.transaction_search import TransactionSear
 from metadata.rest.transaction_queries.transaction_last import TransactionLast
 from metadata.rest.transaction_queries.file_lookup import FileLookup
 from metadata.rest.transaction_queries.transactions_multi_search import TransactionsMultiSearch
+from metadata.rest.transaction_queries.transaction_release_state import TransactionReleaseState
 
 
 # pylint: disable=too-few-public-methods
@@ -20,4 +21,5 @@ class TransactionInfoAPI(object):
         self.search = TransactionSearch()
         self.files = FileLookup()
         self.last = TransactionLast()
+        self.release_state = TransactionReleaseState()
         self.multisearch = TransactionsMultiSearch()

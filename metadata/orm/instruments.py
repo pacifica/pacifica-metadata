@@ -3,7 +3,7 @@
 """Instrument model describing data generators."""
 from peewee import CharField, Expression, OP, BooleanField
 from metadata.rest.orm import CherryPyAPI
-from metadata.orm.utils import unicode_type
+from metadata.orm.utils import unicode_type, index_hash
 
 
 class Instruments(CherryPyAPI):

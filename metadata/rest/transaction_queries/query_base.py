@@ -5,7 +5,7 @@ from cherrypy import HTTPError
 from peewee import DoesNotExist, fn, JOIN
 from metadata.orm import TransactionKeyValue, Keys, Values
 from metadata.orm import Files, FileKeyValue, Transactions
-from metadata.orm import Users, Instruments, Proposals
+from metadata.orm import Users, Instruments, Proposals, TransactionRelease
 
 
 # pylint: disable=too-few-public-methods
@@ -111,7 +111,7 @@ class QueryBase(object):
             transaction['metadata'] = metadata
             transaction['kv_pairs'] = kv_list
             transaction_results['transactions'][trans.id] = transaction
-            transaction_results['times'][entry.get('updated')] = trans.id
+            transaction_results['times'][trans.id] = entry.get('updated')
 
         return transaction_results
 
@@ -149,12 +149,24 @@ class QueryBase(object):
     def _get_base_transaction_metadata(transaction_entry, option=None):
         transaction_id = transaction_entry.get('_id')
         files = QueryBase._get_file_list(transaction_id)
+        release_state_obj = TransactionRelease.select().where(
+            TransactionRelease.transaction == transaction_id).first()
+        if release_state_obj:
+            release_state_info = release_state_obj.to_hash()
+        else:
+            release_state_info = {
+                'release_state': 'not_released',
+                'release_state_display_name': 'Not Released'
+            }
         base_metadata = {
             'transaction_id': transaction_id,
             'submitter_id': transaction_entry.get('submitter'),
             'proposal_id': transaction_entry.get('proposal'),
             'instrument_id': transaction_entry.get('instrument'),
-            'file_ids': list(files.keys())
+            'file_ids': files.keys(),
+            'submitted': transaction_entry.get('created'),
+            'release_state': release_state_info.get('release_state'),
+            'release_state_display': release_state_info.get('release_state_display_name')
         }
         if option == 'details':
             submitter = Users.get(

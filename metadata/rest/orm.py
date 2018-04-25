@@ -133,15 +133,18 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         """Check for already loaded keys to prevent collisions."""
         cls_instance = cls()
         bad_id_list = []
+        check_list = []
         for item in object_list:
             item_id = item['_id'] if '_id' in item.keys() else None
             if item_id is not None:
-                try:
-                    obj = cls.get(cls_instance.where_clause({'_id': item_id}))
-                    bad_id_list.append(obj.id)
-                except DoesNotExist:
-                    obj = None
-        return [str(x) for x in bad_id_list]
+                check_list.append(item_id)
+        if check_list:
+            try:
+                objs = cls.select('id').where(cls.id << check_list).get().objects()
+            except cls.DoesNotExist:
+                objs = []
+
+        return [str(x['_id']) for obj in objs]
 
     @classmethod
     def _insert_many_format(cls, obj_hashes):
@@ -149,6 +152,10 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         clean_objs = []
         for obj in obj_hashes:
             new_obj = deepcopy(obj)
+            print("orig obj")
+            print(obj)
+            print("new obj")
+            print(new_obj)
             if '_id' in new_obj.keys():
                 new_obj['id'] = new_obj.pop('_id')
             cls.__fix_dates(obj, new_obj)
@@ -159,6 +166,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                     # replace incoming lookup table names with
                     # corresponding model field names
                     db_col = info.get('db_column')
+                    print("current db col")
+                    print(db_col)
                     if db_col in new_obj.keys():
                         new_obj[name] = new_obj.pop(db_col)
             clean_objs.append(new_obj)

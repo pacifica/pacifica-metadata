@@ -51,9 +51,9 @@ class DetailedTransactionList(QueryBase):
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
     @staticmethod
-    @tools.json_in()
     @tools.json_out()
     @db_connection_decorator
+    @tools.json_in()
     def POST():
         """Return summaryinfo for a given object type/id/time range combo."""
         # parse object list
