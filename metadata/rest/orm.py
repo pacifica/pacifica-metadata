@@ -150,8 +150,12 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             cls_obj = cls()
             cls_obj.from_hash(obj)
             db_obj = {}
-            for key in model_info['field_list']:
-                db_obj[key] = getattr(cls_obj, key)
+            for key in set(model_info['field_list']) - set(['id']):
+                cls_obj_field = getattr(cls_obj, key)
+                db_obj[key] = getattr(
+                    cls_obj_field, 'python_value', cls_obj_field)
+            if '_id' in obj:
+                db_obj['id'] = obj['_id']
             cls.__fix_dates(obj, db_obj)
             if model_info.get('related_models'):
                 rel_models = model_info.get('related_models')
@@ -162,6 +166,8 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
                     if db_col in db_obj.keys():
                         db_obj[name] = db_obj.pop(db_col)
             clean_objs.append(db_obj)
+            print('========= {} ========='.format(cls.__name__))
+            print(clean_objs)
         return clean_objs
 
     def _delete(self, **kwargs):
