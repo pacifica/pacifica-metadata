@@ -155,14 +155,6 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
             if '_id' in obj:
                 db_obj['id'] = obj['_id']
             cls.__fix_dates(obj, db_obj)
-            if model_info.get('related_models'):
-                rel_models = model_info.get('related_models')
-                for (name, info) in rel_models.items():
-                    # replace incoming lookup table names with
-                    # corresponding model field names
-                    db_col = info.get('db_column')
-                    if db_col in db_obj.keys():
-                        db_obj[name] = db_obj.pop(db_col)
             clean_objs.append(db_obj)
         return clean_objs
 
