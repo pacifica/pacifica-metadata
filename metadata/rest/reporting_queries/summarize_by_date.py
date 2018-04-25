@@ -38,7 +38,9 @@ class SummarizeByDate(QueryBase):
                 'filedate'), Files.size, Files.transaction
         ).join(Transactions)
 
-        query = query.where(where_clause).order_by(time_column).naive()
+        # pylint: disable=no-member
+        query = query.where(where_clause).order_by(time_column).objects()
+        # pylint: enable=no-member
 
         results = {
             'day_graph': {

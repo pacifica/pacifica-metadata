@@ -39,11 +39,11 @@ class TransactionRelease(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(TransactionRelease, self).to_hash(**flags)
-        obj['_id'] = int(self._data['id'])
-        obj['transaction_id'] = int(self._data['transaction'])
-        obj['release_state_id'] = int(self._data['release_state'])
+        obj['_id'] = int(self.__data__['id'])
+        obj['transaction_id'] = int(self.__data__['transaction'])
+        obj['release_state_id'] = int(self.__data__['release_state'])
         # pylint: disable=no-member
-        obj['person_id'] = int(self._data['person'])
+        obj['person_id'] = int(self.__data__['person'])
         # pylint: enable=no-member
 
         return obj

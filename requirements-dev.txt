@@ -5,11 +5,12 @@ elasticsearch
 httpretty
 mock
 nose
-peewee<3.0
+peewee>2
 pep257
-psycopg2
+psycopg2-binary
 pylint
 pytest
 python-dateutil
 radon
 requests
+six

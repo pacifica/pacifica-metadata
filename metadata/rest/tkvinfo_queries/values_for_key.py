@@ -8,7 +8,7 @@ from metadata.orm import TransactionKeyValue, Keys, Values, Transactions
 from metadata.orm.base import db_connection_decorator
 try:
     from urllib.parse import unquote
-except ImportError:
+except ImportError:  # pragma: no cover
     from urlparse import unquote
 
 
@@ -48,7 +48,7 @@ class ValuesForKey(object):
         if start_time:
             start_time = parse(start_time)
         else:
-            start_time = datetime.fromtimestamp(0)
+            start_time = datetime.utcfromtimestamp(0)
         if end_time:
             end_time = parse(end_time)
         else:

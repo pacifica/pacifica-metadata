@@ -3,6 +3,7 @@
 """Admin Module for Admin Commands."""
 from __future__ import print_function
 from sys import argv as sys_argv
+from datetime import timedelta
 from json import loads, dumps
 from argparse import ArgumentParser
 from metadata.orm import ORM_OBJECTS, try_db_connect, try_es_connect, create_elastic_index
@@ -87,7 +88,19 @@ def essync_options(essync_parser):
         help='object type to sync.', required=False, nargs='*',
         default=ORM_OBJECTS
     )
+    essync_parser.add_argument(
+        '--time-ago', dest='time_ago', type=objstr_to_timedelta,
+        help='only objects newer than X days ago.', required=False,
+        default=timedelta(days=36500)
+    )
     essync_parser.set_defaults(func=essync)
+
+
+def objstr_to_timedelta(obj_str):
+    """Turn an object string of the format X unit ago into timedelta."""
+    value, unit, check = obj_str.split()
+    assert check == 'ago'
+    return timedelta(**{unit: float(value)})
 
 
 def objstr_to_ormobj(obj_str):

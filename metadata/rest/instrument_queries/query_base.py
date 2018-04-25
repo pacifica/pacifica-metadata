@@ -12,6 +12,7 @@ class QueryBase(object):
     def format_instrument_block(instrument_entry):
         """Construct a dictionary from a given instrument instance in the metadata stack."""
         _ie = instrument_entry
+        # pylint: disable=no-member
         g_names = Groups.select(
             Groups.name
         ).join(
@@ -19,6 +20,7 @@ class QueryBase(object):
         ).where(
             InstrumentGroup.instrument == _ie.id
         )
+        # pylint: enable=no-member
         category = g_names[0].name if g_names else 'Miscellaneous'
         name = _ie.name
         display_name = u'[{0} / ID:{1}] {2}'.format(

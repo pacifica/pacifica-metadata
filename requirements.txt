@@ -1,6 +1,7 @@
 cherrypy
 elasticsearch
-peewee<3.0
-psycopg2
+peewee>2
+psycopg2-binary
 python-dateutil
 requests
+six

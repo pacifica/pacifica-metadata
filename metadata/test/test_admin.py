@@ -2,22 +2,41 @@
 # -*- coding: utf-8 -*-
 """Test the admin tools methods."""
 from argparse import Namespace
+from datetime import timedelta
 from unittest import TestCase
 from mock import patch
 from peewee import SqliteDatabase
-from playhouse.test_utils import test_database
-from metadata.orm import ORM_OBJECTS
-from metadata.orm.keys import Keys
-from metadata.admin_cmd import main, essync, escreate, render_obj, create_obj, objstr_to_ormobj, objstr_to_whereclause
+import metadata.orm as metaorm
+from metadata.admin_cmd import main, essync, escreate, render_obj, create_obj
+from metadata.admin_cmd import objstr_to_ormobj, objstr_to_whereclause, objstr_to_timedelta
 
 
 class TestAdminTool(TestCase):
     """Test the admin tool cli."""
 
+    def setUp(self):
+        """Setup the database with in memory sqlite."""
+        metaorm.DB = SqliteDatabase(':memory:')
+        for model in metaorm.ORM_OBJECTS:
+            model.bind(metaorm.DB, bind_refs=False, bind_backrefs=False)
+        metaorm.DB.connect()
+        metaorm.DB.create_tables(metaorm.ORM_OBJECTS)
+
+    def tearDown(self):
+        """Tear down the database."""
+        metaorm.DB.drop_tables(metaorm.ORM_OBJECTS)
+        metaorm.DB.close()
+        metaorm.DB = None
+
+    def test_objstr_to_timedelta(self):
+        """Test the string object to timedelta object."""
+        ten_minutes = objstr_to_timedelta('10 minutes ago')
+        self.assertEqual(ten_minutes, timedelta(minutes=10))
+
     def test_objstr_to_ormobj(self):
         """Test the string object to ORM object type check."""
         cls = objstr_to_ormobj('Keys')
-        self.assertEqual(cls, Keys)
+        self.assertEqual(cls, metaorm.Keys)
         hit_exception = False
         try:
             objstr_to_ormobj('Blah!')
@@ -44,6 +63,73 @@ class TestAdminTool(TestCase):
         self.assertTrue(test_patch.called)
 
     @patch('metadata.orm.try_db_connect')
+    def test_render(self, test_patch):
+        """Test render an object."""
+        test_patch.return_value = True
+        args = Namespace()
+        setattr(args, 'object', metaorm.Keys)
+        setattr(args, 'where_clause', {'key': 'test_key'})
+        setattr(args, 'recursion', 1)
+        test_obj = metaorm.Keys()
+        test_obj.key = 'test_key'
+        test_obj.save()
+        render_obj(args)
+        self.assertTrue(test_patch.called)
+
+    @patch('metadata.orm.try_db_connect')
+    def test_create(self, test_patch):
+        """Test the create obj."""
+        test_patch.return_value = True
+        args = Namespace()
+        setattr(args, 'object', metaorm.Keys)
+        create_obj(args)
+        self.assertTrue(test_patch.called)
+
+
+class TestAdminToolNoTables(TestCase):
+    """Test the admin tool cli."""
+
+    def setUp(self):
+        """Setup the database with in memory sqlite."""
+        metaorm.DB = SqliteDatabase('file:cachedb?mode=memory&cache=shared')
+        for model in metaorm.ORM_OBJECTS:
+            model.bind(metaorm.DB, bind_refs=False, bind_backrefs=False)
+        metaorm.DB.connect()
+
+    def tearDown(self):
+        """Tear down the database."""
+        metaorm.DB.drop_tables(metaorm.ORM_OBJECTS)
+        metaorm.DB.close()
+        metaorm.DB = None
+
+    @patch('metadata.orm.try_db_connect')
+    def test_create_no_tables(self, test_patch):
+        """Test the create obj."""
+        test_patch.return_value = True
+        args = Namespace()
+        setattr(args, 'object', metaorm.Keys)
+        create_obj(args)
+        self.assertTrue(test_patch.called)
+
+
+class TestAdminToolThreaded(TestCase):
+    """Test the admin tool cli."""
+
+    def setUp(self):
+        """Setup the database with in memory sqlite."""
+        metaorm.DB = SqliteDatabase('file:cachedb?mode=memory&cache=shared')
+        for model in metaorm.ORM_OBJECTS:
+            model.bind(metaorm.DB, bind_refs=False, bind_backrefs=False)
+        metaorm.DB.connect()
+        metaorm.DB.create_tables(metaorm.ORM_OBJECTS)
+
+    def tearDown(self):
+        """Tear down the database."""
+        metaorm.DB.drop_tables(metaorm.ORM_OBJECTS)
+        metaorm.DB.close()
+        metaorm.DB = None
+
+    @patch('metadata.orm.try_db_connect')
     def test_es_commands(self, test_patch):
         """Test the essync sub command."""
         test_patch.return_value = True
@@ -54,37 +140,12 @@ class TestAdminTool(TestCase):
         setattr(skip_args, 'threads', 1)
         setattr(reg_args, 'threads', 1)
         setattr(reg_args, 'items_per_page', 1)
-        with test_database(SqliteDatabase('file:cachedb?mode=memory&cache=shared'), ORM_OBJECTS):
-            setattr(reg_args, 'objects', [Keys])
-            test_obj = Keys()
-            test_obj.key = 'test_key'
-            test_obj.save()
-            escreate(skip_args)
-            escreate(reg_args)
-            essync(reg_args)
-        self.assertTrue(test_patch.called)
-
-    @patch('metadata.orm.try_db_connect')
-    def test_render(self, test_patch):
-        """Test render an object."""
-        test_patch.return_value = True
-        args = Namespace()
-        setattr(args, 'object', Keys)
-        setattr(args, 'where_clause', {'key': 'test_key'})
-        setattr(args, 'recursion', 1)
-        with test_database(SqliteDatabase(':memory:'), ORM_OBJECTS):
-            test_obj = Keys()
-            test_obj.key = 'test_key'
-            test_obj.save()
-            render_obj(args)
-        self.assertTrue(test_patch.called)
-
-    @patch('metadata.orm.try_db_connect')
-    def test_create(self, test_patch):
-        """Test the create obj."""
-        test_patch.return_value = True
-        args = Namespace()
-        setattr(args, 'object', Keys)
-        with test_database(SqliteDatabase(':memory:'), ORM_OBJECTS, create_tables=False):
-            create_obj(args)
+        setattr(reg_args, 'time_ago', timedelta(days=100))
+        setattr(reg_args, 'objects', [metaorm.Keys])
+        test_obj = metaorm.Keys()
+        test_obj.key = 'test_key'
+        test_obj.save()
+        escreate(skip_args)
+        escreate(reg_args)
+        essync(reg_args)
         self.assertTrue(test_patch.called)

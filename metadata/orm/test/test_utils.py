@@ -23,7 +23,7 @@ class TestUtils(TestCase):
         2. a datetime object
         3. an epoch style int
         """
-        self.assertEqual(datetime_converts(0), datetime.fromtimestamp(0))
+        self.assertEqual(datetime_converts(0), datetime.utcfromtimestamp(0))
         now_chk = datetime_now_nomicrosecond()
         self.assertEqual(datetime_converts(now_chk), now_chk)
         chk_date = datetime(2016, 7, 5, 9, 22, 12)
@@ -42,7 +42,7 @@ class TestUtils(TestCase):
         2. a datetime object
         3. an epoch style int
         """
-        self.assertEqual(date_converts(0), datetime.fromtimestamp(0).date())
+        self.assertEqual(date_converts(0), datetime.utcfromtimestamp(0).date())
         now_chk = datetime.utcnow().date()
         self.assertEqual(date_converts(now_chk), now_chk)
         chk_date = date(2016, 7, 5)

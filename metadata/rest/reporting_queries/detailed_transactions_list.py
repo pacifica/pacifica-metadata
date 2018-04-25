@@ -18,6 +18,7 @@ class DetailedTransactionList(QueryBase):
     @staticmethod
     def get_transaction_list_details(transaction_list):
         """Return complete data set on a specified transaction."""
+        # pylint: disable=no-member
         query = (
             Files().select(
                 Files.transaction.alias('upload_id'),
@@ -32,6 +33,7 @@ class DetailedTransactionList(QueryBase):
                 fn.Min(Transactions.instrument).alias('instrument_id')
             ).join(Transactions).where(Files.transaction << transaction_list).group_by(Files.transaction)
         )
+        # pylint: enable=no-member
 
         return {str(r['upload_id']): {
             'upload_id': str(r['upload_id']),

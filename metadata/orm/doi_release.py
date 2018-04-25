@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Citation proposal relationship."""
-from peewee import ForeignKeyField, CompositeKey, Expression, OP, unicode_type
-from metadata.orm.utils import index_hash
+from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from metadata.orm.utils import index_hash, unicode_type
 from metadata.orm.transaction_release import TransactionRelease
 from metadata.orm.doidatasets import DOIDataSets
 from metadata.orm.base import DB
@@ -47,10 +47,10 @@ class DOIRelease(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOIRelease, self).to_hash(**flags)
-        obj['_id'] = index_hash(unicode_type(self._data['doi']),
-                                int(self._data['release']))
-        obj['doi_reference'] = unicode_type(self._data['doi'])
-        obj['release_id'] = int(self._data['release'])
+        obj['_id'] = index_hash(unicode_type(self.__data__['doi']),
+                                int(self.__data__['release']))
+        obj['doi_reference'] = unicode_type(self.__data__['doi'])
+        obj['release_id'] = int(self.__data__['release'])
         return obj
 
     def from_hash(self, obj):

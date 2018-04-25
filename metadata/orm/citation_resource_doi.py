@@ -47,11 +47,11 @@ class CitationResourceDOI(CherryPyAPI):
         """Convert the object to a hash."""
         obj = super(CitationResourceDOI, self).to_hash(**flags)
         obj['_id'] = index_hash(
-            unicode_type(self._data['doi']),
-            int(self._data['citation'])
+            unicode_type(self.__data__['doi']),
+            int(self.__data__['citation'])
         )
         obj['doi'] = unicode_type(self.doi.doi)
-        obj['citation_id'] = int(self._data['citation'])
+        obj['citation_id'] = int(self.__data__['citation'])
         return obj
 
     def from_hash(self, obj):

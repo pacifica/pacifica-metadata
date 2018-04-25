@@ -43,10 +43,10 @@ class InstrumentGroup(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(InstrumentGroup, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self._data['group']),
-                                int(self._data['instrument']))
-        obj['instrument_id'] = int(self._data['instrument'])
-        obj['group_id'] = int(self._data['group'])
+        obj['_id'] = index_hash(int(self.__data__['group']),
+                                int(self.__data__['instrument']))
+        obj['instrument_id'] = int(self.__data__['instrument'])
+        obj['group_id'] = int(self.__data__['group'])
         return obj
 
     def from_hash(self, obj):

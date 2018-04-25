@@ -43,10 +43,10 @@ class InstitutionPerson(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(InstitutionPerson, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self._data['person']),
-                                int(self._data['institution']))
-        obj['person_id'] = int(self._data['person'])
-        obj['institution_id'] = int(self._data['institution'])
+        obj['_id'] = index_hash(int(self.__data__['person']),
+                                int(self.__data__['institution']))
+        obj['person_id'] = int(self.__data__['person'])
+        obj['institution_id'] = int(self.__data__['institution'])
         return obj
 
     def from_hash(self, obj):

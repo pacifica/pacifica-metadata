@@ -21,15 +21,18 @@ class ProposalUserSearch(QueryBase):
         # get list of proposal_ids for this user
         where_clause = ProposalParticipant().where_clause(
             {'person_id': user_id})
+        # pylint: disable=no-member
         proposals = (Proposals
                      .select(
                          Proposals.id, Proposals.title, Proposals.actual_start_date,
                          Proposals.actual_end_date, Proposals.closed_date,
-                         Proposals.accepted_date, Proposals.submitted_date
+                         Proposals.accepted_date, Proposals.submitted_date,
+                         Proposals.proposal_type
                      )
                      .join(ProposalParticipant)
                      .where(where_clause)
                      .order_by(Proposals.title))
+        # pylint: enable=no-member
         return [QueryBase.format_proposal_block(p) for p in proposals if p]
 
     # pylint: disable=invalid-name

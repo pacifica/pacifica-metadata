@@ -4,6 +4,7 @@
 from unittest import TestCase
 from json import dumps, loads
 import httpretty
+from metadata.orm.utils import unicode_type
 from metadata.client import PMClient, PMClientError
 
 
@@ -65,8 +66,8 @@ class TestClient(TestCase):
         try:
             client.get(class_type, params)
         except PMClientError as ex:
-            self.assertEqual(
-                str(ex), 'Internal Server Error (501) This is the error.')
+            self.assertTrue('501' in str(ex))
+            self.assertTrue('This is the error.' in str(ex))
 
     @httpretty.activate
     def test_client_get_unknown_error(self):
@@ -83,7 +84,8 @@ class TestClient(TestCase):
         try:
             client.get(class_type, params)
         except PMClientError as ex:
-            self.assertEqual(str(ex), 'Unknown Error (301) This is the error.')
+            self.assertTrue('301' in str(ex))
+            self.assertTrue('This is the error.' in str(ex))
 
     @httpretty.activate
     def test_client_delete(self):
@@ -128,8 +130,8 @@ class TestClient(TestCase):
         try:
             client.delete(class_type, params)
         except PMClientError as ex:
-            self.assertEqual(
-                str(ex), 'Internal Server Error (501) This is the error.')
+            self.assertTrue('501' in str(ex))
+            self.assertTrue('This is the error.' in str(ex))
 
     @httpretty.activate
     def test_client_delete_unk_error(self):
@@ -146,7 +148,8 @@ class TestClient(TestCase):
         try:
             client.delete(class_type, params)
         except PMClientError as ex:
-            self.assertEqual(str(ex), 'Unknown Error (301) This is the error.')
+            self.assertTrue('301' in str(ex))
+            self.assertTrue('This is the error.' in str(ex))
 
     @httpretty.activate
     def test_client_create_server_error(self):
@@ -166,8 +169,8 @@ class TestClient(TestCase):
         try:
             client.create(class_type, response_body)
         except PMClientError as ex:
-            self.assertEqual(
-                str(ex), 'Internal Server Error (501) This is the error.')
+            self.assertTrue('501' in str(ex))
+            self.assertTrue('This is the error.' in str(ex))
 
     @httpretty.activate
     def test_client_create_unk_error(self):
@@ -187,7 +190,8 @@ class TestClient(TestCase):
         try:
             client.create(class_type, response_body)
         except PMClientError as ex:
-            self.assertEqual(str(ex), 'Unknown Error (301) This is the error.')
+            self.assertTrue('301' in str(ex))
+            self.assertTrue('This is the error.' in str(ex))
 
     @httpretty.activate
     def test_client_create(self):
@@ -205,7 +209,7 @@ class TestClient(TestCase):
         client = PMClient(endpoint_url)
         response = client.create(class_type, response_body)
         self.assertTrue(response)
-        chk_body = loads(httpretty.last_request().body)
+        chk_body = loads(httpretty.last_request().body.decode('UTF-8'))
         for key, value in response_body.items():
             self.assertEqual(chk_body[key], value)
 
@@ -267,14 +271,15 @@ class TestClient(TestCase):
             'network_id': 'johndoe'
         }
         httpretty.register_uri(httpretty.POST, '{0}/{1}'.format(endpoint_url, class_type),
-                               body='This is the error.',
+                               body=unicode_type('This is the error.'),
                                status=501)
         client = PMClient(endpoint_url)
         try:
             client.update(class_type, params, post_body)
         except PMClientError as ex:
-            self.assertEqual(
-                str(ex), 'Internal Server Error (501) This is the error.')
+            self.assertTrue('501' in str(ex))
+            self.assertTrue('This is the error.' in str(ex))
+            self.assertTrue('Internal Server Error' in str(ex))
 
     @httpretty.activate
     def test_client_update_unk_error(self):
@@ -297,4 +302,5 @@ class TestClient(TestCase):
         try:
             client.update(class_type, params, post_body)
         except PMClientError as ex:
-            self.assertEqual(str(ex), 'Unknown Error (301) This is the error.')
+            self.assertTrue('301' in str(ex))
+            self.assertTrue('This is the error.'in str(ex))

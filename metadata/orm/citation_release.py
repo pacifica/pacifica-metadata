@@ -44,11 +44,11 @@ class CitationRelease(CherryPyAPI):
         """Convert the object to a hash."""
         obj = super(CitationRelease, self).to_hash(**flags)
         obj['_id'] = index_hash(
-            int(self._data['release']),
-            int(self._data['citation'])
+            int(self.__data__['release']),
+            int(self.__data__['citation'])
         )
-        obj['release_id'] = int(self._data['release'])
-        obj['citation_id'] = int(self._data['citation'])
+        obj['release_id'] = int(self.__data__['release'])
+        obj['citation_id'] = int(self.__data__['citation'])
         return obj
 
     def from_hash(self, obj):

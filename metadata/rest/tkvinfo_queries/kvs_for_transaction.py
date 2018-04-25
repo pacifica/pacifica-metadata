@@ -15,6 +15,7 @@ class KVsForTransaction(object):
     @staticmethod
     def get_kv_pairs_for_transaction(transaction_id):
         """Retrieve a list of key/value pairs for a transaction_id."""
+        # pylint: disable=no-member
         tkv_query = (TransactionKeyValue
                      .select(Keys.key, Values.value)
                      .join(Keys,
@@ -22,6 +23,7 @@ class KVsForTransaction(object):
                      .join(Values,
                            on=(TransactionKeyValue.value == Values.id))
                      .where(TransactionKeyValue.transaction == transaction_id)).dicts()
+        # pylint: enable=no-member
         return {str(item['key']): str(item['value']) for item in tkv_query}
 
     # Cherrypy requires these named methods.

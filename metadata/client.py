@@ -28,9 +28,9 @@ class PMClient(object):
         """Create the object of type based on hash."""
         ret = requests.put('{0}/{1}'.format(self.url, cls_type),
                            data=dumps(set_hash), headers=self.headers)
-        if ret.status_code / 100 == 2:
+        if int(ret.status_code / 100) == 2:
             return True
-        elif ret.status_code / 100 == 5:
+        elif int(ret.status_code / 100) == 5:
             raise PMClientError('Internal Server Error ({0}) {1}'.format(
                 ret.status_code, ret.content))
         else:
@@ -48,11 +48,11 @@ class PMClient(object):
                             params=query_hash,
                             data=dumps(set_hash),
                             headers=self.headers)
-        if ret.status_code / 100 == 2:
+        if int(ret.status_code / 100) == 2:
             return True
-        if ret.status_code / 100 == 4:
+        if int(ret.status_code / 100) == 4:
             return False
-        elif ret.status_code / 100 == 5:
+        elif int(ret.status_code / 100) == 5:
             raise PMClientError('Internal Server Error ({0}) {1}'.format(
                 ret.status_code, ret.content))
         else:
@@ -63,11 +63,11 @@ class PMClient(object):
         """Get the object of type from query_hash."""
         ret = requests.get('{0}/{1}'.format(self.url, cls_type),
                            params=query_hash, allow_redirects=True)
-        if ret.status_code / 100 == 2:
-            return loads(ret.content)
-        elif ret.status_code / 100 == 4:
+        if int(ret.status_code / 100) == 2:
+            return loads(ret.content.decode('UTF-8'))
+        elif int(ret.status_code / 100) == 4:
             return {}
-        elif ret.status_code / 100 == 5:
+        elif int(ret.status_code / 100) == 5:
             raise PMClientError('Internal Server Error ({0}) {1}'.format(
                 ret.status_code, ret.content))
         else:
@@ -78,9 +78,9 @@ class PMClient(object):
         """Delete the object of type from query_hash."""
         ret = requests.delete(
             '{0}/{1}'.format(self.url, cls_type), params=query_hash, allow_redirects=True)
-        if ret.status_code / 100 == 2 or ret.status_code / 100 == 4:
+        if int(ret.status_code / 100) == 2 or int(ret.status_code / 100) == 4:
             return True
-        elif ret.status_code / 100 == 5:
+        elif int(ret.status_code / 100) == 5:
             raise PMClientError('Internal Server Error ({0}) {1}'.format(
                 ret.status_code, ret.content))
         else:

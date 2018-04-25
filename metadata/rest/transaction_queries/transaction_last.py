@@ -17,7 +17,7 @@ class TransactionLast(QueryBase):
     @staticmethod
     def _get_last_known_transaction():
         txn_id = (Transactions
-                  .select(fn.Max(Transactions.id))
+                  .select(fn.Max(Transactions.id).alias('id'))
                   .where(Transactions.deleted >> None)
                   .dicts()
                   .get())

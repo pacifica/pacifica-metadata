@@ -66,8 +66,8 @@ class Contributors(CherryPyAPI):
         obj['last_name'] = unicode_type(self.last_name)
         obj['dept_code'] = unicode_type(self.dept_code)
         # pylint: disable=no-member
-        obj['person_id'] = int(self._data['person'])
-        obj['institution_id'] = int(self._data['institution'])
+        obj['person_id'] = int(self.__data__['person'])
+        obj['institution_id'] = int(self.__data__['institution'])
         # pylint: enable=no-member
         obj['encoding'] = str(self.encoding)
         return obj
