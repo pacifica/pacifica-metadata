@@ -43,10 +43,10 @@ class Proposals(CherryPyAPI):
 
     id = CharField(primary_key=True)
     title = TextField(default='', index=True)
-    short_name = CharField(default='', index=True)
-    abstract = TextField(default='')
+    short_name = CharField(null=True, default='', index=True)
+    abstract = TextField(null=True, default='')
     science_theme = CharField(null=True)
-    proposal_type = CharField(default='')
+    proposal_type = CharField(null=True, default='')
     submitted_date = ExtendDateTimeField(
         default=datetime_now_nomicrosecond, index=True)
     accepted_date = ExtendDateField(null=True, index=True)

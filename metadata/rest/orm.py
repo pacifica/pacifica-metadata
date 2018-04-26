@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Core interface for each ORM object to interface with CherryPy."""
-from copy import deepcopy
 import cherrypy
 from cherrypy import HTTPError
 from peewee import DoesNotExist
@@ -148,20 +147,15 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         model_info = cls.get_object_info()
         clean_objs = []
         for obj in obj_hashes:
-            new_obj = deepcopy(obj)
-            if '_id' in new_obj.keys():
-                new_obj['id'] = new_obj.pop('_id')
-            cls.__fix_dates(obj, new_obj)
-
-            if model_info.get('related_models'):
-                rel_models = model_info.get('related_models')
-                for (name, info) in rel_models.items():
-                    # replace incoming lookup table names with
-                    # corresponding model field names
-                    db_col = info.get('db_column')
-                    if db_col in new_obj.keys():
-                        new_obj[name] = new_obj.pop(db_col)
-            clean_objs.append(new_obj)
+            cls_obj = cls()
+            cls_obj.from_hash(obj)
+            db_obj = {}
+            for key in set(model_info['field_list']) - set(['id']):
+                db_obj[key] = cls_obj.__data__.get(key, None)
+            if '_id' in obj:
+                db_obj['id'] = obj['_id']
+            cls.__fix_dates(obj, db_obj)
+            clean_objs.append(db_obj)
         return clean_objs
 
     def _delete(self, **kwargs):
