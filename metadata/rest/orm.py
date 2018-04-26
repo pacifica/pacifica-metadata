@@ -3,7 +3,7 @@
 """Core interface for each ORM object to interface with CherryPy."""
 import cherrypy
 from cherrypy import HTTPError
-from peewee import DoesNotExist, Expression, OP
+from peewee import DoesNotExist
 from metadata.orm.base import PacificaModel, db_connection_decorator
 from metadata.elastic.orm import ElasticAPI
 from metadata.orm.utils import datetime_now_nomicrosecond, datetime_converts
@@ -118,21 +118,11 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         clean_objs = self._insert_many_format(objs)
         es_objs = []
         insert_query = self.__class__.insert_many(clean_objs)
-        big_query = []
         # pylint: disable=no-value-for-parameter
         for item in insert_query.execute():
             query = [getattr(self.__class__, field) == value for field,
                      value in zip(self.get_primary_keys(), item)]
-            rhs = query.pop()
-            while query:
-                lhs = query.pop()
-                rhs = Expression(lhs, OP.AND, rhs)
-            big_query.append(rhs)
-        rhs = big_query.pop()
-        while big_query:
-            lhs = big_query.pop()
-            rhs = Expression(lhs, OP.OR, rhs)
-        for item in self.select().where(rhs).objects().execute():
+            item = self.get(*query)
             es_objs.append(item.to_hash(**self.es_recursive_flags))
         # pylint: enable=no-value-for-parameter
         self.elastic_upload(es_objs)
