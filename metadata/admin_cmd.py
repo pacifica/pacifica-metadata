@@ -14,14 +14,17 @@ def render_obj(args):
     """Render an object based on args."""
     try_db_connect()
     test_obj = args.object()
+    test_obj = args.object.get(
+        test_obj.where_clause(args.where_clause)
+    )
     print(
         dumps(
-            args.object.get(
-                test_obj.where_clause(args.where_clause)
-            ).to_hash(recursion_depth=args.recursion),
+            test_obj.to_hash(recursion_depth=args.recursion),
             indent=4
         )
     )
+    if args.delete:
+        test_obj.delete_instance()
 
 
 def create_obj(args):
@@ -154,6 +157,14 @@ def render_options(render_parser):
         dest='recursion',
         type=int,
         help='recursive level to go',
+        required=False
+    )
+    render_parser.add_argument(
+        '--delete',
+        default='store_false',
+        action='store_true',
+        dest='delete',
+        help='delete the object',
         required=False
     )
     render_parser.set_defaults(func=render_obj)
