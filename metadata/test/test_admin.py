@@ -74,6 +74,7 @@ class TestAdminTool(TestCase):
         test_obj = metaorm.Keys()
         test_obj.key = 'test_key'
         test_obj.save()
+        test_obj.elastic_upload([test_obj.to_hash()])
         render_obj(args)
         hit_exception = False
         try:
