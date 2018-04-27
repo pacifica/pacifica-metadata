@@ -5,7 +5,7 @@ from argparse import Namespace
 from datetime import timedelta
 from unittest import TestCase
 from mock import patch
-from peewee import SqliteDatabase
+from peewee import SqliteDatabase, DoesNotExist
 import metadata.orm as metaorm
 from metadata.admin_cmd import main, essync, escreate, render_obj, create_obj
 from metadata.admin_cmd import objstr_to_ormobj, objstr_to_whereclause, objstr_to_timedelta
@@ -70,10 +70,17 @@ class TestAdminTool(TestCase):
         setattr(args, 'object', metaorm.Keys)
         setattr(args, 'where_clause', {'key': 'test_key'})
         setattr(args, 'recursion', 1)
+        setattr(args, 'delete', True)
         test_obj = metaorm.Keys()
         test_obj.key = 'test_key'
         test_obj.save()
         render_obj(args)
+        hit_exception = False
+        try:
+            metaorm.Keys().get()
+        except DoesNotExist:
+            hit_exception = True
+        self.assertTrue(hit_exception)
         self.assertTrue(test_patch.called)
 
     @patch('metadata.orm.try_db_connect')
