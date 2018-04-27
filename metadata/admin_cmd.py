@@ -25,6 +25,7 @@ def render_obj(args):
     )
     if args.delete:
         test_obj.delete_instance()
+        test_obj.elastic_delete(test_obj)
 
 
 def create_obj(args):

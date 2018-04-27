@@ -17,8 +17,10 @@ class TestAdminTool(TestCase):
     def setUp(self):
         """Setup the database with in memory sqlite."""
         metaorm.DB = SqliteDatabase(':memory:')
+        metaorm.create_elastic_index()
         for model in metaorm.ORM_OBJECTS:
             model.bind(metaorm.DB, bind_refs=False, bind_backrefs=False)
+            model.create_elastic_mapping()
         metaorm.DB.connect()
         metaorm.DB.create_tables(metaorm.ORM_OBJECTS)
 
@@ -74,6 +76,7 @@ class TestAdminTool(TestCase):
         test_obj = metaorm.Keys()
         test_obj.key = 'test_key'
         test_obj.save()
+        test_obj.elastic_upload([test_obj.to_hash()])
         render_obj(args)
         hit_exception = False
         try:
