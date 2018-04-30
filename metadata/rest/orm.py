@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Core interface for each ORM object to interface with CherryPy."""
-from copy import deepcopy
 import cherrypy
 from cherrypy import HTTPError
 from peewee import DoesNotExist
+import pprint
 from metadata.orm.base import PacificaModel, db_connection_decorator
 from metadata.elastic.orm import ElasticAPI
 from metadata.orm.utils import datetime_now_nomicrosecond, datetime_converts
@@ -134,43 +134,35 @@ class CherryPyAPI(PacificaModel, ElasticAPI):
         cls_instance = cls()
         bad_id_list = []
         check_list = []
+        objs = []
         for item in object_list:
             item_id = item['_id'] if '_id' in item.keys() else None
             if item_id is not None:
                 check_list.append(item_id)
         if check_list:
-            try:
-                objs = cls.select('id').where(cls.id << check_list).get().objects()
-            except cls.DoesNotExist:
-                objs = []
+            objs_query = cls.select().where(cls.id << check_list)
+            if objs_query.exists():
+                objs = objs_query.dicts()
 
-        return [str(x['_id']) for obj in objs]
+        retval = [str(obj['id']) for obj in objs]
+        pprint.pprint(retval)
+        return retval
 
     @classmethod
     def _insert_many_format(cls, obj_hashes):
         model_info = cls.get_object_info()
         clean_objs = []
         for obj in obj_hashes:
-            new_obj = deepcopy(obj)
-            print("orig obj")
-            print(obj)
-            print("new obj")
-            print(new_obj)
-            if '_id' in new_obj.keys():
-                new_obj['id'] = new_obj.pop('_id')
-            cls.__fix_dates(obj, new_obj)
+            cls_obj = cls()
+            cls_obj.from_hash(obj)
+            db_obj = {}
+            for key in set(model_info['field_list']) - set(['id']):
+                db_obj[key] = cls_obj.__data__.get(key, None)
+            if '_id' in obj:
+                db_obj['id'] = obj['_id']
+            cls.__fix_dates(obj, db_obj)
+            clean_objs.append(db_obj)
 
-            if model_info.get('related_models'):
-                rel_models = model_info.get('related_models')
-                for (name, info) in rel_models.items():
-                    # replace incoming lookup table names with
-                    # corresponding model field names
-                    db_col = info.get('db_column')
-                    print("current db col")
-                    print(db_col)
-                    if db_col in new_obj.keys():
-                        new_obj[name] = new_obj.pop(db_col)
-            clean_objs.append(new_obj)
         return clean_objs
 
     def _delete(self, **kwargs):

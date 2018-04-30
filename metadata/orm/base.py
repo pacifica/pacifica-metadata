@@ -24,12 +24,6 @@ from six import text_type
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
 
-# # Print all queries to stderr.
-# import logging
-# logger = logging.getLogger('peewee')
-# logger.setLevel(logging.DEBUG)
-# logger.addHandler(logging.StreamHandler())
-
 # Primary PeeWee database connection object constant
 DB = pgdb(getenv('POSTGRES_ENV_POSTGRES_DB', 'pacifica_metadata'),
           user=getenv('POSTGRES_ENV_POSTGRES_USER', 'pacifica'),

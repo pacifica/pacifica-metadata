@@ -33,8 +33,8 @@ class QueryBase(object):
                     .order_by(TransactionKeyValue.key)
                     .dicts())
         # pylint: enable=no-member
-
-        return [tkv for tkv in tkv_list]
+        return list(tkv_list)
+        # return [tkv for tkv in list(tkv_list)]
 
     @staticmethod
     def _get_file_list(transaction_id):
@@ -73,7 +73,6 @@ class QueryBase(object):
 
         transaction_entry.update(transaction_metadata)
         transaction_entry['key_values'] = kv_list
-
         return transaction_entry
 
     @staticmethod
@@ -112,7 +111,7 @@ class QueryBase(object):
             transaction['kv_pairs'] = kv_list
             transaction_results['transactions'][trans.id] = transaction
             transaction_results['times'][trans.id] = entry.get('updated')
-
+        print(transaction_results)
         return transaction_results
 
     @staticmethod
@@ -163,7 +162,7 @@ class QueryBase(object):
             'submitter_id': transaction_entry.get('submitter'),
             'proposal_id': transaction_entry.get('proposal'),
             'instrument_id': transaction_entry.get('instrument'),
-            'file_ids': files.keys(),
+            'file_ids': list(files.keys()),
             'submitted': transaction_entry.get('created'),
             'release_state': release_state_info.get('release_state'),
             'release_state_display': release_state_info.get('release_state_display_name')

@@ -29,9 +29,9 @@ class TransactionReleaseState(QueryBase):
                     )
                     .join(DataReleaseStates)
                     .where(TransactionRelease.transaction << transaction_list).dicts())
-
         found_transactions = []
         for release in releases:
+            print(release)
             found_transactions.append(unicode_type(release['transaction']))
             if release['person'] not in user_lookup_cache:
                 user_lookup_cache[release['person']] = UserLookup.get_user_info_block(
@@ -48,7 +48,6 @@ class TransactionReleaseState(QueryBase):
 
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
-    # pylint: disable=duplicate-code
     @staticmethod
     @tools.json_out()
     @db_connection_decorator
@@ -65,14 +64,14 @@ class TransactionReleaseState(QueryBase):
                 QueryBase.compose_help_block_message()
             )
 
-    # Cherrypy requires these named methods.
-    # pylint: disable=invalid-name
+    # pylint: disable=duplicate-code
     @staticmethod
-    @tools.json_in()
     @tools.json_out()
+    @tools.json_in()
     @db_connection_decorator
+    # pylint: enable=duplicate-code
     def POST():
         """Return transaction release state details for the list of transaction_id's."""
-        transaction_list = map(str, request.json)
+        transaction_list = list(map(str, request.json))
 
         return TransactionReleaseState._get_release_state(transaction_list)
