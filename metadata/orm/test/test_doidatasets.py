@@ -29,7 +29,7 @@ class TestDOIDataSets(TestBase):
     """Test the Keywords ORM object."""
 
     obj_cls = DOIDataSets
-    obj_id = DOIDataSets.id
+    obj_id = DOIDataSets.doi
 
     @classmethod
     def base_create_dep_objs(cls):
