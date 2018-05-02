@@ -171,7 +171,8 @@ class PacificaModel(Model):
         if len(valid_fk_obj_list) == 1:
             fk_item_name = fk_obj_list[valid_fk_obj_list.pop()]
         else:
-            fk_item_name = obj_ref.__class__._meta.__dict__['primary_key'].__dict__['column_name']
+            fk_item_name = obj_ref.__class__._meta.__dict__[
+                'primary_key'].__dict__['column_name']
         return fk_item_name, fk_obj_list
 
     def from_hash(self, obj):
