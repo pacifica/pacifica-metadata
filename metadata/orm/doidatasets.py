@@ -23,7 +23,7 @@ class DOIDataSets(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    doi = CharField(unique=True)
+    doi = CharField(primary_key=True)
     name = CharField(default='')
     encoding = CharField(default='UTF8')
     creator = ForeignKeyField(Users, related_name='dois_created')

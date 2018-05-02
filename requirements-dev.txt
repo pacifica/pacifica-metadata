@@ -7,7 +7,7 @@ mock
 nose
 peewee>2
 pep257
-psycopg2
+psycopg2-binary
 pylint
 pytest
 python-dateutil

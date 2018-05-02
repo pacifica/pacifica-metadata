@@ -154,7 +154,6 @@ class PacificaModel(Model):
     @staticmethod
     def get_append_item(obj_ref, fk_item_name, fk_obj_list):
         """Generate the proper item to append to the newly built object."""
-        # pylint: disable=protected-access
         if 'key' in fk_obj_list.values() and 'value' in fk_obj_list.values():
             append_item = {
                 'key_id': obj_ref.__data__['key'],
@@ -172,7 +171,7 @@ class PacificaModel(Model):
         if len(valid_fk_obj_list) == 1:
             fk_item_name = fk_obj_list[valid_fk_obj_list.pop()]
         else:
-            fk_item_name = 'id'
+            fk_item_name = obj_ref.__class__._meta.__dict__['primary_key'].__dict__['column_name']
         return fk_item_name, fk_obj_list
 
     def from_hash(self, obj):
