@@ -168,11 +168,13 @@ class PacificaModel(Model):
         fk_obj_list = obj_ref.cls_foreignkey_rel_mods()
         valid_fk_obj_list = list(
             set(fk_obj_list) - set([self.__class__]))
+        # pylint: disable=protected-access
         if len(valid_fk_obj_list) == 1:
             fk_item_name = fk_obj_list[valid_fk_obj_list.pop()]
         else:
             fk_item_name = obj_ref.__class__._meta.__dict__[
                 'primary_key'].__dict__['column_name']
+        # pylint: enable=protected-access
         return fk_item_name, fk_obj_list
 
     def from_hash(self, obj):
