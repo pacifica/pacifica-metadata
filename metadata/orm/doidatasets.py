@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
-from peewee import CharField, Expression, OP, ForeignKeyField
+from peewee import CharField, ForeignKeyField
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.users import Users
 from metadata.orm.utils import unicode_type
@@ -23,7 +23,7 @@ class DOIDataSets(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    doi = CharField(unique=True)
+    doi = CharField(primary_key=True)
     name = CharField(default='')
     encoding = CharField(default='UTF8')
     creator = ForeignKeyField(Users, related_name='dois_created')
@@ -63,6 +63,4 @@ class DOIDataSets(CherryPyAPI):
     def where_clause(self, kwargs):
         """Where clause for the various elements."""
         where_clause = super(DOIDataSets, self).where_clause(kwargs)
-        if '_id' in kwargs:
-            where_clause &= Expression(DOIDataSets.id, OP.EQ, kwargs['_id'])
         return self._where_attr_clause(where_clause, kwargs, ['doi', 'name', 'encoding', 'creator'])
