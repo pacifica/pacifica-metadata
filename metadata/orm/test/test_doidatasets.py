@@ -9,7 +9,6 @@ from metadata.orm.test.test_users import TestUsers
 from metadata.orm.users import Users
 
 SAMPLE_DOIDATASET_HASH = {
-    '_id': 142,
     'doi': 'halitosis',
     'name': 'halitosis',
     'encoding': 'UTF8',
@@ -19,7 +18,6 @@ SAMPLE_DOIDATASET_HASH = {
 # yes a DOI can be unicode....
 # https://www.doi.org/doi_handbook/2_Numbering.html#2.2.1
 SAMPLE_UNICODE_DOIDATASET_HASH = {
-    '_id': 143,
     'doi': u'blargééééé',
     'name': u'blargééééé',
     'encoding': 'UTF8',

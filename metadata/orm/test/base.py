@@ -68,8 +68,10 @@ class TestBase(TestCase):
         check all keys in the new hash from the obj_hash passed
         """
         obj = self.base_create_obj(self.obj_cls, obj_hash)
+        # pylint: disable=no-member
         new_obj = self.obj_cls.get(
             self.obj_id == getattr(obj, self.obj_id.column_name))
+        # pylint: enable=no-member
         chk_obj_hash = new_obj.to_hash()
         self.assertTrue('_id' in chk_obj_hash)
         for key in obj_hash.keys():
@@ -91,8 +93,10 @@ class TestBase(TestCase):
         obj = self.obj_cls()
         obj.from_hash(loads(json_str))
         obj.save(force_insert=True)
+        # pylint: disable=no-member
         new_obj = self.obj_cls.get(
             self.obj_id == getattr(obj, self.obj_id.column_name))
+        # pylint: enable=no-member
         chk_obj_json = dumps(new_obj.to_hash())
         self.assertEqual(type(chk_obj_json), str)
 
