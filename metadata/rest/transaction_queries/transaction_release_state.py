@@ -15,17 +15,14 @@ class TransactionReleaseState(QueryBase):
 
     @staticmethod
     def _get_release_state(transaction_list):
-        output_results = {}
         # pylint: disable=no-member
         releases = (TransactionRelease
-                    .select(
-                        TransactionRelease.id.alias('release_id'),
-                        TransactionRelease.transaction,
-                        TransactionRelease.authorized_person
-                    )
-                    .where(TransactionRelease.transaction << transaction_list).dicts())
+                    .select(TransactionRelease.id.alias('release_id'), TransactionRelease.transaction,
+                            TransactionRelease.authorized_person
+                            ).where(TransactionRelease.transaction << transaction_list).dicts())
         # pylint: enable=no-member
 
+        output_results = {}
         user_lookup_cache = {}
         found_transactions = []
 
@@ -39,7 +36,6 @@ class TransactionReleaseState(QueryBase):
             release['display_state'] = 'Released'
             release['release_doi_entries'] = TransactionReleaseState._get_doi_release(
                 release['release_id'])
-            # release['release_doi'] = release['doi_releases'].pop() if len(release['doi_releases']) > 0 else None
             release['release_citations'] = TransactionReleaseState._get_citation_release(
                 release['release_id'])
             output_results[release['transaction']] = release
@@ -67,7 +63,6 @@ class TransactionReleaseState(QueryBase):
         # pylint: enable=no-member
         if doi_releases.exists():
             for release in doi_releases:
-                print(release.doi.name)
                 output_results.append({
                     'doi_name': release.doi.name,
                     'doi_reference': release.doi.doi

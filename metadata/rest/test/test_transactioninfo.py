@@ -154,7 +154,7 @@ class TestTransactionInfoAPI(CPCommonTest):
         data = loads(req.text)
         self.assertTrue('69' in data)
         self.assertEqual(data['69']['transaction'], 69)
-        self.assertEqual(data['69']['person_info']['first_name'], 'bob')
+        self.assertEqual(data['69']['authorized_person']['first_name'], 'bob')
         req = requests.post(
             '{0}/transactioninfo/release_state'.format(self.url),
             data='[{}]'.format(str_transaction_id),
@@ -163,7 +163,7 @@ class TestTransactionInfoAPI(CPCommonTest):
         data = loads(req.text)
         self.assertTrue('69' in data)
         self.assertEqual(data['69']['transaction'], 69)
-        self.assertEqual(data['69']['person_info']['first_name'], 'bob')
+        self.assertEqual(data['69']['authorized_person']['first_name'], 'bob')
 
         str_transaction_id = 4239672
         req = requests.get(

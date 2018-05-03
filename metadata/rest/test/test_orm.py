@@ -126,7 +126,7 @@ class TestCherryPyAPI(CPCommonTest):
                                data=txt_trans, headers=self.headers)
             self.assertEqual(req.status_code, 200)
         end_time = time()
-        self.assertTrue(end_time - start_time < 90)
+        self.assertTrue(end_time - start_time < 150)
 
     def test_set_or_create(self):
         """Test the internal set or create method."""
