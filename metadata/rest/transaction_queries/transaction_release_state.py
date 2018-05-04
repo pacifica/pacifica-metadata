@@ -34,7 +34,8 @@ class TransactionReleaseState(QueryBase):
             })
             output_results[release['transaction']] = release
 
-        missing_transactions = list(set(transaction_list) - set(found_transactions))
+        missing_transactions = list(
+            set(transaction_list) - set(found_transactions))
         for txn in missing_transactions:
             output_results[txn] = {
                 'authorized_person': None, 'release_id': None, 'release_state': 'not_released',
