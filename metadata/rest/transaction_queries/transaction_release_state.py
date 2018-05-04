@@ -20,6 +20,7 @@ class TransactionReleaseState(QueryBase):
         output_results = {}
         user_lookup_cache = {}
         found_transactions = []
+
         for release in releases:
             found_transactions.append(release['transaction'])
             if release['authorized_person'] not in user_lookup_cache:
