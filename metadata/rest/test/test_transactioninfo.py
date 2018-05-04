@@ -171,4 +171,4 @@ class TestTransactionInfoAPI(CPCommonTest):
         self.assertEqual(req.status_code, 200)
         data = loads(req.text)
         self.assertTrue('4239672' in data)
-        self.assertFalse(data['4239672'])
+        self.assertFalse(data['4239672'] is None)

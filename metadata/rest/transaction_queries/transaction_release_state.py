@@ -19,7 +19,8 @@ class TransactionReleaseState(QueryBase):
         releases = (TransactionRelease
                     .select(TransactionRelease.id.alias('release_id'), TransactionRelease.transaction,
                             TransactionRelease.authorized_person
-                            ).where(TransactionRelease.transaction << transaction_list).dicts())
+                            )
+                    .where(TransactionRelease.transaction << transaction_list).dicts())
         # pylint: enable=no-member
 
         output_results = {}
@@ -31,24 +32,21 @@ class TransactionReleaseState(QueryBase):
             if release['authorized_person'] not in user_lookup_cache:
                 user_lookup_cache[release['authorized_person']] = UserLookup.get_user_info_block(
                     release['authorized_person'], 'simple')
-            release['authorized_person'] = user_lookup_cache[release['authorized_person']]
-            release['release_state'] = 'released'
-            release['display_state'] = 'Released'
-            release['release_doi_entries'] = TransactionReleaseState._get_doi_release(
-                release['release_id'])
-            release['release_citations'] = TransactionReleaseState._get_citation_release(
-                release['release_id'])
+            release_additions = {
+                'authorized_person': user_lookup_cache[release['authorized_person']],
+                'release_state': 'released', 'display_state': 'Released',
+                'release_doi_entries': TransactionReleaseState._get_doi_release(release['release_id']),
+                'release_citations': TransactionReleaseState._get_citation_release(release['release_id'])
+            }
+            release.update(release_additions)
             output_results[release['transaction']] = release
 
         missing_transactions = list(
             set(transaction_list) - set(found_transactions))
         for txn in missing_transactions:
             output_results[txn] = {
-                'authorized_person': None,
-                'release_id': None,
-                'release_state': 'not_released',
-                'display_state': 'Not Released',
-                'transaction': txn
+                'authorized_person': None, 'release_id': None, 'release_state': 'not_released',
+                'display_state': 'Not Released', 'transaction': txn
             }
 
         return output_results
