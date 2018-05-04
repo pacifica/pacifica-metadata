@@ -56,31 +56,31 @@ class TransactionReleaseState(QueryBase):
 
     @staticmethod
     def _get_doi_release(release_id):
-        output_results = []
+        output_results = None
         # pylint: disable=no-member
         doi_releases = (DOIRelease
                         .select()
                         .where(DOIRelease.release_id == release_id))
         # pylint: enable=no-member
         if doi_releases.exists():
+            output_results = {}
             for release in doi_releases:
                 output_results.append({
                     'doi_name': release.doi.name,
                     'doi_reference': release.doi.doi
                 })
-        else:
-            output_results = None
         return output_results
 
     @staticmethod
     def _get_citation_release(release_id):
-        output_results = []
+        output_results = None
         # pylint: disable=no-member
         citation_releases = (CitationRelease
                              .select()
                              .where(CitationRelease.release_id == release_id))
         # pylint: enable=no-member
         if citation_releases.exists():
+            output_results = {}
             for citation_entry in citation_releases:
                 output_results.append(
                     {
@@ -89,8 +89,6 @@ class TransactionReleaseState(QueryBase):
                         'doi_reference': citation_entry.citation.doi_reference
                     }
                 )
-        else:
-            output_results = None
         return output_results
 
     # Cherrypy requires these named methods.
