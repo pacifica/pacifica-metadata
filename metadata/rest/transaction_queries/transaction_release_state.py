@@ -63,7 +63,7 @@ class TransactionReleaseState(QueryBase):
                         .where(DOIRelease.release_id == release_id))
         # pylint: enable=no-member
         if doi_releases.exists():
-            output_results = {}
+            output_results = []
             for release in doi_releases:
                 output_results.append({
                     'doi_name': release.doi.name,
@@ -80,7 +80,7 @@ class TransactionReleaseState(QueryBase):
                              .where(CitationRelease.release_id == release_id))
         # pylint: enable=no-member
         if citation_releases.exists():
-            output_results = {}
+            output_results = []
             for citation_entry in citation_releases:
                 output_results.append(
                     {
