@@ -12,22 +12,22 @@ class TransactionReleaseState(QueryBase):
     """Retrieves release state for an individual transaction (GET) or set of transactions (POST)."""
 
     exposed = True
-    user_lookup_cache = {}
 
     @staticmethod
     def _get_release_state(transaction_list):
         releases = TransactionReleaseState._get_release_info(transaction_list)
 
         output_results = {}
+        user_lookup_cache = {}
         found_transactions = []
 
         for release in releases:
             found_transactions.append(release['transaction'])
-            if release['authorized_person'] not in self.user_lookup_cache:
-                self.user_lookup_cache[release['authorized_person']] = UserLookup.get_user_info_block(
+            if release['authorized_person'] not in user_lookup_cache:
+                user_lookup_cache[release['authorized_person']] = UserLookup.get_user_info_block(
                     release['authorized_person'], 'simple')
             release.update({
-                'authorized_person': self.user_lookup_cache[release['authorized_person']],
+                'authorized_person': user_lookup_cache[release['authorized_person']],
                 'release_state': 'released', 'display_state': 'Released',
                 'release_doi_entries': TransactionReleaseState._get_doi_release(release['release_id']),
                 'release_citations': TransactionReleaseState._get_citation_release(release['release_id'])
@@ -48,8 +48,7 @@ class TransactionReleaseState(QueryBase):
         # pylint: disable=no-member
         releases = (TransactionRelease
                     .select(TransactionRelease.id.alias('release_id'), TransactionRelease.transaction,
-                            TransactionRelease.authorized_person
-                            )
+                            TransactionRelease.authorized_person)
                     .where(TransactionRelease.transaction << transaction_list).dicts())
         # pylint: enable=no-member
         return releases
