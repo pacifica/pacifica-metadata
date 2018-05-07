@@ -150,9 +150,12 @@ class QueryBase(object):
         transaction_id = transaction_entry.get('_id')
         files = QueryBase._get_file_list(transaction_id)
         release_state_obj = TransactionRelease.select().where(
-            TransactionRelease.transaction == transaction_id).first()
-        if release_state_obj:
-            release_state_info = release_state_obj.to_hash()
+            TransactionRelease.transaction == transaction_id)
+        if release_state_obj.exists():
+            release_state_info = {
+                'release_state': 'released',
+                'release_state_display_name': 'Released'
+            }
         else:
             release_state_info = {
                 'release_state': 'not_released',
