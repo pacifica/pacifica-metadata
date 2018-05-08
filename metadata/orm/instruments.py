@@ -72,14 +72,15 @@ class Instruments(CherryPyAPI):
         self._set_only_if('encoding', obj, 'encoding',
                           lambda: str(obj['encoding']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
-        where_clause = super(Instruments, self).where_clause(kwargs)
+        where_clause = super(Instruments, cls).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Instruments.id, OP.EQ, kwargs['_id'])
         if 'active' in kwargs:
-            kwargs['active'] = self._bool_translate(kwargs['active'])
-        return self._where_attr_clause(
+            kwargs['active'] = cls._bool_translate(kwargs['active'])
+        return cls._where_attr_clause(
             where_clause,
             kwargs,
             ['name', 'display_name', 'name_short', 'active', 'encoding']

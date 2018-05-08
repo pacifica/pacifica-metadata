@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
-from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.utils import index_hash
 from metadata.orm.citations import Citations
 from metadata.orm.keywords import Keywords
@@ -55,19 +55,17 @@ class CitationKeyword(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(CitationKeyword, self).from_hash(obj)
-        self._set_only_if('citation_id', obj, 'citation', lambda: Citations.get(
-            Citations.id == obj['citation_id']))
-        self._set_only_if('keyword_id', obj, 'keyword', lambda: Keywords.get(
-            Keywords.id == obj['keyword_id']))
+        self._set_only_if('citation_id', obj, 'citation',
+                          lambda: Citations.get(Citations.id == obj['citation_id']))
+        self._set_only_if('keyword_id', obj, 'keyword',
+                          lambda: Keywords.get(Keywords.id == obj['keyword_id']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(CitationKeyword, self).where_clause(kwargs)
-        if 'citation_id' in kwargs:
-            citation = int(kwargs['citation_id'])
-            where_clause &= Expression(
-                CitationKeyword.citation, OP.EQ, citation)
-        if 'keyword_id' in kwargs:
-            keyword = int(kwargs['keyword_id'])
-            where_clause &= Expression(CitationKeyword.keyword, OP.EQ, keyword)
-        return where_clause
+        where_clause = super(CitationKeyword, cls).where_clause(kwargs)
+        attrs = ['citation', 'keyword']
+        for attr in attrs:
+            if '{}_id'.format(attr) in kwargs:
+                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
+        return cls._where_attr_clause(where_clause, kwargs, attrs)

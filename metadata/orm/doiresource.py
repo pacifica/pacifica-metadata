@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
-from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.base import DB
 from metadata.orm.transactions import Transactions
 from metadata.orm.doidatasets import DOIDataSets
@@ -57,21 +57,15 @@ class DOIResource(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash to the object."""
         super(DOIResource, self).from_hash(obj)
-        if 'transaction_id' in obj:
-            self.transaction = Transactions.get(
-                Transactions.id == obj['transaction_id'])
-        if 'doi' in obj:
-            self.doi = DOIDataSets.get(DOIDataSets.doi == obj['doi'])
+        self._set_only_if('transaction_id', obj, 'transaction',
+                          lambda: Transactions.get(Transactions.id == obj['transaction_id']))
+        self._set_only_if('doi', obj, 'doi',
+                          lambda: DOIDataSets.get(DOIDataSets.doi == obj['doi']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(DOIResource, self).where_clause(kwargs)
-        if 'doi' in kwargs:
-            where_clause &= Expression(
-                DOIResource.doi, OP.EQ, unicode_type(kwargs['doi']))
+        where_clause = super(DOIResource, cls).where_clause(kwargs)
         if 'transaction_id' in kwargs:
-            where_clause &= Expression(
-                DOIResource.transaction, OP.EQ,
-                int(kwargs['transaction_id'])
-            )
-        return where_clause
+            kwargs['transaction'] = kwargs.pop('transaction_id')
+        return cls._where_attr_clause(where_clause, kwargs, ['doi', 'transaction'])

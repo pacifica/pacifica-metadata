@@ -102,15 +102,16 @@ class Citations(CherryPyAPI):
             self._set_only_if(
                 key, obj, key, lambda k=key: unicode_type(obj[k]))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Generate the PeeWee where clause used in searching."""
-        where_clause = super(Citations, self).where_clause(kwargs)
+        where_clause = super(Citations, cls).where_clause(kwargs)
         if 'journal_id' in kwargs:
             journal = int(kwargs['journal_id'])
             where_clause &= Expression(Citations.journal, OP.EQ, journal)
         if '_id' in kwargs:
             where_clause &= Expression(Citations.id, OP.EQ, int(kwargs['_id']))
-        return self._where_attr_clause(
+        return cls._where_attr_clause(
             where_clause,
             kwargs,
             [

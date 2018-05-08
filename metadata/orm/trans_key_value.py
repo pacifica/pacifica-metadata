@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """TransactionKeyValue links Transactions and Keys and Values objects."""
-from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.base import DB
 from metadata.orm.utils import index_hash
 from metadata.orm.transactions import Transactions
@@ -60,25 +60,24 @@ class TransactionKeyValue(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(TransactionKeyValue, self).from_hash(obj)
-        if 'transaction_id' in obj:
-            self.transaction = Transactions.get(
-                Transactions.id == obj['transaction_id'])
-        if 'value_id' in obj:
-            self.value = Values.get(Values.id == obj['value_id'])
-        if 'key_id' in obj:
-            self.key = Keys.get(Keys.id == obj['key_id'])
+        self._set_only_if(
+            'transaction_id', obj, 'transaction',
+            lambda: Transactions.get(Transactions.id == obj['transaction_id'])
+        )
+        self._set_only_if(
+            'value_id', obj, 'value', lambda: Values.get(
+                Values.id == obj['value_id'])
+        )
+        self._set_only_if(
+            'key_id', obj, 'key', lambda: Keys.get(Keys.id == obj['key_id'])
+        )
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(TransactionKeyValue, self).where_clause(kwargs)
-        if 'transaction_id' in kwargs:
-            trans = int(kwargs['transaction_id'])
-            where_clause &= Expression(
-                TransactionKeyValue.transaction, OP.EQ, trans)
-        if 'key_id' in kwargs:
-            key = int(kwargs['key_id'])
-            where_clause &= Expression(TransactionKeyValue.key, OP.EQ, key)
-        if 'value_id' in kwargs:
-            value = int(kwargs['value_id'])
-            where_clause &= Expression(TransactionKeyValue.value, OP.EQ, value)
-        return where_clause
+        where_clause = super(TransactionKeyValue, cls).where_clause(kwargs)
+        attrs = ['transaction', 'key', 'value']
+        for attr in attrs:
+            if '{}_id'.format(attr) in kwargs:
+                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
+        return cls._where_attr_clause(where_clause, kwargs, attrs)

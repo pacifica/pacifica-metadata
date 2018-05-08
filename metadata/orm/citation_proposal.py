@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Citation proposal relationship."""
-from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.utils import index_hash, unicode_type
 from metadata.orm.proposals import Proposals
 from metadata.orm.citations import Citations
@@ -54,20 +54,17 @@ class CitationProposal(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(CitationProposal, self).from_hash(obj)
-        if 'citation_id' in obj:
-            self.citation = Citations.get(Citations.id == obj['citation_id'])
-        if 'proposal_id' in obj:
-            self.proposal = Proposals.get(Proposals.id == obj['proposal_id'])
+        self._set_only_if('citation_id', obj, 'citation',
+                          lambda: Citations.get(Citations.id == obj['citation_id']))
+        self._set_only_if('proposal_id', obj, 'proposal',
+                          lambda: Proposals.get(Proposals.id == obj['proposal_id']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(CitationProposal, self).where_clause(kwargs)
-        if 'citation_id' in kwargs:
-            citation = int(kwargs['citation_id'])
-            where_clause &= Expression(
-                CitationProposal.citation, OP.EQ, citation)
-        if 'proposal_id' in kwargs:
-            proposal = kwargs['proposal_id']
-            where_clause &= Expression(
-                CitationProposal.proposal, OP.EQ, proposal)
-        return where_clause
+        where_clause = super(CitationProposal, cls).where_clause(kwargs)
+        attrs = ['citation', 'proposal']
+        for attr in attrs:
+            if '{}_id'.format(attr) in kwargs:
+                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
+        return cls._where_attr_clause(where_clause, kwargs, attrs)

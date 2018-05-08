@@ -129,7 +129,8 @@ class Proposals(CherryPyAPI):
         self._set_date_part('closed_date', obj)
         self._set_date_part('suspense_date', obj)
 
-    def _where_date_clause(self, where_clause, kwargs):
+    @classmethod
+    def _where_date_clause(cls, where_clause, kwargs):
         date_keys = [
             'accepted_date',
             'actual_start_date',
@@ -139,29 +140,31 @@ class Proposals(CherryPyAPI):
         ]
         for date_key in date_keys:
             if date_key in kwargs:
-                date_obj, date_oper = self._date_operator_compare(
+                date_obj, date_oper = cls._date_operator_compare(
                     date_key, kwargs, date_converts)
                 where_clause &= Expression(
                     getattr(Proposals, date_key), date_oper, date_obj)
         return where_clause
 
-    def _where_datetime_clause(self, where_clause, kwargs):
+    @classmethod
+    def _where_datetime_clause(cls, where_clause, kwargs):
         for date_key in ['submitted_date']:
             if date_key in kwargs:
-                date_obj, date_oper = self._date_operator_compare(
+                date_obj, date_oper = cls._date_operator_compare(
                     date_key, kwargs)
                 where_clause &= Expression(
                     getattr(Proposals, date_key), date_oper, date_obj)
         return where_clause
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
-        where_clause = super(Proposals, self).where_clause(kwargs)
-        where_clause = self._where_date_clause(where_clause, kwargs)
-        where_clause = self._where_datetime_clause(where_clause, kwargs)
+        where_clause = super(Proposals, cls).where_clause(kwargs)
+        where_clause = cls._where_date_clause(where_clause, kwargs)
+        where_clause = cls._where_datetime_clause(where_clause, kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Proposals.id, OP.EQ, kwargs['_id'])
-        return self._where_attr_clause(
+        return cls._where_attr_clause(
             where_clause,
             kwargs,
             [

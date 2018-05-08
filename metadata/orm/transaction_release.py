@@ -51,10 +51,11 @@ class TransactionRelease(CherryPyAPI):
         self._set_only_if('authorized_person', obj, 'authorized_person', lambda: Users.get(
             Users.id == obj['authorized_person']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
-        where_clause = super(TransactionRelease, self).where_clause(kwargs)
+        where_clause = super(TransactionRelease, cls).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(
                 TransactionRelease.id, OP.EQ, kwargs['_id'])
-        return self._where_attr_clause(where_clause, kwargs, ['authorized_person', 'transaction'])
+        return cls._where_attr_clause(where_clause, kwargs, ['authorized_person', 'transaction'])

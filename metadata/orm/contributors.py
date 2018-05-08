@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Contributors model describes an author to a journal article."""
-from peewee import CharField, ForeignKeyField, Expression, OP
+from peewee import CharField, ForeignKeyField
 from metadata.orm.users import Users
 from metadata.orm.institutions import Institutions
 from metadata.rest.orm import CherryPyAPI
@@ -86,20 +86,19 @@ class Contributors(CherryPyAPI):
         self._set_only_if('encoding', obj, 'encoding',
                           lambda: str(obj['encoding']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Generate the PeeWee where clause used in searching."""
-        where_clause = super(Contributors, self).where_clause(kwargs)
-        if 'person_id' in kwargs:
-            user = int(kwargs['person_id'])
-            where_clause &= Expression(Contributors.person, OP.EQ, user)
-        if 'institution_id' in kwargs:
-            inst = int(kwargs['institution_id'])
-            where_clause &= Expression(Contributors.institution, OP.EQ, inst)
-        return self._where_attr_clause(
+        where_clause = super(Contributors, cls).where_clause(kwargs)
+        for attr in ['person', 'institution']:
+            if '{}_id'.format(attr) in kwargs:
+                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
+        return cls._where_attr_clause(
             where_clause,
             kwargs,
             [
-                'author_id',
+                'person',
+                'institution',
                 'first_name',
                 'last_name',
                 'encoding',

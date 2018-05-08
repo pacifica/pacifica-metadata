@@ -72,14 +72,15 @@ class Users(CherryPyAPI):
         self._set_only_if('encoding', obj, 'encoding',
                           lambda: str(obj['encoding']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(Users, self).where_clause(kwargs)
+        where_clause = super(Users, cls).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Users.id, OP.EQ, kwargs['_id'])
         if 'network_id' in kwargs:
             kwargs['network_id'] = kwargs['network_id'].lower()
-        return self._where_attr_clause(
+        return cls._where_attr_clause(
             where_clause,
             kwargs,
             [
