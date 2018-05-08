@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """TransactionKeyValue links Transactions and Keys and Values objects."""
-from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.base import DB
 from metadata.orm.utils import index_hash, unicode_type
 from metadata.orm.proposals import Proposals
@@ -56,22 +56,18 @@ class AToolProposal(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(AToolProposal, self).from_hash(obj)
-        if 'proposal_id' in obj:
-            self.proposal = Proposals.get(Proposals.id == obj['proposal_id'])
-        if 'analytical_tool_id' in obj:
-            self.analytical_tool = AnalyticalTools.get(
-                AnalyticalTools.id == obj['analytical_tool_id']
-            )
+        self._set_only_if('proposal_id', obj, 'proposal',
+                          lambda: Proposals.get(Proposals.id == obj['proposal_id']))
+        self._set_only_if('analytical_tool_id', obj, 'analytical_tool',
+                          lambda: AnalyticalTools.get(
+                              AnalyticalTools.id == obj['analytical_tool_id']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(AToolProposal, self).where_clause(kwargs)
-        if 'proposal_id' in kwargs:
-            prop = kwargs['proposal_id']
-            where_clause &= Expression(AToolProposal.proposal, OP.EQ, prop)
-        if 'analytical_tool_id' in kwargs:
-            atool = AnalyticalTools.get(
-                AnalyticalTools.id == kwargs['analytical_tool_id'])
-            where_clause &= Expression(
-                AToolProposal.analytical_tool, OP.EQ, atool)
-        return where_clause
+        where_clause = super(AToolProposal, cls).where_clause(kwargs)
+        attrs = ['proposal', 'analytical_tool']
+        for attr in attrs:
+            if '{}_id'.format(attr) in kwargs:
+                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
+        return cls._where_attr_clause(where_clause, kwargs, attrs)

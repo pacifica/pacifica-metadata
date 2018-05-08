@@ -58,14 +58,15 @@ class Groups(CherryPyAPI):
         if 'is_admin' in obj:
             self.is_admin = self._bool_translate(obj['is_admin'])
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
-        where_clause = super(Groups, self).where_clause(kwargs)
+        where_clause = super(Groups, cls).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Groups.id, OP.EQ, kwargs['_id'])
         if 'is_admin' in kwargs:
-            kwargs['is_admin'] = self._bool_translate(kwargs['is_admin'])
-        return self._where_attr_clause(
+            kwargs['is_admin'] = cls._bool_translate(kwargs['is_admin'])
+        return cls._where_attr_clause(
             where_clause,
             kwargs,
             ['name', 'is_admin', 'encoding']

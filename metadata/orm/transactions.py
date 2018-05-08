@@ -67,21 +67,23 @@ class Transactions(CherryPyAPI):
                 key, obj, key, lambda o=obj_cls, k=key: o.get(o.id == obj[k]))
         self._set_date_part('suspense_date', obj)
 
-    def _where_date_clause(self, where_clause, kwargs):
+    @classmethod
+    def _where_date_clause(cls, where_clause, kwargs):
         for date in ['suspense_date']:
             if date in kwargs:
-                date_obj, date_oper = self._date_operator_compare(
+                date_obj, date_oper = cls._date_operator_compare(
                     date, kwargs, dt_converts=date_converts)
                 where_clause &= Expression(
                     getattr(Transactions, date), date_oper, date_obj)
         return where_clause
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(Transactions, self).where_clause(kwargs)
+        where_clause = super(Transactions, cls).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Transactions.id, OP.EQ, kwargs['_id'])
-        where_clause = self._where_attr_clause(
+        where_clause = cls._where_attr_clause(
             where_clause,
             kwargs,
             [
@@ -90,5 +92,5 @@ class Transactions(CherryPyAPI):
                 'proposal'
             ]
         )
-        where_clause = self._where_date_clause(where_clause, kwargs)
+        where_clause = cls._where_date_clause(where_clause, kwargs)
         return where_clause

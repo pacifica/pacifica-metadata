@@ -42,18 +42,16 @@ class Values(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash to the object."""
         super(Values, self).from_hash(obj)
-        if '_id' in obj:
-            # pylint: disable=invalid-name
-            self.id = obj['_id']
-            # pylint: enable=invalid-name
-        if 'value' in obj:
-            self.value = unicode_type(obj['value'])
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+        self._set_only_if('_id', obj, 'id', lambda: obj['_id'])
+        self._set_only_if('value', obj, 'value',
+                          lambda: unicode_type(obj['value']))
+        self._set_only_if('encoding', obj, 'encoding',
+                          lambda: str(obj['encoding']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
-        where_clause = super(Values, self).where_clause(kwargs)
+        where_clause = super(Values, cls).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Values.id, OP.EQ, kwargs['_id'])
-        return self._where_attr_clause(where_clause, kwargs, ['value', 'encoding'])
+        return cls._where_attr_clause(where_clause, kwargs, ['value', 'encoding'])

@@ -203,22 +203,23 @@ class PacificaModel(Model):
             date_obj = dt_converts(kwargs[date])
         return (date_obj, date_oper)
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """PeeWee specific extension meant to be passed to a PeeWee get or select."""
         where_clause = Expression(1, OP.EQ, 1)
         if 'deleted' in kwargs:
             if kwargs['deleted'] is None:
                 where_clause &= Expression(
-                    getattr(self.__class__, 'deleted'), OP.IS, None)
+                    getattr(cls, 'deleted'), OP.IS, None)
             else:
                 date_obj = datetime_converts(kwargs['deleted'])
                 where_clause &= Expression(
-                    getattr(self.__class__, 'deleted'), OP.EQ, date_obj)
+                    getattr(cls, 'deleted'), OP.EQ, date_obj)
         for date in ['updated', 'created']:
             if date in kwargs:
-                date_obj, date_oper = self._date_operator_compare(date, kwargs)
+                date_obj, date_oper = cls._date_operator_compare(date, kwargs)
                 where_clause &= Expression(
-                    getattr(self.__class__, date), date_oper, date_obj)
+                    getattr(cls, date), date_oper, date_obj)
         return where_clause
 
     @classmethod
@@ -281,7 +282,7 @@ class PacificaModel(Model):
         return [primary_key.name]
 
     @classmethod
-    def get_object_info(cls):
+    def get_object_info(cls, where_clause=None):
         """Get model and field information about the model class."""
         related_model_info = {}
         # pylint: disable=no-member
@@ -297,6 +298,7 @@ class PacificaModel(Model):
                     'db_table': table,
                     'primary_key': pkey
                 }
+        where_clause = where_clause if where_clause else {}
         # pylint: disable=no-value-for-parameter
         js_object = {
             'callable_name': cls.__module__.split('.')[2],
@@ -306,7 +308,7 @@ class PacificaModel(Model):
             'foreign_keys': cls.cls_foreignkeys(),
             'related_models': related_model_info,
             'related_names': cls.cls_revforeignkeys(),
-            'record_count': cls.select().count()
+            'record_count': cls.select().where(cls.where_clause(where_clause)).count()
         }
         # pylint: enable=no-value-for-parameter
         # pylint: enable=no-member

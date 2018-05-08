@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Connects a User with an Institution."""
-from peewee import ForeignKeyField, Expression, OP, CompositeKey
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.utils import index_hash
 from metadata.orm.users import Users
 from metadata.orm.institutions import Institutions
@@ -52,21 +52,17 @@ class InstitutionPerson(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(InstitutionPerson, self).from_hash(obj)
-        if 'person_id' in obj:
-            self.person = Users.get(Users.id == obj['person_id'])
-        if 'institution_id' in obj:
-            self.institution = Institutions.get(
-                Institutions.id == obj['institution_id']
-            )
+        self._set_only_if('person_id', obj, 'person',
+                          lambda: Users.get(Users.id == obj['person_id']))
+        self._set_only_if('institution_id', obj, 'institution',
+                          lambda: Institutions.get(Institutions.id == obj['institution_id']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(InstitutionPerson, self).where_clause(kwargs)
-        if 'person_id' in kwargs:
-            person = int(kwargs['person_id'])
-            where_clause &= Expression(InstitutionPerson.person, OP.EQ, person)
-        if 'institution_id' in kwargs:
-            institution = int(kwargs['institution_id'])
-            where_clause &= Expression(
-                InstitutionPerson.institution, OP.EQ, institution)
-        return where_clause
+        where_clause = super(InstitutionPerson, cls).where_clause(kwargs)
+        attrs = ['person', 'institution']
+        for attr in attrs:
+            if '{}_id'.format(attr) in kwargs:
+                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
+        return cls._where_attr_clause(where_clause, kwargs, attrs)

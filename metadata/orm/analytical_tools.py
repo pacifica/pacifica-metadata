@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Contains the model for metadata analytical tools."""
-from peewee import CharField, Expression, OP
+from peewee import CharField
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.utils import unicode_type
 
@@ -42,28 +42,14 @@ class AnalyticalTools(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash to the object."""
         super(AnalyticalTools, self).from_hash(obj)
-        if '_id' in obj:
-            # pylint: disable=invalid-name
-            self.id = obj['_id']
-            # pylint: enable=invalid-name
-        if 'name' in obj:
-            self.name = unicode_type(obj['name'])
-        if 'encoding' in obj:
-            self.encoding = str(obj['encoding'])
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
+        self._set_only_if('name', obj, 'name',
+                          lambda: unicode_type(obj['name']))
+        self._set_only_if('encoding', obj, 'encoding',
+                          lambda: str(obj['encoding']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
-        where_clause = super(AnalyticalTools, self).where_clause(kwargs)
-        if '_id' in kwargs:
-            where_clause &= Expression(
-                AnalyticalTools.id, OP.EQ, kwargs['_id'])
-        if 'name' in kwargs:
-            name_oper = OP.EQ
-            if 'name_operator' in kwargs:
-                name_oper = getattr(OP, kwargs['name_operator'])
-            where_clause &= Expression(
-                AnalyticalTools.name, name_oper, kwargs['name'])
-        if 'encoding' in kwargs:
-            where_clause &= Expression(
-                AnalyticalTools.encoding, OP.EQ, kwargs['encoding'])
-        return where_clause
+        where_clause = super(AnalyticalTools, cls).where_clause(kwargs)
+        return cls._where_attr_clause(where_clause, kwargs, ['name', 'encoding'])

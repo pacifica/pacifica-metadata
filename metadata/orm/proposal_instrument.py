@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Proposal instrument relationship."""
-from peewee import ForeignKeyField, Expression, OP, CompositeKey
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.utils import index_hash, unicode_type
 from metadata.orm.proposals import Proposals
 from metadata.orm.instruments import Instruments
@@ -54,21 +54,21 @@ class ProposalInstrument(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(ProposalInstrument, self).from_hash(obj)
-        if 'instrument_id' in obj:
-            self.instrument = Instruments.get(
-                Instruments.id == obj['instrument_id'])
-        if 'proposal_id' in obj:
-            self.proposal = Proposals.get(Proposals.id == obj['proposal_id'])
+        self._set_only_if(
+            'instrument_id', obj, 'instrument',
+            lambda: Instruments.get(Instruments.id == obj['instrument_id'])
+        )
+        self._set_only_if(
+            'proposal_id', obj, 'proposal',
+            lambda: Proposals.get(Proposals.id == obj['proposal_id'])
+        )
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(ProposalInstrument, self).where_clause(kwargs)
-        if 'instrument_id' in kwargs:
-            instrument = int(kwargs['instrument_id'])
-            where_clause &= Expression(
-                ProposalInstrument.instrument, OP.EQ, instrument)
-        if 'proposal_id' in kwargs:
-            proposal = kwargs['proposal_id']
-            where_clause &= Expression(
-                ProposalInstrument.proposal, OP.EQ, proposal)
-        return where_clause
+        where_clause = super(ProposalInstrument, cls).where_clause(kwargs)
+        attrs = ['instrument', 'proposal']
+        for attr in attrs:
+            if '{}_id'.format(attr) in kwargs:
+                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
+        return cls._where_attr_clause(where_clause, kwargs, attrs)

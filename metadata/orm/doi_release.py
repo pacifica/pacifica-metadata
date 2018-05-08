@@ -61,7 +61,8 @@ class DOIRelease(CherryPyAPI):
         self._set_only_if('release', obj, 'release', lambda: TransactionRelease.get(
             TransactionRelease.id == obj['release']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(DOIRelease, self).where_clause(kwargs)
-        return self._where_attr_clause(where_clause, kwargs, ['doi', 'release'])
+        where_clause = super(DOIRelease, cls).where_clause(kwargs)
+        return cls._where_attr_clause(where_clause, kwargs, ['doi', 'release'])

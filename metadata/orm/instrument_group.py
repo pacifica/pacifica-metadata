@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """InstrumentGroup links Groups and Instruments and objects."""
-from peewee import ForeignKeyField, CompositeKey, Expression, OP
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.utils import index_hash
 from metadata.orm.base import DB
 from metadata.rest.orm import CherryPyAPI
@@ -52,20 +52,17 @@ class InstrumentGroup(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(InstrumentGroup, self).from_hash(obj)
-        if 'instrument_id' in obj:
-            self.instrument = Instruments.get(
-                Instruments.id == obj['instrument_id'])
-        if 'group_id' in obj:
-            self.group = Groups.get(Groups.id == obj['group_id'])
+        self._set_only_if('instrument_id', obj, 'instrument',
+                          lambda: Instruments.get(Instruments.id == obj['instrument_id']))
+        self._set_only_if('group_id', obj, 'group',
+                          lambda: Groups.get(Groups.id == obj['group_id']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(InstrumentGroup, self).where_clause(kwargs)
-        if 'instrument_id' in kwargs:
-            instrument = int(kwargs['instrument_id'])
-            where_clause &= Expression(
-                InstrumentGroup.instrument, OP.EQ, instrument)
-        if 'group_id' in kwargs:
-            group = int(kwargs['group_id'])
-            where_clause &= Expression(InstrumentGroup.group, OP.EQ, group)
-        return where_clause
+        where_clause = super(InstrumentGroup, cls).where_clause(kwargs)
+        attrs = ['instrument', 'group']
+        for attr in attrs:
+            if '{}_id'.format(attr) in kwargs:
+                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
+        return cls._where_attr_clause(where_clause, kwargs, attrs)

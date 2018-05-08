@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Proposal person relationship."""
-from peewee import ForeignKeyField, Expression, OP, CompositeKey
+from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.utils import index_hash, unicode_type
 from metadata.orm.proposals import Proposals
 from metadata.orm.users import Users
@@ -54,20 +54,17 @@ class ProposalParticipant(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(ProposalParticipant, self).from_hash(obj)
-        if 'person_id' in obj:
-            self.person = Users.get(Users.id == obj['person_id'])
-        if 'proposal_id' in obj:
-            self.proposal = Proposals.get(Proposals.id == obj['proposal_id'])
+        self._set_only_if('person_id', obj, 'person',
+                          lambda: Users.get(Users.id == obj['person_id']))
+        self._set_only_if('proposal_id', obj, 'proposal',
+                          lambda: Proposals.get(Proposals.id == obj['proposal_id']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(ProposalParticipant, self).where_clause(kwargs)
-        if 'person_id' in kwargs:
-            member = int(kwargs['person_id'])
-            where_clause &= Expression(
-                ProposalParticipant.person, OP.EQ, member)
-        if 'proposal_id' in kwargs:
-            proposal = kwargs['proposal_id']
-            where_clause &= Expression(
-                ProposalParticipant.proposal, OP.EQ, proposal)
-        return where_clause
+        where_clause = super(ProposalParticipant, cls).where_clause(kwargs)
+        attrs = ['person', 'proposal']
+        for attr in attrs:
+            if '{}_id'.format(attr) in kwargs:
+                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
+        return cls._where_attr_clause(where_clause, kwargs, attrs)

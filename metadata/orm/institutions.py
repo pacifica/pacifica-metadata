@@ -61,14 +61,15 @@ class Institutions(CherryPyAPI):
         self._set_only_if('encoding', obj, 'encoding',
                           lambda: str(obj['encoding']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
-        where_clause = super(Institutions, self).where_clause(kwargs)
+        where_clause = super(Institutions, cls).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Institutions.id, OP.EQ, kwargs['_id'])
         if 'is_foreign' in kwargs:
-            kwargs['is_foreign'] = self._bool_translate(kwargs['is_foreign'])
-        return self._where_attr_clause(
+            kwargs['is_foreign'] = cls._bool_translate(kwargs['is_foreign'])
+        return cls._where_attr_clause(
             where_clause,
             kwargs,
             ['name', 'is_foreign', 'association_cd', 'encoding']

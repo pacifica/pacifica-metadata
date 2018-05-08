@@ -118,9 +118,10 @@ class Files(CherryPyAPI):
             return Transactions.get(Transactions.id == obj['transaction_id'])
         self._set_only_if('transaction_id', obj, 'transaction', trans_func)
 
-    def _where_date_clause(self, where_clause, kwargs):
+    @classmethod
+    def _where_date_clause(cls, where_clause, kwargs):
         if 'suspense_date' in kwargs:
-            date_obj, date_oper = self._date_operator_compare(
+            date_obj, date_oper = cls._date_operator_compare(
                 'suspense_date',
                 kwargs,
                 dt_converts=date_converts
@@ -129,21 +130,22 @@ class Files(CherryPyAPI):
                 Files.suspense_date, date_oper, date_obj)
         for date in ['mtime', 'ctime']:
             if date in kwargs:
-                date_obj, date_oper = self._date_operator_compare(date, kwargs)
+                date_obj, date_oper = cls._date_operator_compare(date, kwargs)
                 where_clause &= Expression(
                     getattr(Files, date), date_oper, date_obj)
         return where_clause
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """PeeWee specific where expression."""
-        where_clause = super(Files, self).where_clause(kwargs)
+        where_clause = super(Files, cls).where_clause(kwargs)
         if 'transaction_id' in kwargs:
             trans = int(kwargs['transaction_id'])
             where_clause &= Expression(Files.transaction, OP.EQ, trans)
         if '_id' in kwargs:
             where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
-        where_clause = self._where_date_clause(where_clause, kwargs)
-        where_clause = self._where_attr_clause(
+        where_clause = cls._where_date_clause(where_clause, kwargs)
+        where_clause = cls._where_attr_clause(
             where_clause,
             kwargs,
             [

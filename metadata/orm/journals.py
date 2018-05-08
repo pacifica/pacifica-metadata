@@ -61,9 +61,10 @@ class Journals(CherryPyAPI):
         self._set_only_if('encoding', obj, 'encoding',
                           lambda: str(obj['encoding']))
 
-    def where_clause(self, kwargs):
+    @classmethod
+    def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
-        where_clause = super(Journals, self).where_clause(kwargs)
+        where_clause = super(Journals, cls).where_clause(kwargs)
         if '_id' in kwargs:
             where_clause &= Expression(Journals.id, OP.EQ, kwargs['_id'])
-        return self._where_attr_clause(where_clause, kwargs, ['name', 'impact_factor', 'website_url', 'encoding'])
+        return cls._where_attr_clause(where_clause, kwargs, ['name', 'impact_factor', 'website_url', 'encoding'])
