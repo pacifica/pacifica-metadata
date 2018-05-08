@@ -34,7 +34,7 @@ class ObjectInfoAPI(object):
     @staticmethod
     @tools.json_out()
     @db_connection_decorator
-    def GET(object_class_name=None, operation=None):
+    def GET(object_class_name=None, operation=None, **where_clause):
         """
         Implement the GET HTTP method.
 
@@ -62,5 +62,5 @@ class ObjectInfoAPI(object):
                     message = 'No object class name found'
                 raise cherrypy.HTTPError(404, message)
             else:
-                js_object = myclass.get_object_info()
+                js_object = myclass.get_object_info(where_clause)
         return js_object
