@@ -6,9 +6,8 @@ from cherrypy import tools
 import metadata.orm as orm
 from metadata.orm.base import db_connection_decorator
 
+
 # pylint: disable=too-few-public-methods
-
-
 class ObjectInfoAPI(object):
     """ObjectInfoAPI API."""
 
