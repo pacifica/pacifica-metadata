@@ -19,7 +19,7 @@ class TestTransactionRelease(TestBase):
     """Test the Keywords ORM object."""
 
     obj_cls = TransactionRelease
-    obj_id = TransactionRelease.id
+    obj_id = TransactionRelease.transaction
 
     @classmethod
     def base_create_dep_objs(cls):
