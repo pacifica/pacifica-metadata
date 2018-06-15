@@ -25,7 +25,7 @@ class DOIRelease(CherryPyAPI):
 
     doi = ForeignKeyField(
         DOIDataSets, related_name='doi_entries', to_field='doi')
-    transaction = ForeignKeyField(TransactionRelease, to_field='transaction' related_name='doi_releases')
+    transaction = ForeignKeyField(TransactionRelease, to_field='transaction', related_name='doi_releases')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
