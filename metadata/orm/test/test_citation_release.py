@@ -13,7 +13,7 @@ from metadata.orm.test.test_transaction_release import TestTransactionRelease
 
 SAMPLE_CITATION_RELEASE_HASH = {
     'citation': SAMPLE_CITATION_HASH['_id'],
-    'release': SAMPLE_TRANS_RELEASE_HASH['_id']
+    'transaction': SAMPLE_TRANS_RELEASE_HASH['transaction']
 }
 
 

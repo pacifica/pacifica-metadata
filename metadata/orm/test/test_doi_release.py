@@ -13,7 +13,7 @@ from metadata.orm.test.test_transaction_release import TestTransactionRelease
 
 SAMPLE_DOI_RELEASE_HASH = {
     'doi': SAMPLE_DOIDATASET_HASH['doi'],
-    'release': SAMPLE_TRANS_RELEASE_HASH['_id']
+    'transaction': SAMPLE_TRANS_RELEASE_HASH['transaction']
 }
 
 
