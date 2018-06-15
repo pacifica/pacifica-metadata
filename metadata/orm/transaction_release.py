@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Contains the model for metadata analytical tools."""
-from peewee import ForeignKeyField, Expression, OP
+from peewee import ForeignKeyField
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.users import Users
 from metadata.orm.transactions import Transactions
@@ -23,7 +23,8 @@ class TransactionRelease(CherryPyAPI):
 
     authorized_person = ForeignKeyField(
         Users, related_name='authorized_releases')
-    transaction = ForeignKeyField(Transactions, related_name='release_state', primary_key=True)
+    transaction = ForeignKeyField(
+        Transactions, related_name='release_state', primary_key=True)
 
     @staticmethod
     def elastic_mapping_builder(obj):
