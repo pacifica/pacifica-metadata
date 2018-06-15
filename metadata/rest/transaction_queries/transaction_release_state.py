@@ -39,6 +39,15 @@ class TransactionReleaseState(QueryBase):
             })
             output_results[release['transaction']] = release
 
+        missing_transactions = TransactionReleaseState._generate_missing_transactions(
+            transaction_list, found_transactions
+        )
+        output_results.update(missing_transactions)
+
+        return output_results
+
+    @staticmethod
+    def _generate_missing_transactions(transaction_list, found_transactions):
         missing_transactions = list(
             set(transaction_list) - set(found_transactions))
         for txn in missing_transactions:
@@ -46,7 +55,6 @@ class TransactionReleaseState(QueryBase):
                 'authorized_person': None, 'release_state': 'not_released',
                 'display_state': 'Not Released', 'transaction': txn
             }
-
         return output_results
 
     @staticmethod
