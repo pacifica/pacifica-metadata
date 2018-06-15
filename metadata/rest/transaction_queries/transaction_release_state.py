@@ -21,6 +21,8 @@ class TransactionReleaseState(QueryBase):
         user_lookup_cache = {}
         found_transactions = []
 
+        transactions = QueryBase._get_transaction_sizes(transaction_list)
+
         for release in releases:
             found_transactions.append(release['transaction'])
             if release['authorized_person'] not in user_lookup_cache:
@@ -29,8 +31,11 @@ class TransactionReleaseState(QueryBase):
             release.update({
                 'authorized_person': user_lookup_cache[release['authorized_person']],
                 'release_state': 'released', 'display_state': 'Released',
-                'release_doi_entries': TransactionReleaseState._get_doi_release(release['release_id']),
-                'release_citations': TransactionReleaseState._get_citation_release(release['release_id'])
+                'release_date': release['release_date'].isoformat(),
+                'total_size_bytes': transactions[release['transaction']]['total_file_size_bytes'],
+                'total_file_count': transactions[release['transaction']]['total_file_count'],
+                'release_doi_entries': TransactionReleaseState._get_doi_release(release['transaction']),
+                'release_citations': TransactionReleaseState._get_citation_release(release['transaction'])
             })
             output_results[release['transaction']] = release
 
@@ -38,7 +43,7 @@ class TransactionReleaseState(QueryBase):
             set(transaction_list) - set(found_transactions))
         for txn in missing_transactions:
             output_results[txn] = {
-                'authorized_person': None, 'release_id': None, 'release_state': 'not_released',
+                'authorized_person': None, 'release_state': 'not_released',
                 'display_state': 'Not Released', 'transaction': txn
             }
 
@@ -48,19 +53,20 @@ class TransactionReleaseState(QueryBase):
     def _get_release_info(transaction_list):
         # pylint: disable=no-member
         releases = (TransactionRelease
-                    .select(TransactionRelease.id.alias('release_id'), TransactionRelease.transaction,
-                            TransactionRelease.authorized_person)
+                    .select(TransactionRelease.transaction,
+                            TransactionRelease.authorized_person,
+                            TransactionRelease.updated.alias('release_date'))
                     .where(TransactionRelease.transaction << transaction_list).dicts())
         # pylint: enable=no-member
         return releases
 
     @staticmethod
-    def _get_doi_release(release_id):
+    def _get_doi_release(transaction_id):
         output_results = None
         # pylint: disable=no-member
         doi_releases = (DOIRelease
                         .select()
-                        .where(DOIRelease.release_id == release_id))
+                        .where(DOIRelease.transaction_id == transaction_id))
         # pylint: enable=no-member
         if doi_releases.exists():
             output_results = []
@@ -72,12 +78,12 @@ class TransactionReleaseState(QueryBase):
         return output_results
 
     @staticmethod
-    def _get_citation_release(release_id):
+    def _get_citation_release(transaction_id):
         output_results = None
         # pylint: disable=no-member
         citation_releases = (CitationRelease
                              .select()
-                             .where(CitationRelease.release_id == release_id))
+                             .where(CitationRelease.transaction_id == transaction_id))
         # pylint: enable=no-member
         if citation_releases.exists():
             output_results = []

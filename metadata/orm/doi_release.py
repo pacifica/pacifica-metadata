@@ -19,13 +19,13 @@ class DOIRelease(CherryPyAPI):
         +===================+============================================+
         | doi               | Link to the DOI model                      |
         +-------------------+--------------------------------------------+
-        | release           | Link to the TransactionRelease model       |
+        | transaction       | Link to the TransactionRelease model       |
         +-------------------+--------------------------------------------+
     """
 
     doi = ForeignKeyField(
         DOIDataSets, related_name='doi_entries', to_field='doi')
-    release = ForeignKeyField(TransactionRelease, related_name='doi_releases')
+    transaction = ForeignKeyField(TransactionRelease, to_field='transaction' related_name='doi_releases')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
