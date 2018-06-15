@@ -78,6 +78,7 @@ class QueryBase(object):
 
     @staticmethod
     def _get_transaction_entries(transaction_list):
+        # pylint: disable=no-member
         transactions = (Transactions
                         .select(
                             Transactions,
