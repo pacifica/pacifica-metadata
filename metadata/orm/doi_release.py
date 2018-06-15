@@ -60,7 +60,7 @@ class DOIRelease(CherryPyAPI):
         self._set_only_if('doi', obj, 'doi', lambda: DOIDataSets.get(
             DOIDataSets.doi == obj['doi']))
         self._set_only_if('transaction', obj, 'transaction', lambda: TransactionRelease.get(
-            TransactionRelease.id == obj['transaction']))
+            TransactionRelease.transaction == obj['transaction']))
 
     @classmethod
     def where_clause(cls, kwargs):

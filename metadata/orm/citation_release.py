@@ -58,7 +58,7 @@ class CitationRelease(CherryPyAPI):
         self._set_only_if('citation', obj, 'citation',
                           lambda: Citations.get(Citations.id == obj['citation']))
         self._set_only_if('transaction', obj, 'transaction',
-                          lambda: TransactionRelease.get(TransactionRelease.id == obj['transaction']))
+                          lambda: TransactionRelease.get(TransactionRelease.transaction == obj['transaction']))
 
     @classmethod
     def where_clause(cls, kwargs):
