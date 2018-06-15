@@ -33,14 +33,14 @@ class DOIRelease(CherryPyAPI):
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB
-        primary_key = CompositeKey('doi', 'release')
+        primary_key = CompositeKey('doi', 'transaction')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(DOIRelease, DOIRelease).elastic_mapping_builder(obj)
-        obj['release'] = {'type': 'integer'}
+        obj['transaction'] = {'type': 'integer'}
         obj['doi'] = \
             {'type': 'text', 'fields': {'keyword': {
                 'type': 'keyword', 'ignore_above': 256}}}
@@ -49,9 +49,9 @@ class DOIRelease(CherryPyAPI):
         """Convert the object to a hash."""
         obj = super(DOIRelease, self).to_hash(**flags)
         obj['_id'] = index_hash(unicode_type(self.__data__['doi']),
-                                int(self.__data__['release']))
+                                int(self.__data__['transaction']))
         obj['doi'] = unicode_type(self.__data__['doi'])
-        obj['release'] = int(self.__data__['release'])
+        obj['transaction'] = int(self.__data__['transaction'])
         return obj
 
     def from_hash(self, obj):
@@ -59,11 +59,11 @@ class DOIRelease(CherryPyAPI):
         super(DOIRelease, self).from_hash(obj)
         self._set_only_if('doi', obj, 'doi', lambda: DOIDataSets.get(
             DOIDataSets.doi == obj['doi']))
-        self._set_only_if('release', obj, 'release', lambda: TransactionRelease.get(
-            TransactionRelease.id == obj['release']))
+        self._set_only_if('transaction', obj, 'transaction', lambda: TransactionRelease.get(
+            TransactionRelease.id == obj['transaction']))
 
     @classmethod
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(DOIRelease, cls).where_clause(kwargs)
-        return cls._where_attr_clause(where_clause, kwargs, ['doi', 'release'])
+        return cls._where_attr_clause(where_clause, kwargs, ['doi', 'transaction'])

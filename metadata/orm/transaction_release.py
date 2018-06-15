@@ -23,7 +23,7 @@ class TransactionRelease(CherryPyAPI):
 
     authorized_person = ForeignKeyField(
         Users, related_name='authorized_releases')
-    transaction = ForeignKeyField(Transactions, related_name='release_state')
+    transaction = ForeignKeyField(Transactions, related_name='release_state', primary_key=True)
 
     @staticmethod
     def elastic_mapping_builder(obj):
@@ -34,7 +34,6 @@ class TransactionRelease(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(TransactionRelease, self).to_hash(**flags)
-        obj['_id'] = int(self.__data__['id'])
         obj['transaction'] = int(self.__data__['transaction'])
         # pylint: disable=no-member
         obj['authorized_person'] = int(self.__data__['authorized_person'])
@@ -45,7 +44,6 @@ class TransactionRelease(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash to the object."""
         super(TransactionRelease, self).from_hash(obj)
-        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
         self._set_only_if('transaction', obj, 'transaction', lambda: Transactions.get(
             Transactions.id == obj['transaction']))
         self._set_only_if('authorized_person', obj, 'authorized_person', lambda: Users.get(
@@ -55,7 +53,4 @@ class TransactionRelease(CherryPyAPI):
     def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
         where_clause = super(TransactionRelease, cls).where_clause(kwargs)
-        if '_id' in kwargs:
-            where_clause &= Expression(
-                TransactionRelease.id, OP.EQ, kwargs['_id'])
         return cls._where_attr_clause(where_clause, kwargs, ['authorized_person', 'transaction'])

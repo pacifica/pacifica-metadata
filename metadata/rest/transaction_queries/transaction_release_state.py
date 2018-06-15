@@ -48,6 +48,7 @@ class TransactionReleaseState(QueryBase):
 
     @staticmethod
     def _generate_missing_transactions(transaction_list, found_transactions):
+        output_results = {}
         missing_transactions = list(
             set(transaction_list) - set(found_transactions))
         for txn in missing_transactions:
