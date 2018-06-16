@@ -157,7 +157,7 @@ class TestTransactionInfoAPI(CPCommonTest):
         self.assertEqual(data['67']['authorized_person']['first_name'], 'bob')
         req = requests.post(
             '{0}/transactioninfo/release_state'.format(self.url),
-            data='[{}, {}]'.format(str_transaction_id, 68),
+            data='[{}, {}]'.format(str_transaction_id, 67),
             headers={'content-type': 'application/json'}
         )
         data = loads(req.text)
