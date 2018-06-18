@@ -40,8 +40,8 @@ from metadata.orm.atool_transaction import AToolTransaction
 from metadata.orm.doidatasets import DOIDataSets
 from metadata.orm.doiresource import DOIResource
 from metadata.orm.transaction_release import TransactionRelease
-from metadata.orm.doi_release import DOIRelease
-from metadata.orm.citation_release import CitationRelease
+from metadata.orm.doi_transaction import DOITransaction
+from metadata.orm.citation_transaction import CitationTransaction
 from metadata.orm.citation_doi import CitationDOI
 
 DATABASE_CONNECT_ATTEMPTS = 40
@@ -78,8 +78,8 @@ ORM_OBJECTS = [
     DOIDataSets,
     DOIResource,
     TransactionRelease,
-    DOIRelease,
-    CitationRelease,
+    DOITransaction,
+    CitationTransaction,
     CitationDOI
 ]
 

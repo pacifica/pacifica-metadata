@@ -9,9 +9,9 @@ from metadata.rest.orm import CherryPyAPI
 from metadata.orm.utils import index_hash
 
 
-class CitationRelease(CherryPyAPI):
+class CitationTransaction(CherryPyAPI):
     """
-    CitationRelease Model.
+    CitationTransaction Model.
 
     Attributes:
         +-------------------+--------------------------------------------+
@@ -38,12 +38,12 @@ class CitationRelease(CherryPyAPI):
     @staticmethod
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
-        super(CitationRelease, CitationRelease).elastic_mapping_builder(obj)
+        super(CitationTransaction, CitationTransaction).elastic_mapping_builder(obj)
         obj['citation'] = obj['transaction'] = {'type': 'integer'}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(CitationRelease, self).to_hash(**flags)
+        obj = super(CitationTransaction, self).to_hash(**flags)
         obj['_id'] = index_hash(
             int(self.__data__['transaction']),
             int(self.__data__['citation'])
@@ -54,7 +54,7 @@ class CitationRelease(CherryPyAPI):
 
     def from_hash(self, obj):
         """Convert the hash to the object."""
-        super(CitationRelease, self).from_hash(obj)
+        super(CitationTransaction, self).from_hash(obj)
         self._set_only_if('citation', obj, 'citation',
                           lambda: Citations.get(Citations.id == obj['citation']))
         self._set_only_if('transaction', obj, 'transaction',
@@ -63,5 +63,5 @@ class CitationRelease(CherryPyAPI):
     @classmethod
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(CitationRelease, cls).where_clause(kwargs)
+        where_clause = super(CitationTransaction, cls).where_clause(kwargs)
         return cls._where_attr_clause(where_clause, kwargs, ['citation', 'transaction'])

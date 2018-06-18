@@ -3,7 +3,7 @@
 """CherryPy Status Transaction Metadata object class."""
 from cherrypy import tools, request
 from metadata.rest.transaction_queries.query_base import QueryBase
-from metadata.orm import TransactionRelease, DOIRelease, CitationRelease
+from metadata.orm import TransactionRelease, DOITransaction, CitationTransaction
 from metadata.rest.user_queries.user_lookup import UserLookup
 from metadata.orm.base import db_connection_decorator
 
@@ -73,9 +73,9 @@ class TransactionReleaseState(QueryBase):
     def _get_doi_release(transaction_id):
         output_results = None
         # pylint: disable=no-member
-        doi_releases = (DOIRelease
+        doi_releases = (DOITransaction
                         .select()
-                        .where(DOIRelease.transaction_id == transaction_id))
+                        .where(DOITransaction.transaction_id == transaction_id))
         # pylint: enable=no-member
         if doi_releases.exists():
             output_results = []
@@ -90,9 +90,9 @@ class TransactionReleaseState(QueryBase):
     def _get_citation_release(transaction_id):
         output_results = None
         # pylint: disable=no-member
-        citation_releases = (CitationRelease
+        citation_releases = (CitationTransaction
                              .select()
-                             .where(CitationRelease.transaction_id == transaction_id))
+                             .where(CitationTransaction.transaction_id == transaction_id))
         # pylint: enable=no-member
         if citation_releases.exists():
             output_results = []

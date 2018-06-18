@@ -3,46 +3,46 @@
 """Test the file_key_values ORM object."""
 from json import dumps
 from metadata.orm.test.base import TestBase
-from metadata.orm.doi_release import DOIRelease
-from metadata.orm.doidatasets import DOIDataSets
-from metadata.orm.test.test_doidatasets import SAMPLE_DOIDATASET_HASH
-from metadata.orm.test.test_doidatasets import TestDOIDataSets
+from metadata.orm.citation_transaction import CitationTransaction
+from metadata.orm.citations import Citations
+from metadata.orm.test.test_citations import SAMPLE_CITATION_HASH
+from metadata.orm.test.test_citations import TestCitations
 from metadata.orm.transaction_release import TransactionRelease
 from metadata.orm.test.test_transaction_release import SAMPLE_TRANS_RELEASE_HASH
 from metadata.orm.test.test_transaction_release import TestTransactionRelease
 
-SAMPLE_DOI_RELEASE_HASH = {
-    'doi': SAMPLE_DOIDATASET_HASH['doi'],
+SAMPLE_CITATION_RELEASE_HASH = {
+    'citation': SAMPLE_CITATION_HASH['_id'],
     'transaction': SAMPLE_TRANS_RELEASE_HASH['transaction']
 }
 
 
-class TestDOIRelease(TestBase):
+class TestCitationRelease(TestBase):
     """Test the Keywords ORM object."""
 
-    obj_cls = DOIRelease
-    obj_id = DOIRelease.doi
+    obj_cls = CitationTransaction
+    obj_id = CitationTransaction.citation
 
     @classmethod
     def base_create_dep_objs(cls):
         """Build the object and make dependent user object."""
+        cite = Citations()
+        TestCitations.base_create_dep_objs()
+        cite.from_hash(SAMPLE_CITATION_HASH)
+        cite.save(force_insert=True)
         trans_rel = TransactionRelease()
         TestTransactionRelease.base_create_dep_objs()
         trans_rel.from_hash(SAMPLE_TRANS_RELEASE_HASH)
         trans_rel.save(force_insert=True)
-        doi_ds = DOIDataSets()
-        TestDOIDataSets.base_create_dep_objs()
-        doi_ds.from_hash(SAMPLE_DOIDATASET_HASH)
-        doi_ds.save(force_insert=True)
 
-    def test_doirelease_hash(self):
+    def test_citationrelease_hash(self):
         """Test the hash portion using base object method."""
-        self.base_test_hash(SAMPLE_DOI_RELEASE_HASH)
+        self.base_test_hash(SAMPLE_CITATION_RELEASE_HASH)
 
-    def test_doirelease_json(self):
+    def test_citationrelease_json(self):
         """Test the hash portion using base object method."""
-        self.base_test_json(dumps(SAMPLE_DOI_RELEASE_HASH))
+        self.base_test_json(dumps(SAMPLE_CITATION_RELEASE_HASH))
 
-    def test_doirelease_where(self):
+    def test_citationrelease_where(self):
         """Test the hash portion using base object method."""
-        self.base_where_clause(SAMPLE_DOI_RELEASE_HASH)
+        self.base_where_clause(SAMPLE_CITATION_RELEASE_HASH)

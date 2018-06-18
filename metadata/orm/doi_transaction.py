@@ -9,7 +9,7 @@ from metadata.orm.base import DB
 from metadata.rest.orm import CherryPyAPI
 
 
-class DOIRelease(CherryPyAPI):
+class DOITransaction(CherryPyAPI):
     """
     Relates DOI entries with transaction release entries.
 
@@ -39,7 +39,7 @@ class DOIRelease(CherryPyAPI):
     @staticmethod
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
-        super(DOIRelease, DOIRelease).elastic_mapping_builder(obj)
+        super(DOITransaction, DOITransaction).elastic_mapping_builder(obj)
         obj['transaction'] = {'type': 'integer'}
         obj['doi'] = \
             {'type': 'text', 'fields': {'keyword': {
@@ -47,7 +47,7 @@ class DOIRelease(CherryPyAPI):
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(DOIRelease, self).to_hash(**flags)
+        obj = super(DOITransaction, self).to_hash(**flags)
         obj['_id'] = index_hash(unicode_type(self.__data__['doi']),
                                 int(self.__data__['transaction']))
         obj['doi'] = unicode_type(self.__data__['doi'])
@@ -56,7 +56,7 @@ class DOIRelease(CherryPyAPI):
 
     def from_hash(self, obj):
         """Convert the hash into the object."""
-        super(DOIRelease, self).from_hash(obj)
+        super(DOITransaction, self).from_hash(obj)
         self._set_only_if('doi', obj, 'doi', lambda: DOIDataSets.get(
             DOIDataSets.doi == obj['doi']))
         self._set_only_if('transaction', obj, 'transaction', lambda: TransactionRelease.get(
@@ -65,5 +65,5 @@ class DOIRelease(CherryPyAPI):
     @classmethod
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(DOIRelease, cls).where_clause(kwargs)
+        where_clause = super(DOITransaction, cls).where_clause(kwargs)
         return cls._where_attr_clause(where_clause, kwargs, ['doi', 'transaction'])
