@@ -42,8 +42,8 @@ def main():
         'doidatasets',
         'doiresource',
         'transaction_release',
-        'doi_release',
-        'citation_release',
+        'doi_transaction',
+        'citation_transaction',
         'citation_doi'
     ]
     for obj in object_order:

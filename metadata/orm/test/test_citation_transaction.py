@@ -3,7 +3,7 @@
 """Test the file_key_values ORM object."""
 from json import dumps
 from metadata.orm.test.base import TestBase
-from metadata.orm.citation_release import CitationRelease
+from metadata.orm.citation_transaction import CitationTransaction
 from metadata.orm.citations import Citations
 from metadata.orm.test.test_citations import SAMPLE_CITATION_HASH
 from metadata.orm.test.test_citations import TestCitations
@@ -13,15 +13,15 @@ from metadata.orm.test.test_transaction_release import TestTransactionRelease
 
 SAMPLE_CITATION_RELEASE_HASH = {
     'citation': SAMPLE_CITATION_HASH['_id'],
-    'release': SAMPLE_TRANS_RELEASE_HASH['_id']
+    'transaction': SAMPLE_TRANS_RELEASE_HASH['transaction']
 }
 
 
 class TestCitationRelease(TestBase):
     """Test the Keywords ORM object."""
 
-    obj_cls = CitationRelease
-    obj_id = CitationRelease.citation
+    obj_cls = CitationTransaction
+    obj_id = CitationTransaction.citation
 
     @classmethod
     def base_create_dep_objs(cls):

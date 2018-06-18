@@ -77,7 +77,7 @@ class QueryBase(object):
         return transaction_entry
 
     @staticmethod
-    def _get_transaction_info_blocks(transaction_list, option='details'):
+    def _get_transaction_entries(transaction_list):
         # pylint: disable=no-member
         transactions = (Transactions
                         .select(
@@ -89,6 +89,23 @@ class QueryBase(object):
                         .group_by(Transactions)
                         .where(Transactions.id << transaction_list))
         # pylint: enable=no-member
+        return transactions
+
+    @staticmethod
+    def _get_transaction_sizes(transaction_list):
+        transactions = QueryBase._get_transaction_entries(transaction_list)
+        results = {}
+        for trans in transactions:
+            results[trans.id] = {
+                'total_file_size_bytes': int(trans.file_size_bytes),
+                'total_file_count': int(trans.file_count)
+            }
+        return results
+
+    @staticmethod
+    def _get_transaction_info_blocks(transaction_list, option='details'):
+        # pylint: disable=no-member
+        transactions = QueryBase._get_transaction_entries(transaction_list)
 
         transaction_results = {'transactions': {}, 'times': {}}
 

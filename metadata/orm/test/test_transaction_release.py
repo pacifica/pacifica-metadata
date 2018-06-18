@@ -10,7 +10,6 @@ from metadata.orm.transactions import Transactions
 from metadata.orm.test.test_users import SAMPLE_USER_HASH as SAMPLE_CREATOR_HASH
 
 SAMPLE_TRANS_RELEASE_HASH = {
-    '_id': 1,
     'authorized_person': SAMPLE_CREATOR_HASH['_id'],
     'transaction': SAMPLE_TRANSACTION_HASH['_id']
 }
@@ -20,7 +19,7 @@ class TestTransactionRelease(TestBase):
     """Test the Keywords ORM object."""
 
     obj_cls = TransactionRelease
-    obj_id = TransactionRelease.id
+    obj_id = TransactionRelease.transaction
 
     @classmethod
     def base_create_dep_objs(cls):

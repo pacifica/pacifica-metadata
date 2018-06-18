@@ -3,7 +3,7 @@
 """Test the file_key_values ORM object."""
 from json import dumps
 from metadata.orm.test.base import TestBase
-from metadata.orm.doi_release import DOIRelease
+from metadata.orm.doi_transaction import DOITransaction
 from metadata.orm.doidatasets import DOIDataSets
 from metadata.orm.test.test_doidatasets import SAMPLE_DOIDATASET_HASH
 from metadata.orm.test.test_doidatasets import TestDOIDataSets
@@ -13,15 +13,15 @@ from metadata.orm.test.test_transaction_release import TestTransactionRelease
 
 SAMPLE_DOI_RELEASE_HASH = {
     'doi': SAMPLE_DOIDATASET_HASH['doi'],
-    'release': SAMPLE_TRANS_RELEASE_HASH['_id']
+    'transaction': SAMPLE_TRANS_RELEASE_HASH['transaction']
 }
 
 
 class TestDOIRelease(TestBase):
     """Test the Keywords ORM object."""
 
-    obj_cls = DOIRelease
-    obj_id = DOIRelease.doi
+    obj_cls = DOITransaction
+    obj_id = DOITransaction.doi
 
     @classmethod
     def base_create_dep_objs(cls):

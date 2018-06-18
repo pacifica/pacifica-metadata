@@ -147,23 +147,23 @@ class TestTransactionInfoAPI(CPCommonTest):
 
     def test_transaction_release(self):
         """Test the transaction release data."""
-        str_transaction_id = 69
+        str_transaction_id = 67
         req = requests.get(
             '{0}/transactioninfo/release_state/{1}'.format(self.url, str_transaction_id))
         self.assertEqual(req.status_code, 200)
         data = loads(req.text)
-        self.assertTrue('69' in data)
-        self.assertEqual(data['69']['transaction'], 69)
-        self.assertEqual(data['69']['authorized_person']['first_name'], 'bob')
+        self.assertTrue('67' in data)
+        self.assertEqual(data['67']['transaction'], 67)
+        self.assertEqual(data['67']['authorized_person']['first_name'], 'bob')
         req = requests.post(
             '{0}/transactioninfo/release_state'.format(self.url),
-            data='[{}, {}]'.format(str_transaction_id, 68),
+            data='[{}, {}]'.format(str_transaction_id, 67),
             headers={'content-type': 'application/json'}
         )
         data = loads(req.text)
-        self.assertTrue('69' in data)
-        self.assertEqual(data['69']['transaction'], 69)
-        self.assertEqual(data['69']['authorized_person']['first_name'], 'bob')
+        self.assertTrue('67' in data)
+        self.assertEqual(data['67']['transaction'], 67)
+        self.assertEqual(data['67']['authorized_person']['first_name'], 'bob')
 
         str_transaction_id = 4239672
         req = requests.get(

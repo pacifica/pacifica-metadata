@@ -50,7 +50,7 @@ class DOIResource(CherryPyAPI):
             unicode_type(self.__data__['doi']),
             int(self.__data__['transaction'])
         )
-        obj['doi'] = unicode_type(self.doi.doi)
+        obj['doi'] = unicode_type(self.__data__['doi'])
         obj['transaction_id'] = int(self.__data__['transaction'])
         return obj
 

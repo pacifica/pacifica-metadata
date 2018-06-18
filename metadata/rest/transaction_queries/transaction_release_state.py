@@ -3,7 +3,7 @@
 """CherryPy Status Transaction Metadata object class."""
 from cherrypy import tools, request
 from metadata.rest.transaction_queries.query_base import QueryBase
-from metadata.orm import TransactionRelease, DOIRelease, CitationRelease
+from metadata.orm import TransactionRelease, DOITransaction, CitationTransaction
 from metadata.rest.user_queries.user_lookup import UserLookup
 from metadata.orm.base import db_connection_decorator
 
@@ -21,6 +21,8 @@ class TransactionReleaseState(QueryBase):
         user_lookup_cache = {}
         found_transactions = []
 
+        transactions = QueryBase._get_transaction_sizes(transaction_list)
+
         for release in releases:
             found_transactions.append(release['transaction'])
             if release['authorized_person'] not in user_lookup_cache:
@@ -29,38 +31,51 @@ class TransactionReleaseState(QueryBase):
             release.update({
                 'authorized_person': user_lookup_cache[release['authorized_person']],
                 'release_state': 'released', 'display_state': 'Released',
-                'release_doi_entries': TransactionReleaseState._get_doi_release(release['release_id']),
-                'release_citations': TransactionReleaseState._get_citation_release(release['release_id'])
+                'release_date': release['release_date'].isoformat(),
+                'total_size_bytes': transactions[release['transaction']]['total_file_size_bytes'],
+                'total_file_count': transactions[release['transaction']]['total_file_count'],
+                'release_doi_entries': TransactionReleaseState._get_doi_release(release['transaction']),
+                'release_citations': TransactionReleaseState._get_citation_release(release['transaction'])
             })
             output_results[release['transaction']] = release
 
+        missing_transactions = TransactionReleaseState._generate_missing_transactions(
+            transaction_list, found_transactions
+        )
+        output_results.update(missing_transactions)
+
+        return output_results
+
+    @staticmethod
+    def _generate_missing_transactions(transaction_list, found_transactions):
+        output_results = {}
         missing_transactions = list(
             set(transaction_list) - set(found_transactions))
         for txn in missing_transactions:
             output_results[txn] = {
-                'authorized_person': None, 'release_id': None, 'release_state': 'not_released',
+                'authorized_person': None, 'release_state': 'not_released',
                 'display_state': 'Not Released', 'transaction': txn
             }
-
         return output_results
 
     @staticmethod
     def _get_release_info(transaction_list):
         # pylint: disable=no-member
         releases = (TransactionRelease
-                    .select(TransactionRelease.id.alias('release_id'), TransactionRelease.transaction,
-                            TransactionRelease.authorized_person)
+                    .select(TransactionRelease.transaction,
+                            TransactionRelease.authorized_person,
+                            TransactionRelease.updated.alias('release_date'))
                     .where(TransactionRelease.transaction << transaction_list).dicts())
         # pylint: enable=no-member
         return releases
 
     @staticmethod
-    def _get_doi_release(release_id):
+    def _get_doi_release(transaction_id):
         output_results = None
         # pylint: disable=no-member
-        doi_releases = (DOIRelease
+        doi_releases = (DOITransaction
                         .select()
-                        .where(DOIRelease.release_id == release_id))
+                        .where(DOITransaction.transaction_id == transaction_id))
         # pylint: enable=no-member
         if doi_releases.exists():
             output_results = []
@@ -72,12 +87,12 @@ class TransactionReleaseState(QueryBase):
         return output_results
 
     @staticmethod
-    def _get_citation_release(release_id):
+    def _get_citation_release(transaction_id):
         output_results = None
         # pylint: disable=no-member
-        citation_releases = (CitationRelease
+        citation_releases = (CitationTransaction
                              .select()
-                             .where(CitationRelease.release_id == release_id))
+                             .where(CitationTransaction.transaction_id == transaction_id))
         # pylint: enable=no-member
         if citation_releases.exists():
             output_results = []
