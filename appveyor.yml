@@ -8,11 +8,12 @@ environment:
   PGSQL_PATH: C:\Program Files\PostgreSQL\9.6
   POSTGRES_ENV_POSTGRES_USER: postgres
   POSTGRES_ENV_POSTGRES_PASSWORD: Password12!
-  MSVC_VERSION: "Visual Studio 10 Win64"
 
   matrix:
     - PYTHON: C:\Python27-x64
+      MSVC_VERSION: "Visual Studio 10 Win64"
     - PYTHON: C:\Python36-x64
+      MSVC_VERSION: "Visual Studio 10 Win64"
       
 services:
   - postgresql
@@ -25,8 +26,8 @@ install:
   - ps: 'Invoke-WebRequest -Uri "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.8.zip" -OutFile "elasticsearch.zip"'
   - ps: 'Expand-Archive "elasticsearch.zip" -DestinationPath "C:\elasticsearch"'
   - ps: 'Start-Process C:\elasticsearch\elasticsearch-5.6.8\bin\elasticsearch'
-  - '%PYTHON%\python.exe -m pip install -r requirements-dev.txt'
   - cp "c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdint.h" "C:\Users\appveyor\AppData\Local\Programs\Common\Microsoft\Visual C++ for Python\9.0\VC\include\stdint.h"
+  - '%PYTHON%\python.exe -m pip install -r requirements-dev.txt'
 
 build: off
 
