@@ -23,11 +23,23 @@ before_test:
   - createdb pacifica_metadata
 
 install:
-  - ps: 'Invoke-WebRequest -Uri "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.8.zip" -OutFile "elasticsearch.zip"'
-  - ps: 'Expand-Archive "elasticsearch.zip" -DestinationPath "C:\elasticsearch"'
-  - ps: 'Start-Process C:\elasticsearch\elasticsearch-5.6.8\bin\elasticsearch'
-  - cp "c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdint.h" "C:\Users\appveyor\AppData\Local\Programs\Common\Microsoft\Visual C++ for Python\9.0\VC\include\stdint.h"
-  - '%PYTHON%\python.exe -m pip install -r requirements-dev.txt'
+- ps: >
+    $env:PATH = "${env:PYTHON}\Scripts;${env:PATH}";
+    Invoke-WebRequest -OutFile sqlite.zip https://www.sqlite.org/2018/sqlite-dll-win64-x64-3240000.zip;
+    Invoke-WebRequest -OutFile sqlite-devel.zip https://www.sqlite.org/2018/sqlite-amalgamation-3240000.zip;
+    Expand-Archive sqlite.zip -DestinationPath sqlite3;
+    Expand-Archive sqlite-devel.zip -DestinationPath sqlite3;
+    cd sqlite3;
+    & "C:\Users\appveyor\AppData\Local\Programs\Common\Microsoft\Visual C++ for Python\9.0\VC\Bin\amd64\link.exe" /lib /def:sqlite3.def;
+    cd ..;
+    cp sqlite3\sqlite3.dll "$env:PYTHON\DLLs\sqlite3.dll";
+    cp sqlite3\sqlite3.lib "$env:PYTHON\libs\sqlite3.lib";
+    cp sqlite3\sqlite-amalgamation-3240000\sqlite3.h "$env:PYTHON\include\sqlite3.h";
+    cp "c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdint.h" "C:\Users\appveyor\AppData\Local\Programs\Common\Microsoft\Visual C++ for Python\9.0\VC\include\stdint.h";
+    Invoke-WebRequest -Uri "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.8.zip" -OutFile "elasticsearch.zip";
+    Expand-Archive "elasticsearch.zip" -DestinationPath "C:\elasticsearch";
+    Start-Process C:\elasticsearch\elasticsearch-5.6.8\bin\elasticsearch;
+    & $env:PYTHON\python.exe -m pip install -r requirements-dev.txt;
 
 build: off
 
