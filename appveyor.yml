@@ -14,7 +14,7 @@ environment:
       MSVC_VERSION: "Visual Studio 10 Win64"
     - PYTHON: C:\Python36-x64
       MSVC_VERSION: "Visual Studio 10 Win64"
-      
+
 services:
   - postgresql
 
