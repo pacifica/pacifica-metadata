@@ -98,6 +98,7 @@ class TestIngestAPI(CPCommonTest):
 
         putdata[0]['value'] += 1
         putdata[7]['_id'] += 10
+        putdata[8]['file_id'] += 10
         putdata[9]['_id'] += 10
         # notifications url shouldn't be listening
         # however accepting the data should be okay
