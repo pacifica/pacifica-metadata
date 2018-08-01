@@ -35,8 +35,14 @@ Example uploaded data:
 ]
 """
 from __future__ import print_function
+from os import getenv
+from datetime import datetime
+import logging
 import hashlib
+from json import dumps
 from six import binary_type
+import requests
+from requests.exceptions import RequestException
 from cherrypy import request, tools
 from metadata.orm.transactions import Transactions
 from metadata.orm.trans_key_value import TransactionKeyValue
@@ -186,6 +192,38 @@ class IngestAPI(object):
                 files.append(file_hash)
             return files
 
+        def emit_event(json):
+            """Emit a cloud event that the data is now accepted."""
+            try:
+                resp = requests.post(
+                    getenv('NOTIFICATIONS_URL',
+                           'http://127.0.0.1:8070/receive'),
+                    data=dumps({
+                        'cloudEventsVersion': '0.1',
+                        'eventType': getenv('CLOUDEVENT_TYPE', 'org.pacifica.metadata.ingest'),
+                        'source': getenv(
+                            'CLOUDEVENT_SOURCE_URL',
+                            'http://metadata.pacifica.org/transactions?_id={}'.format(
+                                pull_value_by_attr(
+                                    json, 'Transactions._id', 'value')
+                            )
+                        ),
+                        'eventID': 'metadata.ingest.{}'.format(
+                            pull_value_by_attr(
+                                json, 'Transactions._id', 'value')
+                        ),
+                        'eventTime': datetime.now().replace(microsecond=0).isoformat(),
+                        'extensions': {},
+                        'contentType': 'application/json',
+                        'data': json
+                    }),
+                    headers={'Content-Type': 'application/json'}
+                )
+                resp_major = int(int(resp.status_code)/100)
+                assert resp_major == 2
+            except (RequestException, AssertionError) as ex:
+                logging.warning('Unable to send notification: %s', ex)
+
         transaction_hash = {
             '_id': pull_value_by_attr(request.json, 'Transactions._id', 'value'),
             'submitter': pull_value_by_attr(request.json, 'Transactions.submitter', 'value'),
@@ -199,4 +237,5 @@ class IngestAPI(object):
         Files()._insert(extract_files(request.json))
         FileKeyValue()._insert(generate_fkvs(request.json))
         # pylint: enable=protected-access
+        emit_event(request.json)
         return {'status': 'success'}
