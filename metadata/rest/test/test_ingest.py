@@ -96,6 +96,9 @@ class TestIngestAPI(CPCommonTest):
         self.assertEqual(req.text, '{"status": "success"}')
         self.assertEqual(req.status_code, 200)
 
+        putdata[0]['value'] += 1
+        putdata[7]['_id'] += 10
+        putdata[9]['value'] += 10
         # notifications url shouldn't be listening
         # however accepting the data should be okay
         os.environ['NOTIFICATIONS_URL'] = 'http://127.0.0.1:8070'
@@ -103,6 +106,7 @@ class TestIngestAPI(CPCommonTest):
             '{0}/ingest'.format(self.url), data=dumps(putdata), headers={'content-type': 'application/json'})
         self.assertEqual(req.text, '{"status": "success"}')
         self.assertEqual(req.status_code, 200)
+
         # generate bad file metadata
         putdata[0]['value'] += 1
         putdata[7]['hashtype'] = ''
