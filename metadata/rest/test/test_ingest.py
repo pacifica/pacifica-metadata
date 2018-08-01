@@ -98,7 +98,7 @@ class TestIngestAPI(CPCommonTest):
 
         putdata[0]['value'] += 1
         putdata[7]['_id'] += 10
-        putdata[9]['value'] += 10
+        putdata[9]['_id'] += 10
         # notifications url shouldn't be listening
         # however accepting the data should be okay
         os.environ['NOTIFICATIONS_URL'] = 'http://127.0.0.1:8070'
