@@ -41,7 +41,7 @@ install:
     Expand-Archive "elasticsearch.zip" -DestinationPath "C:\elasticsearch";
     Start-Process C:\elasticsearch\elasticsearch-5.6.8\bin\elasticsearch;
     & $env:PYTHON\python.exe -m pip install -r requirements-dev.txt;
-    Start-Process "${env:PYTHON}\Scripts\python.exe" -ArgumentList "test_files\cherrypy_catch.py";
+    Start-Process "${env:PYTHON}\python.exe" -ArgumentList "test_files\cherrypy_catch.py";
 
 build: off
 
