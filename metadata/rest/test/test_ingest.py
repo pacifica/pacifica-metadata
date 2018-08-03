@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Test the ORM interface IngestAPI."""
+import os
 from json import dumps, loads
 import requests
 from metadata.rest.test import CPCommonTest
@@ -90,6 +91,18 @@ class TestIngestAPI(CPCommonTest):
                 'hashsum': 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
             },
         ]
+        req = requests.put(
+            '{0}/ingest'.format(self.url), data=dumps(putdata), headers={'content-type': 'application/json'})
+        self.assertEqual(req.text, '{"status": "success"}')
+        self.assertEqual(req.status_code, 200)
+
+        putdata[0]['value'] += 1
+        putdata[7]['_id'] += 10
+        putdata[8]['file_id'] += 10
+        putdata[9]['_id'] += 10
+        # notifications url shouldn't be listening
+        # however accepting the data should be okay
+        os.environ['NOTIFICATIONS_URL'] = 'http://127.0.0.1:8070'
         req = requests.put(
             '{0}/ingest'.format(self.url), data=dumps(putdata), headers={'content-type': 'application/json'})
         self.assertEqual(req.text, '{"status": "success"}')

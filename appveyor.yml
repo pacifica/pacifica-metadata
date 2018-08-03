@@ -8,6 +8,7 @@ environment:
   PGSQL_PATH: C:\Program Files\PostgreSQL\9.6
   POSTGRES_ENV_POSTGRES_USER: postgres
   POSTGRES_ENV_POSTGRES_PASSWORD: Password12!
+  NOTIFICATIONS_URL: http://127.0.0.1:8080
 
   matrix:
     - PYTHON: C:\Python27-x64
@@ -40,6 +41,7 @@ install:
     Expand-Archive "elasticsearch.zip" -DestinationPath "C:\elasticsearch";
     Start-Process C:\elasticsearch\elasticsearch-5.6.8\bin\elasticsearch;
     & $env:PYTHON\python.exe -m pip install -r requirements-dev.txt;
+    Start-Process "${env:PYTHON}\python.exe" -ArgumentList "test_files\cherrypy_catch.py";
 
 build: off
 
