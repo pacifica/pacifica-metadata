@@ -19,7 +19,7 @@ from os import getenv
 import datetime
 from dateutil import parser
 from peewee import PostgresqlDatabase as pgdb
-from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, SQL, NodeList, BackrefAccessor
+from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, SQL, NodeList, BackrefAccessor, CharField
 from six import text_type
 from metadata.orm.utils import index_hash, ExtendDateTimeField
 from metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
@@ -65,6 +65,8 @@ class PacificaModel(Model):
         +-------------------+-------------------------------------+
         | deleted           | When was the object deleted         |
         +-------------------+-------------------------------------+
+        | version           | What version the object is          |
+        +-------------------+-------------------------------------+
     """
 
     # this is peewee specific need to disable this check
@@ -76,6 +78,7 @@ class PacificaModel(Model):
     updated = ExtendDateTimeField(
         default=datetime_now_nomicrosecond, index=True)
     deleted = ExtendDateTimeField(null=True, index=True)
+    version = CharField(default='v0.1.0')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
@@ -125,6 +128,7 @@ class PacificaModel(Model):
         recursion_depth = flags.get('recursion_depth', 0)
         recursion_limit = flags.get('recursion_limit', 1000)
         obj = {}
+        obj['version'] = self.version
         obj['created'] = self.created.isoformat()
         obj['updated'] = self.updated.isoformat()
         obj['deleted'] = self.deleted.isoformat(
@@ -182,6 +186,7 @@ class PacificaModel(Model):
         self._set_datetime_part('created', obj)
         self._set_datetime_part('updated', obj)
         self._set_datetime_part('deleted', obj)
+        self._set_only_if('version', obj, 'version', lambda: obj['version'])
 
     @staticmethod
     def _bool_translate(thing):
