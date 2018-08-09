@@ -11,18 +11,18 @@ from setuptools import setup, find_packages
 INSTALL_REQS = parse_requirements('requirements.txt', session='hack')
 
 setup(
-    name='PacificaMetadata',
+    name='pacifica-metadata',
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     description='Pacifica Metadata',
     author='David Brown',
-    author_email='david.brown@pnnl.gov',
+    author_email='dmlb2000@gmail.com',
     packages=find_packages(),
-    scripts=['MetadataServer.py', 'DatabaseCreate.py'],
+    namespace_packages=['pacifica'],
     entry_points={
         'console_scripts': [
-            'MetadataServer=metadata:main',
-            'MDAdmin=metadata.admin_cmd:main'
+            'metadata-server=pacifica.metadata:main',
+            'metadata-admin=pacifica.metadata.admin_cmd:main'
         ]
     },
     install_requires=[str(ir.req) for ir in INSTALL_REQS]

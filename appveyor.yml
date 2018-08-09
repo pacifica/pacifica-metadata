@@ -25,7 +25,9 @@ before_test:
 
 install:
 - ps: >
-    $env:PATH = "${env:PYTHON}\Scripts;${env:PATH}";
+    & "$env:PYTHON\python.exe" -m virtualenv C:\pacifica;
+    $env:PATH = "C:\pacifica\Scripts;${env:PATH}";
+    python -m pip install --upgrade pip setuptools wheel;
     Invoke-WebRequest -OutFile sqlite.zip https://www.sqlite.org/2018/sqlite-dll-win64-x64-3240000.zip;
     Invoke-WebRequest -OutFile sqlite-devel.zip https://www.sqlite.org/2018/sqlite-amalgamation-3240000.zip;
     Expand-Archive sqlite.zip -DestinationPath sqlite3;
@@ -40,14 +42,14 @@ install:
     Invoke-WebRequest -Uri "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.8.zip" -OutFile "elasticsearch.zip";
     Expand-Archive "elasticsearch.zip" -DestinationPath "C:\elasticsearch";
     Start-Process C:\elasticsearch\elasticsearch-5.6.8\bin\elasticsearch;
-    & $env:PYTHON\python.exe -m pip install -r requirements-dev.txt;
-    Start-Process "${env:PYTHON}\python.exe" -ArgumentList "test_files\cherrypy_catch.py";
+    python -m pip install -r requirements-dev.txt;
+    Start-Process "C:\pacifica\Scripts\python.exe" -ArgumentList "test_files\cherrypy_catch.py";
 
 build: off
 
 test_script:
   - ps: >
-      & "$env:PYTHON\python.exe" -m coverage run --include="metadata/*" -m pytest -v metadata/orm metadata/elastic metadata/test;
-      & "$env:PYTHON\python.exe" -m coverage run --include="metadata/*" -a -m pytest -v metadata/rest;
-      & "$env:PYTHON\python.exe" -m coverage run --include="metadata/*" -a MetadataServer.py --stop-after-a-moment;
-      & "$env:PYTHON\python.exe" -m coverage report --show-missing --fail-under 100;
+      C:\pacifica\Scripts\activate.ps1;
+      python -m coverage run --include="pacifica/*" -m pytest -v;
+      python -m coverage run --include="pacifica/*" -a -m pacifica.metadata --stop-after-a-moment;
+      python -m coverage report --show-missing --fail-under 100;

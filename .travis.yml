@@ -1,24 +1,24 @@
 services:
- - postgresql
+ - elasticsearch
 language: python
 python:
  - 2.7
  - 3.6
 
+
+addons:
+  apt:
+    sources:
+    - elasticsearch-5.x
+    packages:
+    - elasticsearch
+    - oracle-java8-set-default
+
 env:
 - RUN_LINTS=true
-- ES_VERSION=5.6.8
 
 cache: pip
 
 before_install: bash -xe travis/before-install.sh
-install:
-- >
-  if [[ -z $RUN_LINTS ]] ; then
-    ES_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${ES_VERSION}.tar.gz;
-    curl -Lo /tmp/estarball.tgz ${ES_DOWNLOAD_URL};
-    tar -C /tmp -xzf /tmp/estarball.tgz;
-    pushd /tmp/elasticsearch-${ES_VERSION}; ./bin/elasticsearch & popd;
-  fi;
-  pip install -r requirements-dev.txt
+install: pip install -r requirements-dev.txt
 script: bash -xe travis/test-script.sh
