@@ -9,7 +9,7 @@ walks the metadata orm objects searching for PeeWee attributes and populating
 tables...
 """
 from __future__ import print_function
-from metadata.orm import ORM_OBJECTS
+from pacifica.metadata.orm import ORM_OBJECTS
 
 print("""# The Pacifica Metadata Model
 
