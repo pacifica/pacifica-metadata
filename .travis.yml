@@ -17,6 +17,7 @@ addons:
 
 env:
 - RUN_LINTS=true
+- RUN_LINTS=
 
 cache: pip
 
