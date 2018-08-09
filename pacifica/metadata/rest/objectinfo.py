@@ -3,7 +3,7 @@
 """Core interface for the uploader metadata objects to interface with CherryPy."""
 import cherrypy
 from cherrypy import tools
-import metadata.orm as orm
+import pacifica.metadata.orm as orm
 from pacifica.metadata.orm.base import db_connection_decorator
 
 

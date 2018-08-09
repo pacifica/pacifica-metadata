@@ -49,6 +49,7 @@ coverage.xml
 
 # Django stuff:
 *.log
+db.sqlite3
 
 # Sphinx documentation
 docs/_build/
@@ -58,3 +59,6 @@ target/
 
 # GNU Dia
 *.dia~
+
+# pytest
+.pytest_cache

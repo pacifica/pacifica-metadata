@@ -11,11 +11,10 @@ from pacifica.metadata.globals import CONFIG_FILE
 
 def get_config():
     """Return the ConfigParser object with defaults set."""
-    configparser = SafeConfigParser({
-        'peewee_url': 'sqliteext:///db.sqlite3',
-        'default_user': 'default_user'
-    })
+    configparser = SafeConfigParser()
     configparser.add_section('database')
+    configparser.set('database', 'peewee_url', getenv(
+        'PEEWEE_URL', 'sqliteext:///db.sqlite3'))
     configparser.add_section('notifications')
     configparser.set('notifications', 'url', getenv(
         'NOTIFICATIONS_URL', 'http://127.0.0.1:8070/receive'))

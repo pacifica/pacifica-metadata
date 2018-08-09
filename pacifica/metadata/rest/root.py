@@ -37,7 +37,7 @@ class Root(object):
     not exposed by default the base objects are exposed
     """
 
-    exposed = False
+    exposed = True
 
     objectinfo = ObjectInfoAPI()
     elasticupdate = ElasticSearchUpdateAPI()
@@ -55,6 +55,6 @@ class Root(object):
 
 
 for cls in ORM_OBJECTS:
-    # this is based on the module name being something like metadata.orm.BLAH
-    obj_loc = cls.__module__.split('.')[2]
+    # this is based on the module name being something like pacifica.metadata.orm.BLAH
+    obj_loc = cls.__module__.split('.')[3]
     setattr(Root, obj_loc, cls())

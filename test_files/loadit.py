@@ -4,7 +4,7 @@
 from os import getenv
 from os.path import dirname, realpath, join
 from json import loads
-from metadata.client import PMClient
+from pacifica.metadata.client import PMClient
 
 
 def main():
