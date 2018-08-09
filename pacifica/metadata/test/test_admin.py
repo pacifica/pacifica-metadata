@@ -6,7 +6,7 @@ from datetime import timedelta
 from unittest import TestCase
 from mock import patch
 from peewee import SqliteDatabase, DoesNotExist
-import metadata.orm as metaorm
+import pacifica.metadata.orm as metaorm
 from pacifica.metadata.admin_cmd import main, essync, escreate, render_obj, create_obj
 from pacifica.metadata.admin_cmd import objstr_to_ormobj, objstr_to_whereclause, objstr_to_timedelta
 
