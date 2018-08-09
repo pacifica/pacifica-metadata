@@ -49,6 +49,6 @@ build: off
 test_script:
   - ps: >
       C:\pacifica\Scripts\activate.ps1;
-      python -m coverage run --include="pacifica/*" -m pytest -v;
+      python -m coverage run --include="pacifica/*" -m pytest -vx;
       python -m coverage run --include="pacifica/*" -a -m pacifica.metadata --stop-after-a-moment;
       python -m coverage report --show-missing --fail-under 100;
