@@ -57,14 +57,14 @@ class TestAdminTool(TestCase):
             hit_exception = True
         self.assertTrue(hit_exception)
 
-    @patch('metadata.admin_cmd.essync')
+    @patch('pacifica.metadata.admin_cmd.essync')
     def test_main(self, test_patch):
         """Test the main method."""
         test_patch.return_value = 'Return a test thing'
         main('essync')
         self.assertTrue(test_patch.called)
 
-    @patch('metadata.orm.try_db_connect')
+    @patch('pacifica.metadata.orm.try_db_connect')
     def test_render(self, test_patch):
         """Test render an object."""
         test_patch.return_value = True
@@ -86,7 +86,7 @@ class TestAdminTool(TestCase):
         self.assertTrue(hit_exception)
         self.assertTrue(test_patch.called)
 
-    @patch('metadata.orm.try_db_connect')
+    @patch('pacifica.metadata.orm.try_db_connect')
     def test_create(self, test_patch):
         """Test the create obj."""
         test_patch.return_value = True
@@ -112,7 +112,7 @@ class TestAdminToolNoTables(TestCase):
         metaorm.DB.close()
         metaorm.DB = None
 
-    @patch('metadata.orm.try_db_connect')
+    @patch('pacifica.metadata.orm.try_db_connect')
     def test_create_no_tables(self, test_patch):
         """Test the create obj."""
         test_patch.return_value = True
@@ -139,7 +139,7 @@ class TestAdminToolThreaded(TestCase):
         metaorm.DB.close()
         metaorm.DB = None
 
-    @patch('metadata.orm.try_db_connect')
+    @patch('pacifica.metadata.orm.try_db_connect')
     def test_es_commands(self, test_patch):
         """Test the essync sub command."""
         test_patch.return_value = True
