@@ -7,7 +7,7 @@ python:
 
 env:
 - RUN_LINTS=true
-- ES_VERSION=5.6.8
+- ES_VERSION=5.6.10
 
 cache: pip
 
