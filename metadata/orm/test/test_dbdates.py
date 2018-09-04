@@ -93,6 +93,7 @@ class TestDBDates(TestBase):
         objs = self.base_where_clause_search(third_obj, search_expr)
         self.assertEqual(len(objs), 2)
         search_expr = {
+            'created': '0',
             'created_0': date_check_min.replace(microsecond=0).isoformat(),
             'created_1': date_check_max.replace(microsecond=0).isoformat(),
             'created_operator': 'BETWEEN'
