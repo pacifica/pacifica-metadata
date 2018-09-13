@@ -168,15 +168,19 @@ class QueryBase(object):
         files = QueryBase._get_file_list(transaction_id)
         release_state_obj = TransactionRelease.select().where(
             TransactionRelease.transaction == transaction_id)
+        # release_state_obj = TransactionRelease.get(TransactionRelease.transaction == transaction_id)
         if release_state_obj.exists():
+            rso = release_state_obj.get().to_hash()
             release_state_info = {
                 'release_state': 'released',
-                'release_state_display_name': 'Released'
+                'release_state_display_name': 'Released',
+                'release_date': rso.get('created')
             }
         else:
             release_state_info = {
                 'release_state': 'not_released',
-                'release_state_display_name': 'Not Released'
+                'release_state_display_name': 'Not Released',
+                'release_date': None
             }
         base_metadata = {
             'transaction_id': transaction_id,
@@ -185,6 +189,7 @@ class QueryBase(object):
             'instrument_id': transaction_entry.get('instrument'),
             'file_ids': list(files.keys()),
             'submitted': transaction_entry.get('created'),
+            'release_date': release_state_info.get('release_date'),
             'release_state': release_state_info.get('release_state'),
             'release_state_display': release_state_info.get('release_state_display_name')
         }
