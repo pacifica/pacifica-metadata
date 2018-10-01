@@ -201,8 +201,8 @@ class PacificaModel(Model):
         else:
             date_oper = OP.EQ
         if date_oper == OP.BETWEEN:
-            date_obj_min = dt_converts(kwargs[date][0])
-            date_obj_max = dt_converts(kwargs[date][1])
+            date_obj_min = dt_converts(kwargs['{}_0'.format(date)])
+            date_obj_max = dt_converts(kwargs['{}_1'.format(date)])
             date_obj = NodeList((date_obj_min, SQL('AND'), date_obj_max))
         else:
             date_obj = dt_converts(kwargs[date])

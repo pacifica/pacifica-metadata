@@ -58,3 +58,6 @@ target/
 
 # GNU Dia
 *.dia~
+
+db.sqlite3
+.pytest_cache
