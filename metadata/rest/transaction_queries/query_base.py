@@ -168,7 +168,6 @@ class QueryBase(object):
         files = QueryBase._get_file_list(transaction_id)
         release_state_obj = TransactionRelease.select().where(
             TransactionRelease.transaction == transaction_id)
-        # release_state_obj = TransactionRelease.get(TransactionRelease.transaction == transaction_id)
         if release_state_obj.exists():
             rso = release_state_obj.get().to_hash()
             release_state_info = {
