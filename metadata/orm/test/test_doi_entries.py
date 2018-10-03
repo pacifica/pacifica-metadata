@@ -24,7 +24,7 @@ SAMPLE_DOIENTRIES_HASH = {
 # https://www.doi.org/doi_handbook/2_Numbering.html#2.2.1
 SAMPLE_UNICODE_DOIENTRIES_HASH = {
     'doi_id': 1234567,
-    'doi': '10.25584/data.café.2018-03.127/1234567',
+    'doi': u'10.25584/data.café.2018-03.127/1234567',
     'status': 'completed',
     'site_url': 'https://release.datahub.pnnl.gov/released_data/127',
     'transaction_id': 127,

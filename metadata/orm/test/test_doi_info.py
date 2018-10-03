@@ -13,16 +13,16 @@ import pprint
 
 SAMPLE_DOIINFO_HASH = {
     'doi_id': 1234567,
-    'key': 'title',
-    'value': 'My Super Title'
+    'key': u'title',
+    'value': u'My Super Title'
 }
 
 # yes a DOI can be unicode....
 # https://www.doi.org/doi_handbook/2_Numbering.html#2.2.1
 SAMPLE_UNICODE_DOIINFO_HASH = {
     'doi_id': 1234567,
-    'key': 'töitle',
-    'value': 'Meine Süpër Töitle'
+    'key': u'töitle',
+    'value': u'Meine Süpër Töitle'
 }
 
 
