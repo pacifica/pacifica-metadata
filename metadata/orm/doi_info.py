@@ -5,9 +5,8 @@ from peewee import ForeignKeyField, CompositeKey, CharField
 from metadata.orm.base import DB
 from metadata.orm.utils import index_hash
 from metadata.orm.doi_entries import DOIEntries
-from metadata.orm.values import Values
-from metadata.orm.keys import Keys
 from metadata.rest.orm import CherryPyAPI
+from metadata.orm.utils import unicode_type
 
 
 class DOIInfo(CherryPyAPI):
@@ -26,7 +25,7 @@ class DOIInfo(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    doi = ForeignKeyField(DOIEntries, related_name='metadata')
+    doi = ForeignKeyField(DOIEntries, related_name='metadata', column_name='doi_id')
     key = CharField()
     value = CharField()
 
@@ -35,7 +34,7 @@ class DOIInfo(CherryPyAPI):
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB
-        primary_key = CompositeKey('doi', 'key', 'value')
+        # primary_key = CompositeKey('doi', 'key', 'value')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
@@ -50,9 +49,6 @@ class DOIInfo(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOIInfo, self).to_hash(**flags)
-        obj['_id'] = index_hash(unicode_type(self.__data__['key']),
-                                int(self.__data__['doi']),
-                                unicode_type(self.__data__['value']))
         obj['doi_id'] = int(self.__data__['doi'])
         obj['key'] = unicode_type(self.__data__['key'])
         obj['value'] = unicode_type(self.__data__['value'])
@@ -63,7 +59,7 @@ class DOIInfo(CherryPyAPI):
         super(DOIInfo, self).from_hash(obj)
         self._set_only_if(
             'doi_id', obj, 'doi',
-            lambda: DOIEntries.get(DOIEntries.id == obj['doi_id'])
+            lambda: DOIEntries.get(DOIEntries.doi_id == obj['doi_id'])
         )
         self._set_only_if(
             'value', obj, 'value', lambda: unicode_type(obj['value'])

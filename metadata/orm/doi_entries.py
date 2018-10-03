@@ -39,7 +39,8 @@ class DOIEntries(CherryPyAPI):
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(DOIEntries, DOIEntries).elastic_mapping_builder(obj)
-        obj['doi_id'] = obj['creator'] = obj['transaction'] = {'type': 'integer'}
+        obj['doi_id'] = obj['creator'] = obj['transaction'] = {
+            'type': 'integer'}
         obj['doi'] = obj['status'] = obj['site_url'] = \
             {'type': 'text', 'fields': {'keyword': {
                 'type': 'keyword', 'ignore_above': 256}}}
@@ -47,13 +48,14 @@ class DOIEntries(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOIEntries, self).to_hash(**flags)
-        obj['doi_id'] = int(self.doi_id) if self.doi_id is not None else obj['doi_id']
+        obj['doi_id'] = int(
+            self.doi_id) if self.doi_id is not None else obj['doi_id']
         obj['_id'] = obj['doi_id']
         obj['doi'] = unicode_type(self.doi)
         obj['status'] = unicode_type(self.status)
         obj['site_url'] = unicode_type(self.site_url)
-        obj['transaction'] = int(self.__data__['transaction'])
-        obj['creator'] = int(self.__data__['creator'])
+        obj['transaction_id'] = int(self.__data__['transaction'])
+        obj['creator_id'] = int(self.__data__['creator'])
         return obj
 
     def from_hash(self, obj):
@@ -67,10 +69,10 @@ class DOIEntries(CherryPyAPI):
                           lambda: unicode_type(obj['status']))
         self._set_only_if('site_url', obj, 'site_url',
                           lambda: unicode_type(obj['site_url']))
-        self._set_only_if('creator', obj, 'creator',
-                          lambda: Users.get(Users.id == obj['creator']))
-        self._set_only_if('transaction', obj, 'transaction',
-                          lambda: str(obj['transaction_id']))
+        self._set_only_if('creator_id', obj, 'creator',
+                          lambda: Users.get(Users.id == obj['creator_id']))
+        self._set_only_if('transaction_id', obj, 'transaction',
+                          lambda: Transactions.get(Transactions.id == obj['transaction_id']))
 
     @classmethod
     def where_clause(cls, kwargs):
