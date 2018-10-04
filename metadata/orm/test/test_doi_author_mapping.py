@@ -56,22 +56,22 @@ class TestDOIAuthorMapping(TestBase):
         uni_author.from_hash(SAMPLE_UNICODE_AUTHOR_HASH)
         uni_author.save(force_insert=True)
 
-    def test_doiauthormapping_hash(self):
+    def test_doi_author_mapping_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_DOIAUTHORMAPPING_HASH)
 
-    def test_unicode_doiauthormapping_hash(self):
+    def test_unicode_doi_author_mapping_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_UNICODE_DOIAUTHORMAPPING_HASH)
 
-    def test_doiauthormapping_json(self):
+    def test_doi_author_mapping_json(self):
         """Test the hash portion using base object method."""
         self.base_test_json(dumps(SAMPLE_DOIAUTHORMAPPING_HASH))
 
-    def test_doiauthormapping_where(self):
+    def test_doi_author_mapping_where(self):
         """Test the hash portion using base object method."""
         self.base_where_clause(SAMPLE_DOIAUTHORMAPPING_HASH)
 
-    def test_unicode_doiauthormapping_where(self):
+    def test_unicode_doi_author_mapping_where(self):
         """Test the hash portion using base object method."""
         self.base_where_clause(SAMPLE_UNICODE_DOIAUTHORMAPPING_HASH)

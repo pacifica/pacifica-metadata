@@ -34,14 +34,14 @@ class TestDOIInfo(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """Build the object ands make dependent DOI entry object."""
-        doi = DOIEntries()
-        TestDOIEntries.base_create_dep_objs()
-        doi.from_hash(SAMPLE_DOI_HASH)
-        doi.save(force_insert=True)
-
         uni_doi = DOIEntries()
+        TestDOIEntries.base_create_dep_objs()
         uni_doi.from_hash(SAMPLE_UNICODE_DOI_HASH)
         uni_doi.save(force_insert=True)
+
+        doi = DOIEntries()
+        doi.from_hash(SAMPLE_DOI_HASH)
+        doi.save(force_insert=True)
 
     def test_doiinfo_hash(self):
         """Test the hash portion using base object method."""

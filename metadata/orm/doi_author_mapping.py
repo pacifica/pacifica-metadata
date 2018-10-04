@@ -32,6 +32,7 @@ class DOIAuthorMapping(CherryPyAPI):
     # pylint: disable=too-few-public-methods
     class Meta(object):
         """PeeWee meta class contains the database and the primary key."""
+
         database = DB
         primary_key = CompositeKey('author', 'doi', 'author_order')
     # pylint: enable=too-few-public-methods
@@ -42,7 +43,7 @@ class DOIAuthorMapping(CherryPyAPI):
         super(DOIAuthorMapping, DOIAuthorMapping).elastic_mapping_builder(obj)
         obj['author_order'] = obj['author'] = {'type': 'integer'}
         obj['doi'] = {'type': 'text', 'fields': {'keyword': {
-                      'type': 'keyword', 'ignore_above': 256}}}
+            'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
