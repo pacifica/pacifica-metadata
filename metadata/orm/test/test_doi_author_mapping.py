@@ -12,7 +12,6 @@ from metadata.orm.doi_authors import DOIAuthors
 from metadata.orm.test.test_doi_authors import TestDOIAuthors
 from metadata.orm.test.test_doi_authors import SAMPLE_DOIAUTHORS_HASH as SAMPLE_AUTHOR_HASH
 from metadata.orm.test.test_doi_authors import SAMPLE_UNICODE_DOIAUTHORS_HASH as SAMPLE_UNICODE_AUTHOR_HASH
-import pprint
 
 
 SAMPLE_DOIAUTHORMAPPING_HASH = {

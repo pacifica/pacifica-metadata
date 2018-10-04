@@ -6,7 +6,6 @@ from metadata.orm.test.base import TestBase
 from metadata.orm.doi_transaction import DOITransaction
 from metadata.orm.doi_entries import DOIEntries
 from metadata.orm.test.test_doi_entries import SAMPLE_DOIENTRIES_HASH
-from metadata.orm.test.test_doi_entries import TestDOIEntries
 from metadata.orm.transaction_release import TransactionRelease
 from metadata.orm.test.test_transaction_release import SAMPLE_TRANS_RELEASE_HASH
 from metadata.orm.test.test_transaction_release import TestTransactionRelease
@@ -32,7 +31,6 @@ class TestDOITransaction(TestBase):
         trans_rel.save(force_insert=True)
 
         doi_ds = DOIEntries()
-        # TestDOIEntries.base_create_dep_objs()
         doi_ds.from_hash(SAMPLE_DOIENTRIES_HASH)
         doi_ds.save(force_insert=True)
 
