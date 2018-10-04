@@ -5,7 +5,7 @@ from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.doi_entries import DOIEntries
 from metadata.orm.test.test_doi_entries import TestDOIEntries
-from metadata.orm.test.test_doi_entries import SAMPLE_DOIENTRIES_HASH
+from metadata.orm.test.test_doi_entries import SAMPLE_DOIENTRIES_HASH as SAMPLE_DOI_HASH
 from metadata.orm.test.test_users import SAMPLE_USER_HASH, SAMPLE_UNICODE_USER_HASH
 from metadata.orm.doi_authors import DOIAuthors
 
@@ -43,8 +43,8 @@ class TestDOIAuthors(TestBase):
         """Build the object ands make dependent DOI entry object."""
         doi = DOIEntries()
         TestDOIEntries.base_create_dep_objs()
-        doi.from_hash(SAMPLE_DOIENTRIES_HASH)
-        doi.save()
+        doi.from_hash(SAMPLE_DOI_HASH)
+        doi.save(force_insert=True)
 
     def test_doiauthors_hash(self):
         """Test the hash portion using base object method."""

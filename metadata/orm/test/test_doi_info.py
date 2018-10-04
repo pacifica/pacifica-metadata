@@ -6,9 +6,7 @@ from metadata.orm.test.base import TestBase
 from metadata.orm.doi_entries import DOIEntries
 from metadata.orm.test.test_doi_entries import TestDOIEntries
 from metadata.orm.test.test_doi_entries import SAMPLE_DOIENTRIES_HASH
-# from metadata.orm.test.test_users import SAMPLE_USER_HASH, SAMPLE_UNICODE_USER_HASH
 from metadata.orm.doi_info import DOIInfo
-import pprint
 
 
 SAMPLE_DOIINFO_HASH = {
