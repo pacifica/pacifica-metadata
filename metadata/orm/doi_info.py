@@ -24,7 +24,8 @@ class DOIInfo(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    doi = ForeignKeyField(DOIEntries, related_name='metadata', column_name='doi_id')
+    doi = ForeignKeyField(
+        DOIEntries, related_name='metadata', column_name='doi_id')
     key = CharField()
     value = CharField()
 
