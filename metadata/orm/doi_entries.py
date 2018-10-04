@@ -38,7 +38,7 @@ class DOIEntries(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(DOIEntries, DOIEntries).elastic_mapping_builder(obj)
         obj['creator'] = {'type': 'integer'}
-        obj['doi'] = obj['status'] = obj['encoding'] = obj['_id'] = \
+        obj['doi'] = obj['status'] = obj['encoding'] = \
             {'type': 'text', 'fields': {'keyword': {
                 'type': 'keyword', 'ignore_above': 256}}}
 
