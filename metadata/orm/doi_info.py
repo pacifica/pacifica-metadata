@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""TransactionKeyValue links Transactions and Keys and Values objects."""
-from peewee import ForeignKeyField, CharField
+"""DOIInfo stores return info from the minting service about the DOI entry."""
+from peewee import ForeignKeyField, CharField, CompositeKey
 from metadata.orm.base import DB
 from metadata.orm.doi_entries import DOIEntries
 from metadata.rest.orm import CherryPyAPI
@@ -10,7 +10,7 @@ from metadata.orm.utils import unicode_type
 
 class DOIInfo(CherryPyAPI):
     """
-    TransactionKeyValue attributes are foreign keys.
+    DOI Info keys and values for return info from minting service.
 
     Attributes:
         +-------------------+-------------------------------------+
@@ -18,14 +18,14 @@ class DOIInfo(CherryPyAPI):
         +===================+=====================================+
         | doi               | Link to the DOIEntries model        |
         +-------------------+-------------------------------------+
-        | key               | Link to the Keys model              |
+        | key               | Key name                            |
         +-------------------+-------------------------------------+
-        | value             | Link to the Values model            |
+        | value             | Value                               |
         +-------------------+-------------------------------------+
     """
 
     doi = ForeignKeyField(
-        DOIEntries, related_name='metadata', column_name='doi_id')
+        DOIEntries, related_name='metadata', column_name='doi')
     key = CharField()
     value = CharField()
 
@@ -34,22 +34,21 @@ class DOIInfo(CherryPyAPI):
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB
-        # primary_key = CompositeKey('doi', 'key', 'value')
+        primary_key = CompositeKey('doi', 'key', 'value')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(DOIInfo, DOIInfo).elastic_mapping_builder(obj)
-        obj['doi_id'] = {'type': 'integer'}
-        obj['key'] = obj['value'] = \
+        obj['doi'] = obj['key'] = obj['value'] = \
             {'type': 'text', 'fields': {'keyword': {
                 'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOIInfo, self).to_hash(**flags)
-        obj['doi_id'] = int(self.__data__['doi'])
+        obj['doi'] = unicode_type(self.__data__['doi'])
         obj['key'] = unicode_type(self.__data__['key'])
         obj['value'] = unicode_type(self.__data__['value'])
         return obj
@@ -58,8 +57,8 @@ class DOIInfo(CherryPyAPI):
         """Convert the hash into the object."""
         super(DOIInfo, self).from_hash(obj)
         self._set_only_if(
-            'doi_id', obj, 'doi',
-            lambda: DOIEntries.get(DOIEntries.doi_id == obj['doi_id'])
+            'doi', obj, 'doi',
+            lambda: DOIEntries.get(DOIEntries.doi == obj['doi'])
         )
         self._set_only_if(
             'value', obj, 'value', lambda: unicode_type(obj['value'])

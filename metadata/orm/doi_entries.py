@@ -1,10 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
-from peewee import CharField, IntegerField, ForeignKeyField
+from peewee import CharField, ForeignKeyField
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.users import Users
-from metadata.orm.transactions import Transactions
 from metadata.orm.utils import unicode_type
 
 
@@ -16,53 +15,48 @@ class DOIEntries(CherryPyAPI):
         +-------------------+-------------------------------------+
         | Name              | Description                         |
         +===================+=====================================+
-        | doi_id            | OSTI identifier (postfix)           |
-        +-------------------+-------------------------------------+
-        | doi               | official DOI string                 |
-        +-------------------+-------------------------------------+
-        | transaction       | Corresponding transaction ID        |
+        | doi               | full DOI specifier                  |
         +-------------------+-------------------------------------+
         | status            | Current publishing status           |
         +-------------------+-------------------------------------+
+        | site_url          | Linked landing page url             |
+        +-------------------+-------------------------------------+
         | creator           | Link to Users table                 |
+        +-------------------+-------------------------------------+
+        | encoding          | encoding of the keyword             |
         +-------------------+-------------------------------------+
     """
 
-    doi_id = IntegerField(primary_key=True)
-    doi = CharField()
-    status = CharField(default='PENDING')
+    doi = CharField(primary_key=True)
+    status = CharField(default='')
     site_url = CharField()
-    transaction = ForeignKeyField(Transactions)
+    encoding = CharField(default='UTF8')
     creator = ForeignKeyField(Users, related_name='dois_created')
 
     @staticmethod
     def elastic_mapping_builder(obj):
         """Build the elasticsearch mapping bits."""
         super(DOIEntries, DOIEntries).elastic_mapping_builder(obj)
-        obj['doi_id'] = obj['creator'] = obj['transaction'] = {
-            'type': 'integer'}
-        obj['doi'] = obj['status'] = obj['site_url'] = \
+        obj['creator'] = {'type': 'integer'}
+        obj['doi'] = obj['status'] = obj['encoding'] = obj['_id'] = \
             {'type': 'text', 'fields': {'keyword': {
                 'type': 'keyword', 'ignore_above': 256}}}
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOIEntries, self).to_hash(**flags)
-        obj['doi_id'] = int(
-            self.doi_id) if self.doi_id is not None else obj['doi_id']
-        obj['_id'] = obj['doi_id']
+        obj['_id'] = int(self.id) if self.id is not None else obj['_id']
         obj['doi'] = unicode_type(self.doi)
         obj['status'] = unicode_type(self.status)
         obj['site_url'] = unicode_type(self.site_url)
-        obj['transaction_id'] = int(self.__data__['transaction'])
         obj['creator_id'] = int(self.__data__['creator'])
+        obj['encoding'] = str(self.encoding)
         return obj
 
     def from_hash(self, obj):
         """Convert the hash to the object."""
         super(DOIEntries, self).from_hash(obj)
-        self._set_only_if('doi_id', obj, '_id', lambda: int(obj['doi_id']))
-        self._set_only_if('doi_id', obj, 'doi_id', lambda: int(obj['doi_id']))
+        self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
         self._set_only_if('doi', obj, 'doi',
                           lambda: unicode_type(obj['doi']))
         self._set_only_if('status', obj, 'status',
@@ -71,12 +65,11 @@ class DOIEntries(CherryPyAPI):
                           lambda: unicode_type(obj['site_url']))
         self._set_only_if('creator_id', obj, 'creator',
                           lambda: Users.get(Users.id == obj['creator_id']))
-        self._set_only_if('transaction_id', obj, 'transaction',
-                          lambda: Transactions.get(Transactions.id == obj['transaction_id']))
+        self._set_only_if('encoding', obj, 'encoding',
+                          lambda: str(obj['encoding']))
 
     @classmethod
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(DOIEntries, cls).where_clause(kwargs)
-        return cls._where_attr_clause(where_clause, kwargs, [
-            'doi_id', 'doi', 'status', 'site_url', 'creator', 'transaction_id'])
+        return cls._where_attr_clause(where_clause, kwargs, ['doi', 'status', 'encoding', 'creator'])

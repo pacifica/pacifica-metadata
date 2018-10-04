@@ -3,15 +3,11 @@
 """Test the file_key_values ORM object."""
 from json import dumps
 from metadata.orm.test.base import TestBase
-from metadata.orm.doi_entries import DOIEntries
-from metadata.orm.test.test_doi_entries import TestDOIEntries
-from metadata.orm.test.test_doi_entries import SAMPLE_DOIENTRIES_HASH as SAMPLE_DOI_HASH
 from metadata.orm.test.test_users import SAMPLE_USER_HASH, SAMPLE_UNICODE_USER_HASH
 from metadata.orm.doi_authors import DOIAuthors
 
 SAMPLE_DOIAUTHORS_HASH = {
-    'doi_id': 1234567,
-    'author_order': 1,
+    '_id': 1,
     'last_name': SAMPLE_USER_HASH['last_name'],
     'first_name': SAMPLE_USER_HASH['first_name'],
     'email': SAMPLE_USER_HASH['email_address'],
@@ -22,8 +18,7 @@ SAMPLE_DOIAUTHORS_HASH = {
 # yes a DOI can be unicode....
 # https://www.doi.org/doi_handbook/2_Numbering.html#2.2.1
 SAMPLE_UNICODE_DOIAUTHORS_HASH = {
-    'doi_id': 1234567,
-    'author_order': 1,
+    '_id': 2,
     'last_name': SAMPLE_UNICODE_USER_HASH['last_name'],
     'first_name': SAMPLE_UNICODE_USER_HASH['first_name'],
     'email': SAMPLE_UNICODE_USER_HASH['email_address'],
@@ -37,14 +32,6 @@ class TestDOIAuthors(TestBase):
 
     obj_cls = DOIAuthors
     obj_id = DOIAuthors.id
-
-    @classmethod
-    def base_create_dep_objs(cls):
-        """Build the object ands make dependent DOI entry object."""
-        doi = DOIEntries()
-        TestDOIEntries.base_create_dep_objs()
-        doi.from_hash(SAMPLE_DOI_HASH)
-        doi.save(force_insert=True)
 
     def test_doiauthors_hash(self):
         """Test the hash portion using base object method."""

@@ -4,7 +4,7 @@
 from peewee import ForeignKeyField, CompositeKey
 from metadata.orm.base import DB
 from metadata.orm.citations import Citations
-from metadata.orm.doidatasets import DOIDataSets
+from metadata.orm.doi_entries import DOIEntries
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.utils import index_hash, unicode_type
 
@@ -24,7 +24,7 @@ class CitationDOI(CherryPyAPI):
     """
 
     doi = ForeignKeyField(
-        DOIDataSets, related_name='doi_citations', to_field='doi')
+        DOIEntries, related_name='doi_citations', to_field='doi')
     citation = ForeignKeyField(Citations, related_name='doi_entries')
 
     # pylint: disable=too-few-public-methods
@@ -48,8 +48,8 @@ class CitationDOI(CherryPyAPI):
         """Convert the object to a hash."""
         obj = super(CitationDOI, self).to_hash(**flags)
         obj['_id'] = index_hash(
-            unicode_type(self.__data__['doi']),
-            int(self.__data__['citation'])
+            int(self.__data__['citation']),
+            unicode_type(self.__data__['doi'])
         )
         obj['doi'] = unicode_type(self.__data__['doi'])
         obj['citation'] = int(self.__data__['citation'])
@@ -61,7 +61,7 @@ class CitationDOI(CherryPyAPI):
         self._set_only_if('citation', obj, 'citation',
                           lambda: Citations.get(Citations.id == obj['citation']))
         self._set_only_if('doi', obj, 'doi',
-                          lambda: DOIDataSets.get(DOIDataSets.doi == obj['doi']))
+                          lambda: DOIEntries.get(DOIEntries.doi == obj['doi']))
 
     @classmethod
     def where_clause(cls, kwargs):

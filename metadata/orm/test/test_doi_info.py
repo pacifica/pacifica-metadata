@@ -5,12 +5,13 @@ from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.doi_entries import DOIEntries
 from metadata.orm.test.test_doi_entries import TestDOIEntries
-from metadata.orm.test.test_doi_entries import SAMPLE_DOIENTRIES_HASH
+from metadata.orm.test.test_doi_entries import SAMPLE_DOIENTRIES_HASH as SAMPLE_DOI_HASH
+from metadata.orm.test.test_doi_entries import SAMPLE_UNICODE_DOIENTRIES_HASH as SAMPLE_UNICODE_DOI_HASH
 from metadata.orm.doi_info import DOIInfo
 
 
 SAMPLE_DOIINFO_HASH = {
-    'doi_id': 1234567,
+    'doi': SAMPLE_DOI_HASH['doi'],
     'key': u'title',
     'value': u'My Super Title'
 }
@@ -18,7 +19,7 @@ SAMPLE_DOIINFO_HASH = {
 # yes a DOI can be unicode....
 # https://www.doi.org/doi_handbook/2_Numbering.html#2.2.1
 SAMPLE_UNICODE_DOIINFO_HASH = {
-    'doi_id': 1234567,
+    'doi': SAMPLE_UNICODE_DOI_HASH['doi'],
     'key': u'töitle',
     'value': u'Meine Süpër Töitle'
 }
@@ -28,15 +29,19 @@ class TestDOIInfo(TestBase):
     """Test the DOIAuthors ORM object."""
 
     obj_cls = DOIInfo
-    obj_id = DOIInfo.id
+    obj_id = DOIInfo.doi
 
     @classmethod
     def base_create_dep_objs(cls):
         """Build the object ands make dependent DOI entry object."""
         doi = DOIEntries()
         TestDOIEntries.base_create_dep_objs()
-        doi.from_hash(SAMPLE_DOIENTRIES_HASH)
+        doi.from_hash(SAMPLE_DOI_HASH)
         doi.save(force_insert=True)
+
+        uni_doi = DOIEntries()
+        uni_doi.from_hash(SAMPLE_UNICODE_DOI_HASH)
+        uni_doi.save(force_insert=True)
 
     def test_doiinfo_hash(self):
         """Test the hash portion using base object method."""

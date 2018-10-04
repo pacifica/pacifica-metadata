@@ -5,30 +5,29 @@ from json import dumps
 from metadata.orm.test.base import TestBase
 from metadata.orm.doi_entries import DOIEntries
 from metadata.orm.test.test_users import SAMPLE_USER_HASH as SAMPLE_CREATOR_HASH
+from metadata.orm.test.test_users import SAMPLE_UNICODE_USER_HASH as SAMPLE_UNICODE_CREATOR_HASH
 from metadata.orm.test.test_users import TestUsers
 from metadata.orm.users import Users
-from metadata.orm.transactions import Transactions
-from metadata.orm.test.test_transactions import TestTransactions
-from metadata.orm.test.test_transactions import SAMPLE_TRANSACTION_HASH
+# from metadata.orm.transactions import Transactions
+# from metadata.orm.test.test_transactions import TestTransactions
+# from metadata.orm.test.test_transactions import SAMPLE_TRANSACTION_HASH
 
 SAMPLE_DOIENTRIES_HASH = {
-    'doi_id': 1234567,
-    'doi': '10.25584/data.2018-03.127/1234567',
+    'doi': u'10.25584/data.2018-03.127/1234567',
     'status': 'completed',
     'site_url': 'https://release.datahub.pnnl.gov/released_data/127',
-    'transaction_id': 127,
+    'encoding': 'UTF8',
     'creator_id': SAMPLE_CREATOR_HASH['_id']
 }
 
 # yes a DOI can be unicode....
 # https://www.doi.org/doi_handbook/2_Numbering.html#2.2.1
 SAMPLE_UNICODE_DOIENTRIES_HASH = {
-    'doi_id': 1234567,
-    'doi': u'10.25584/data.café.2018-03.127/1234567',
+    'doi': u'10.25584/data.café.2018-03.127/1234568',
     'status': 'completed',
     'site_url': 'https://release.datahub.pnnl.gov/released_data/127',
-    'transaction_id': 127,
-    'creator_id': SAMPLE_CREATOR_HASH['_id']
+    'encoding': 'UTF8',
+    'creator_id': SAMPLE_UNICODE_CREATOR_HASH['_id']
 }
 
 
@@ -36,7 +35,7 @@ class TestDOIEntries(TestBase):
     """Test the DOIEntries ORM object."""
 
     obj_cls = DOIEntries
-    obj_id = DOIEntries.doi_id
+    obj_id = DOIEntries.doi
 
     @classmethod
     def base_create_dep_objs(cls):
@@ -46,10 +45,9 @@ class TestDOIEntries(TestBase):
         submitter.from_hash(SAMPLE_CREATOR_HASH)
         submitter.save(force_insert=True)
 
-        trans = Transactions()
-        TestTransactions.base_create_dep_objs()
-        trans.from_hash(SAMPLE_TRANSACTION_HASH)
-        trans.save(force_insert=True)
+        uni_submitter = Users()
+        uni_submitter.from_hash(SAMPLE_UNICODE_CREATOR_HASH)
+        uni_submitter.save(force_insert=True)
 
     def test_doientries_hash(self):
         """Test the hash portion using base object method."""
