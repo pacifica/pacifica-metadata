@@ -39,10 +39,12 @@ def main():
         'proposal_participant',
         'trans_key_value',
         'user_group',
-        'doidatasets',
-        'doiresource',
         'transaction_release',
+        'doi_authors',
+        'doi_entries',
+        'doi_info',
         'doi_transaction',
+        'doi_author_mapping',
         'citation_transaction',
         'citation_doi'
     ]
