@@ -1,10 +1,10 @@
 [
   {
     "_id": 1,
-    "last_name": "Thompson",
-    "first_name": "Tom",
-    "email": "tom@imnotreal.gov",
     "affiliation": "PNNL",
+    "email": "tom@imnotreal.gov",
+    "first_name": "Tom",
+    "last_name": "Thompson",
     "orcid": "1234-2345-3456-4576"
   }
 ]
