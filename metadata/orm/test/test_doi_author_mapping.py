@@ -72,6 +72,6 @@ class TestDOIAuthorMapping(TestBase):
         """Test the hash portion using base object method."""
         self.base_where_clause(SAMPLE_DOIAUTHORMAPPING_HASH)
 
-    def test_uc_doi_author_mapping_where(self):
+    def test_uc_doi_authormapping_where(self):
         """Test the hash portion using base object method."""
         self.base_where_clause(SAMPLE_UNICODE_DOIAUTHORMAPPING_HASH)
