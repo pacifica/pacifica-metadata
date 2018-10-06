@@ -48,6 +48,11 @@ class DOIInfo(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOIInfo, self).to_hash(**flags)
+        obj['_id'] = index_hash(
+            unicode_type(self.__data__['doi']),
+            unicode_type(self.__data__['key']),
+            unicode_type(self.__data__['value'])
+        )
         obj['doi'] = unicode_type(self.__data__['doi'])
         obj['key'] = unicode_type(self.__data__['key'])
         obj['value'] = unicode_type(self.__data__['value'])
