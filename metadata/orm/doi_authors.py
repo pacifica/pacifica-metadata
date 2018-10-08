@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Keywords linked to citations."""
+"""Secondary author list for DOI entries."""
 from peewee import CharField
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.utils import unicode_type
