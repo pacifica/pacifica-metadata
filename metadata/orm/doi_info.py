@@ -3,6 +3,7 @@
 """DOIInfo stores return info from the minting service about the DOI entry."""
 from peewee import ForeignKeyField, CharField, CompositeKey
 from metadata.orm.base import DB
+from metadata.orm.utils import index_hash
 from metadata.orm.doi_entries import DOIEntries
 from metadata.rest.orm import CherryPyAPI
 from metadata.orm.utils import unicode_type
