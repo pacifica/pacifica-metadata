@@ -78,7 +78,4 @@ class DOIInfo(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(DOIInfo, cls).where_clause(kwargs)
         attrs = ['doi', 'key', 'value']
-        for attr in attrs:
-            if '{}_id'.format(attr) in kwargs:
-                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
         return cls._where_attr_clause(where_clause, kwargs, attrs)
