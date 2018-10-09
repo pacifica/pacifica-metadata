@@ -8,41 +8,43 @@ on those objects.
 """
 from time import sleep
 from peewee import OperationalError
-from pacifica.metadata.elastic import create_elastic_index, try_es_connect
-from pacifica.metadata.orm.base import DB
-from pacifica.metadata.orm.citations import Citations
-from pacifica.metadata.orm.contributors import Contributors
-from pacifica.metadata.orm.institution_person import InstitutionPerson
-from pacifica.metadata.orm.institutions import Institutions
-from pacifica.metadata.orm.instruments import Instruments
-from pacifica.metadata.orm.instrument_custodian import InstrumentCustodian
-from pacifica.metadata.orm.journals import Journals
-from pacifica.metadata.orm.keywords import Keywords
-from pacifica.metadata.orm.citation_keyword import CitationKeyword
-from pacifica.metadata.orm.citation_contributor import CitationContributor
-from pacifica.metadata.orm.proposal_instrument import ProposalInstrument
-from pacifica.metadata.orm.users import Users
-from pacifica.metadata.orm.proposal_participant import ProposalParticipant
-from pacifica.metadata.orm.proposals import Proposals
-from pacifica.metadata.orm.citation_proposal import CitationProposal
-from pacifica.metadata.orm.files import Files
-from pacifica.metadata.orm.keys import Keys
-from pacifica.metadata.orm.values import Values
-from pacifica.metadata.orm.transactions import Transactions
-from pacifica.metadata.orm.file_key_value import FileKeyValue
-from pacifica.metadata.orm.trans_key_value import TransactionKeyValue
-from pacifica.metadata.orm.groups import Groups
-from pacifica.metadata.orm.user_group import UserGroup
-from pacifica.metadata.orm.instrument_group import InstrumentGroup
-from pacifica.metadata.orm.analytical_tools import AnalyticalTools
-from pacifica.metadata.orm.atool_proposal import AToolProposal
-from pacifica.metadata.orm.atool_transaction import AToolTransaction
-from pacifica.metadata.orm.doidatasets import DOIDataSets
-from pacifica.metadata.orm.doiresource import DOIResource
-from pacifica.metadata.orm.transaction_release import TransactionRelease
-from pacifica.metadata.orm.doi_transaction import DOITransaction
-from pacifica.metadata.orm.citation_transaction import CitationTransaction
-from pacifica.metadata.orm.citation_doi import CitationDOI
+from ..elastic import create_elastic_index, try_es_connect
+from .base import DB
+from .citations import Citations
+from .contributors import Contributors
+from .institution_person import InstitutionPerson
+from .institutions import Institutions
+from .instruments import Instruments
+from .instrument_custodian import InstrumentCustodian
+from .journals import Journals
+from .keywords import Keywords
+from .citation_keyword import CitationKeyword
+from .citation_contributor import CitationContributor
+from .proposal_instrument import ProposalInstrument
+from .users import Users
+from .proposal_participant import ProposalParticipant
+from .proposals import Proposals
+from .citation_proposal import CitationProposal
+from .files import Files
+from .keys import Keys
+from .values import Values
+from .transactions import Transactions
+from .file_key_value import FileKeyValue
+from .trans_key_value import TransactionKeyValue
+from .groups import Groups
+from .user_group import UserGroup
+from .instrument_group import InstrumentGroup
+from .analytical_tools import AnalyticalTools
+from .atool_proposal import AToolProposal
+from .atool_transaction import AToolTransaction
+from .transaction_release import TransactionRelease
+from .doi_transaction import DOITransaction
+from .citation_transaction import CitationTransaction
+from .citation_doi import CitationDOI
+from .doi_entries import DOIEntries
+from .doi_authors import DOIAuthors
+from .doi_author_mapping import DOIAuthorMapping
+from .doi_info import DOIInfo
 
 DATABASE_CONNECT_ATTEMPTS = 40
 DATABASE_WAIT = 3
@@ -75,12 +77,14 @@ ORM_OBJECTS = [
     AnalyticalTools,
     AToolProposal,
     AToolTransaction,
-    DOIDataSets,
-    DOIResource,
     TransactionRelease,
+    DOIEntries,
+    DOIAuthors,
     DOITransaction,
     CitationTransaction,
-    CitationDOI
+    CitationDOI,
+    DOIAuthorMapping,
+    DOIInfo
 ]
 
 

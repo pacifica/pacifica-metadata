@@ -7,13 +7,13 @@ from pacifica.metadata.orm.citation_doi import CitationDOI
 from pacifica.metadata.orm.citations import Citations
 from pacifica.metadata.orm.test.test_citations import SAMPLE_CITATION_HASH
 from pacifica.metadata.orm.test.test_citations import TestCitations
-from pacifica.metadata.orm.doidatasets import DOIDataSets
-from pacifica.metadata.orm.test.test_doidatasets import SAMPLE_DOIDATASET_HASH
-from pacifica.metadata.orm.test.test_doidatasets import TestDOIDataSets
+from pacifica.metadata.orm.doi_entries import DOIEntries
+from pacifica.metadata.orm.test.test_doi_entries import SAMPLE_DOIENTRIES_HASH
+from pacifica.metadata.orm.test.test_doi_entries import TestDOIEntries
 
 SAMPLE_CITATION_DOI_HASH = {
     'citation': SAMPLE_CITATION_HASH['_id'],
-    'doi': SAMPLE_DOIDATASET_HASH['doi']
+    'doi': SAMPLE_DOIENTRIES_HASH['doi']
 }
 
 
@@ -26,10 +26,11 @@ class TestCitationDOI(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """Build the object and make dependent user object."""
-        doi_ds = DOIDataSets()
-        TestDOIDataSets.base_create_dep_objs()
-        doi_ds.from_hash(SAMPLE_DOIDATASET_HASH)
-        doi_ds.save(force_insert=True)
+        doi = DOIEntries()
+        TestDOIEntries.base_create_dep_objs()
+        doi.from_hash(SAMPLE_DOIENTRIES_HASH)
+        doi.save(force_insert=True)
+
         cite = Citations()
         TestCitations.base_create_dep_objs()
         cite.from_hash(SAMPLE_CITATION_HASH)

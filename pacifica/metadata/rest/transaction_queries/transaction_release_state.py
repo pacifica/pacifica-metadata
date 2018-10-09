@@ -81,7 +81,7 @@ class TransactionReleaseState(QueryBase):
             output_results = []
             for release in doi_releases:
                 output_results.append({
-                    'doi_name': release.doi.name,
+                    'doi_status': release.doi.status,
                     'doi_reference': release.doi.doi
                 })
         return output_results

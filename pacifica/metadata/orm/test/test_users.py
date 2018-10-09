@@ -16,7 +16,7 @@ SAMPLE_USER_HASH = {
 }
 
 SAMPLE_UNICODE_USER_HASH = {
-    '_id': 127,
+    '_id': 128,
     'first_name': u'Téd',
     'middle_initial': u'é',
     'last_name': u'Doé',

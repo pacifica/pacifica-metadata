@@ -4,20 +4,19 @@
 from json import dumps
 from pacifica.metadata.orm.test.base import TestBase
 from pacifica.metadata.orm.doi_transaction import DOITransaction
-from pacifica.metadata.orm.doidatasets import DOIDataSets
-from pacifica.metadata.orm.test.test_doidatasets import SAMPLE_DOIDATASET_HASH
-from pacifica.metadata.orm.test.test_doidatasets import TestDOIDataSets
+from pacifica.metadata.orm.doi_entries import DOIEntries
+from pacifica.metadata.orm.test.test_doi_entries import SAMPLE_DOIENTRIES_HASH
 from pacifica.metadata.orm.transaction_release import TransactionRelease
 from pacifica.metadata.orm.test.test_transaction_release import SAMPLE_TRANS_RELEASE_HASH
 from pacifica.metadata.orm.test.test_transaction_release import TestTransactionRelease
 
 SAMPLE_DOI_RELEASE_HASH = {
-    'doi': SAMPLE_DOIDATASET_HASH['doi'],
+    'doi': SAMPLE_DOIENTRIES_HASH['doi'],
     'transaction': SAMPLE_TRANS_RELEASE_HASH['transaction']
 }
 
 
-class TestDOIRelease(TestBase):
+class TestDOITransaction(TestBase):
     """Test the Keywords ORM object."""
 
     obj_cls = DOITransaction
@@ -30,19 +29,19 @@ class TestDOIRelease(TestBase):
         TestTransactionRelease.base_create_dep_objs()
         trans_rel.from_hash(SAMPLE_TRANS_RELEASE_HASH)
         trans_rel.save(force_insert=True)
-        doi_ds = DOIDataSets()
-        TestDOIDataSets.base_create_dep_objs()
-        doi_ds.from_hash(SAMPLE_DOIDATASET_HASH)
+
+        doi_ds = DOIEntries()
+        doi_ds.from_hash(SAMPLE_DOIENTRIES_HASH)
         doi_ds.save(force_insert=True)
 
-    def test_doirelease_hash(self):
+    def test_doitransaction_hash(self):
         """Test the hash portion using base object method."""
         self.base_test_hash(SAMPLE_DOI_RELEASE_HASH)
 
-    def test_doirelease_json(self):
+    def test_doitransaction_json(self):
         """Test the hash portion using base object method."""
         self.base_test_json(dumps(SAMPLE_DOI_RELEASE_HASH))
 
-    def test_doirelease_where(self):
+    def test_doitransaction_where(self):
         """Test the hash portion using base object method."""
         self.base_where_clause(SAMPLE_DOI_RELEASE_HASH)

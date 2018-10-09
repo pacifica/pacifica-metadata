@@ -1,0 +1,12 @@
+[
+  {
+    "doi": "10.25584/data.2018-03.127/1234567",
+    "key": "title",
+    "value": "My Super Title"
+  },
+  {
+    "doi": "10.25584/data.2018-03.127/1234567",
+    "key": "sponsoring_research_organization",
+    "value": "EMSL"
+  }
+]
