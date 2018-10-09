@@ -37,12 +37,14 @@ from metadata.orm.instrument_group import InstrumentGroup
 from metadata.orm.analytical_tools import AnalyticalTools
 from metadata.orm.atool_proposal import AToolProposal
 from metadata.orm.atool_transaction import AToolTransaction
-from metadata.orm.doidatasets import DOIDataSets
-from metadata.orm.doiresource import DOIResource
 from metadata.orm.transaction_release import TransactionRelease
 from metadata.orm.doi_transaction import DOITransaction
 from metadata.orm.citation_transaction import CitationTransaction
 from metadata.orm.citation_doi import CitationDOI
+from metadata.orm.doi_entries import DOIEntries
+from metadata.orm.doi_authors import DOIAuthors
+from metadata.orm.doi_author_mapping import DOIAuthorMapping
+from metadata.orm.doi_info import DOIInfo
 
 DATABASE_CONNECT_ATTEMPTS = 40
 DATABASE_WAIT = 3
@@ -75,12 +77,14 @@ ORM_OBJECTS = [
     AnalyticalTools,
     AToolProposal,
     AToolTransaction,
-    DOIDataSets,
-    DOIResource,
     TransactionRelease,
+    DOIEntries,
+    DOIAuthors,
     DOITransaction,
     CitationTransaction,
-    CitationDOI
+    CitationDOI,
+    DOIAuthorMapping,
+    DOIInfo
 ]
 
 
