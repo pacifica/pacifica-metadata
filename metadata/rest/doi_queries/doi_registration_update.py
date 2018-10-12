@@ -122,8 +122,9 @@ class DOIRegistrationUpdate(object):
                 'key': field,
                 'doi': doi_string
             }
+
             insert_item = {
-                'value': doi_info[field]
+                'value': doi_info.get(field)
             }
             item, _created = DOIInfo.get_or_create(**lookup_item, defaults=insert_item)
             if not _created and item.value != insert_item['value']:
