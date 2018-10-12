@@ -17,9 +17,6 @@ class DOIRegistrationUpdate(object):
     """Updates the database with new DOI registration info from registration API."""
 
     exposed = True
-    osti_elink_url_base = 'https://www.osti.gov/elink/2416api'
-    osti_user = 'PNNLData'
-    osti_pw = 'SUmo09)(s'
 
     @staticmethod
     def _add_doi_record_entry(doi_info):
@@ -41,7 +38,7 @@ class DOIRegistrationUpdate(object):
         # add doi_entry record
         DOIRegistrationUpdate._update_doi_entry_info(
             doi_info.get('doi'),
-            meta_info.get('site_url'),
+            meta_info,
             user_info.get('person_id')
         )
 
@@ -143,6 +140,8 @@ class DOIRegistrationUpdate(object):
             'released': released,
             'site_url': doi_info['site_url']
         }
+        osti_elink_url_base = 'https://www.osti.gov/elink/2416api'
+
         if creator is not None:
             insert_item['creator'] = creator
         doi_entry, _created = DOIEntries.get_or_create(**lookup_item, defaults=insert_item)
@@ -169,7 +168,7 @@ class DOIRegistrationUpdate(object):
             new_entries_info.append(new_entry)
             DOIRegistrationUpdate._get_updated_osti_info(
                 doi_string=new_entry,
-                elink_url=self.osti_elink_url,
-                elink_user=self.osti_user,
-                elink_password=self.osti_pw)
+                elink_url=osti_elink_url,
+                elink_user='***********',
+                elink_password='************')
         return new_entries_info
