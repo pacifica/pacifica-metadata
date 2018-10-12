@@ -66,24 +66,25 @@ class DOIRegistrationUpdate(object):
         release_status = record.attrib['released'].lower() == 'y'
 
         doi_info = {}
-        author_list = []
         for child in record:
             if child.tag == 'creatorsblock':
                 # these are authors, handle appropriately
-                author_info = {x.tag: x.text for x in child.find('creators_detail')}
-                author_list.append(author_info)
-                info = None
+                DOIRegistrationUpdate._extract_authors(child)
+                continue
             elif 'date' in child.tag:
                 info = parse(child.text).strftime('%Y-%m-%d')
             else:
                 info = child.text
-            if info is not None:
-                doi_info[child.tag] = info
+            doi_info[child.tag] = info
 
-        DOIRegistrationUpdate._update_author_info(author_list, doi_string)
         DOIRegistrationUpdate._update_doi_metadata_info(doi_info, doi_string)
         DOIRegistrationUpdate._update_doi_entry_info(
             doi_string, doi_info, None, current_status, release_status)
+
+    @staticmethod
+    def _extract_authors(creatorsblock_element, doi_string):
+        author_list = [{x.tag: x.text for x in el} for el in creatorsblock_element]
+        DOIRegistrationUpdate._update_author_info(author_list, doi_string)
 
     @staticmethod
     def _update_author_info(author_list, doi_string):
