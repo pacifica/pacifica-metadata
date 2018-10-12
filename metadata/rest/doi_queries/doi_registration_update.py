@@ -126,9 +126,7 @@ class DOIRegistrationUpdate(object):
                 'doi': doi_string
             }
             insert_item = {
-                'key': field,
-                'value': doi_info[field],
-                'doi': doi_string
+                'value': doi_info[field]
             }
             item, _created = DOIInfo.get_or_create(**lookup_item, defaults=insert_item)
             if not _created and item.value != insert_item['value']:
@@ -170,7 +168,7 @@ class DOIRegistrationUpdate(object):
             new_entry = DOIRegistrationUpdate._add_doi_record_entry(item)
             new_entries_info.append(new_entry)
             DOIRegistrationUpdate._get_updated_osti_info(
-                doi_string=new_entry
+                doi_string=new_entry,
                 elink_url=self.osti_elink_url,
                 elink_user=self.osti_user,
                 elink_password=self.osti_pw)
