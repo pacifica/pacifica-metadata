@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 """CherryPy DOI Registration Updater object class."""
 from __future__ import print_function
-from peewee import fn
+from xml.etree import ElementTree
 from cherrypy import tools, request, HTTPError
 import requests
 from dateutil.parser import parse
 from metadata.rest.user_queries.user_search import UserSearch
 from metadata.orm import DOIEntries, DOITransaction, TransactionRelease
 from metadata.orm import DOIAuthors, DOIAuthorMapping, DOIInfo
-from xml.etree import ElementTree
-import pprint
+
+# pylint: disable=too-few-public-methods
 
 
 class DOIRegistrationUpdate(object):
@@ -21,17 +21,19 @@ class DOIRegistrationUpdate(object):
     @staticmethod
     def _add_doi_record_entry(doi_info):
         # translate existing user from network id
-        user_info = UserSearch.search_for_user(doi_info.get('owner_network_id'), 'simple').pop()
-        user_id = user_info.get('person_id')
+        user_info = UserSearch.search_for_user(
+            doi_info.get('owner_network_id'), 'simple').pop()
         meta_info = doi_info.get('meta')
 
         infix_components = meta_info.get('doi_infix').split('.')
         transaction_id = infix_components.pop()
 
         # Check if transaction is released
-        tr_check_query = TransactionRelease().select().where(TransactionRelease.transaction == transaction_id)
+        tr_check_query = TransactionRelease().select().where(
+            TransactionRelease.transaction == transaction_id)
         if tr_check_query.count() == 0:
-            message = 'Transaction {0} has not been released'.format(transaction_id)
+            message = 'Transaction {0} has not been released'.format(
+                transaction_id)
             raise HTTPError('400 Bad Request', message)
 
         # make sure this record doesn't already exist
@@ -47,16 +49,18 @@ class DOIRegistrationUpdate(object):
             'doi': doi_info.get('doi'),
             'transaction': transaction_id
         }
-        doi_trans_mapping, mapping_created = DOITransaction.get_or_create(**doi_trans_map_item)
+        doi_trans_mapping, mapping_created = DOITransaction.get_or_create(
+            **doi_trans_map_item)
         return doi_trans_mapping.doi.doi
 
     @staticmethod
     def _get_updated_osti_info(doi_string, elink_url, elink_user, elink_password):
-        """This will access the server at OSTI and get all the relevant details for this DOI."""
+        """Access the server at OSTI and get all the relevant details for this DOI."""
         osti_elink_url = elink_url + '?doi=' + doi_string
 
-        r = requests.get(osti_elink_url, auth=(elink_user, elink_password))
-        tree = ElementTree.fromstring(r.content)
+        retrieved_osti_records = requests.get(
+            osti_elink_url, auth=(elink_user, elink_password))
+        tree = ElementTree.fromstring(retrieved_osti_records.content)
 
         record = tree[0]
         current_status = record.attrib['status'].lower()
@@ -66,7 +70,7 @@ class DOIRegistrationUpdate(object):
         for child in record:
             if child.tag == 'creatorsblock':
                 # these are authors, handle appropriately
-                DOIRegistrationUpdate._extract_authors(child)
+                DOIRegistrationUpdate._extract_authors(child, doi_string)
                 continue
             elif 'date' in child.tag:
                 info = parse(child.text).strftime('%Y-%m-%d')
@@ -80,7 +84,8 @@ class DOIRegistrationUpdate(object):
 
     @staticmethod
     def _extract_authors(creatorsblock_element, doi_string):
-        author_list = [{x.tag: x.text for x in el} for el in creatorsblock_element]
+        author_list = [{x.tag: x.text for x in el}
+                       for el in creatorsblock_element]
         DOIRegistrationUpdate._update_author_info(author_list, doi_string)
 
     @staticmethod
@@ -124,7 +129,8 @@ class DOIRegistrationUpdate(object):
             }
             insert_item = {}
             insert_item['value'] = doi_info.get(field)
-            item, _created = DOIInfo.get_or_create(**lookup_item, defaults=insert_item)
+            item, _created = DOIInfo.get_or_create(
+                **lookup_item, defaults=insert_item)
             if not _created and item.value != insert_item['value']:
                 item.value = insert_item['value']
                 item.save()
@@ -139,11 +145,10 @@ class DOIRegistrationUpdate(object):
             'released': released,
             'site_url': doi_info['site_url']
         }
-        osti_elink_url_base = 'https://www.osti.gov/elink/2416api'
-
         if creator is not None:
             insert_item['creator'] = creator
-        doi_entry, _created = DOIEntries.get_or_create(**lookup_item, defaults=insert_item)
+        doi_entry, _created = DOIEntries.get_or_create(
+            **lookup_item, defaults=insert_item)
         if not _created:
             doi_entry.status = status
             doi_entry.released = released
@@ -152,22 +157,24 @@ class DOIRegistrationUpdate(object):
             doi_entry.save(only=doi_entry.dirty_fields)
 
     # CherryPy requires these named methods.
-    # pylint: disable=invalid-named
+    # pylint: disable=invalid-name
     @staticmethod
-    @tools.json_in()
     @tools.json_out()
+    @tools.json_in()
     def POST():
         """Upload and create new DOI Entries."""
         items = request.json
         if not isinstance(items, (list,)) and isinstance(items, (dict, )):
             items = [items]
         new_entries_info = []
+        osti_elink_url_base = 'https://www.osti.gov/elink/2416api'
+
         for item in items:
             new_entry = DOIRegistrationUpdate._add_doi_record_entry(item)
             new_entries_info.append(new_entry)
             DOIRegistrationUpdate._get_updated_osti_info(
                 doi_string=new_entry,
-                elink_url=osti_elink_url,
+                elink_url=osti_elink_url_base,
                 elink_user='***********',
                 elink_password='************')
         return new_entries_info
