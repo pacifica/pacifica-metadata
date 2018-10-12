@@ -14,6 +14,7 @@ from metadata.rest.summaryinfo import SummaryInfoAPI
 from metadata.rest.migrationinfo import MigrationInfoAPI
 from metadata.rest.tkvinfo import TkvInfoAPI
 from metadata.rest.tkvupload import TkvUploadAPI
+from metadata.rest.doiupload import DOIUploadAPI
 
 
 # pylint: disable=too-few-public-methods
@@ -38,6 +39,7 @@ class Root(object):
     migrate = MigrationInfoAPI()
     tkvinfo = TkvInfoAPI()
     tkvupload = TkvUploadAPI()
+    doiupload = DOIUploadAPI()
 # pylint: enable=too-few-public-methods
 
 
