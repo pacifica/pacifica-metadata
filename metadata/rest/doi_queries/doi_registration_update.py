@@ -122,13 +122,13 @@ class DOIRegistrationUpdate(object):
     @staticmethod
     def _update_doi_metadata_info(doi_info, doi_string):
         # loop through metadata entries and make doi_info entries
-        for field in doi_info:
+        for md_field in doi_info:
             lookup_item = {
-                'key': field,
+                'key': md_field,
                 'doi': doi_string
             }
             insert_item = {}
-            insert_item['value'] = doi_info.get(field)
+            insert_item['value'] = doi_info.get(md_field)
             item, _created = DOIInfo.get_or_create(
                 **lookup_item, defaults=insert_item)
             if not _created and item.value != insert_item['value']:
