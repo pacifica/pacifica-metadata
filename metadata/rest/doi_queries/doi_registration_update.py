@@ -17,6 +17,9 @@ class DOIRegistrationUpdate(object):
     """Updates the database with new DOI registration info from registration API."""
 
     exposed = True
+    osti_elink_url_base = 'https://www.osti.gov/elink/2416api'
+    osti_user = 'PNNLData'
+    osti_pw = 'SUmo09)(s'
 
     @staticmethod
     def _add_doi_record_entry(doi_info):
@@ -51,40 +54,36 @@ class DOIRegistrationUpdate(object):
         return doi_trans_mapping.doi.doi
 
     @staticmethod
-    def _get_updated_osti_info(doi_string):
+    def _get_updated_osti_info(doi_string, elink_url, elink_user, elink_password):
         """This will access the server at OSTI and get all the relevant details for this DOI."""
-        osti_elink_url = 'https://www.osti.gov/elink/2416api' + '?doi=' + doi_string
-        osti_user = 'PNNLData'
-        osti_pw = 'SUmo09)(s'
+        osti_elink_url = elink_url + '?doi=' + doi_string
 
-        r = requests.get(osti_elink_url, auth=(osti_user, osti_pw))
+        r = requests.get(osti_elink_url, auth=(elink_user, elink_password))
         tree = ElementTree.fromstring(r.content)
 
-        for index in range(int(tree.attrib['start']), int(tree.attrib['rows'])):
-            record = tree[index]
-            current_status = record.attrib['status'].lower()
-            release_status = record.attrib['released'].lower() == 'y'
+        record = tree[0]
+        current_status = record.attrib['status'].lower()
+        release_status = record.attrib['released'].lower() == 'y'
 
-            doi_info = {}
-            author_list = []
-            for child in record:
-                if child.tag == 'creatorsblock':
-                    # these are authors, handle appropriately
-                    author_info = {x.tag: x.text for x in child.find('creators_detail')}
-                    author_list.append(author_info)
-                    info = None
-                elif 'date' in child.tag:
-                    info = parse(child.text).strftime('%Y-%m-%d')
-                else:
-                    info = child.text
-                if info is not None:
-                    doi_info[child.tag] = info
+        doi_info = {}
+        author_list = []
+        for child in record:
+            if child.tag == 'creatorsblock':
+                # these are authors, handle appropriately
+                author_info = {x.tag: x.text for x in child.find('creators_detail')}
+                author_list.append(author_info)
+                info = None
+            elif 'date' in child.tag:
+                info = parse(child.text).strftime('%Y-%m-%d')
+            else:
+                info = child.text
+            if info is not None:
+                doi_info[child.tag] = info
 
-            DOIRegistrationUpdate._update_author_info(author_list, doi_string)
-            DOIRegistrationUpdate._update_doi_metadata_info(doi_info, doi_string)
-            if 'site_url' in doi_info:
-                DOIRegistrationUpdate._update_doi_entry_info(
-                    doi_string, doi_info['site_url'], None, current_status, release_status)
+        DOIRegistrationUpdate._update_author_info(author_list, doi_string)
+        DOIRegistrationUpdate._update_doi_metadata_info(doi_info, doi_string)
+        DOIRegistrationUpdate._update_doi_entry_info(
+            doi_string, doi_info, None, current_status, release_status)
 
     @staticmethod
     def _update_author_info(author_list, doi_string):
@@ -136,14 +135,14 @@ class DOIRegistrationUpdate(object):
                 item.save()
 
     @staticmethod
-    def _update_doi_entry_info(doi_string, site_url, creator, status='pending', released=False):
+    def _update_doi_entry_info(doi_string, doi_info, creator, status='pending', released=False):
         lookup_item = {
             'doi': doi_string
         }
         insert_item = {
             'status': status,
             'released': released,
-            'site_url': site_url
+            'site_url': doi_info['site_url']
         }
         if creator is not None:
             insert_item['creator'] = creator
@@ -151,9 +150,8 @@ class DOIRegistrationUpdate(object):
         if not _created:
             doi_entry.status = status
             doi_entry.released = released
-            doi_entry.site_url = site_url
-            if creator is not None:
-                doi_entry.creator = creator
+            doi_entry.site_url = doi_info['site_url']
+            doi_entry.creator = creator
             doi_entry.save(only=doi_entry.dirty_fields)
 
     # CherryPy requires these named methods.
@@ -170,5 +168,9 @@ class DOIRegistrationUpdate(object):
         for item in items:
             new_entry = DOIRegistrationUpdate._add_doi_record_entry(item)
             new_entries_info.append(new_entry)
-            DOIRegistrationUpdate._get_updated_osti_info(new_entry)
+            DOIRegistrationUpdate._get_updated_osti_info(
+                doi_string=new_entry
+                elink_url=self.osti_elink_url,
+                elink_user=self.osti_user,
+                elink_password=self.osti_pw)
         return new_entries_info
