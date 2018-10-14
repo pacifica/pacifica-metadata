@@ -1,12 +1,7 @@
-services:
- - elasticsearch
- - postgresql
 language: python
-python:
- - 2.7
- - 3.6
-
-
+services:
+- postgresql
+- elasticsearch
 addons:
   apt:
     sources:
@@ -14,13 +9,65 @@ addons:
     packages:
     - elasticsearch
     - oracle-java8-set-default
-
+stages:
+- lint
+- test
+- deploy
 env:
-- RUN_LINTS=true
-- ES_VERSION=5.6.10
-
-cache: pip
-
-before_install: bash -xe travis/before-install.sh
-install: pip install -r requirements-dev.txt
-script: bash -xe travis/test-script.sh
+  NOTIFICATIONS_URL: http://127.0.0.1:8080
+  PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
+".script": &1
+- pip install .
+- export METADATA_CPCONFIG="$PWD/server.conf"
+- cd tests
+- coverage run --include='*/site-packages/pacifica/metadata/*' -m pytest -xv orm elastic core
+- coverage run --include='*/site-packages/pacifica/metadata/*' -a -m pytest -xv rest
+- coverage report -m --fail-under 100
+".before_script": &2
+- psql -c 'create database pacifica_metadata;' -U postgres
+- pushd tests; python cherrypy_catch_test.py & echo $! > cherrypy-catch.pid; popd;
+jobs:
+  include:
+  - stage: lint
+    python: 3.6
+    script: pre-commit run -a
+  - python: 2.7
+    script: pre-commit run -a
+  - stage: test
+    script: *1
+    before_script: *2
+    python: 3.6
+  - script: *1
+    before_script: *2
+    python: 2.7
+  - stage: deploy
+    services: []
+    language: python
+    before_install: skip
+    script: skip
+    python: 3.6
+    deploy:
+      skip_cleanup: true
+      provider: pypi
+      user: dmlb2000
+      distributions: sdist bdist_wheel
+      password:
+        secure: QldhKXUmkWsrHuI0JLEmN65A5nwC2JqG4r80BwmAyAVYSJ3OOX3a91S0N30hUL3/BZp12+0VUwyLYYfwFvOGx5lymkmjLQXtgT/tUFHnyci1JPsBK3KmSNixqGzRQGvtuiSVutXmuD5+pAR2RoZ0NcPUPwZ8wZ/Xqgq6YdSO7EpqT607F+eV8lOZzamMkrZ2qESf17w3KmCbzwNupiGUyWBd2SuPCgQS9K8hjwye0oPijSUsqTTkHKr5hEsmdv1eUbLAGZzoEMZyyXYpSsIu0X6DBZRt1k5m9XEw2wQlVeNeayPlgva/QlswzcUbdCZUpAKcaTm8X2pzSfYdzX3VksqyGHHeC93HiHZBLkVlqa4H1aHJPLJRZp0kvadq1DQWO1rh8gWl/QhKiqDk8J4KqsFaoW8aFK+x0YANJXitQJ5xQve85QY/d+M9hHPgkawHbhkssbVLAjzLgvUpbvcRgghmZ6/Aafo74KXuxfAtp4xThEYXT0zoVzULgVHYMWJFNeLLvimvjRozgbC98mqr5lFxhQG9vmTX5hB/AcljisdOzHrPftyZPvSFMqgdiJjqcHrf5uuVBP5JAxM7PKqCHXTtxzTgEi58H/CFzAf1/2Vnh07nN31/5IdNwttonzb2EdbToz3ReCIf8roQGnt/hhNi9UiupOe9cFvXoWCWmZk=
+      on:
+        tags: true
+  - services: []
+    language: python
+    before_install: skip
+    script: skip
+    python: 2.7
+    deploy:
+      skip_cleanup: true
+      provider: pypi
+      user: dmlb2000
+      distributions: bdist_wheel
+      password:
+        secure: QldhKXUmkWsrHuI0JLEmN65A5nwC2JqG4r80BwmAyAVYSJ3OOX3a91S0N30hUL3/BZp12+0VUwyLYYfwFvOGx5lymkmjLQXtgT/tUFHnyci1JPsBK3KmSNixqGzRQGvtuiSVutXmuD5+pAR2RoZ0NcPUPwZ8wZ/Xqgq6YdSO7EpqT607F+eV8lOZzamMkrZ2qESf17w3KmCbzwNupiGUyWBd2SuPCgQS9K8hjwye0oPijSUsqTTkHKr5hEsmdv1eUbLAGZzoEMZyyXYpSsIu0X6DBZRt1k5m9XEw2wQlVeNeayPlgva/QlswzcUbdCZUpAKcaTm8X2pzSfYdzX3VksqyGHHeC93HiHZBLkVlqa4H1aHJPLJRZp0kvadq1DQWO1rh8gWl/QhKiqDk8J4KqsFaoW8aFK+x0YANJXitQJ5xQve85QY/d+M9hHPgkawHbhkssbVLAjzLgvUpbvcRgghmZ6/Aafo74KXuxfAtp4xThEYXT0zoVzULgVHYMWJFNeLLvimvjRozgbC98mqr5lFxhQG9vmTX5hB/AcljisdOzHrPftyZPvSFMqgdiJjqcHrf5uuVBP5JAxM7PKqCHXTtxzTgEi58H/CFzAf1/2Vnh07nN31/5IdNwttonzb2EdbToz3ReCIf8roQGnt/hhNi9UiupOe9cFvXoWCWmZk=
+      on:
+        tags: true
+install:
+- pip install -r requirements-dev.txt

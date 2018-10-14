@@ -8,342 +8,424 @@ objects in the model.
 ### Journals
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| encoding | VARCHAR |  | NOT NULL |
-| impact_factor | REAL |  | NOT NULL |
-| name | VARCHAR |  | NOT NULL |
-| website_url | VARCHAR |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| name | CharField |  | NOT NULL |
+| impact_factor | FloatField |  | NOT NULL |
+| website_url | CharField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Users
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| email_address | VARCHAR |  | NOT NULL |
-| encoding | VARCHAR |  | NOT NULL |
-| first_name | VARCHAR |  | NOT NULL |
-| last_name | VARCHAR |  | NOT NULL |
-| middle_initial | VARCHAR |  | NOT NULL |
-| network_id | VARCHAR |  | NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| first_name | CharField |  | NOT NULL |
+| middle_initial | CharField |  | NOT NULL |
+| last_name | CharField |  | NOT NULL |
+| network_id | CharField |  | NULL |
+| email_address | CharField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Institutions
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| association_cd | VARCHAR |  | NOT NULL |
-| encoding | VARCHAR |  | NOT NULL |
-| is_foreign | BOOLEAN |  | NOT NULL |
-| name | TEXT |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| name | TextField |  | NOT NULL |
+| association_cd | CharField |  | NOT NULL |
+| is_foreign | BooleanField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Proposals
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | VARCHAR |  | NOT NULL, PRIMARY KEY |
-| abstract | TEXT |  | NOT NULL |
-| accepted_date | DATE |  | NULL |
-| actual_end_date | DATE |  | NULL |
-| actual_start_date | DATE |  | NULL |
-| closed_date | DATE |  | NULL |
-| encoding | VARCHAR |  | NOT NULL |
-| proposal_type | VARCHAR |  | NOT NULL |
-| science_theme | VARCHAR |  | NULL |
-| short_name | VARCHAR |  | NOT NULL |
-| submitted_date | TIMESTAMP |  | NOT NULL |
-| suspense_date | DATE |  | NULL |
-| title | TEXT |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | CharField |  | NOT NULL, PRIMARY KEY |
+| title | TextField |  | NOT NULL |
+| short_name | CharField |  | NULL |
+| abstract | TextField |  | NULL |
+| science_theme | CharField |  | NULL |
+| proposal_type | CharField |  | NULL |
+| submitted_date | ExtendDateTimeField |  | NOT NULL |
+| accepted_date | ExtendDateField |  | NULL |
+| actual_start_date | ExtendDateField |  | NULL |
+| actual_end_date | ExtendDateField |  | NULL |
+| closed_date | ExtendDateField |  | NULL |
+| suspense_date | ExtendDateField |  | NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Instruments
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| active | BOOLEAN |  | NOT NULL |
-| display_name | VARCHAR |  | NOT NULL |
-| encoding | VARCHAR |  | NOT NULL |
-| name | VARCHAR |  | NOT NULL |
-| name_short | VARCHAR |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| display_name | CharField |  | NOT NULL |
+| name | CharField |  | NOT NULL |
+| name_short | CharField |  | NOT NULL |
+| active | BooleanField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### InstrumentCustodian
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| custodian | INTEGER | Users.id | NOT NULL |
-| instrument | INTEGER | Instruments.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| instrument | ForeignKeyField | Instruments.id | NOT NULL |
+| custodian | ForeignKeyField | Users.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Citations
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| abstract_text | TEXT |  | NOT NULL |
-| article_title | TEXT |  | NOT NULL |
-| doi_reference | VARCHAR |  | NOT NULL |
-| encoding | VARCHAR |  | NOT NULL |
-| journal | INTEGER | Journals.id | NOT NULL |
-| journal_issue | INTEGER |  | NOT NULL |
-| journal_volume | INTEGER |  | NOT NULL |
-| page_range | VARCHAR |  | NOT NULL |
-| release_authorization_id | VARCHAR |  | NOT NULL |
-| xml_text | TEXT |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| article_title | TextField |  | NOT NULL |
+| journal | ForeignKeyField | Journals.id | NOT NULL |
+| journal_volume | IntegerField |  | NOT NULL |
+| journal_issue | IntegerField |  | NOT NULL |
+| page_range | CharField |  | NOT NULL |
+| abstract_text | TextField |  | NOT NULL |
+| xml_text | TextField |  | NOT NULL |
+| release_authorization_id | CharField |  | NOT NULL |
+| doi_reference | CharField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Contributors
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| dept_code | VARCHAR |  | NOT NULL |
-| encoding | VARCHAR |  | NOT NULL |
-| first_name | VARCHAR |  | NOT NULL |
-| institution | INTEGER | Institutions.id | NOT NULL |
-| last_name | VARCHAR |  | NOT NULL |
-| middle_initial | VARCHAR |  | NOT NULL |
-| person | INTEGER | Users.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| person | ForeignKeyField | Users.id | NOT NULL |
+| first_name | CharField |  | NOT NULL |
+| middle_initial | CharField |  | NOT NULL |
+| last_name | CharField |  | NOT NULL |
+| dept_code | CharField |  | NOT NULL |
+| institution | ForeignKeyField | Institutions.id | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### InstitutionPerson
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| institution | INTEGER | Institutions.id | NOT NULL |
-| person | INTEGER | Users.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| person | ForeignKeyField | Users.id | NOT NULL |
+| institution | ForeignKeyField | Institutions.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Keywords
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| encoding | VARCHAR |  | NOT NULL |
-| keyword | VARCHAR |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| keyword | CharField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### CitationContributor
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| author | INTEGER | Contributors.id | NOT NULL |
-| author_precedence | INTEGER |  | NOT NULL |
-| citation | INTEGER | Citations.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| citation | ForeignKeyField | Citations.id | NOT NULL |
+| author | ForeignKeyField | Contributors.id | NOT NULL |
+| author_precedence | IntegerField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### CitationKeyword
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| citation | INTEGER | Citations.id | NOT NULL |
-| keyword | INTEGER | Keywords.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| citation | ForeignKeyField | Citations.id | NOT NULL |
+| keyword | ForeignKeyField | Keywords.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### ProposalInstrument
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| instrument | INTEGER | Instruments.id | NOT NULL |
-| proposal | VARCHAR | Proposals.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| instrument | ForeignKeyField | Instruments.id | NOT NULL |
+| proposal | ForeignKeyField | Proposals.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### ProposalParticipant
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| person | INTEGER | Users.id | NOT NULL |
-| proposal | VARCHAR | Proposals.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| person | ForeignKeyField | Users.id | NOT NULL |
+| proposal | ForeignKeyField | Proposals.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### CitationProposal
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| citation | INTEGER | Citations.id | NOT NULL |
-| proposal | VARCHAR | Proposals.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| citation | ForeignKeyField | Citations.id | NOT NULL |
+| proposal | ForeignKeyField | Proposals.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Transactions
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| instrument | INTEGER | Instruments.id | NOT NULL |
-| proposal | VARCHAR | Proposals.id | NOT NULL |
-| submitter | INTEGER | Users.id | NOT NULL |
-| suspense_date | DATE |  | NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| submitter | ForeignKeyField | Users.id | NOT NULL |
+| instrument | ForeignKeyField | Instruments.id | NOT NULL |
+| proposal | ForeignKeyField | Proposals.id | NOT NULL |
+| suspense_date | ExtendDateField |  | NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Files
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| ctime | TIMESTAMP |  | NOT NULL |
-| encoding | VARCHAR |  | NOT NULL |
-| hashsum | VARCHAR |  | NOT NULL |
-| hashtype | VARCHAR |  | NOT NULL |
-| mimetype | VARCHAR |  | NOT NULL |
-| mtime | TIMESTAMP |  | NOT NULL |
-| name | VARCHAR |  | NOT NULL |
-| size | BIGINT |  | NOT NULL |
-| subdir | VARCHAR |  | NOT NULL |
-| suspense_date | DATE |  | NULL |
-| transaction | INTEGER | Transactions.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| name | CharField |  | NOT NULL |
+| subdir | CharField |  | NOT NULL |
+| ctime | ExtendDateTimeField |  | NOT NULL |
+| mtime | ExtendDateTimeField |  | NOT NULL |
+| hashsum | CharField |  | NOT NULL |
+| hashtype | CharField |  | NOT NULL |
+| size | BigIntegerField |  | NOT NULL |
+| transaction | ForeignKeyField | Transactions.id | NOT NULL |
+| mimetype | CharField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| suspense_date | ExtendDateField |  | NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Keys
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| encoding | VARCHAR |  | NOT NULL |
-| key | VARCHAR |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| key | CharField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Values
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| encoding | VARCHAR |  | NOT NULL |
-| value | VARCHAR |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| value | CharField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### FileKeyValue
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| file | INTEGER | Files.id | NOT NULL |
-| key | INTEGER | Keys.id | NOT NULL |
-| value | INTEGER | Values.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| file | ForeignKeyField | Files.id | NOT NULL |
+| key | ForeignKeyField | Keys.id | NOT NULL |
+| value | ForeignKeyField | Values.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### TransactionKeyValue
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| key | INTEGER | Keys.id | NOT NULL |
-| transaction | INTEGER | Transactions.id | NOT NULL |
-| value | INTEGER | Values.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| transaction | ForeignKeyField | Transactions.id | NOT NULL |
+| key | ForeignKeyField | Keys.id | NOT NULL |
+| value | ForeignKeyField | Values.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### Groups
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| encoding | VARCHAR |  | NOT NULL |
-| is_admin | BOOLEAN |  | NOT NULL |
-| name | VARCHAR |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| name | CharField |  | NOT NULL |
+| is_admin | BooleanField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### UserGroup
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| group | INTEGER | Groups.id | NOT NULL |
-| person | INTEGER | Users.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| person | ForeignKeyField | Users.id | NOT NULL |
+| group | ForeignKeyField | Groups.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### InstrumentGroup
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| group | INTEGER | Groups.id | NOT NULL |
-| instrument | INTEGER | Instruments.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| instrument | ForeignKeyField | Instruments.id | NOT NULL |
+| group | ForeignKeyField | Groups.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### AnalyticalTools
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| encoding | VARCHAR |  | NOT NULL |
-| name | VARCHAR |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| name | CharField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### AToolProposal
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| analytical_tool | INTEGER | AnalyticalTools.id | NOT NULL |
-| proposal | VARCHAR | Proposals.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| proposal | ForeignKeyField | Proposals.id | NOT NULL |
+| analytical_tool | ForeignKeyField | AnalyticalTools.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 ### AToolTransaction
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| analytical_tool | INTEGER | AnalyticalTools.id | NOT NULL |
-| transaction | INTEGER | Transactions.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| transaction | ForeignKeyField | Transactions.id | NOT NULL |
+| analytical_tool | ForeignKeyField | AnalyticalTools.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
-### DOIDataSets
+### TransactionRelease
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| doi | VARCHAR |  | NOT NULL |
-| encoding | VARCHAR |  | NOT NULL |
-| name | VARCHAR |  | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| transaction | ForeignKeyField | Transactions.id | NOT NULL, PRIMARY KEY |
+| authorized_person | ForeignKeyField | Users.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
-### DOIResource
+### DOIEntries
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | SERIAL |  | NOT NULL, PRIMARY KEY |
-| doi | VARCHAR | DOIDataSets.doi | NOT NULL |
-| transaction | INTEGER | Transactions.id | NOT NULL |
-| created | TIMESTAMP |  | NOT NULL |
-| deleted | TIMESTAMP |  | NULL |
-| updated | TIMESTAMP |  | NOT NULL |
+| doi | CharField |  | NOT NULL, PRIMARY KEY |
+| status | CharField |  | NOT NULL |
+| site_url | CharField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| creator | ForeignKeyField | Users.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### DOIAuthors
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| last_name | CharField |  | NOT NULL |
+| first_name | CharField |  | NOT NULL |
+| email | CharField |  | NULL |
+| affiliation | CharField |  | NULL |
+| orcid | CharField |  | NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### DOITransaction
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| doi | ForeignKeyField | DOIEntries.doi | NOT NULL, PRIMARY KEY |
+| transaction | ForeignKeyField | TransactionRelease.transaction | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### CitationTransaction
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| citation | ForeignKeyField | Citations.id | NOT NULL |
+| transaction | ForeignKeyField | TransactionRelease.transaction | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### CitationDOI
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| doi | ForeignKeyField | DOIEntries.doi | NOT NULL |
+| citation | ForeignKeyField | Citations.id | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### DOIAuthorMapping
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| author | ForeignKeyField | DOIAuthors.id | NOT NULL |
+| doi | ForeignKeyField | DOIEntries.doi | NOT NULL |
+| author_order | IntegerField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### DOIInfo
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| doi | ForeignKeyField | DOIEntries.doi | NOT NULL |
+| key | CharField |  | NOT NULL |
+| value | CharField |  | NOT NULL |
+| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
 
 
 ## Note

@@ -10,11 +10,16 @@ from pacifica.metadata.globals import CONFIG_FILE
 
 
 def get_config():
-    """Return the ConfigParser object with defaults set."""
+    """
+    Return the ConfigParser object with defaults set.
+
+    Currently metadata API doesn't work with SQLite the queries are
+    too complex and it only is supported with MySQL and PostgreSQL.
+    """
     configparser = SafeConfigParser()
     configparser.add_section('database')
     configparser.set('database', 'peewee_url', getenv(
-        'PEEWEE_URL', 'sqliteext:///db.sqlite3'))
+        'PEEWEE_URL', 'postgresql://pacifica:metadata@localhost:5432/pacifica_metadata'))
     configparser.add_section('notifications')
     configparser.set('notifications', 'url', getenv(
         'NOTIFICATIONS_URL', 'http://127.0.0.1:8070/receive'))
