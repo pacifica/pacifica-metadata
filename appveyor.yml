@@ -2,52 +2,46 @@ version: 0.1.{build}
 pull_requests:
   do_not_increment_build_number: true
 
+services:
+- postgresql
+
 environment:
   PGUSER: postgres
   PGPASSWORD: Password12!
   PGSQL_PATH: C:\Program Files\PostgreSQL\9.6
-  POSTGRES_ENV_POSTGRES_USER: postgres
-  POSTGRES_ENV_POSTGRES_PASSWORD: Password12!
   NOTIFICATIONS_URL: http://127.0.0.1:8080
-
+  PEEWEE_URL: postgres://postgres:Password12!@localhost/pacifica_metadata
   matrix:
-    - PYTHON: C:\Python27-x64
-      MSVC_VERSION: "Visual Studio 10 Win64"
-    - PYTHON: C:\Python36-x64
-      MSVC_VERSION: "Visual Studio 10 Win64"
-
-services:
-  - postgresql
-
-before_test:
-  - SET PATH=%PGSQL_PATH%\bin;%PATH%
-  - createdb pacifica_metadata
+  - PYTHON: C:\Python27-x64
+  - PYTHON: C:\Python36-x64
 
 install:
 - ps: >
-    $env:PATH = "${env:PYTHON}\Scripts;${env:PATH}";
-    Invoke-WebRequest -OutFile sqlite.zip https://www.sqlite.org/2018/sqlite-dll-win64-x64-3240000.zip;
-    Invoke-WebRequest -OutFile sqlite-devel.zip https://www.sqlite.org/2018/sqlite-amalgamation-3240000.zip;
-    Expand-Archive sqlite.zip -DestinationPath sqlite3;
-    Expand-Archive sqlite-devel.zip -DestinationPath sqlite3;
-    cd sqlite3;
-    & "C:\Users\appveyor\AppData\Local\Programs\Common\Microsoft\Visual C++ for Python\9.0\VC\Bin\amd64\link.exe" /lib /def:sqlite3.def;
-    cd ..;
-    cp sqlite3\sqlite3.dll "$env:PYTHON\DLLs\sqlite3.dll";
-    cp sqlite3\sqlite3.lib "$env:PYTHON\libs\sqlite3.lib";
-    cp sqlite3\sqlite-amalgamation-3240000\sqlite3.h "$env:PYTHON\include\sqlite3.h";
-    cp "c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\include\stdint.h" "C:\Users\appveyor\AppData\Local\Programs\Common\Microsoft\Visual C++ for Python\9.0\VC\include\stdint.h";
-    Invoke-WebRequest -Uri "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.8.zip" -OutFile "elasticsearch.zip";
+    & "$env:PYTHON\python.exe" -m virtualenv C:\pacifica;
+    Invoke-WebRequest -Uri "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.5.zip" -OutFile "elasticsearch.zip";
     Expand-Archive "elasticsearch.zip" -DestinationPath "C:\elasticsearch";
-    Start-Process C:\elasticsearch\elasticsearch-5.6.8\bin\elasticsearch;
-    & $env:PYTHON\python.exe -m pip install -r requirements-dev.txt;
-    Start-Process "${env:PYTHON}\python.exe" -ArgumentList "test_files\cherrypy_catch.py";
+    Start-Process C:\elasticsearch\elasticsearch-5.6.5\bin\elasticsearch;
+    C:\pacifica\Scripts\activate.ps1;
+    python -m pip install --upgrade pip setuptools wheel;
+    python -m pip install -r requirements-dev.txt;
+    python -m pip install 'celery[eventlet]' eventlet;
 
 build: off
 
+before_test:
+- ps: >
+    $env:PATH = "${env:PGSQL_PATH}\bin;${env:PYTHON}\Scripts;${env:PATH}";
+    createdb pacifica_metadata;
+    C:\pacifica\Scripts\activate.ps1;
+    Start-Process C:\pacifica\Scripts\python.exe -ArgumentList "tests\cherrypy_catch_test.py" -RedirectStandardError catch-error.log -RedirectStandardOutput catch-output.log;
+
+
 test_script:
-  - ps: >
-      & "$env:PYTHON\python.exe" -m coverage run --include="metadata/*" -m pytest -v metadata/orm metadata/elastic metadata/test;
-      & "$env:PYTHON\python.exe" -m coverage run --include="metadata/*" -a -m pytest -v metadata/rest;
-      & "$env:PYTHON\python.exe" -m coverage run --include="metadata/*" -a MetadataServer.py --stop-after-a-moment;
-      & "$env:PYTHON\python.exe" -m coverage report --show-missing --fail-under 100;
+- ps: >
+    mkdir C:\tmp; C:\pacifica\Scripts\activate.ps1;
+    pre-commit run -a;
+    $env:METADATA_CPCONFIG = "$PWD/server.conf";
+    pip install .; cd tests;
+    coverage run --include='*/site-packages/pacifica/metadata/*' -m pytest -xv orm elastic core;
+    coverage run --include='*/site-packages/pacifica/metadata/*' -a -m pytest -xv rest;
+    coverage report -m --fail-under=100;

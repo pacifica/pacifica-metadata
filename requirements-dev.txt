@@ -7,6 +7,7 @@ mock
 nose
 peewee>2
 pep257
+pre-commit
 psycopg2
 pylint<2.0
 pytest

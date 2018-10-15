@@ -2,15 +2,17 @@ version: '2'
 
 services:
   elasticmaster:
-    build:
-      context: .
-      dockerfile: docker-compose/Dockerfile.elastic
-    container_name: elasticmaster
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.10
     environment:
-      - cluster.name=pacifica-cluster
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    - bootstrap.memory_lock=true
+    - xpack.security.enabled=false
+    - xpack.monitoring.enabled=false
+    - xpack.watcher.enabled=false
+    - http.cors.enabled=true
+    - "http.cors.allow-origin=\"/.*/\""
+    - "http.cors.allow-methods=OPTIONS, HEAD, GET, POST, PUT, DELETE"
+    - "http.cors.allow-headers=\"X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization\""
+    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
         soft: -1
@@ -20,15 +22,18 @@ services:
       - 9200:9200
 
   elasticslave:
-    build:
-      context: .
-      dockerfile: docker-compose/Dockerfile.elastic
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.10
     environment:
-      - cluster.name=pacifica-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - xpack.security.enabled=false
-      - discovery.zen.ping.unicast.hosts=elasticmaster
+    - bootstrap.memory_lock=true
+    - xpack.security.enabled=false
+    - xpack.monitoring.enabled=false
+    - xpack.watcher.enabled=false
+    - http.cors.enabled=true
+    - "http.cors.allow-origin=\"/.*/\""
+    - "http.cors.allow-methods=OPTIONS, HEAD, GET, POST, PUT, DELETE"
+    - "http.cors.allow-headers=\"X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization\""
+    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    - discovery.zen.ping.unicast.hosts=elasticmaster
     ulimits:
       memlock:
         soft: -1
