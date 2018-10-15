@@ -5,7 +5,7 @@ from __future__ import print_function
 from cherrypy import tools, request, HTTPError
 from metadata.rest.user_queries.user_search import UserSearch
 from metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
-from metadata.orm import DOIEntries, DOITransaction, TransactionRelease
+from metadata.orm import DOITransaction, TransactionRelease
 
 # pylint: disable=too-few-public-methods
 
@@ -63,7 +63,8 @@ class DOIRegistrationEntry(DOIRegistrationBase):
         new_entries_info = []
 
         for item in items:
-            new_entry, _created = DOIRegistrationEntry._add_doi_record_entry(item)
+            new_entry, _created = DOIRegistrationEntry._add_doi_record_entry(
+                item)
             new_entries_info.append({
                 'entry': new_entry,
                 'was_created': _created

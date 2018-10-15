@@ -22,7 +22,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         try:
             tree = ElementTree.fromstring(osti_xml_string)
         except ElementTree.ParseError:
-            raise HTTPError(400, "Bad Request: Invalid XML Document")
+            raise HTTPError(400, 'Bad Request: Invalid XML Document')
 
         record = tree[0]
         current_status = record.attrib['status'].lower()
@@ -41,7 +41,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
                 info = child.text
             doi_info[child.tag] = info
 
-        if DOIRegistrationUpdate.check_for_doi_entry(doi_string):
+        if DOIRegistrationUpdate._check_for_doi_entry(doi_string):
             DOIRegistrationUpdate.change_doi_entry_info(
                 doi_string, doi_info, None, current_status, release_status)
             DOIRegistrationUpdate._extract_authors(creators_block, doi_string)
@@ -51,14 +51,10 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         return doi_string
 
     @staticmethod
-    def update_doi_entry_info(doi_string, doi_info, current_status, release_status):
-        DOIRegistrationUpdate.change_doi_entry_info(doi_string, doi_info, None, current_status, release_status)
-
-    @staticmethod
-    def check_for_doi_entry(doi_string):
+    def _check_for_doi_entry(doi_string):
         check_query = DOIEntries.select().where(DOIEntries.doi == doi_string)
         print(check_query.sql())
-        print("check count = {0}".format(check_query.count() > 0))
+        print('check count = {0}'.format(check_query.count() > 0))
         return check_query.count() > 0
 
     @staticmethod
@@ -98,7 +94,8 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
                 'author': author_id,
                 'doi': doi_string
             }
-            DOIAuthorMapping.get_or_create(**author_map_lookup_item, defaults=author_map_insert_item)
+            DOIAuthorMapping.get_or_create(
+                **author_map_lookup_item, defaults=author_map_insert_item)
 
     # CherryPy requires these named methods.
     # pylint: disable=invalid-name
@@ -113,6 +110,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
                             ', '.join(valid_content_types))
 
         osti_xml_string = request.body.read()
-        doi_string = DOIRegistrationUpdate._process_updated_osti_info(osti_xml_string)
+        doi_string = DOIRegistrationUpdate._process_updated_osti_info(
+            osti_xml_string)
 
         return doi_string

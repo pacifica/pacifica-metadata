@@ -13,6 +13,7 @@ class DOIRegistrationBase(object):
 
     @staticmethod
     def change_doi_entry_info(doi_string, doi_info, creator, status='pending', released=False):
+        """Update or create DOI entries."""
         lookup_item = {
             'doi': doi_string
         }
