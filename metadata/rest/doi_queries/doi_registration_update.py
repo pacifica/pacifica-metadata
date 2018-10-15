@@ -29,17 +29,8 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         release_status = record.attrib['released'].lower() == 'y'
         doi_string = record.find('doi').text
 
-        doi_info = {}
-        for child in record:
-            if child.tag == 'creatorsblock':
-                creators_block = child
-                # these are authors, handle appropriately
-                continue
-            elif 'date' in child.tag:
-                info = parse(child.text).strftime('%Y-%m-%d')
-            else:
-                info = child.text
-            doi_info[child.tag] = info
+        doi_info, creators_block = DOIRegistrationUpdate._extract_doi_info_from_xml(
+            record)
 
         if DOIRegistrationUpdate._check_for_doi_entry(doi_string):
             DOIRegistrationUpdate.change_doi_entry_info(
@@ -49,6 +40,21 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
             raise HTTPError(404, 'DOI Entry %s does not exist' % doi_string)
 
         return doi_string
+
+    @staticmethod
+    def _extract_doi_info_from_xml(record_object):
+        doi_info = {}
+        for child in record_object:
+            if child.tag == 'creatorsblock':
+                creators_block = child
+                # these are authors, handle appropriately
+                continue
+            elif 'date' in child.tag:
+                info = parse(child.text).strftime('%Y-%m-%d')
+            else:
+                info = child.text
+            doi_info[child.tag] = info
+        return doi_info, creators_block
 
     @staticmethod
     def _check_for_doi_entry(doi_string):
