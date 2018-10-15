@@ -20,6 +20,7 @@ from .journals import Journals
 from .keywords import Keywords
 from .citation_keyword import CitationKeyword
 from .citation_contributor import CitationContributor
+from .proposal_group import ProposalGroup
 from .proposal_instrument import ProposalInstrument
 from .users import Users
 from .proposal_participant import ProposalParticipant
@@ -60,10 +61,12 @@ ORM_OBJECTS = [
     Contributors,
     InstitutionPerson,
     Keywords,
+    Groups,
     CitationContributor,
     CitationKeyword,
     ProposalInstrument,
     ProposalParticipant,
+    ProposalGroup,
     CitationProposal,
     Transactions,
     Files,
@@ -71,7 +74,6 @@ ORM_OBJECTS = [
     Values,
     FileKeyValue,
     TransactionKeyValue,
-    Groups,
     UserGroup,
     InstrumentGroup,
     AnalyticalTools,
