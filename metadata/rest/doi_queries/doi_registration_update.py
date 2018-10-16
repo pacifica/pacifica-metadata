@@ -94,7 +94,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
             author_map_insert_item = {'author_order': author_order}
             author_map_lookup_item = {'author': author_id, 'doi': doi_string}
             DOIAuthorMapping.get_or_create(
-                **author_map_lookup_item, defaults=author_map_insert_item)
+                defaults=author_map_insert_item, **author_map_lookup_item)
 
     # CherryPy requires these named methods.
     # pylint: disable=invalid-name

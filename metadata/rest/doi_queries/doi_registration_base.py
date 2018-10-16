@@ -24,7 +24,7 @@ class DOIRegistrationBase(object):
         insert_obj['site_url'] = site_url
         insert_obj['creator'] = creator
         doi_entry, _created = DOIEntries.get_or_create(
-            **lookup_item, defaults=insert_item)
+            defaults=insert_item, **lookup_item)
 
         DOIRegistrationBase._update_doi_metadata_info(doi_info, doi_string)
 
