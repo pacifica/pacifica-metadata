@@ -35,6 +35,7 @@ def main():
         'institution_person',
         'instrument_custodian',
         'instrument_group',
+        'proposal_group',
         'proposal_instrument',
         'proposal_participant',
         'trans_key_value',

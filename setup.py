@@ -27,7 +27,7 @@ setup(
     namespace_packages=['pacifica'],
     entry_points={
         'console_scripts': [
-            'pacifica-metadata=pacifica.metadata:main',
+            'pacifica-metadata=pacifica.metadata.__main__:main',
             'pacifica-metadata-cmd=pacifica.metadata.admin_cmd:main'
         ]
     },
