@@ -51,16 +51,14 @@ class DOIRegistrationBase(object):
     def _update_doi_metadata_info(doi_info, doi_string):
         # loop through metadata entries and make doi_info entries
         doi_info.pop('authors', None)
-        for md_field in doi_info:
+        info = (md_field for md_field in doi_info if doi_info[md_field])
+        for md_field in info:
             val = doi_info.get(md_field)
             if isinstance(val, list):
                 val = ', '.join(val)
-            if not val:
-                continue
             item, _created = DOIInfo.get_or_create(
                 key=md_field, doi=doi_string,
                 defaults={'value': val}
             )
-            if not _created and val != item.value:
-                item.value = val
-                item.save(only=item.dirty_fields)
+            item.value = val
+            item.save(only=item.dirty_fields)
