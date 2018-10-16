@@ -92,9 +92,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         for author_id in author_id_list:
             author_order += 1
             author_map_insert_item = {'author_order': author_order}
-            author_map_lookup_item = {
-                'author': author_id,
-                'doi': doi_string}
+            author_map_lookup_item = {'author': author_id, 'doi': doi_string}
             DOIAuthorMapping.get_or_create(
                 **author_map_lookup_item, defaults=author_map_insert_item)
 
