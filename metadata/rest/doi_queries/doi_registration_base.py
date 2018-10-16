@@ -21,8 +21,7 @@ class DOIRegistrationBase(object):
             'status': status,
             'released': released,
             'site_url': doi_info['site_url'],
-            'creator': creator
-        }
+            'creator': creator}
         doi_entry, _created = DOIEntries.get_or_create(
             **lookup_item, defaults=insert_item)
 
