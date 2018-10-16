@@ -9,7 +9,8 @@ walks the metadata orm objects searching for PeeWee attributes and populating
 tables...
 """
 from __future__ import print_function
-from metadata.orm import ORM_OBJECTS
+from functools import cmp_to_key
+from pacifica.metadata.orm import ORM_OBJECTS
 
 print("""# The Pacifica Metadata Model
 
@@ -24,9 +25,9 @@ for obj_cls in ORM_OBJECTS:
     print('| Column | Type | Reference | Attributes |')
     print('| --- | --- | --- | --- |')
     column_tuples = []
-    for obj_cls_attr in dir(obj_cls):
-        attr = getattr(obj_cls, obj_cls_attr)
-        attr_type = type(attr)
+    # pylint: disable=protected-access
+    for obj_attr_name, obj_cls_attr in obj_cls._meta.fields.items():
+        attr_type = type(obj_cls_attr)
         # pylint: disable=too-many-boolean-expressions
         # introspection is hard...
         extended_objs = attr_type.__name__ == 'ExtendDateTimeField' or \
@@ -36,27 +37,29 @@ for obj_cls in ORM_OBJECTS:
             attr_type.__name__ != 'ReverseRelationDescriptor' and \
             attr_type.__name__ != 'CompositeKey'
         if extended_objs or peewee_chk:
-            column_name = obj_cls_attr
-            column_type = attr.get_column_type()
+            column_name = obj_attr_name
+            column_type = attr_type.__name__
             points_to = ''
             sql_attrs = []
-            if attr.null:
+            if obj_cls_attr.null:
                 sql_attrs.append('NULL')
             else:
                 sql_attrs.append('NOT NULL')
-            if attr.primary_key:
+            if obj_cls_attr.primary_key:
                 sql_attrs.append('PRIMARY KEY')
-            if attr.sequence:
-                sql_attrs.append('DEFAULT NEXTVAL({0})'.format(attr.sequence))
+            if obj_cls_attr.sequence:
+                sql_attrs.append(
+                    'DEFAULT NEXTVAL({0})'.format(obj_cls_attr.sequence))
             sql_attrs = ', '.join(sql_attrs)
             if attr_type.__name__ == 'ForeignKeyField':
-                points_to_class = attr.to_field.model_class.__name__
-                points_to_column = attr.to_field.name
+                points_to_class = obj_cls_attr.rel_model.__name__
+                points_to_column = obj_cls_attr.rel_field.name
                 points_to = '{0}.{1}'.format(points_to_class, points_to_column)
                 if column_name.endswith('_id'):
                     continue
             column_tuples.append(
                 (column_name, column_type, points_to, sql_attrs))
+    # pylint: enable=protected-access
 
     # pylint: disable=invalid-name
     # pylint: disable=too-many-return-statements
@@ -85,7 +88,7 @@ for obj_cls in ORM_OBJECTS:
     # pylint: enable=too-many-return-statements
     # pylint: enable=invalid-name
 
-    for column in sorted(column_tuples, cmp=column_cmp):
+    for column in sorted(column_tuples, key=cmp_to_key(column_cmp)):
         print('| {0} | {1} | {2} | {3} |'.format(*column))
     print('')
 

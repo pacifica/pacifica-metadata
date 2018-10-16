@@ -1,0 +1,10 @@
+[
+  {
+    "group_id": 1001,
+    "proposal_id": "1234a"
+  },
+  {
+    "group_id": 1001,
+    "proposal_id": "1236\u00e9"
+  }
+]
