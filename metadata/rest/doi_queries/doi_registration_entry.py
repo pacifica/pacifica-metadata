@@ -35,7 +35,7 @@ class DOIRegistrationEntry(DOIRegistrationBase):
 
         # make sure this record doesn't already exist
         # add doi_entry record
-        doi_entry, _created = DOIRegistrationEntry.change_doi_entry_info(
+        DOIRegistrationEntry.make_doi_entry_info(
             doi_info.get('doi'),
             meta_info,
             user_info.get('person_id')
@@ -48,7 +48,7 @@ class DOIRegistrationEntry(DOIRegistrationBase):
         }
         doi_trans_mapping, mapping_created = DOITransaction.get_or_create(
             **doi_trans_map_item)
-        return doi_trans_mapping.doi.doi, _created
+        return doi_trans_mapping.doi.doi, mapping_created
 
     # CherryPy requires these named methods.
     # pylint: disable=invalid-name

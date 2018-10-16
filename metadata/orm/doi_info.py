@@ -35,7 +35,7 @@ class DOIInfo(CherryPyAPI):
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB
-        primary_key = CompositeKey('doi', 'key', 'value')
+        primary_key = CompositeKey('doi', 'key')
     # pylint: enable=too-few-public-methods
 
     @staticmethod
@@ -51,8 +51,7 @@ class DOIInfo(CherryPyAPI):
         obj = super(DOIInfo, self).to_hash(**flags)
         obj['_id'] = index_hash(
             unicode_type(self.__data__['doi']),
-            unicode_type(self.__data__['key']),
-            unicode_type(self.__data__['value'])
+            unicode_type(self.__data__['key'])
         )
         obj['doi'] = unicode_type(self.__data__['doi'])
         obj['key'] = unicode_type(self.__data__['key'])

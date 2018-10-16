@@ -34,7 +34,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
 
         if DOIRegistrationUpdate._check_for_doi_entry(doi_string):
             DOIRegistrationUpdate.change_doi_entry_info(
-                doi_string, doi_info, None, current_status, release_status)
+                doi_string, doi_info, current_status, release_status)
             DOIRegistrationUpdate._extract_authors(creators_block, doi_string)
         else:
             raise HTTPError(404, 'DOI Entry %s does not exist' % doi_string)
@@ -45,6 +45,8 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
     def _extract_doi_info_from_xml(record_object):
         doi_info = {}
         for child in record_object:
+            if child.text is None:
+                continue
             if child.tag == 'creatorsblock':
                 creators_block = child
                 # these are authors, handle appropriately
@@ -59,8 +61,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
     @staticmethod
     def _check_for_doi_entry(doi_string):
         check_query = DOIEntries.select().where(DOIEntries.doi == doi_string)
-        print(check_query.sql())
-        print('check count = {0}'.format(check_query.count() > 0))
+        print('query count {0}'.format(check_query.count()))
         return check_query.count() > 0
 
     @staticmethod
