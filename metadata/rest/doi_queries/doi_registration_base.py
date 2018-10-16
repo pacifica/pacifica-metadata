@@ -14,13 +14,14 @@ class DOIRegistrationBase(object):
     @staticmethod
     def make_doi_entry_info(doi_string, doi_info, creator, status='pending', released=False):
         """Update or create DOI entries."""
+        site_url = doi_info.get('site_url')
         lookup_item = {
             'doi': doi_string
         }
         insert_obj = {}
         insert_obj['status'] = status
         insert_obj['released'] = released
-        insert_obj['site_url'] = doi_info['site_url']
+        insert_obj['site_url'] = site_url
         insert_obj['creator'] = creator
         doi_entry, _created = DOIEntries.get_or_create(
             **lookup_item, defaults=insert_item)
@@ -32,11 +33,12 @@ class DOIRegistrationBase(object):
     @staticmethod
     def change_doi_entry_info(doi_string, doi_info, status='pending', released=False):
         """Update or create DOI entries."""
+        site_url = doi_info.get('site_url')
         doi_entry = DOIEntries.get(DOIEntries.doi == doi_string)
         insert_item = {
             'status': status,
             'released': released,
-            'site_url': doi_info['site_url']
+            'site_url': site_url
         }
         doi_entry.from_hash(insert_item)
         doi_entry.updated = datetime_now_nomicrosecond()
