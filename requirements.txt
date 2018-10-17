@@ -3,5 +3,6 @@ elasticsearch
 peewee>2
 psycopg2
 python-dateutil
+urllib3==1.23
 requests
 six
