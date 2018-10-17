@@ -18,11 +18,12 @@ class DOIRegistrationBase(object):
         lookup_item = {
             'doi': doi_string
         }
-        insert_obj = {}
-        insert_obj['status'] = status
-        insert_obj['released'] = released
-        insert_obj['site_url'] = site_url
-        insert_obj['creator'] = creator
+        insert_item = {
+            'status': status,
+            'released': released,
+            'site_url': site_url,
+            'creator': creator
+        }
         doi_entry, _created = DOIEntries.get_or_create(
             defaults=insert_item, **lookup_item)
 
