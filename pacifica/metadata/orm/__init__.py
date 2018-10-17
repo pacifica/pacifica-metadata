@@ -103,7 +103,7 @@ def try_db_connect(attempts=0):
             raise OperationalError
 
 
-def create_tables():
+def database_setup():
     """Create the tables for the objects if they exist."""
     try_db_connect()
     try_es_connect()
