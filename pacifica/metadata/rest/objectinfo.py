@@ -17,9 +17,8 @@ class ObjectInfoAPI(object):
     def get_class_object_from_name(object_class_name):
         """Return a metadata model class for a given class name string."""
         if object_class_name is not None:
-            lower_obj = {obj.__module__.split('.')[3].lower(
+            lower_obj = {obj.__module__.split('.').pop().lower(
             ): obj.__name__ for obj in orm.ORM_OBJECTS}
-
             try:
                 myclass = getattr(orm, lower_obj[object_class_name.lower()])
             except KeyError:
@@ -42,7 +41,7 @@ class ObjectInfoAPI(object):
         """
         if object_class_name == 'list':
             lower_obj = {obj.__name__: obj.__module__.split(
-                '.')[2].lower() for obj in orm.ORM_OBJECTS}
+                '.').pop().lower() for obj in orm.ORM_OBJECTS}
             return {'available_objects': lower_obj}
 
         myclass = ObjectInfoAPI.get_class_object_from_name(object_class_name)
