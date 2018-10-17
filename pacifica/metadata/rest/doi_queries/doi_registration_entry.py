@@ -3,9 +3,9 @@
 """CherryPy DOI Registration Updater object class."""
 from __future__ import print_function
 from cherrypy import tools, request, HTTPError
-from metadata.rest.user_queries.user_search import UserSearch
-from metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
-from metadata.orm import DOITransaction, TransactionRelease
+from pacifica.metadata.rest.user_queries.user_search import UserSearch
+from pacifica.metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
+from pacifica.metadata.orm import DOITransaction, TransactionRelease
 
 # pylint: disable=too-few-public-methods
 

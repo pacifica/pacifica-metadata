@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """CherryPy DOI Registration Updater object class."""
 from __future__ import print_function
-from metadata.orm import DOIEntries, DOIInfo
-from metadata.orm.utils import datetime_now_nomicrosecond
+from pacifica.metadata.orm import DOIEntries, DOIInfo
+from pacifica.metadata.orm.utils import datetime_now_nomicrosecond
 
 # pylint: disable=too-few-public-methods
 

@@ -5,8 +5,8 @@ from __future__ import print_function
 from xml.etree import ElementTree
 from cherrypy import tools, request, HTTPError
 from dateutil.parser import parse
-from metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
-from metadata.orm import DOIAuthors, DOIAuthorMapping, DOIEntries
+from pacifica.metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
+from pacifica.metadata.orm import DOIAuthors, DOIAuthorMapping, DOIEntries
 
 # pylint: disable=too-few-public-methods
 
