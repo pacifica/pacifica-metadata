@@ -16,6 +16,7 @@ from pacifica.metadata.rest.summaryinfo import SummaryInfoAPI
 from pacifica.metadata.rest.migrationinfo import MigrationInfoAPI
 from pacifica.metadata.rest.tkvinfo import TkvInfoAPI
 from pacifica.metadata.rest.tkvupload import TkvUploadAPI
+from pacifica.metadata.rest.doiupload import DOIUploadAPI
 
 
 def error_page_default(**kwargs):
@@ -51,6 +52,7 @@ class Root(object):
     migrate = MigrationInfoAPI()
     tkvinfo = TkvInfoAPI()
     tkvupload = TkvUploadAPI()
+    doiupload = DOIUploadAPI()
 # pylint: enable=too-few-public-methods
 
 
