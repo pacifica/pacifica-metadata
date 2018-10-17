@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
-from peewee import CharField, ForeignKeyField
+from peewee import CharField, ForeignKeyField, BooleanField
 from ..rest.orm import CherryPyAPI
 from .users import Users
 from .utils import unicode_type
