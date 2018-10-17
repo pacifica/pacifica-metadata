@@ -12,7 +12,7 @@ if [[ -z $PEEWEE_DATABASE_URL ]] ; then
 fi
 mkdir ~/.pacifica-metadata/
 printf '[database]\npeewee_url = '${PEEWEE_DATABASE_URL}'\n' > ~/.pacifica-metadata/config.ini
-python -c 'from pacifica.metadata.orm import database_setup; database_setup()'
+python -c 'from pacifica.metadata.orm import create_tables; create_tables()'
 uwsgi \
   --http-socket 0.0.0.0:8121 \
   --master \
