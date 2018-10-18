@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Test the ORM interface DOIUpload."""
 from json import loads
+from os.path import realpath
 import requests
 from . import CPCommonTest
 
@@ -28,12 +29,13 @@ class TestObjectInfoAPI(CPCommonTest):
             headers=header_list
         )
         self.assertEqual(req.status_code, 200)
-        self.assertTrue('success' in req.text)
 
         # test for unreleased transaction_id
         entry_data['doi'] = entry_data['doi'].replace('.67', '.68')
-        entry_data['meta']['doi_infix'] = entry_data['meta']['doi_infix'].replace('.67', '.68')
-        entry_data['meta']['site_url'] = entry_data['meta']['site_url'].replace('/67', '/68')
+        entry_data['meta']['doi_infix'] = entry_data['meta']['doi_infix'].replace(
+            '.67', '.68')
+        entry_data['meta']['site_url'] = entry_data['meta']['site_url'].replace(
+            '/67', '/68')
 
         req = requests.post(
             url='{0}/doiupload/new_entry'.format(self.url),
@@ -42,6 +44,54 @@ class TestObjectInfoAPI(CPCommonTest):
         )
         self.assertEqual(req.status_code, 400)
         self.assertTrue('has not been released' in req.text)
+
+    def test_osti_update(self):
+        """Test the POST method for information updates."""
+        path = realpath('test_files')
+        update_data = open(
+            '{0}/{1}.xml'.format(
+                path,
+                'osti_update'
+            )
+        ).read()
+
+        header_list = {'Content-Type': 'application/xml'}
+        req = requests.post(
+            url='{0}/doiupload/update'.format(self.url),
+            data=update_data,
+            headers=header_list
+        )
+
+        self.assertEqual(req.status_code, 200)
+
+        update_data = open(
+            '{0}/{1}.xml'.format(
+                path,
+                'osti_update_missing_trans'
+            )
+        ).read()
+
+        req = requests.post(
+            url='{0}/doiupload/update'.format(self.url),
+            data=update_data,
+            headers=header_list
+        )
+
+        self.assertEqual(req.status_code, 404)
+
+        update_data = open(
+            '{0}/{1}.xml'.format(
+                path,
+                'osti_update_bad'
+            )
+        ).read()
+
+        req = requests.post(
+            url='{0}/doiupload/update'.format(self.url),
+            data=update_data,
+            headers=header_list
+        )
+        self.assertEqual(req.status_code, 400)
 
     #     req = requests.get(
     #         '{0}/objectinfo?object_class_name=list'.format(self.url))
