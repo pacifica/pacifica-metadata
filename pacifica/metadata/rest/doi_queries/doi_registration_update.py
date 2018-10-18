@@ -33,9 +33,9 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
             record)
 
         if DOIRegistrationUpdate._check_for_doi_entry(doi_string):
+            DOIRegistrationUpdate._extract_authors(creators_block, doi_string)
             DOIRegistrationUpdate.change_doi_entry_info(
                 doi_string, doi_info, current_status, release_status)
-            DOIRegistrationUpdate._extract_authors(creators_block, doi_string)
         else:
             raise HTTPError(404, 'DOI Entry %s does not exist' % doi_string)
 

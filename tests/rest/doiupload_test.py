@@ -7,7 +7,7 @@ import requests
 from . import CPCommonTest
 
 
-class TestObjectInfoAPI(CPCommonTest):
+class TestDOIUploadAPI(CPCommonTest):
     """Test the DOIUploadAPI class."""
 
     __test__ = True
