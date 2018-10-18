@@ -46,7 +46,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         doi_info = {}
         children = (child for child in record_object if child.text)
         creators_block = record_object.find('creatorsblock')
-        record_object.remove('creatorsblock')
+        record_object.remove(creators_block)
         for child in children:
             if 'date' in child.tag:
                 info = parse(child.text).strftime('%Y-%m-%d')
@@ -58,7 +58,6 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
     @staticmethod
     def _check_for_doi_entry(doi_string):
         check_query = DOIEntries.select().where(DOIEntries.doi == doi_string)
-        print('query count {0}'.format(check_query.count()))
         return check_query.count() > 0
 
     @staticmethod

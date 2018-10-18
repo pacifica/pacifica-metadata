@@ -62,5 +62,12 @@ class DOIRegistrationBase(object):
                 key=md_field, doi=doi_string,
                 defaults={'value': val}
             )
-            item.value = val
+            item = DOIRegistrationBase._check_doi_info_for_change(item, val)
             item.save(only=item.dirty_fields)
+
+    @staticmethod
+    def _check_doi_info_for_change(item_to_check, value):
+        if item_to_check.value != value:
+            item_to_check.value = value
+            item_to_check.updated = datetime_now_nomicrosecond()
+        return item_to_check
