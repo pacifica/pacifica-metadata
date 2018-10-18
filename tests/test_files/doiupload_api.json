@@ -1,0 +1,59 @@
+{
+  "doi": "10.25584/data.2018-08.67/1473613",
+  "error": null,
+  "id": 1,
+  "meta": {
+    "accession_num": "",
+    "authors": [
+      {
+        "affiliation_name": "PNNL",
+        "first_name": "Bob",
+        "last_name": "Thomas",
+        "private_email": "bob.thomas@nowhere.gov"
+      }
+    ],
+    "availability": "",
+    "contact_email": "bob.thomas@nowhere.gov",
+    "contact_name": "Robert Thomas",
+    "contact_org": "PNNL",
+    "contact_phone": "",
+    "contract_nos": [
+      "AC05-76RL01830"
+    ],
+    "contributors": [],
+    "country": "US",
+    "dataset_size": "8 files (28.5 MB)",
+    "dataset_type": "ND",
+    "description": "",
+    "doi": "",
+    "doi_infix": "data.2018-08.67",
+    "file_extension": [],
+    "geolocations": [],
+    "keywords": [],
+    "language": "EN",
+    "non-doe_contract_nos": [],
+    "originating_research_org": [
+      "PNNL"
+    ],
+    "other_identifying_nos": [],
+    "product_nos": [
+      "Proposal ID: 1234a",
+      "Instrument ID: 54",
+      "Upload ID: 67"
+    ],
+    "publication_date": "2018-09-25",
+    "related": [],
+    "set_reserved": false,
+    "site_url": "https://release.datahub.pnnl.gov/released_data/67",
+    "software_needed": [],
+    "sponsor_org": [
+      "SC-23"
+    ],
+    "subject_categories_code": [
+      "59 BASIC BIOLOGICAL SCIENCES"
+    ],
+    "title": "Test DOI for upload 469"
+  },
+  "owner_network_id": "bjohn",
+  "service_id": 147313
+}
