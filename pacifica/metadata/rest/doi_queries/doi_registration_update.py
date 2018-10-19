@@ -35,7 +35,8 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
 
         if DOIRegistrationUpdate._check_for_doi_entry(doi_string):
             with DB.atomic():
-                DOIRegistrationUpdate._extract_authors(creators_block, doi_string)
+                DOIRegistrationUpdate._extract_authors(
+                    creators_block, doi_string)
                 DOIRegistrationUpdate.change_doi_entry_info(
                     doi_string, doi_info, current_status, release_status)
         else:
