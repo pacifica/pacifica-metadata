@@ -6,7 +6,7 @@ from cherrypy import tools, request, HTTPError
 from pacifica.metadata.rest.user_queries.user_search import UserSearch
 from pacifica.metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
 from pacifica.metadata.orm import DOITransaction, TransactionRelease
-
+from pacifica.metadata.orm.base import DB
 # pylint: disable=too-few-public-methods
 
 
@@ -35,19 +35,20 @@ class DOIRegistrationEntry(DOIRegistrationBase):
 
         # make sure this record doesn't already exist
         # add doi_entry record
-        DOIRegistrationEntry.make_doi_entry_info(
-            doi_info.get('doi'),
-            meta_info,
-            user_info.get('person_id')
-        )
+        with DB.atomic():
+            DOIRegistrationEntry.make_doi_entry_info(
+                doi_info.get('doi'),
+                meta_info,
+                user_info.get('person_id')
+            )
 
-        # add doi to transaction mapping
-        doi_trans_map_item = {
-            'doi': doi_info.get('doi'),
-            'transaction': transaction_id
-        }
-        doi_trans_mapping, mapping_created = DOITransaction.get_or_create(
-            **doi_trans_map_item)
+            # add doi to transaction mapping
+            doi_trans_map_item = {
+                'doi': doi_info.get('doi'),
+                'transaction': transaction_id
+            }
+            doi_trans_mapping, mapping_created = DOITransaction.get_or_create(
+                **doi_trans_map_item)
         return doi_trans_mapping.doi.doi, mapping_created
 
     # CherryPy requires these named methods.

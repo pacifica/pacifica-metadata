@@ -7,6 +7,7 @@ from cherrypy import tools, request, HTTPError
 from dateutil.parser import parse
 from pacifica.metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
 from pacifica.metadata.orm import DOIAuthors, DOIAuthorMapping, DOIEntries
+from pacifica.metadata.orm.base import DB
 
 # pylint: disable=too-few-public-methods
 
@@ -33,9 +34,10 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
             record)
 
         if DOIRegistrationUpdate._check_for_doi_entry(doi_string):
-            DOIRegistrationUpdate._extract_authors(creators_block, doi_string)
-            DOIRegistrationUpdate.change_doi_entry_info(
-                doi_string, doi_info, current_status, release_status)
+            with DB.atomic():
+                DOIRegistrationUpdate._extract_authors(creators_block, doi_string)
+                DOIRegistrationUpdate.change_doi_entry_info(
+                    doi_string, doi_info, current_status, release_status)
         else:
             raise HTTPError(404, 'DOI Entry %s does not exist' % doi_string)
 
