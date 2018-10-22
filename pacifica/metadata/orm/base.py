@@ -298,7 +298,7 @@ class PacificaModel(Model):
         where_clause = where_clause if where_clause else {}
         # pylint: disable=no-value-for-parameter
         js_object = {
-            'callable_name': cls.__module__.split('.')[2],
+            'callable_name': cls.__module__.split('.').pop().lower(),
             'last_changed_date': cls.last_change_date(),
             'primary_keys': cls.get_primary_keys(),
             'field_list': cls._meta.sorted_field_names,

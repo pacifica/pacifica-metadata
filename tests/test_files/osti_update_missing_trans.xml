@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<records start="0" rows="1" numfound="1">
+  <record status="Completed" released="Y">
+    <osti_id>1473615</osti_id>
+    <dataset_type>ND</dataset_type>
+    <title>Test for Upload 68</title>
+    <creatorsblock>
+      <creators_detail>
+        <first_name>Bob</first_name>
+        <last_name>Thomas</last_name>
+        <private_email>bob.thomas@nowhere.gov</private_email>
+        <affiliation_name>PNNL</affiliation_name>
+      </creators_detail>
+    </creatorsblock>
+    <related_resource/>
+    <product_nos>Proposal ID: 1234a; Instrument ID: 54; Upload ID: 68</product_nos>
+    <product_type>DA</product_type>
+    <contract_nos>AC05-76RL01830</contract_nos>
+    <other_identifying_numbers/>
+    <originating_research_org>Pacific Northwest National Laboratory; PNNL</originating_research_org>
+    <availability/>
+    <collaboration_names/>
+    <publication_date>09/24/2018</publication_date>
+    <language>EN</language>
+    <country>US</country>
+    <sponsor_org>SC-23</sponsor_org>
+    <subject_categories_code>59 BASIC BIOLOGICAL SCIENCES</subject_categories_code>
+    <keywords/>
+    <accession_num/>
+    <description/>
+    <site_url>https://release.datahub.pnnl.gov/released_data/68</site_url>
+    <date_first_submitted>2018-09-25</date_first_submitted>
+    <date_last_submitted>2018-09-26</date_last_submitted>
+    <doi status="COMPLETED">10.25584/data.2018-08.68/1473615</doi>
+    <doi_infix>data.2018-08.68</doi_infix>
+    <file_extension/>
+    <software_needed/>
+    <dataset_size>4 files (554.8 MB)</dataset_size>
+    <contact_name>Robert Thomas</contact_name>
+    <contact_org>PNNL</contact_org>
+    <contact_email>bob.thomas@nowhere.gov</contact_email>
+    <contact_phone>509-375-0000</contact_phone>
+    <othnondoe_contract_nos/>
+  </record>
+</records>

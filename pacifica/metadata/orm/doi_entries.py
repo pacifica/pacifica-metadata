@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
-from peewee import CharField, ForeignKeyField
+from peewee import CharField, ForeignKeyField, BooleanField
 from ..rest.orm import CherryPyAPI
 from .users import Users
 from .utils import unicode_type
@@ -19,6 +19,8 @@ class DOIEntries(CherryPyAPI):
         +-------------------+-------------------------------------+
         | status            | Current publishing status           |
         +-------------------+-------------------------------------+
+        | released          | Has the data been released          |
+        +-------------------+-------------------------------------+
         | site_url          | Linked landing page url             |
         +-------------------+-------------------------------------+
         | creator           | Link to Users table                 |
@@ -29,6 +31,7 @@ class DOIEntries(CherryPyAPI):
 
     doi = CharField(primary_key=True)
     status = CharField(default='')
+    released = BooleanField(default=False)
     site_url = CharField()
     encoding = CharField(default='UTF8')
     creator = ForeignKeyField(Users, related_name='dois_created')
@@ -38,6 +41,7 @@ class DOIEntries(CherryPyAPI):
         """Build the elasticsearch mapping bits."""
         super(DOIEntries, DOIEntries).elastic_mapping_builder(obj)
         obj['creator'] = {'type': 'integer'}
+        obj['released'] = {'type': 'boolean'}
         obj['doi'] = obj['status'] = obj['encoding'] = \
             {'type': 'text', 'fields': {'keyword': {
                 'type': 'keyword', 'ignore_above': 256}}}
@@ -48,6 +52,7 @@ class DOIEntries(CherryPyAPI):
         obj['_id'] = int(self.id) if self.id is not None else obj['_id']
         obj['doi'] = unicode_type(self.doi)
         obj['status'] = unicode_type(self.status)
+        obj['released'] = bool(self.released)
         obj['site_url'] = unicode_type(self.site_url)
         obj['creator_id'] = int(self.__data__['creator'])
         obj['encoding'] = str(self.encoding)
@@ -61,6 +66,8 @@ class DOIEntries(CherryPyAPI):
                           lambda: unicode_type(obj['doi']))
         self._set_only_if('status', obj, 'status',
                           lambda: unicode_type(obj['status']))
+        self._set_only_if('released', obj, 'released',
+                          lambda: bool(obj['released']))
         self._set_only_if('site_url', obj, 'site_url',
                           lambda: unicode_type(obj['site_url']))
         self._set_only_if('creator_id', obj, 'creator',
@@ -72,4 +79,4 @@ class DOIEntries(CherryPyAPI):
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(DOIEntries, cls).where_clause(kwargs)
-        return cls._where_attr_clause(where_clause, kwargs, ['doi', 'status', 'encoding', 'creator'])
+        return cls._where_attr_clause(where_clause, kwargs, ['doi', 'status', 'released', 'encoding', 'creator'])
