@@ -143,8 +143,10 @@ class PacificaModel(Model):
         for obj_ref in getattr(self, attr):
             if not fk_obj_list:
                 fk_item_name, fk_obj_list = self._generate_fk_obj_list(obj_ref)
-            obj[attr].append(self.get_append_item(
-                obj_ref, fk_item_name, fk_obj_list))
+            append_item = self.get_append_item(
+                obj_ref, fk_item_name, fk_obj_list)
+            if append_item is not None:
+                obj[attr].append(append_item)
         return obj
 
     @staticmethod
@@ -156,7 +158,8 @@ class PacificaModel(Model):
                 'value_id': obj_ref.__data__['value']
             }
         else:
-            append_item = obj_ref.__data__[fk_item_name]
+            append_item = obj_ref.__data__[
+                fk_item_name] if fk_item_name in obj_ref.__data__ else None
         # pylint: enable=protected-access
         return append_item
 
