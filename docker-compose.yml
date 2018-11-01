@@ -68,8 +68,10 @@ services:
       - 8121:8121
     environment:
       ELASTICDB_PORT: tcp://elasticmaster:9200
-      POSTGRES_ENV_POSTGRES_DB: pacifica_metadata
-      POSTGRES_ENV_POSTGRES_USER: pacifica
-      POSTGRES_PORT_5432_TCP_ADDR: postgres
-      POSTGRES_PORT_5432_TCP_PORT: 5432
-      POSTGRES_ENV_POSTGRES_PASSWORD: pacifica
+      PEEWEE_DATABASE: pacifica_metadata
+      PEEWEE_USER: pacifica
+      PEEWEE_ADDR: postgres
+      PEEWEE_PORT: 5432
+      PEEWEE_PROTO: postgres
+      PEEWEE_PASS: pacifica
+      METADATA_CPCONFIG: /usr/src/app/server.conf 
