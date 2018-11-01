@@ -25,6 +25,10 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         except ElementTree.ParseError:
             raise HTTPError(400, 'Bad Request: Invalid XML Document')
 
+        record_count = int(tree.attrib['numfound'])
+        if record_count == 0:
+            raise HTTPError(404, 'No DOI Entries found in this XML')
+
         record = tree[0]
         current_status = record.attrib['status'].lower()
         release_status = record.attrib['released'].lower() == 'y'
@@ -51,7 +55,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         creators_block = record_object.find('creatorsblock')
         record_object.remove(creators_block)
         for child in children:
-            if 'date' in child.tag:
+            if 'date' in child.tag and child.text != 'none':
                 info = parse(child.text).strftime('%Y-%m-%d')
             else:
                 info = child.text
