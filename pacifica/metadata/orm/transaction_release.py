@@ -22,9 +22,9 @@ class TransactionRelease(CherryPyAPI):
     """
 
     authorized_person = ForeignKeyField(
-        Users, related_name='authorized_releases')
+        Users, backref='authorized_releases')
     transaction = ForeignKeyField(
-        Transactions, related_name='release_state', primary_key=True)
+        Transactions, backref='release_state', primary_key=True)
 
     @staticmethod
     def elastic_mapping_builder(obj):

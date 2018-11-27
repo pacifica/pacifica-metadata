@@ -23,9 +23,9 @@ class CitationTransaction(CherryPyAPI):
         +-------------------+--------------------------------------------+
     """
 
-    citation = ForeignKeyField(Citations, related_name='release_entries')
+    citation = ForeignKeyField(Citations, backref='release_entries')
     transaction = ForeignKeyField(
-        TransactionRelease, related_name='citations', to_field='transaction')
+        TransactionRelease, backref='citations', field='transaction')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

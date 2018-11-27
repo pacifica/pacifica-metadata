@@ -6,13 +6,15 @@ from sys import argv as sys_argv
 from datetime import timedelta
 from json import loads, dumps
 from argparse import ArgumentParser
-from pacifica.metadata.orm import ORM_OBJECTS, try_db_connect, try_es_connect, create_elastic_index
-from pacifica.metadata.essync import escreate, essync
+from .orm.all_objects import ORM_OBJECTS
+from .orm.sync import OrmSync
+from .elastic import try_es_connect, create_elastic_index
+from .essync import escreate, essync
 
 
 def render_obj(args):
     """Render an object based on args."""
-    try_db_connect()
+    OrmSync.connect_and_check()
     test_obj = args.object()
     test_obj = args.object.get(
         test_obj.where_clause(args.where_clause)
@@ -30,12 +32,11 @@ def render_obj(args):
 
 def create_obj(args):
     """Create a specific object."""
-    try_db_connect()
+    OrmSync.dbconn_blocking()
     try_es_connect()
     create_elastic_index()
     if not args.object.table_exists():
         args.object.create_table()
-        args.object.create_elastic_mapping()
 
 
 def create_subcommands(subparsers):

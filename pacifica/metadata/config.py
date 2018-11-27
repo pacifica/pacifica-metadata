@@ -5,7 +5,7 @@ from os import getenv
 try:
     from ConfigParser import SafeConfigParser
 except ImportError:  # pragma: no cover python 2 vs 3 issue
-    from configparser import SafeConfigParser
+    from configparser import ConfigParser as SafeConfigParser
 from pacifica.metadata.globals import CONFIG_FILE
 
 
@@ -18,6 +18,10 @@ def get_config():
     """
     configparser = SafeConfigParser()
     configparser.add_section('database')
+    configparser.set('database', 'connect_attempts', getenv(
+        'DATABASE_CONNECT_ATTEMPTS', '10'))
+    configparser.set('database', 'connect_wait', getenv(
+        'DATABASE_CONNECT_WAIT', '20'))
     configparser.set('database', 'peewee_url', getenv(
         'PEEWEE_URL', 'postgresql://pacifica:metadata@localhost:5432/pacifica_metadata'))
     configparser.add_section('notifications')

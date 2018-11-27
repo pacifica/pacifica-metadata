@@ -23,8 +23,8 @@ class UserGroup(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    person = ForeignKeyField(Users, related_name='groups')
-    group = ForeignKeyField(Groups, related_name='members')
+    person = ForeignKeyField(Users, backref='groups')
+    group = ForeignKeyField(Groups, backref='members')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

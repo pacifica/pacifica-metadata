@@ -34,7 +34,7 @@ class DOIEntries(CherryPyAPI):
     released = BooleanField(default=False)
     site_url = CharField()
     encoding = CharField(default='UTF8')
-    creator = ForeignKeyField(Users, related_name='dois_created')
+    creator = ForeignKeyField(Users, backref='dois_created')
 
     @staticmethod
     def elastic_mapping_builder(obj):

@@ -23,8 +23,8 @@ class ProposalGroup(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    group = ForeignKeyField(Groups, related_name='proposals')
-    proposal = ForeignKeyField(Proposals, related_name='groups')
+    group = ForeignKeyField(Groups, backref='proposals')
+    proposal = ForeignKeyField(Proposals, backref='groups')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

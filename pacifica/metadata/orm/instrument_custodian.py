@@ -23,8 +23,8 @@ class InstrumentCustodian(CherryPyAPI):
         +------------+--------------------------------------------+
     """
 
-    instrument = ForeignKeyField(Instruments, related_name='custodians')
-    custodian = ForeignKeyField(Users, related_name='instruments')
+    instrument = ForeignKeyField(Instruments, backref='custodians')
+    custodian = ForeignKeyField(Users, backref='instruments')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

@@ -23,9 +23,8 @@ class CitationDOI(CherryPyAPI):
         +-------------------+--------------------------------------------+
     """
 
-    doi = ForeignKeyField(
-        DOIEntries, related_name='doi_citations', to_field='doi')
-    citation = ForeignKeyField(Citations, related_name='doi_entries')
+    doi = ForeignKeyField(DOIEntries, backref='doi_citations', field='doi')
+    citation = ForeignKeyField(Citations, backref='doi_entries')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

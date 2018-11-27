@@ -23,9 +23,8 @@ class AToolTransaction(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    transaction = ForeignKeyField(Transactions, related_name='atools')
-    analytical_tool = ForeignKeyField(
-        AnalyticalTools, related_name='transactions')
+    transaction = ForeignKeyField(Transactions, backref='atools')
+    analytical_tool = ForeignKeyField(AnalyticalTools, backref='transactions')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
