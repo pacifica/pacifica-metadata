@@ -53,11 +53,15 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         doi_info = {}
         creators_block = record_object.find('creatorsblock')
         record_object.remove(creators_block)
-        doi_info = {child.tag: DOIRegistrationUpdate._process_child_object(child) for child in record_object}
+        for child in record_object:
+            info = DOIRegistrationUpdate._process_child_object(child)
+            if info:
+                doi_info[child.tag] = info
         return doi_info, creators_block
 
     @staticmethod
-    _process_child_object(child_object):
+    def _process_child_object(child_object):
+        info = None
         if child_object.text:
             info = child_object.text
         if 'date' in child_object.tag and child_object.text != 'none':
