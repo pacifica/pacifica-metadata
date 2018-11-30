@@ -79,6 +79,22 @@ class TestDOIUploadAPI(CPCommonTest):
 
         self.assertEqual(req.status_code, 404)
 
+        # Process return with no records
+        update_data = open(
+            '{0}/{1}.xml'.format(
+                path,
+                'osti_update_empty'
+            )
+        ).read()
+
+        req = requests.post(
+            url='{0}/doiupload/update'.format(self.url),
+            data=update_data,
+            headers=header_list
+        )
+
+        self.assertEqual(req.status_code, 404)
+
         # Process invalid XML doc
         update_data = open(
             '{0}/{1}.xml'.format(
