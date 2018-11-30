@@ -3,7 +3,7 @@
 """Core interface for the uploader metadata objects to interface with CherryPy."""
 import cherrypy
 from cherrypy import tools
-import pacifica.metadata.orm as orm
+import pacifica.metadata.orm.all_objects as orm_obj_module
 from pacifica.metadata.orm.base import db_connection_decorator
 
 
@@ -17,10 +17,12 @@ class ObjectInfoAPI(object):
     def get_class_object_from_name(object_class_name):
         """Return a metadata model class for a given class name string."""
         if object_class_name is not None:
-            lower_obj = {obj.__module__.split('.').pop().lower(
-            ): obj.__name__ for obj in orm.ORM_OBJECTS}
+            lower_obj = {
+                obj.__module__.split('.').pop().lower(): obj.__name__ for obj in orm_obj_module.ORM_OBJECTS
+            }
             try:
-                myclass = getattr(orm, lower_obj[object_class_name.lower()])
+                myclass = getattr(
+                    orm_obj_module, lower_obj[object_class_name.lower()])
             except KeyError:
                 myclass = None
         else:
@@ -40,8 +42,9 @@ class ObjectInfoAPI(object):
         Returns the json object based on fields passed into kwargs.
         """
         if object_class_name == 'list':
-            lower_obj = {obj.__name__: obj.__module__.split(
-                '.').pop().lower() for obj in orm.ORM_OBJECTS}
+            lower_obj = {
+                obj.__name__: obj.__module__.split('.').pop().lower() for obj in orm_obj_module.ORM_OBJECTS
+            }
             return {'available_objects': lower_obj}
 
         myclass = ObjectInfoAPI.get_class_object_from_name(object_class_name)

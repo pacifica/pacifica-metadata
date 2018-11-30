@@ -26,9 +26,9 @@ class FileKeyValue(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    file = ForeignKeyField(Files, related_name='metadata')
-    key = ForeignKeyField(Keys, related_name='file_links')
-    value = ForeignKeyField(Values, related_name='file_links')
+    file = ForeignKeyField(Files, backref='metadata')
+    key = ForeignKeyField(Keys, backref='file_links')
+    value = ForeignKeyField(Values, backref='file_links')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

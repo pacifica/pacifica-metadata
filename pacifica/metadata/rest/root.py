@@ -3,7 +3,7 @@
 """CherryPy root object class."""
 from json import dumps
 import cherrypy
-from pacifica.metadata.orm import ORM_OBJECTS
+from pacifica.metadata.orm.all_objects import ORM_OBJECTS
 from pacifica.metadata.elastic.elasticupdate import ElasticSearchUpdateAPI
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from pacifica.metadata.rest.userinfo import UserInfoAPI

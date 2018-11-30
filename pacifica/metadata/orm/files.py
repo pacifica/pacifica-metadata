@@ -52,8 +52,7 @@ class Files(CherryPyAPI):
     hashsum = CharField(default='', index=True)
     hashtype = CharField(default='sha1', index=True)
     size = BigIntegerField(default=-1)
-    transaction = ForeignKeyField(
-        Transactions, related_name='files', index=True)
+    transaction = ForeignKeyField(Transactions, backref='files', index=True)
     mimetype = CharField(default='')
     encoding = CharField(default='UTF8')
     suspense_date = ExtendDateField(null=True, index=True)

@@ -23,9 +23,8 @@ class AToolProposal(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    proposal = ForeignKeyField(Proposals, related_name='atools')
-    analytical_tool = ForeignKeyField(
-        AnalyticalTools, related_name='proposals')
+    proposal = ForeignKeyField(Proposals, backref='atools')
+    analytical_tool = ForeignKeyField(AnalyticalTools, backref='proposals')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

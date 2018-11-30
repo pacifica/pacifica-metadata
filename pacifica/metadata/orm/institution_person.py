@@ -23,8 +23,8 @@ class InstitutionPerson(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    person = ForeignKeyField(Users, related_name='institutions')
-    institution = ForeignKeyField(Institutions, related_name='users')
+    person = ForeignKeyField(Users, backref='institutions')
+    institution = ForeignKeyField(Institutions, backref='users')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

@@ -44,7 +44,7 @@ class Citations(CherryPyAPI):
     """
 
     article_title = TextField(default='')
-    journal = ForeignKeyField(Journals, related_name='citations')
+    journal = ForeignKeyField(Journals, backref='citations')
     journal_volume = IntegerField(default=-1)
     journal_issue = IntegerField(default=-1)
     page_range = CharField(default='')

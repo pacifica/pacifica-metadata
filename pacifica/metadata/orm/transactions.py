@@ -27,9 +27,9 @@ class Transactions(CherryPyAPI):
         +-------------------+--------------------------------------+
     """
 
-    submitter = ForeignKeyField(Users, related_name='transactions')
-    instrument = ForeignKeyField(Instruments, related_name='transactions')
-    proposal = ForeignKeyField(Proposals, related_name='transactions')
+    submitter = ForeignKeyField(Users, backref='transactions')
+    instrument = ForeignKeyField(Instruments, backref='transactions')
+    proposal = ForeignKeyField(Proposals, backref='transactions')
     suspense_date = ExtendDateField(null=True, index=True)
 
     @staticmethod

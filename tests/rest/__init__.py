@@ -3,7 +3,8 @@
 """Test the REST interfaces."""
 import cherrypy
 from cherrypy.test import helper
-from pacifica.metadata.orm import create_tables, ORM_OBJECTS, DB
+from pacifica.metadata.orm import ORM_OBJECTS
+from pacifica.metadata.orm.sync import OrmSync, DB
 from pacifica.metadata.rest.root import Root, error_page_default
 from pacifica.metadata.globals import CHERRYPY_CONFIG
 from test_files.loadit_test import main
@@ -44,7 +45,7 @@ class CPCommonTest(helper.CPWebCase):
         # logger.setLevel(logging.DEBUG)
         # logger.addHandler(logging.StreamHandler())
         ########
-        create_tables()
+        OrmSync.create_tables()
         cherrypy.config.update({'error_page.default': error_page_default})
         cherrypy.config.update(CHERRYPY_CONFIG)
         cherrypy.tree.mount(Root(), '/', CHERRYPY_CONFIG)

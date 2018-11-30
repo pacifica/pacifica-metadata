@@ -25,8 +25,8 @@ class DOIAuthorMapping(CherryPyAPI):
         +-------------------+-----------------------------------------+
     """
 
-    author = ForeignKeyField(DOIAuthors, related_name='doi_authorships')
-    doi = ForeignKeyField(DOIEntries, related_name='authors', to_field='doi')
+    author = ForeignKeyField(DOIAuthors, backref='doi_authorships')
+    doi = ForeignKeyField(DOIEntries, backref='authors', field='doi')
     author_order = IntegerField(default=1)
 
     # pylint: disable=too-few-public-methods

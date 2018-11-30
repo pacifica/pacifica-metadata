@@ -23,8 +23,8 @@ class ProposalParticipant(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    person = ForeignKeyField(Users, related_name='proposals')
-    proposal = ForeignKeyField(Proposals, related_name='users')
+    person = ForeignKeyField(Users, backref='proposals')
+    proposal = ForeignKeyField(Proposals, backref='users')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

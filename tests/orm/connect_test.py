@@ -5,8 +5,8 @@ from unittest import TestCase
 from json import dumps
 from peewee import SqliteDatabase, OperationalError
 import httpretty
-from pacifica.metadata.orm import try_db_connect, DATABASE_CONNECT_ATTEMPTS, ORM_OBJECTS
-import pacifica.metadata.orm as metaorm
+from pacifica.metadata.orm import ORM_OBJECTS
+import pacifica.metadata.orm.sync as orm_sync
 from elastic import ES_CLUSTER_BODY
 
 
@@ -15,10 +15,10 @@ class TestConnections(TestCase):
 
     def test_db_connect_and_fail(self):
         """Try to connect to a database and fail."""
-        metaorm.DB = SqliteDatabase('file:///root/foo.db')
+        orm_sync.DB = SqliteDatabase('file:///root/foo.db')
         hit_exception = False
         try:
-            try_db_connect(DATABASE_CONNECT_ATTEMPTS - 1)
+            orm_sync.OrmSync.dbconn_blocking()
         except OperationalError:
             hit_exception = True
         self.assertTrue(hit_exception)
@@ -56,6 +56,6 @@ class TestConnections(TestCase):
             httpretty.register_uri(httpretty.PUT, es_mapping_url,
                                    body=dumps(created_body),
                                    content_type='application/json')
-        metaorm.DB = SqliteDatabase(':memory:')
-        metaorm.create_tables()
+        orm_sync.DB = SqliteDatabase(':memory:')
+        orm_sync.OrmSync.create_tables()
         self.assertTrue(httpretty.last_request().method, 'PUT')
