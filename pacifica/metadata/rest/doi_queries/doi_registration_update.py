@@ -53,8 +53,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         doi_info = {}
         creators_block = record_object.find('creatorsblock')
         record_object.remove(creators_block)
-        for child in record_object:
-            doi_info[child.tag] = DOIRegistrationUpdate._process_child_object(child)
+        doi_info = {child.tag: DOIRegistrationUpdate._process_child_object(child) for child in record_object}
         return doi_info, creators_block
 
     @staticmethod
