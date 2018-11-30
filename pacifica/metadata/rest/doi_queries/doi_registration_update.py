@@ -51,10 +51,11 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
     @staticmethod
     def _extract_doi_info_from_xml(record_object):
         doi_info = {}
-        children = (child for child in record_object if child.text)
         creators_block = record_object.find('creatorsblock')
         record_object.remove(creators_block)
-        for child in children:
+        for child in record_object:
+            if not child.text:
+                continue
             if 'date' in child.tag and child.text != 'none':
                 info = parse(child.text).strftime('%Y-%m-%d')
             else:
