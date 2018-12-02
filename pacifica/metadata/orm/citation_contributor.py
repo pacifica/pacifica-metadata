@@ -25,8 +25,8 @@ class CitationContributor(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    citation = ForeignKeyField(Citations, related_name='authors')
-    author = ForeignKeyField(Contributors, related_name='citations')
+    citation = ForeignKeyField(Citations, backref='authors')
+    author = ForeignKeyField(Contributors, backref='citations')
     author_precedence = IntegerField(default=1)
 
     # pylint: disable=too-few-public-methods

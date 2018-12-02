@@ -23,9 +23,9 @@ class DOITransaction(CherryPyAPI):
     """
 
     doi = ForeignKeyField(
-        DOIEntries, related_name='transactions', to_field='doi', column_name='doi', primary_key=True)
+        DOIEntries, backref='transactions', field='doi', column_name='doi', primary_key=True)
     transaction = ForeignKeyField(
-        TransactionRelease, to_field='transaction', related_name='doi_releases')
+        TransactionRelease, field='transaction', backref='doi_releases')
 
     @staticmethod
     def elastic_mapping_builder(obj):

@@ -23,8 +23,8 @@ class InstrumentGroup(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    instrument = ForeignKeyField(Instruments, related_name='groups')
-    group = ForeignKeyField(Groups, related_name='instrument_members')
+    instrument = ForeignKeyField(Instruments, backref='groups')
+    group = ForeignKeyField(Groups, backref='instrument_members')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

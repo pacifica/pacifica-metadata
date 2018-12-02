@@ -17,14 +17,13 @@ and deleting these objects in from a web service layer.
 """
 import datetime
 from dateutil import parser
-from peewee import Model, Expression, OP, PrimaryKeyField, fn, CompositeKey, SQL, NodeList, BackrefAccessor
-from playhouse.db_url import connect
+from peewee import Model, Expression, OP, AutoField, fn, CompositeKey, SQL, NodeList, BackrefAccessor
 from six import text_type
-from pacifica.metadata.config import get_config
-from pacifica.metadata.orm.utils import index_hash, ExtendDateTimeField
-from pacifica.metadata.orm.utils import datetime_converts, date_converts, datetime_now_nomicrosecond
+from ..config import get_config
+from .utils import index_hash, ExtendDateTimeField
+from .utils import datetime_converts, date_converts, datetime_now_nomicrosecond
+from .globals import DB
 
-DB = connect(get_config().get('database', 'peewee_url'))
 ELASTIC_ENDPOINT = get_config().get('elasticsearch', 'url')
 
 
@@ -61,7 +60,7 @@ class PacificaModel(Model):
 
     # this is peewee specific need to disable this check
     # pylint: disable=invalid-name
-    id = PrimaryKeyField()
+    id = AutoField()
     # pylint: enable=invalid-name
     created = ExtendDateTimeField(
         default=datetime_now_nomicrosecond, index=True)

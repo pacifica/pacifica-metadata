@@ -10,14 +10,15 @@ except ImportError:  # pragma: no cover
 from math import ceil
 from datetime import datetime
 from elasticsearch import Elasticsearch, helpers, ElasticsearchException
-from pacifica.metadata.orm import ORM_OBJECTS, try_db_connect
-from pacifica.metadata.elastic import create_elastic_index, try_es_connect
-from pacifica.metadata.elastic import ELASTIC_ENDPOINT, ELASTIC_INDEX, ES_CLIENT_ARGS
+from .orm.all_objects import ORM_OBJECTS
+from .orm.sync import OrmSync
+from .elastic import create_elastic_index, try_es_connect
+from .elastic import ELASTIC_ENDPOINT, ELASTIC_INDEX, ES_CLIENT_ARGS
 
 
 def escreate(args):
     """Create the elastic search index and mappings."""
-    try_db_connect()
+    OrmSync.connect_and_check()
     try_es_connect()
     create_elastic_index()
     if args.skip_mappings:

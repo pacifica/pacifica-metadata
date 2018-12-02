@@ -7,7 +7,7 @@ from threading import Thread
 from argparse import ArgumentParser, SUPPRESS
 import cherrypy
 from pacifica.metadata.rest.root import Root, error_page_default
-from pacifica.metadata.orm import create_tables
+from pacifica.metadata.orm.sync import OrmSync
 from pacifica.metadata.globals import CHERRYPY_CONFIG, CONFIG_FILE
 
 
@@ -45,10 +45,8 @@ def main():
                         action='store_true')
     args = parser.parse_args()
     os.environ['METADATA_CONFIG'] = args.config
-    create_tables()
-
+    OrmSync.connect_and_check()
     stop_later(args.stop_later)
-
     cherrypy.config.update({'error_page.default': error_page_default})
     cherrypy.config.update({
         'server.socket_host': args.address,

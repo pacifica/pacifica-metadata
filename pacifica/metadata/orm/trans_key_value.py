@@ -26,9 +26,9 @@ class TransactionKeyValue(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    transaction = ForeignKeyField(Transactions, related_name='metadata')
-    key = ForeignKeyField(Keys, related_name='trans_links')
-    value = ForeignKeyField(Values, related_name='trans_links')
+    transaction = ForeignKeyField(Transactions, backref='metadata')
+    key = ForeignKeyField(Keys, backref='trans_links')
+    value = ForeignKeyField(Values, backref='trans_links')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

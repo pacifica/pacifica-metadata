@@ -39,12 +39,12 @@ class Contributors(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    person = ForeignKeyField(Users, related_name='contributions')
+    person = ForeignKeyField(Users, backref='contributions')
     first_name = CharField(default='')
     middle_initial = CharField(default='')
     last_name = CharField(default='')
     dept_code = CharField(default='')
-    institution = ForeignKeyField(Institutions, related_name='contributors')
+    institution = ForeignKeyField(Institutions, backref='contributors')
     encoding = CharField(default='UTF8')
 
     @staticmethod
