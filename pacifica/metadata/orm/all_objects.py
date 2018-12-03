@@ -25,6 +25,7 @@ from .citation_proposal import CitationProposal
 from .files import Files
 from .keys import Keys
 from .values import Values
+from .transsip import TransSIP
 from .transactions import Transactions
 from .file_key_value import FileKeyValue
 from .trans_key_value import TransactionKeyValue
@@ -62,6 +63,7 @@ ORM_OBJECTS = [
     ProposalGroup,
     CitationProposal,
     Transactions,
+    TransSIP,
     Files,
     Keys,
     Values,
