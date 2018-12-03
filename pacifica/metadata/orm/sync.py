@@ -55,6 +55,8 @@ class OrmSync(object):
         dbcon_wait = get_config().getint('database', 'connect_wait')
         while dbcon_attempts:
             try:  # pragma: no cover this block doesn't complete
+                if not DB.is_closed():
+                    DB.close()
                 DB.connect()
                 return
             except OperationalError:
@@ -87,6 +89,8 @@ class OrmSync(object):
     def create_tables():
         """Create the tables for the objects if they exist."""
         with DB.atomic():
+            MetadataSystem.create_table()
+            MetadataSystem.get_or_create_version()
             for obj in ORM_OBJECTS:
                 if not obj.table_exists():
                     obj.create_table()
