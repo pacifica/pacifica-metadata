@@ -4,7 +4,7 @@
 from cherrypy import tools, request
 from peewee import fn
 from pacifica.metadata.rest.reporting_queries.query_base import QueryBase
-from pacifica.metadata.orm import Transactions, Files
+from pacifica.metadata.orm import TransSIP, Files
 from pacifica.metadata.orm.base import db_connection_decorator
 from pacifica.metadata.rest.reporting_queries.summarize_by_date import SummarizeByDate
 
@@ -22,16 +22,19 @@ class DetailedTransactionList(QueryBase):
         query = (
             Files().select(
                 Files.transaction.alias('upload_id'),
-                fn.Max(Transactions.updated).alias('upload_date'),
+                fn.Max(TransSIP.updated).alias('upload_date'),
                 fn.Min(Files.mtime).alias('file_date_start'),
                 fn.Max(Files.mtime).alias('file_date_end'),
-                fn.Min(Transactions.submitter).alias('uploaded_by_id'),
+                fn.Min(TransSIP.submitter).alias('uploaded_by_id'),
                 fn.Sum(Files.size).alias('bundle_size'),
                 fn.Count(Files.id).alias('file_count'),
-                fn.Min(Transactions.updated).alias('upload_datetime'),
-                fn.Min(Transactions.proposal).alias('proposal_id'),
-                fn.Min(Transactions.instrument).alias('instrument_id')
-            ).join(Transactions).where(Files.transaction << transaction_list).group_by(Files.transaction)
+                fn.Min(TransSIP.updated).alias('upload_datetime'),
+                fn.Min(TransSIP.proposal).alias('proposal_id'),
+                fn.Min(TransSIP.instrument).alias('instrument_id')
+            ).join(
+                TransSIP,
+                on=(TransSIP.id == Files.transaction)
+            ).where(Files.transaction << transaction_list).group_by(Files.transaction)
         )
         # pylint: enable=no-member
 

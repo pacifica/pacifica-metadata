@@ -7,7 +7,7 @@ from cherrypy import tools
 from dateutil.parser import parse
 from peewee import Expression, OP
 from pacifica.metadata.rest.transaction_queries.query_base import QueryBase
-from pacifica.metadata.orm import Transactions, InstrumentGroup
+from pacifica.metadata.orm import TransSIP, InstrumentGroup
 from pacifica.metadata.orm.base import db_connection_decorator
 from pacifica.metadata.rest.reporting_queries.detailed_transactions_list import DetailedTransactionList
 
@@ -24,17 +24,17 @@ class TransactionsMultiSearch(QueryBase):
 
         where_clause = Expression(1, OP.EQ, 1)
         # now get the appropriate transactions
-        where_clause &= Transactions().where_clause(
+        where_clause &= TransSIP().where_clause(
             {'updated': start_time, 'updated_operator': 'gte'})
-        where_clause &= Transactions().where_clause(
+        where_clause &= TransSIP().where_clause(
             {'updated': end_time, 'updated_operator': 'lte'})
 
         if instrument_list:
-            where_clause &= (Transactions.instrument << instrument_list)
+            where_clause &= (TransSIP.instrument << instrument_list)
         if proposal_id:
-            where_clause &= (Transactions.proposal == proposal_id)
-        transactions_list_query = Transactions.select(
-            Transactions.id).where(where_clause)
+            where_clause &= (TransSIP.proposal == proposal_id)
+        transactions_list_query = TransSIP.select(
+            TransSIP.id).where(where_clause)
 
         transactions_list = [t['id'] for t in transactions_list_query.dicts()]
         return transactions_list

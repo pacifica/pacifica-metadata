@@ -4,7 +4,7 @@
 from cherrypy import HTTPError
 from peewee import DoesNotExist, fn, JOIN
 from pacifica.metadata.orm import TransactionKeyValue, Keys, Values
-from pacifica.metadata.orm import Files, FileKeyValue, Transactions
+from pacifica.metadata.orm import Files, FileKeyValue, TransSIP
 from pacifica.metadata.orm import Users, Instruments, Proposals, TransactionRelease
 
 
@@ -49,10 +49,10 @@ class QueryBase(object):
     @staticmethod
     def _get_transaction_info_block(transaction_id, option='details'):
         try:
-            transaction_entry = Transactions()
+            transaction_entry = TransSIP()
             where_clause = transaction_entry.where_clause(
                 {'_id': transaction_id})
-            transaction_info = (Transactions
+            transaction_info = (TransSIP
                                 .select()
                                 .where(where_clause)
                                 .get())
@@ -79,15 +79,15 @@ class QueryBase(object):
     @staticmethod
     def _get_transaction_entries(transaction_list):
         # pylint: disable=no-member
-        transactions = (Transactions
+        transactions = (TransSIP
                         .select(
-                            Transactions,
+                            TransSIP,
                             fn.Sum(Files.size).alias('file_size_bytes'),
                             fn.Count(Files.id).alias('file_count')
                         )
-                        .join(Files, JOIN.LEFT_OUTER)
-                        .group_by(Transactions)
-                        .where(Transactions.id << transaction_list))
+                        .join(Files, JOIN.LEFT_OUTER, on=(TransSIP.id == Files.transaction))
+                        .group_by(TransSIP)
+                        .where(TransSIP.id << transaction_list))
         # pylint: enable=no-member
         return transactions
 
@@ -96,7 +96,7 @@ class QueryBase(object):
         transactions = QueryBase._get_transaction_entries(transaction_list)
         results = {}
         for trans in transactions:
-            results[trans.id] = {
+            results[trans.id.id] = {
                 'total_file_size_bytes': int(trans.file_size_bytes),
                 'total_file_count': int(trans.file_count)
             }
@@ -114,7 +114,7 @@ class QueryBase(object):
             entry = trans.to_hash()
             metadata = QueryBase._get_base_transaction_metadata(entry, option)
             transaction = {}
-            kvs = QueryBase._get_transaction_key_values(trans.id)
+            kvs = QueryBase._get_transaction_key_values(trans.id.id)
             for key_value in kvs:
                 kv_list.update({key_value['key']: key_value['value']})
             transaction['file_size_bytes'] = int(
@@ -122,13 +122,13 @@ class QueryBase(object):
             transaction['file_count'] = int(
                 trans.file_count) if trans.file_count is not None else 0
             transaction['status'] = {
-                'trans_id': trans.id, 'person_id': trans.submitter_id,
+                'trans_id': trans.id.id, 'person_id': trans.submitter_id,
                 'step': 6, 'message': 'verified', 'status': 'success'
             }
             transaction['metadata'] = metadata
             transaction['kv_pairs'] = kv_list
-            transaction_results['transactions'][trans.id] = transaction
-            transaction_results['times'][trans.id] = entry.get('updated')
+            transaction_results['transactions'][trans.id.id] = transaction
+            transaction_results['times'][trans.id.id] = entry.get('updated')
 
         return transaction_results
 

@@ -45,6 +45,7 @@ import requests
 from requests.exceptions import RequestException
 from cherrypy import request, tools
 from pacifica.metadata.config import get_config
+from pacifica.metadata.orm.transsip import TransSIP
 from pacifica.metadata.orm.transactions import Transactions
 from pacifica.metadata.orm.trans_key_value import TransactionKeyValue
 from pacifica.metadata.orm.file_key_value import FileKeyValue
@@ -225,6 +226,9 @@ class IngestAPI(object):
                 logging.warning('Unable to send notification: %s', ex)
 
         transaction_hash = {
+            '_id': pull_value_by_attr(request.json, 'Transactions._id', 'value')
+        }
+        transsip_hash = {
             '_id': pull_value_by_attr(request.json, 'Transactions._id', 'value'),
             'submitter': pull_value_by_attr(request.json, 'Transactions.submitter', 'value'),
             'instrument': pull_value_by_attr(request.json, 'Transactions.instrument', 'value'),
@@ -233,6 +237,7 @@ class IngestAPI(object):
 
         # pylint: disable=protected-access
         Transactions()._insert(transaction_hash)
+        TransSIP()._insert(transsip_hash)
         TransactionKeyValue()._insert(generate_tkvs(request.json))
         Files()._insert(extract_files(request.json))
         FileKeyValue()._insert(generate_fkvs(request.json))

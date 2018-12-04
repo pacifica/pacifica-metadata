@@ -6,7 +6,7 @@ import cherrypy
 from cherrypy import tools, HTTPError
 from peewee import Expression, OP
 from pacifica.metadata.rest.transaction_queries.query_base import QueryBase
-from pacifica.metadata.orm import Transactions
+from pacifica.metadata.orm import TransSIP
 from pacifica.metadata.orm.base import db_connection_decorator
 
 
@@ -18,7 +18,7 @@ class TransactionSearch(QueryBase):
     @staticmethod
     def _search_transactions(search_terms):
         # build the search query from keyword bits
-        trans = Transactions()
+        trans = TransSIP()
         where_clause = Expression(1, OP.EQ, 1)
         query = trans.select()
         item_count = 100
@@ -26,28 +26,28 @@ class TransactionSearch(QueryBase):
         for term in search_terms:
             value = str(search_terms[term]).replace('+', ' ')
             if term in ['proposal', 'proposal_id'] and value != '-1':
-                where_clause &= Transactions().where_clause(
+                where_clause &= TransSIP().where_clause(
                     {'proposal': value})
                 continue
             if term in ['instrument', 'instrument_id'] and value != '-1':
-                where_clause &= Transactions().where_clause(
+                where_clause &= TransSIP().where_clause(
                     {'instrument': value})
                 continue
             if term in ['start', 'start_time']:
-                where_clause &= Transactions().where_clause(
+                where_clause &= TransSIP().where_clause(
                     {'updated': value, 'updated_operator': 'gte'})
                 continue
             if term in ['end', 'end_time']:
-                where_clause &= Transactions().where_clause(
+                where_clause &= TransSIP().where_clause(
                     {'updated': value, 'updated_operator': 'lte'})
                 continue
             if term in ['user', 'user_id', 'person',
                         'person_id', 'submitter', 'submitter_id'] and value != '-1':
-                where_clause &= Transactions().where_clause(
+                where_clause &= TransSIP().where_clause(
                     {'submitter': value})
                 continue
             if term in ['transaction_id'] and value != '-1':
-                where_clause &= Transactions().where_clause({'_id': value})
+                where_clause &= TransSIP().where_clause({'_id': value})
                 continue
             if term in ['item_count'] and value != '-1':
                 item_count = int(value)

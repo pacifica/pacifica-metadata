@@ -21,6 +21,7 @@ def main():
         'proposals',
         'instruments',
         'transactions',
+        'transsip',
         'files',
         'groups',
         'keys',
