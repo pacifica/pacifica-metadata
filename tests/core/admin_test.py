@@ -10,7 +10,7 @@ import pacifica.metadata.orm.globals as orm_db_mod
 import pacifica.metadata.orm.all_objects as orm_obj_mod
 from pacifica.metadata.orm.sync import OrmSync, MetadataSystem
 from pacifica.metadata.elastic import create_elastic_index
-from pacifica.metadata.admin_cmd import main, essync, escreate, render_obj, create_obj
+from pacifica.metadata.admin_cmd import main, essync, escreate, render_obj, create_obj, bool2cmdint
 from pacifica.metadata.admin_cmd import objstr_to_ormobj, objstr_to_whereclause, objstr_to_timedelta
 
 
@@ -36,6 +36,11 @@ class TestAdminTool(TestCase):
         orm_db_mod.DB.drop_tables(orm_obj_mod.ORM_OBJECTS)
         orm_db_mod.DB.close()
         orm_db_mod.DB = None
+
+    def test_bool2cmdint(self):
+        """Test the bool2cmdint method."""
+        self.assertEqual(-1, bool2cmdint(False))
+        self.assertEqual(0, bool2cmdint(True))
 
     def test_objstr_to_timedelta(self):
         """Test the string object to timedelta object."""
