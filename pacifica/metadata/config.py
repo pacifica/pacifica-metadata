@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Configuration reading and validation module."""
+import logging
 from os import getenv
 try:
     from ConfigParser import SafeConfigParser
@@ -22,6 +23,8 @@ def get_config():
         'DATABASE_CONNECT_ATTEMPTS', '10'))
     configparser.set('database', 'connect_wait', getenv(
         'DATABASE_CONNECT_WAIT', '20'))
+    configparser.set('database', 'debug_logging', getenv(
+        'DATABASE_DEBUG_LOGGING', 'False'))
     configparser.set('database', 'peewee_url', getenv(
         'PEEWEE_URL', 'postgresql://pacifica:metadata@localhost:5432/pacifica_metadata'))
     configparser.add_section('notifications')
@@ -32,3 +35,9 @@ def get_config():
         'ELASTIC_ENDPOINT', 'http://127.0.0.1:9200'))
     configparser.read(CONFIG_FILE)
     return configparser
+
+
+if get_config().getboolean('database', 'debug_logging'):  # pragma: no cover used for debugging
+    LOGGER = logging.getLogger('peewee')
+    LOGGER.setLevel(logging.DEBUG)
+    LOGGER.addHandler(logging.StreamHandler())

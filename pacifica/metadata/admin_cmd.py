@@ -51,8 +51,12 @@ def dbchk(args):
     """Check the database for the version running."""
     OrmSync.dbconn_blocking()
     if args.check_equal:
-        return bool2cmdint(MetadataSystem.is_equal())
-    return bool2cmdint(MetadataSystem.is_safe())
+        res = MetadataSystem.is_equal()
+        OrmSync.close()
+        return bool2cmdint(res)
+    res = MetadataSystem.is_safe()
+    OrmSync.close()
+    return bool2cmdint(res)
 
 
 def dbsync(_args):
@@ -64,8 +68,12 @@ def dbsync(_args):
         OrmSync.dbconn_blocking()
         try_es_connect()
         create_elastic_index()
-        return OrmSync.create_tables()
-    return OrmSync.update_tables()
+        OrmSync.create_tables()
+        OrmSync.close()
+        return
+    OrmSync.update_tables()
+    OrmSync.close()
+    return
 
 
 def create_subcommands(subparsers):
@@ -241,4 +249,4 @@ def main(*argv):
     if not argv:  # pragma: no cover
         argv = sys_argv[1:]
     args = parser.parse_args(argv)
-    args.func(args)
+    return args.func(args)
