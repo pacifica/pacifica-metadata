@@ -29,11 +29,8 @@ class TransSIP(CherryPyAPI):
     """
 
     id = ForeignKeyField(
-        Transactions,
-        index=True,
-        primary_key=True,
-        unique=True,
-        backref='transsip'
+        Transactions, index=True, primary_key=True,
+        unique=True, backref='transsip'
     )
     submitter = ForeignKeyField(Users, backref='transsip')
     instrument = ForeignKeyField(Instruments, backref='transsip')

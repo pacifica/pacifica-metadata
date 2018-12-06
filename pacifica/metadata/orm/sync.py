@@ -7,7 +7,7 @@ from playhouse.migrate import SchemaMigrator, migrate
 from ..config import get_config
 from .globals import DB
 from .all_objects import ORM_OBJECTS
-from .all_objects import Users, Instruments, Proposals, TransSIP, Transactions
+from .all_objects import Users, Instruments, Proposals, TransSIP, Transactions, TransSAP
 
 SCHEMA_MAJOR = 1
 SCHEMA_MINOR = 0
@@ -73,6 +73,7 @@ class OrmSync(object):
         """Update from 0.1 to 1.0."""
         migrator = SchemaMigrator(DB)
         TransSIP.create_table()
+        TransSAP.create_table()
 
         class OldTrans(Model):
             """This is the old transactions."""

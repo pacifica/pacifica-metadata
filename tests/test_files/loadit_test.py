@@ -22,6 +22,7 @@ def main():
         'instruments',
         'transactions',
         'transsip',
+        'transsap',
         'files',
         'groups',
         'keys',
