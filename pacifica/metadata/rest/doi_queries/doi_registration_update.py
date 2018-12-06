@@ -25,6 +25,10 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         except ElementTree.ParseError:
             raise HTTPError(400, 'Bad Request: Invalid XML Document')
 
+        record_count = int(tree.attrib['numfound'])
+        if record_count == 0:
+            raise HTTPError(404, 'No DOI Entries found in this XML')
+
         record = tree[0]
         current_status = record.attrib['status'].lower()
         release_status = record.attrib['released'].lower() == 'y'
@@ -47,16 +51,22 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
     @staticmethod
     def _extract_doi_info_from_xml(record_object):
         doi_info = {}
-        children = (child for child in record_object if child.text)
         creators_block = record_object.find('creatorsblock')
         record_object.remove(creators_block)
-        for child in children:
-            if 'date' in child.tag:
-                info = parse(child.text).strftime('%Y-%m-%d')
-            else:
-                info = child.text
-            doi_info[child.tag] = info
+        for child in record_object:
+            info = DOIRegistrationUpdate._process_child_object(child)
+            if info:
+                doi_info[child.tag] = info
         return doi_info, creators_block
+
+    @staticmethod
+    def _process_child_object(child_object):
+        info = None
+        if child_object.text:
+            info = child_object.text
+        if 'date' in child_object.tag and child_object.text != 'none':
+            info = parse(child_object.text).strftime('%Y-%m-%d')
+        return info
 
     @staticmethod
     def _check_for_doi_entry(doi_string):
