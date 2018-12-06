@@ -6,8 +6,9 @@ from sys import argv as sys_argv
 from datetime import timedelta
 from json import loads, dumps
 from argparse import ArgumentParser
+from peewee import PeeweeException
 from .orm.all_objects import ORM_OBJECTS
-from .orm.sync import OrmSync
+from .orm.sync import OrmSync, MetadataSystem
 from .elastic import try_es_connect, create_elastic_index
 from .essync import escreate, essync
 
@@ -39,6 +40,34 @@ def create_obj(args):
         args.object.create_table()
 
 
+def bool2cmdint(command_bool):
+    """Convert a boolean to either 0 for true  or -1 for false."""
+    if command_bool:
+        return 0
+    return -1
+
+
+def dbchk(args):
+    """Check the database for the version running."""
+    OrmSync.dbconn_blocking()
+    if args.check_equal:
+        return bool2cmdint(MetadataSystem.is_equal())
+    return bool2cmdint(MetadataSystem.is_safe())
+
+
+def dbsync(_args):
+    """Create or update the database."""
+    OrmSync.dbconn_blocking()
+    try:
+        MetadataSystem.get_version()
+    except PeeweeException:
+        OrmSync.dbconn_blocking()
+        try_es_connect()
+        create_elastic_index()
+        return OrmSync.create_tables()
+    return OrmSync.update_tables()
+
+
 def create_subcommands(subparsers):
     """Create the subcommands from the subparsers."""
     create_obj_parser = subparsers.add_parser(
@@ -61,7 +90,38 @@ def create_subcommands(subparsers):
         help='essync help',
         description='sync sql data to elastic search'
     )
-    return render_parser, escreate_parser, essync_parser, create_obj_parser
+    db_parser = subparsers.add_parser(
+        'dbsync',
+        help='dbsync help',
+        description='Update or Create the Database.'
+    )
+    dbchk_parser = subparsers.add_parser(
+        'dbchk',
+        help='dbchk help',
+        description='Check database against current version.'
+    )
+    return (
+        (render_parser, render_options),
+        (escreate_parser, escreate_options),
+        (essync_parser, essync_options),
+        (create_obj_parser, create_obj_options),
+        (db_parser, db_options),
+        (dbchk_parser, dbchk_options)
+    )
+
+
+def db_options(db_parser):
+    """Add the options for dbsync subcommand."""
+    db_parser.set_defaults(func=dbsync)
+
+
+def dbchk_options(dbchk_parser):
+    """Add the options for dbchk."""
+    dbchk_parser.add_argument(
+        '--equal', default=False,
+        dest='check_equal', action='store_true'
+    )
+    dbchk_parser.set_defaults(func=dbchk)
 
 
 def escreate_options(escreate_parser):
@@ -176,13 +236,8 @@ def main(*argv):
     """Main method for admin command line tool."""
     parser = ArgumentParser()
     subparsers = parser.add_subparsers(help='sub-command help')
-    render_parser, escreate_parser, essync_parser, create_obj_parser = create_subcommands(
-        subparsers
-    )
-    escreate_options(escreate_parser)
-    essync_options(essync_parser)
-    render_options(render_parser)
-    create_obj_options(create_obj_parser)
+    for subparser, options_func in create_subcommands(subparsers):
+        options_func(subparser)
     if not argv:  # pragma: no cover
         argv = sys_argv[1:]
     args = parser.parse_args(argv)
