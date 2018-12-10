@@ -3,7 +3,6 @@
 """CherryPy DOI Registration Updater object class."""
 from __future__ import print_function
 from cherrypy import tools, request, HTTPError
-from dateutil.parser import parse
 from pacifica.metadata.orm.utils import datetime_now_nomicrosecond
 from pacifica.metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
 from pacifica.metadata.orm import DOIEntries
@@ -49,6 +48,7 @@ class DOIModifiedTimeUpdate(DOIRegistrationBase):
                             ', '.join(valid_content_types))
 
         doi_list = request.json
-        update_count = DOIModifiedTimeUpdate._update_modification_times(doi_list)
+        update_count = DOIModifiedTimeUpdate._update_modification_times(
+            doi_list)
 
         return {'num_records_updated': update_count}

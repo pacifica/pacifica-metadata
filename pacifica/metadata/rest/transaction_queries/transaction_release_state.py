@@ -6,7 +6,7 @@ from pacifica.metadata.rest.transaction_queries.query_base import QueryBase
 from pacifica.metadata.orm import TransactionRelease, DOITransaction, CitationTransaction
 from pacifica.metadata.rest.user_queries.user_lookup import UserLookup
 from pacifica.metadata.orm.base import db_connection_decorator
-import pprint
+
 
 class TransactionReleaseState(QueryBase):
     """Retrieves release state for an individual transaction (GET) or set of transactions (POST)."""
@@ -82,7 +82,8 @@ class TransactionReleaseState(QueryBase):
             for release in doi_releases:
                 # mint_api = release.doi.metadata.where(release.doi.metadata.key == 'minting_api_id')
                 # print(mint_api)
-                metadata = {info_bit.__data__['key']: info_bit.__data__['value'] for info_bit in release.doi.metadata}
+                metadata = {info_bit.__data__['key']: info_bit.__data__[
+                    'value'] for info_bit in release.doi.metadata}
                 output_results.append({
                     'doi_status': release.doi.status,
                     'is_released': release.doi.released,
