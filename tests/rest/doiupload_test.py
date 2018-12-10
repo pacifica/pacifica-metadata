@@ -54,7 +54,7 @@ class TestDOIUploadAPI(CPCommonTest):
                 'doiupload_api'
             )
         ).read())
-
+        print(entry_data)
         doi_string = [entry_data[0]['doi']]
         header_list = {'Content-Type': 'application/json'}
         req = requests.post(
