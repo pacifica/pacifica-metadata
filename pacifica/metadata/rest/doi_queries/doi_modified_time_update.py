@@ -16,13 +16,9 @@ class DOIModifiedTimeUpdate(DOIRegistrationBase):
 
     exposed = True
 
-    @staticmethod
-    def _check_for_doi_entry(doi_string):
-        check_query = DOIEntries.select().where(DOIEntries.doi == doi_string)
-        return check_query.count() > 0
 
-    @staticmethod
-    def _update_modification_times(doi_list):
+=    @staticmethod
+   def _update_modification_times(doi_list):
         """Touch a list of DOI Entries to force a modification time update."""
         touch_query = DOIEntries.select().where(DOIEntries.doi << doi_list)
         print(touch_query)
@@ -41,12 +37,6 @@ class DOIModifiedTimeUpdate(DOIRegistrationBase):
     @tools.json_in()
     def POST():
         """Update existing DOI Entries."""
-        valid_content_types = ['application/json', 'text/json']
-        headers = request.headers
-        if headers['Content-type'] not in valid_content_types:
-            raise HTTPError(415, 'Expected an entity of content type %s' %
-                            ', '.join(valid_content_types))
-
         doi_list = request.json
         update_count = DOIModifiedTimeUpdate._update_modification_times(
             doi_list)
