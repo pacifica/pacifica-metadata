@@ -65,9 +65,6 @@ class TestDOIUploadAPI(CPCommonTest):
         self.assertEqual(req.status_code, 200)
         self.assertTrue('"num_records_updated": 1' in req.text)
 
-        
-
-
     def test_osti_update(self):
         """Test the POST method for information updates."""
         path = realpath('test_files')

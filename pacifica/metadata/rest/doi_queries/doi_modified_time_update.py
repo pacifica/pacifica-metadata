@@ -16,9 +16,8 @@ class DOIModifiedTimeUpdate(DOIRegistrationBase):
 
     exposed = True
 
-
-=    @staticmethod
-   def _update_modification_times(doi_list):
+    @staticmethod
+    def _update_modification_times(doi_list):
         """Touch a list of DOI Entries to force a modification time update."""
         touch_query = DOIEntries.select().where(DOIEntries.doi << doi_list)
         print(touch_query)
