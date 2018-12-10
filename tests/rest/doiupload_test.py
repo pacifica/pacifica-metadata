@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Test the ORM interface DOIUpload."""
+from __future__ import print_function
 from json import loads
 from os.path import realpath
 import requests
