@@ -1,0 +1,23 @@
+[
+  {
+    "_id": 70,
+    "analytical_tool": 1234,
+    "created": "Mon Jul 15 00:00:00 2017",
+    "proposal": "1234a",
+    "submitter": 10
+  },
+  {
+    "_id": 71,
+    "analytical_tool": 1235,
+    "created": "Mon Jul 10 00:00:00 2017",
+    "proposal": "1237",
+    "submitter": 10
+  },
+  {
+    "_id": 72,
+    "analytical_tool": 1234,
+    "created": "Mon Jul 1 00:00:00 2017",
+    "proposal": "1236\u00e9",
+    "submitter": 10
+  }
+]

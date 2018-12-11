@@ -4,19 +4,11 @@
 from json import dumps
 from datetime import datetime
 from pacifica.metadata.orm.transactions import Transactions
-from pacifica.metadata.orm.users import Users
-from pacifica.metadata.orm.proposals import Proposals
-from pacifica.metadata.orm.instruments import Instruments
 from .base_test import TestBase
-from .users_test import SAMPLE_USER_HASH as SAMPLE_SUBMITTER_HASH, TestUsers
-from .proposals_test import SAMPLE_PROPOSAL_HASH, TestProposals
-from .instruments_test import SAMPLE_INSTRUMENT_HASH, TestInstruments
 
 SAMPLE_TRANSACTION_HASH = {
     '_id': 127,
-    'submitter': SAMPLE_SUBMITTER_HASH['_id'],
-    'proposal': SAMPLE_PROPOSAL_HASH['_id'],
-    'instrument': SAMPLE_INSTRUMENT_HASH['_id'],
+    'description': 'The really important description of the file content',
     'suspense_date': datetime.utcnow().date().isoformat()
 }
 
@@ -26,23 +18,6 @@ class TestTransactions(TestBase):
 
     obj_cls = Transactions
     obj_id = Transactions.id
-
-    @classmethod
-    def base_create_dep_objs(cls):
-        """Build the object and make dependent user object."""
-        submitter, _created = Users().get_or_create(
-            id=SAMPLE_SUBMITTER_HASH['_id'])
-        TestUsers.base_create_dep_objs()
-        submitter.from_hash(SAMPLE_SUBMITTER_HASH)
-        submitter.save()
-        prop = Proposals()
-        TestProposals.base_create_dep_objs()
-        prop.from_hash(SAMPLE_PROPOSAL_HASH)
-        prop.save(force_insert=True)
-        inst = Instruments()
-        TestInstruments.base_create_dep_objs()
-        inst.from_hash(SAMPLE_INSTRUMENT_HASH)
-        inst.save(force_insert=True)
 
     def test_transactions_hash(self):
         """Test the hash portion using base object method."""

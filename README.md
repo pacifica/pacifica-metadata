@@ -33,13 +33,18 @@ docker-compose up
 Install the dependencies using the `pip` command:
 
 ```sh
-pip install -r requirements.txt
+pip install pacifica-metadata
+```
+
+Setup the database the default is PostgreSQL.
+```sh
+pacifica-metadata-cmd dbsync
 ```
 
 Then, run the code:
 
 ```sh
-python MetadataServer.py
+pacifica-metadata
 ```
 
 ## The API

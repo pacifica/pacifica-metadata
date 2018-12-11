@@ -3,7 +3,7 @@
 """CherryPy Status Metadata object class."""
 import cherrypy
 from cherrypy import tools
-from pacifica.metadata.orm import Transactions
+from pacifica.metadata.orm import TransSIP
 from pacifica.metadata.rest.proposal_queries.query_base import QueryBase
 from pacifica.metadata.orm.base import db_connection_decorator
 
@@ -25,19 +25,19 @@ class ProposalHasData(QueryBase):
         ret_hash = {}
         for proposal_id in cherrypy.request.json:
             ret_hash[proposal_id] = []
-            instlist = [trans.instrument for trans in Transactions.select(
-                Transactions.instrument
+            instlist = [trans.instrument for trans in TransSIP.select(
+                TransSIP.instrument
             ).where(
-                Transactions.proposal == proposal_id
+                TransSIP.proposal == proposal_id
             ).distinct()]
             for instrument in instlist:
-                data = [x.created for x in Transactions.select(
-                    Transactions.created
+                data = [x.created for x in TransSIP.select(
+                    TransSIP.created
                 ).where(
-                    (Transactions.proposal == proposal_id) &
-                    (Transactions.instrument == instrument)
+                    (TransSIP.proposal == proposal_id) &
+                    (TransSIP.instrument == instrument)
                 ).order_by(
-                    Transactions.created.desc()
+                    TransSIP.created.desc()
                 ).limit(10)]
                 ret_hash[proposal_id].append({
                     'instrument': instrument.id,

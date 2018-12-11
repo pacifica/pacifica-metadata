@@ -4,7 +4,7 @@
 from datetime import datetime
 from dateutil.parser import parse
 from cherrypy import tools
-from pacifica.metadata.orm import TransactionKeyValue, Keys, Values, Transactions
+from pacifica.metadata.orm import TransactionKeyValue, Keys, Values, TransSIP
 from pacifica.metadata.orm.base import db_connection_decorator
 try:
     from urllib.parse import unquote
@@ -26,10 +26,10 @@ class ValuesForKey(object):
                     .select(Values.value, TransactionKeyValue.transaction)
                     .join(TransactionKeyValue)
                     .join(Keys)
-                    .join(Transactions, on=(Transactions.id == TransactionKeyValue.transaction))
+                    .join(TransSIP, on=(TransSIP.id == TransactionKeyValue.transaction))
                     .where(Keys.key == key)
-                    .where(Transactions.created < end_time)
-                    .where(Transactions.created >= start_time)).dicts()
+                    .where(TransSIP.created < end_time)
+                    .where(TransSIP.created >= start_time)).dicts()
         ret = {}
         for val in val_list:
             if val.get('value') not in ret:

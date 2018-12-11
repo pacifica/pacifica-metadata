@@ -4,7 +4,7 @@
 from cherrypy import tools
 from peewee import fn
 from pacifica.metadata.rest.transaction_queries.query_base import QueryBase
-from pacifica.metadata.orm import Transactions
+from pacifica.metadata.orm import TransSIP
 from pacifica.metadata.orm.base import db_connection_decorator
 
 
@@ -16,9 +16,9 @@ class TransactionLast(QueryBase):
 
     @staticmethod
     def _get_last_known_transaction():
-        txn_id = (Transactions
-                  .select(fn.Max(Transactions.id).alias('id'))
-                  .where(Transactions.deleted >> None)
+        txn_id = (TransSIP
+                  .select(fn.Max(TransSIP.id).alias('id'))
+                  .where(TransSIP.deleted >> None)
                   .dicts()
                   .get())
         return {'latest_transaction_id': txn_id['id']}

@@ -4,7 +4,7 @@
 from __future__ import print_function
 from peewee import fn
 from cherrypy import tools, HTTPError, request
-from pacifica.metadata.orm import Files, Transactions
+from pacifica.metadata.orm import Files, TransSIP
 from pacifica.metadata.rest.reporting_queries.query_base import QueryBase
 
 # pylint: disable=too-few-public-methods
@@ -39,18 +39,18 @@ class EarliestLatestFiles(QueryBase):
             'modif': lambda x: 'modified',
             'creat': lambda x: 'created'
         }[short_time_basis](short_time_basis)
-        search_field = getattr(Transactions, '{0}'.format(item_type))
+        search_field = getattr(TransSIP, '{0}'.format(item_type))
         if time_basis == 'submitted':
-            query = Transactions().select(
-                fn.Min(Transactions.updated).alias('earliest'),
-                fn.Max(Transactions.updated).alias('latest'),
+            query = TransSIP().select(
+                fn.Min(TransSIP.updated).alias('earliest'),
+                fn.Max(TransSIP.updated).alias('latest'),
             )
         if time_basis in ['modified', 'created']:
             time_basis_field = getattr(Files, '{0}time'.format(time_basis[:1]))
             query = Files().select(
                 fn.Min(time_basis_field).alias('earliest'),
                 fn.Max(time_basis_field).alias('latest'),
-            ).join(Transactions)
+            ).join(TransSIP, on=(TransSIP.id == Files.transaction))
 
         query = query.where(search_field << item_list)
         row = query.get()
