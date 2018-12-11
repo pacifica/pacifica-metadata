@@ -52,7 +52,7 @@ class TestDOIUploadAPI(CPCommonTest):
         entry_data = loads(open(
             '{0}/{1}.json'.format(
                 entry_path,
-                'doiupload_api'
+                'doi_entries'
             )
         ).read())
         print(entry_data)
