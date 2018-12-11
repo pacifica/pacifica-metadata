@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Test the ORM interface DOIUpload."""
+from __future__ import print_function
 from json import loads
 from os.path import realpath
 import requests
@@ -44,6 +45,26 @@ class TestDOIUploadAPI(CPCommonTest):
         )
         self.assertEqual(req.status_code, 400)
         self.assertTrue('has not been released' in req.text)
+
+    def test_doi_entry_mod_time_update(self):
+        """Test the method for touching a DOI Entry to update its modification time."""
+        entry_path = realpath('test_files')
+        entry_data = loads(open(
+            '{0}/{1}.json'.format(
+                entry_path,
+                'doi_entries'
+            )
+        ).read())
+        print(entry_data)
+        doi_string = [entry_data[0]['doi']]
+        header_list = {'Content-Type': 'application/json'}
+        req = requests.post(
+            url='{0}/doiupload/update_modified_time'.format(self.url),
+            json=doi_string,
+            headers=header_list
+        )
+        self.assertEqual(req.status_code, 200)
+        self.assertTrue('"num_records_updated": 1' in req.text)
 
     def test_osti_update(self):
         """Test the POST method for information updates."""

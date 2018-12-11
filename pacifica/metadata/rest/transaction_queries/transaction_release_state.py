@@ -80,9 +80,17 @@ class TransactionReleaseState(QueryBase):
         if doi_releases.exists():
             output_results = []
             for release in doi_releases:
+                # mint_api = release.doi.metadata.where(release.doi.metadata.key == 'minting_api_id')
+                # print(mint_api)
+                metadata = {info_bit.__data__['key']: info_bit.__data__[
+                    'value'] for info_bit in release.doi.metadata}
                 output_results.append({
                     'doi_status': release.doi.status,
-                    'doi_reference': release.doi.doi
+                    'is_released': release.doi.released,
+                    'doi_reference': release.doi.doi,
+                    'site_url': release.doi.site_url,
+                    'submission_date': release.created.isoformat(),
+                    'metadata': metadata
                 })
         return output_results
 

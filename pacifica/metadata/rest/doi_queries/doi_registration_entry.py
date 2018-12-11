@@ -5,7 +5,7 @@ from __future__ import print_function
 from cherrypy import tools, request, HTTPError
 from pacifica.metadata.rest.user_queries.user_search import UserSearch
 from pacifica.metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
-from pacifica.metadata.orm import DOITransaction, TransactionRelease
+from pacifica.metadata.orm import DOITransaction, TransactionRelease, DOIInfo
 from pacifica.metadata.orm.base import DB
 # pylint: disable=too-few-public-methods
 
@@ -49,6 +49,16 @@ class DOIRegistrationEntry(DOIRegistrationBase):
             }
             doi_trans_mapping, mapping_created = DOITransaction.get_or_create(
                 **doi_trans_map_item)
+
+            registration_info_item = {
+                'doi': doi_info.get('doi'),
+                'key': 'minting_api_id',
+                'value': doi_info.get('id')
+            }
+
+            DOIInfo.get_or_create(
+                **registration_info_item
+            )
         return doi_trans_mapping.doi.doi, mapping_created
 
     # CherryPy requires these named methods.

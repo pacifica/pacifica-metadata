@@ -4,7 +4,6 @@
 from __future__ import print_function
 from pacifica.metadata.orm import DOIEntries, DOIInfo
 from pacifica.metadata.orm.utils import datetime_now_nomicrosecond
-
 # pylint: disable=too-few-public-methods
 
 
@@ -34,12 +33,10 @@ class DOIRegistrationBase(object):
     @staticmethod
     def change_doi_entry_info(doi_string, doi_info, status='pending', released=False):
         """Update or create DOI entries."""
-        site_url = doi_info.get('site_url')
         doi_entry = DOIEntries.get(DOIEntries.doi == doi_string)
         insert_item = {
             'status': status,
-            'released': released,
-            'site_url': site_url
+            'released': released
         }
         doi_entry.from_hash(insert_item)
         doi_entry.updated = datetime_now_nomicrosecond()
