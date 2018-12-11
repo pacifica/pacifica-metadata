@@ -59,7 +59,7 @@ class TestDOIUploadAPI(CPCommonTest):
         doi_string = [entry_data[0]['doi']]
         header_list = {'Content-Type': 'application/json'}
         req = requests.post(
-            url='{0}/doiupload/update_modified_time',
+            url='{0}/doiupload/update_modified_time'.format(self.url),
             json=doi_string,
             headers=header_list
         )
