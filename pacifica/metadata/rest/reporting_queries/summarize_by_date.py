@@ -7,7 +7,7 @@ from dateutil.parser import parse
 from cherrypy import tools, request
 from peewee import Expression, OP
 from pacifica.metadata.rest.reporting_queries.query_base import QueryBase
-from pacifica.metadata.orm import Transactions, Files
+from pacifica.metadata.orm import TransSIP, Files
 from pacifica.metadata.orm.base import db_connection_decorator
 
 
@@ -25,10 +25,10 @@ class SummarizeByDate(QueryBase):
             object_type)
 
         if time_basis == 'submitted':
-            time_column = getattr(Transactions, time_column_name)
+            time_column = getattr(TransSIP, time_column_name)
         else:
             time_column = getattr(Files, time_column_name)
-        object_type_column = getattr(Transactions, object_type_column_name)
+        object_type_column = getattr(TransSIP, object_type_column_name)
 
         where_clause = Expression(time_column, OP.GTE, start_date)
         where_clause &= Expression(time_column, OP.LTE, end_date)
@@ -36,7 +36,7 @@ class SummarizeByDate(QueryBase):
         query = Files().select(
             Files.id, time_column.alias(
                 'filedate'), Files.size, Files.transaction
-        ).join(Transactions)
+        ).join(TransSIP, on=(TransSIP.id == Files.transaction))
 
         # pylint: disable=no-member
         query = query.where(where_clause).order_by(time_column).objects()
@@ -74,7 +74,7 @@ class SummarizeByDate(QueryBase):
         transaction_cache = {}
         for item in query.iterator():
             if item.transaction_id not in transaction_cache:
-                t_info = item.transaction.to_hash()
+                t_info = item.transaction.transsip.get().to_hash()
                 transaction_cache[item.transaction_id] = t_info
             else:
                 t_info = transaction_cache[item.transaction_id]
@@ -97,13 +97,14 @@ class SummarizeByDate(QueryBase):
         prop = t_info['proposal']
         inst = t_info['instrument']
         submitter = t_info['submitter']
+        transsip = item.transaction.transsip.get()
         if prop not in info_block['proposal'].keys():
-            info_block['proposal'][prop] = item.transaction.proposal.title
+            info_block['proposal'][prop] = transsip.proposal.title
         if inst not in info_block['instrument'].keys():
-            info_block['instrument'][inst] = item.transaction.instrument.name
+            info_block['instrument'][inst] = transsip.instrument.name
         if submitter not in info_block['user'].keys():
             info_block['user'][submitter] = u'{0} {1}'.format(
-                item.transaction.submitter.first_name, item.transaction.submitter.last_name
+                transsip.submitter.first_name, transsip.submitter.last_name
             )
 
     @staticmethod

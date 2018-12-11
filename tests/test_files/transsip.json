@@ -1,0 +1,23 @@
+[
+  {
+    "_id": 67,
+    "created": "Mon Jul 15 00:00:00 2017",
+    "instrument": 54,
+    "proposal": "1234a",
+    "submitter": 10
+  },
+  {
+    "_id": 68,
+    "created": "Mon Jul 10 00:00:00 2017",
+    "instrument": 54,
+    "proposal": "1237",
+    "submitter": 10
+  },
+  {
+    "_id": 69,
+    "created": "Mon Jul 1 00:00:00 2017",
+    "instrument": 54,
+    "proposal": "1236\u00e9",
+    "submitter": 10
+  }
+]

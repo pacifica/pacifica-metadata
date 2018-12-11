@@ -2,6 +2,9 @@ language: python
 services:
 - postgresql
 - elasticsearch
+cache:
+  directories:
+  - $HOME/.cache/pre-commit
 addons:
   apt:
     sources:
@@ -17,9 +20,20 @@ env:
   NOTIFICATIONS_URL: http://127.0.0.1:8080
   PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
 ".script": &1
-- pip install .
+- pip install pacifica-metadata==0.3.1
 - export METADATA_CPCONFIG="$PWD/server.conf"
+- export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata_upgrade"
+- pacifica-metadata-cmd dbsync
+- >
+  pushd $(mktemp -d);
+  pacifica-metadata --stop-after-a-moment & METADATA_PID=$!;
+  curl -Lo data.zip https://github.com/pacifica/pacifica-metadata/archive/v0.3.1.zip;
+  unzip data.zip; pushd pacifica-metadata-0.3.1;
+  curl localhost:8121/users;
+  python tests/test_files/loadit_test.py; wait $METADATA_PID;
+  popd; popd;
 - cd tests
+- pip install ..
 - >
   coverage run --include='*/site-packages/pacifica/metadata/*' core/cmd_test.py dbchk --equal;
   ret_val=$?;
@@ -28,14 +42,22 @@ env:
   coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk;
   ret_val=$?;
   if [[ $ret_val == 0 ]] ; then exit -1; fi;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk
+- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
+- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk;
+- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk --equal;
+- >
+  export PEEWEE_URL="sqliteext:///db.sqlite3";
+  coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
+  export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata";
+- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
+- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
+- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk;
 - coverage run --include='*/site-packages/pacifica/metadata/*' -a -m pytest -xv orm elastic core
 - coverage run --include='*/site-packages/pacifica/metadata/*' -a -m pytest -xv rest
 - coverage report -m --fail-under 100
 ".before_script": &2
 - psql -c 'create database pacifica_metadata;' -U postgres
+- psql -c 'create database pacifica_metadata_upgrade;' -U postgres
 - pushd tests; python cherrypy_catch_test.py & echo $! > cherrypy-catch.pid; popd;
 jobs:
   include:

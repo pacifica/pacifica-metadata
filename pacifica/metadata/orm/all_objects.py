@@ -25,6 +25,8 @@ from .citation_proposal import CitationProposal
 from .files import Files
 from .keys import Keys
 from .values import Values
+from .transsip import TransSIP
+from .transsap import TransSAP
 from .transactions import Transactions
 from .file_key_value import FileKeyValue
 from .trans_key_value import TransactionKeyValue
@@ -55,6 +57,7 @@ ORM_OBJECTS = [
     InstitutionPerson,
     Keywords,
     Groups,
+    AnalyticalTools,
     CitationContributor,
     CitationKeyword,
     ProposalInstrument,
@@ -62,6 +65,8 @@ ORM_OBJECTS = [
     ProposalGroup,
     CitationProposal,
     Transactions,
+    TransSIP,
+    TransSAP,
     Files,
     Keys,
     Values,
@@ -69,7 +74,6 @@ ORM_OBJECTS = [
     TransactionKeyValue,
     UserGroup,
     InstrumentGroup,
-    AnalyticalTools,
     AToolProposal,
     AToolTransaction,
     TransactionRelease,

@@ -8,12 +8,11 @@ objects in the model.
 ### Journals
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | name | CharField |  | NOT NULL |
 | impact_factor | FloatField |  | NOT NULL |
 | website_url | CharField |  | NOT NULL |
 | encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -21,14 +20,13 @@ objects in the model.
 ### Users
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | first_name | CharField |  | NOT NULL |
 | middle_initial | CharField |  | NOT NULL |
 | last_name | CharField |  | NOT NULL |
 | network_id | CharField |  | NULL |
 | email_address | CharField |  | NOT NULL |
 | encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -36,12 +34,11 @@ objects in the model.
 ### Institutions
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | name | TextField |  | NOT NULL |
 | association_cd | CharField |  | NOT NULL |
 | is_foreign | BooleanField |  | NOT NULL |
 | encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -62,7 +59,6 @@ objects in the model.
 | closed_date | ExtendDateField |  | NULL |
 | suspense_date | ExtendDateField |  | NULL |
 | encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -70,13 +66,12 @@ objects in the model.
 ### Instruments
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | display_name | CharField |  | NOT NULL |
 | name | CharField |  | NOT NULL |
 | name_short | CharField |  | NOT NULL |
 | active | BooleanField |  | NOT NULL |
 | encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -86,7 +81,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | instrument | ForeignKeyField | Instruments.id | NOT NULL |
 | custodian | ForeignKeyField | Users.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -94,7 +88,7 @@ objects in the model.
 ### Citations
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | article_title | TextField |  | NOT NULL |
 | journal | ForeignKeyField | Journals.id | NOT NULL |
 | journal_volume | IntegerField |  | NOT NULL |
@@ -105,7 +99,6 @@ objects in the model.
 | release_authorization_id | CharField |  | NOT NULL |
 | doi_reference | CharField |  | NOT NULL |
 | encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -113,7 +106,7 @@ objects in the model.
 ### Contributors
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | person | ForeignKeyField | Users.id | NOT NULL |
 | first_name | CharField |  | NOT NULL |
 | middle_initial | CharField |  | NOT NULL |
@@ -121,7 +114,6 @@ objects in the model.
 | dept_code | CharField |  | NOT NULL |
 | institution | ForeignKeyField | Institutions.id | NOT NULL |
 | encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -131,7 +123,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | person | ForeignKeyField | Users.id | NOT NULL |
 | institution | ForeignKeyField | Institutions.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -139,10 +130,30 @@ objects in the model.
 ### Keywords
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | keyword | CharField |  | NOT NULL |
 | encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### Groups
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
+| name | CharField |  | NOT NULL |
+| is_admin | BooleanField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### AnalyticalTools
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
+| name | CharField |  | NOT NULL |
+| encoding | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -153,7 +164,6 @@ objects in the model.
 | citation | ForeignKeyField | Citations.id | NOT NULL |
 | author | ForeignKeyField | Contributors.id | NOT NULL |
 | author_precedence | IntegerField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -163,7 +173,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | citation | ForeignKeyField | Citations.id | NOT NULL |
 | keyword | ForeignKeyField | Keywords.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -173,7 +182,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | instrument | ForeignKeyField | Instruments.id | NOT NULL |
 | proposal | ForeignKeyField | Proposals.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -183,7 +191,15 @@ objects in the model.
 | --- | --- | --- | --- |
 | person | ForeignKeyField | Users.id | NOT NULL |
 | proposal | ForeignKeyField | Proposals.id | NOT NULL |
-| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### ProposalGroup
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| group | ForeignKeyField | Groups.id | NOT NULL |
+| proposal | ForeignKeyField | Proposals.id | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -193,7 +209,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | citation | ForeignKeyField | Citations.id | NOT NULL |
 | proposal | ForeignKeyField | Proposals.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -201,12 +216,31 @@ objects in the model.
 ### Transactions
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
+| description | TextField |  | NULL |
+| suspense_date | ExtendDateField |  | NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### TransSIP
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| id | ForeignKeyField | Transactions.id | NOT NULL, PRIMARY KEY |
 | submitter | ForeignKeyField | Users.id | NOT NULL |
 | instrument | ForeignKeyField | Instruments.id | NOT NULL |
 | proposal | ForeignKeyField | Proposals.id | NOT NULL |
-| suspense_date | ExtendDateField |  | NULL |
-| version | CharField |  | NOT NULL |
+| created | ExtendDateTimeField |  | NOT NULL |
+| updated | ExtendDateTimeField |  | NOT NULL |
+| deleted | ExtendDateTimeField |  | NULL |
+
+### TransSAP
+| Column | Type | Reference | Attributes |
+| --- | --- | --- | --- |
+| id | ForeignKeyField | Transactions.id | NOT NULL, PRIMARY KEY |
+| submitter | ForeignKeyField | Users.id | NOT NULL |
+| analytical_tool | ForeignKeyField | AnalyticalTools.id | NOT NULL |
+| proposal | ForeignKeyField | Proposals.id | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -214,7 +248,7 @@ objects in the model.
 ### Files
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | name | CharField |  | NOT NULL |
 | subdir | CharField |  | NOT NULL |
 | ctime | ExtendDateTimeField |  | NOT NULL |
@@ -226,7 +260,6 @@ objects in the model.
 | mimetype | CharField |  | NOT NULL |
 | encoding | CharField |  | NOT NULL |
 | suspense_date | ExtendDateField |  | NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -234,10 +267,9 @@ objects in the model.
 ### Keys
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | key | CharField |  | NOT NULL |
 | encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -245,10 +277,9 @@ objects in the model.
 ### Values
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | value | CharField |  | NOT NULL |
 | encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -259,7 +290,6 @@ objects in the model.
 | file | ForeignKeyField | Files.id | NOT NULL |
 | key | ForeignKeyField | Keys.id | NOT NULL |
 | value | ForeignKeyField | Values.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -270,19 +300,6 @@ objects in the model.
 | transaction | ForeignKeyField | Transactions.id | NOT NULL |
 | key | ForeignKeyField | Keys.id | NOT NULL |
 | value | ForeignKeyField | Values.id | NOT NULL |
-| version | CharField |  | NOT NULL |
-| created | ExtendDateTimeField |  | NOT NULL |
-| updated | ExtendDateTimeField |  | NOT NULL |
-| deleted | ExtendDateTimeField |  | NULL |
-
-### Groups
-| Column | Type | Reference | Attributes |
-| --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
-| name | CharField |  | NOT NULL |
-| is_admin | BooleanField |  | NOT NULL |
-| encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -292,7 +309,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | person | ForeignKeyField | Users.id | NOT NULL |
 | group | ForeignKeyField | Groups.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -302,18 +318,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | instrument | ForeignKeyField | Instruments.id | NOT NULL |
 | group | ForeignKeyField | Groups.id | NOT NULL |
-| version | CharField |  | NOT NULL |
-| created | ExtendDateTimeField |  | NOT NULL |
-| updated | ExtendDateTimeField |  | NOT NULL |
-| deleted | ExtendDateTimeField |  | NULL |
-
-### AnalyticalTools
-| Column | Type | Reference | Attributes |
-| --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
-| name | CharField |  | NOT NULL |
-| encoding | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -323,7 +327,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | proposal | ForeignKeyField | Proposals.id | NOT NULL |
 | analytical_tool | ForeignKeyField | AnalyticalTools.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -333,7 +336,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | transaction | ForeignKeyField | Transactions.id | NOT NULL |
 | analytical_tool | ForeignKeyField | AnalyticalTools.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -343,7 +345,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | transaction | ForeignKeyField | Transactions.id | NOT NULL, PRIMARY KEY |
 | authorized_person | ForeignKeyField | Users.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -353,10 +354,10 @@ objects in the model.
 | --- | --- | --- | --- |
 | doi | CharField |  | NOT NULL, PRIMARY KEY |
 | status | CharField |  | NOT NULL |
+| released | BooleanField |  | NOT NULL |
 | site_url | CharField |  | NOT NULL |
 | encoding | CharField |  | NOT NULL |
 | creator | ForeignKeyField | Users.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -364,13 +365,12 @@ objects in the model.
 ### DOIAuthors
 | Column | Type | Reference | Attributes |
 | --- | --- | --- | --- |
-| id | PrimaryKeyField |  | NOT NULL, PRIMARY KEY |
+| id | AutoField |  | NOT NULL, PRIMARY KEY |
 | last_name | CharField |  | NOT NULL |
 | first_name | CharField |  | NOT NULL |
 | email | CharField |  | NULL |
 | affiliation | CharField |  | NULL |
 | orcid | CharField |  | NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -380,7 +380,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | doi | ForeignKeyField | DOIEntries.doi | NOT NULL, PRIMARY KEY |
 | transaction | ForeignKeyField | TransactionRelease.transaction | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -390,7 +389,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | citation | ForeignKeyField | Citations.id | NOT NULL |
 | transaction | ForeignKeyField | TransactionRelease.transaction | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -400,7 +398,6 @@ objects in the model.
 | --- | --- | --- | --- |
 | doi | ForeignKeyField | DOIEntries.doi | NOT NULL |
 | citation | ForeignKeyField | Citations.id | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -411,7 +408,6 @@ objects in the model.
 | author | ForeignKeyField | DOIAuthors.id | NOT NULL |
 | doi | ForeignKeyField | DOIEntries.doi | NOT NULL |
 | author_order | IntegerField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
@@ -422,7 +418,6 @@ objects in the model.
 | doi | ForeignKeyField | DOIEntries.doi | NOT NULL |
 | key | CharField |  | NOT NULL |
 | value | CharField |  | NOT NULL |
-| version | CharField |  | NOT NULL |
 | created | ExtendDateTimeField |  | NOT NULL |
 | updated | ExtendDateTimeField |  | NOT NULL |
 | deleted | ExtendDateTimeField |  | NULL |
