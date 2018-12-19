@@ -59,7 +59,7 @@ def dbchk(args):
     return bool2cmdint(res)
 
 
-def dbsync(_args):
+def dbsync(_args=None):
     """Create or update the database."""
     OrmSync.dbconn_blocking()
     try:
