@@ -103,7 +103,7 @@ class OrmSync(object):
                 setattr(transsip, attr, getattr(old_trans, attr))
             setattr(transsip, 'id', Transactions.get(
                 Transactions.id == old_trans.id))
-            transsip.save()
+            transsip.save(force_insert=True)
         migrate(
             migrator.drop_column(
                 'transactions',
