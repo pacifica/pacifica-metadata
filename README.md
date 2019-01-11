@@ -1,6 +1,6 @@
 # Pacifica Metadata Services
-![PyPi](https://img.shields.io/pypi/v/pacifica-uniqueid.svg)
-![Read the Docs](https://readthedocs.org/projects/pacifica-uniqueid/badge/?version=latest)
+![PyPi](https://img.shields.io/pypi/v/pacifica-metadata.svg)
+![Read the Docs](https://readthedocs.org/projects/pacifica-metadata/badge/?version=latest)
 [![Build Status](https://travis-ci.org/pacifica/pacifica-metadata.svg?branch=master)](https://travis-ci.org/pacifica/pacifica-metadata)
 [![Build status](https://ci.appveyor.com/api/projects/status/ekicw5d4yxfmq1x4?svg=true)](https://ci.appveyor.com/project/dmlb2000/pacifica-metadata)
 [![Code Climate](https://codeclimate.com/github/pacifica/pacifica-metadata/badges/gpa.svg)](https://codeclimate.com/github/pacifica/pacifica-metadata)
@@ -16,7 +16,7 @@ API endpoint for access to metadata.
 ## Documentation
 
 For installation, configuration and usage documentation please
-refer to the [Read the Docs](https://pacifica-uniqueid.readthedocs.io)
+refer to the [Read the Docs](https://pacifica-metadata.readthedocs.io)
 documentation.
 
 * [Installation](docs/installation.md) documentation.
