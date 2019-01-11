@@ -1,6 +1,5 @@
 cherrypy
-codeclimate-test-reporter
-coverage>=4.0,<4.4
+coverage
 elasticsearch
 httpretty
 mock
@@ -13,5 +12,6 @@ pylint<2.0
 pytest
 python-dateutil
 radon
+recommonmark
 requests
 six
