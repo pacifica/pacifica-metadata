@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Core interface for the tkvinfo metadata objects to interface with CherryPy."""
+"""Transaciton Key Value Upload Base CherryPy."""
 from pacifica.metadata.rest.tkvinfo_queries.values_for_key import ValuesForKey
 from pacifica.metadata.rest.tkvinfo_queries.kvs_for_transaction import KVsForTransaction
 
 
 # pylint: disable=too-few-public-methods
 class TkvInfoAPI(object):
-    """InstrumentInfo API."""
+    """Transaction Key Value Info API."""
 
     exposed = True
 

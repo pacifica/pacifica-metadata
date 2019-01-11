@@ -81,9 +81,7 @@ class TestElasticAPI(TestCase):
         """Test the delete class method."""
         url = 'http://127.0.0.1:9200/pacifica/ElasticAPI/127'
         obj = ElasticAPI()
-        # pylint: disable=invalid-name
-        obj.id = 127
-        # pylint: enable=invalid-name
+        setattr(obj, 'id', 127)
         response_body = {
             'status': 'deleted!'
         }
@@ -101,9 +99,7 @@ class TestElasticAPI(TestCase):
         """Test the delete class method failed upload."""
         url = 'http://127.0.0.1:9200/pacifica/ElasticAPI/127'
         obj = ElasticAPI()
-        # pylint: disable=invalid-name
-        obj.id = 127
-        # pylint: enable=invalid-name
+        setattr(obj, 'id', 127)
         response_body = {
             'status': 'error!'
         }
@@ -128,9 +124,7 @@ class TestElasticAPI(TestCase):
         """Test the elastic_mapping class method."""
         url = 'http://127.0.0.1:9200/pacifica/_mapping/ElasticAPI'
         obj = ElasticAPI()
-        # pylint: disable=invalid-name
-        obj.id = 127
-        # pylint: enable=invalid-name
+        setattr(obj, 'id', 127)
 
         response_body = {
             'status': 'mapped!'
@@ -149,9 +143,7 @@ class TestElasticAPI(TestCase):
         """Test the elastic mapping class method failed upload."""
         url = 'http://127.0.0.1:9200/pacifica/_mapping/ElasticAPI'
         obj = ElasticAPI()
-        # pylint: disable=invalid-name
-        obj.id = 127
-        # pylint: enable=invalid-name
+        setattr(obj, 'id', 127)
         response_body = {
             'status': 'error!'
         }

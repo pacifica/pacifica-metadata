@@ -16,7 +16,7 @@ class TransactionRelease(CherryPyAPI):
         | Name              | Description                                   |
         +===================+===============================================+
         | transaction       | transaction to be released                    |
-        +-------------------+-----------------------------------------------|
+        +-------------------+-----------------------------------------------+
         | authorized_person | authorized person originating the release     |
         +-------------------+-----------------------------------------------+
     """

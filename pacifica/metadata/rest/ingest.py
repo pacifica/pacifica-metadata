@@ -3,36 +3,37 @@
 """
 Core interface for the ingest of metadata objects.
 
-Example uploaded data:
-[
-  {"destinationTable": "Transactions._id", "value": 1234},
-  {"destinationTable": "Transactions.submitter", "value": 34002},
-  {"destinationTable": "Transactions.proposal", "value": 34002},
-  {"destinationTable": "Transactions.instrument", "value": 34002},
-  {"destinationTable": "TransactionKeyValue", "key": "Tag", "value": "Blah"},
-  {"destinationTable": "TransactionKeyValue", "key": "Taggy", "value": "Blah"},
-  {"destinationTable": "TransactionKeyValue", "key": "Taggier", "value": "Blah"}
-  {
-    "destinationTable": "Files",
-    "_id": 34, "name": "foo.txt", "subdir": "a/b/",
-    "ctime": "Tue Nov 29 14:09:05 PST 2016",
-    "mtime": "Tue Nov 29 14:09:05 PST 2016",
-    "size": 128, "mimetype": "text/plain"
-  },
-  {
-      "destinationTable": "FileKeyValue",
-      "key": "Micronic Adjustment",
-      "value": "5.66%",
-      "file_id": 34
-  },
-  {
-    "destinationTable": "Files",
-    "_id": 35, "name": "bar.txt", "subdir": "a/b/",
-    "ctime": "Tue Nov 29 14:09:05 PST 2016",
-    "mtime": "Tue Nov 29 14:09:05 PST 2016",
-    "size": 47, "mimetype": "text/plain"
-  },
-]
+Example uploaded data::
+
+  [
+    {"destinationTable": "Transactions._id", "value": 1234},
+    {"destinationTable": "Transactions.submitter", "value": 34002},
+    {"destinationTable": "Transactions.proposal", "value": 34002},
+    {"destinationTable": "Transactions.instrument", "value": 34002},
+    {"destinationTable": "TransactionKeyValue", "key": "Tag", "value": "Blah"},
+    {"destinationTable": "TransactionKeyValue", "key": "Taggy", "value": "Blah"},
+    {"destinationTable": "TransactionKeyValue", "key": "Taggier", "value": "Blah"}
+    {
+      "destinationTable": "Files",
+      "_id": 34, "name": "foo.txt", "subdir": "a/b/",
+      "ctime": "Tue Nov 29 14:09:05 PST 2016",
+      "mtime": "Tue Nov 29 14:09:05 PST 2016",
+      "size": 128, "mimetype": "text/plain"
+    },
+    {
+        "destinationTable": "FileKeyValue",
+        "key": "Micronic Adjustment",
+        "value": "5.66%",
+        "file_id": 34
+    },
+    {
+      "destinationTable": "Files",
+      "_id": 35, "name": "bar.txt", "subdir": "a/b/",
+      "ctime": "Tue Nov 29 14:09:05 PST 2016",
+      "mtime": "Tue Nov 29 14:09:05 PST 2016",
+      "size": 47, "mimetype": "text/plain"
+    },
+  ]
 """
 from __future__ import print_function
 from os import getenv
