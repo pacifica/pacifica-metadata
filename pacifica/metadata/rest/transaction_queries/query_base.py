@@ -96,6 +96,10 @@ class QueryBase(object):
         transactions = QueryBase._get_transaction_entries(transaction_list)
         results = {}
         for trans in transactions:
+            if not trans.file_size_bytes:
+                trans.file_size_bytes = 0
+            if not trans.file_count:
+                trans.file_count = 0
             results[trans.id.id] = {
                 'total_file_size_bytes': int(trans.file_size_bytes),
                 'total_file_count': int(trans.file_count)
