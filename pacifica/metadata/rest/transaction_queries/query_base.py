@@ -97,8 +97,8 @@ class QueryBase(object):
         results = {}
         for trans in transactions:
             results[trans.id.id] = {
-                'total_file_size_bytes': int(getattr(trans, 'file_size_bytes', 0),
-                'total_file_count': int(getattr(trans, 'file_count', 0)
+                'total_file_size_bytes': int(getattr(trans, 'file_size_bytes', 0)),
+                'total_file_count': int(getattr(trans, 'file_count', 0))
             }
         return results
 
