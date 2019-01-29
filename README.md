@@ -21,7 +21,7 @@ documentation.
 
 * [Installation](docs/installation.md) documentation.
 * [Configuration](docs/configuration.md) documentation.
-* [Metadata Model](docs/metadatamodel.md) documentation.
+* [Metadata Model](docs/metadatamodel.rst) documentation.
 * [Examples](docs/exampleusage.md) documentation.
 
 
