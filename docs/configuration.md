@@ -51,6 +51,9 @@ debug_logging = False
 [notifications]
 ; This section describes where the notifications server is.
 
+; Disable eventing for the metadata service.
+disabled = False
+
 ; URL to the recieve endpoint on the notifications server.
 url = http://127.0.0.1:8070/receive
 

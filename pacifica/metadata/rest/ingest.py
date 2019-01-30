@@ -243,5 +243,6 @@ class IngestAPI(object):
         Files()._insert(extract_files(request.json))
         FileKeyValue()._insert(generate_fkvs(request.json))
         # pylint: enable=protected-access
-        emit_event(request.json)
+        if not get_config().getboolean('notifications', 'disabled'):
+            emit_event(request.json)
         return {'status': 'success'}
