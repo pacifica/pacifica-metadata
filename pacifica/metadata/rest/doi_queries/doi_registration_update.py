@@ -94,8 +94,9 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         for author_info in author_list:
             my_author_info = {}
             for key in author_info:
-                my_key = author_info_mapping[key]
-                my_author_info[my_key] = author_info[key]
+                if key in author_info_mapping:
+                    my_key = author_info_mapping[key]
+                    my_author_info[my_key] = author_info[key]
             author, _created = DOIAuthors.get_or_create(**my_author_info)
             author_id_list.append(author.id)
 
