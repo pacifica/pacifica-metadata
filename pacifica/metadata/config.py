@@ -28,6 +28,8 @@ def get_config():
     configparser.set('database', 'peewee_url', getenv(
         'PEEWEE_URL', 'postgresql://pacifica:metadata@localhost:5432/pacifica_metadata'))
     configparser.add_section('notifications')
+    configparser.set('notifications', 'disabled', getenv(
+        'NOTIFICATIONS_DISABLED', 'False'))
     configparser.set('notifications', 'url', getenv(
         'NOTIFICATIONS_URL', 'http://127.0.0.1:8070/receive'))
     configparser.add_section('elasticsearch')
