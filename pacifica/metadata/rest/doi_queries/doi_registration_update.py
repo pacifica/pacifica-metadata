@@ -101,7 +101,8 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         # adding new and retrieving existing
         author_id_list = []
         for author_info in author_list:
-            my_author_info = DOIRegistrationUpdate._clean_author_info(author_info)
+            my_author_info = DOIRegistrationUpdate._clean_author_info(
+                author_info)
             author, _created = DOIAuthors.get_or_create(**my_author_info)
             author_id_list.append(author.id)
 
