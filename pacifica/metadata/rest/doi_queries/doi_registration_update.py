@@ -80,9 +80,7 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         DOIRegistrationUpdate._update_author_info(author_list, doi_string)
 
     @staticmethod
-    def _update_author_info(author_list, doi_string):
-        # cross check author list with doi_authors
-        # adding new and retrieving existing
+    def _clean_author_info(author_info):
         author_info_mapping = {
             'first_name': 'first_name',
             'last_name': 'last_name',
@@ -90,12 +88,21 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
             'private_email': 'email',
             'orcid_id': 'orcid'
         }
-        author_id_list = []
-        for author_info in author_list:
-            my_author_info = {}
-            for key in author_info:
+        my_author_info = {}
+        for key in author_info:
+            if key in author_info_mapping:
                 my_key = author_info_mapping[key]
                 my_author_info[my_key] = author_info[key]
+        return my_author_info
+
+    @staticmethod
+    def _update_author_info(author_list, doi_string):
+        # cross check author list with doi_authors
+        # adding new and retrieving existing
+        author_id_list = []
+        for author_info in author_list:
+            my_author_info = DOIRegistrationUpdate._clean_author_info(
+                author_info)
             author, _created = DOIAuthors.get_or_create(**my_author_info)
             author_id_list.append(author.id)
 
