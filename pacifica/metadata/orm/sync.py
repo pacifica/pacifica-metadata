@@ -148,7 +148,6 @@ class OrmSync(object):
             for obj in ORM_OBJECTS:
                 if not obj.table_exists():
                     obj.create_table()
-                    obj.create_elastic_mapping()
 
     @staticmethod
     def close():

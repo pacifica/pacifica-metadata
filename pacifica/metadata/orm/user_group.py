@@ -34,12 +34,6 @@ class UserGroup(CherryPyAPI):
         primary_key = CompositeKey('person', 'group')
     # pylint: enable=too-few-public-methods
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(UserGroup, UserGroup).elastic_mapping_builder(obj)
-        obj['group_id'] = obj['person_id'] = {'type': 'integer'}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(UserGroup, self).to_hash(**flags)

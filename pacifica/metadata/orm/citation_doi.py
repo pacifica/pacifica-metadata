@@ -34,15 +34,6 @@ class CitationDOI(CherryPyAPI):
         primary_key = CompositeKey('citation', 'doi')
     # pylint: enable=too-few-public-methods
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(CitationDOI, CitationDOI).elastic_mapping_builder(obj)
-        obj['citation'] = {'type': 'integer'}
-        obj['doi'] = \
-            {'type': 'text', 'fields': {'keyword': {
-                'type': 'keyword', 'ignore_above': 256}}}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(CitationDOI, self).to_hash(**flags)

@@ -35,15 +35,6 @@ class Users(CherryPyAPI):
     email_address = CharField(default='', index=True)
     encoding = CharField(default='UTF8')
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(Users, Users).elastic_mapping_builder(obj)
-        obj['first_name'] = obj['last_name'] = obj['network_id'] = \
-            obj['middle_initial'] = obj['encoding'] = \
-            {'type': 'text', 'fields': {'keyword': {
-                'type': 'keyword', 'ignore_above': 256}}}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(Users, self).to_hash(**flags)

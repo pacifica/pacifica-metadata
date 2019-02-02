@@ -56,22 +56,6 @@ class Proposals(CherryPyAPI):
     suspense_date = ExtendDateField(null=True, index=True)
     encoding = CharField(default='UTF8')
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(Proposals, Proposals).elastic_mapping_builder(obj)
-        obj['abstract'] = {'type': 'text'}
-        obj['title'] = obj['science_theme'] = obj['proposal_type'] = \
-            obj['encoding'] = obj['short_name'] = {'type': 'text',
-                                                   'fields': {'keyword': {'type': 'keyword', 'ignore_above': 256}}}
-
-        obj['submitted_date'] = \
-            {'type': 'date', 'format': "yyyy-mm-dd'T'HH:mm:ss"}
-
-        obj['actual_start_date'] = obj['accepted_date'] = \
-            obj['actual_end_date'] = obj['closed_date'] = \
-            obj['suspense_date'] = {'type': 'date', 'format': 'yyyy-mm-dd'}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         exclude_text = flags.get('exclude_text', False)

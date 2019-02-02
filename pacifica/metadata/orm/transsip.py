@@ -36,19 +36,6 @@ class TransSIP(CherryPyAPI):
     instrument = ForeignKeyField(Instruments, backref='transsip')
     proposal = ForeignKeyField(Proposals, backref='transsip')
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(TransSIP, TransSIP).elastic_mapping_builder(obj)
-        obj['submitter'] = {'type': 'integer'}
-        obj['instrument'] = {'type': 'integer'}
-        obj['proposal'] = {
-            'type': 'text',
-            'fields': {
-                'keyword': {'type': 'keyword', 'ignore_above': 256}
-            }
-        }
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(TransSIP, self).to_hash(**flags)

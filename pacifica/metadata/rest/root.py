@@ -4,7 +4,6 @@
 from json import dumps
 import cherrypy
 from pacifica.metadata.orm.all_objects import ORM_OBJECTS
-from pacifica.metadata.elastic.elasticupdate import ElasticSearchUpdateAPI
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from pacifica.metadata.rest.userinfo import UserInfoAPI
 from pacifica.metadata.rest.proposalinfo import ProposalInfoAPI
@@ -41,7 +40,6 @@ class Root(object):
     exposed = True
 
     objectinfo = ObjectInfoAPI()
-    elasticupdate = ElasticSearchUpdateAPI()
     userinfo = UserInfoAPI()
     proposalinfo = ProposalInfoAPI()
     fileinfo = FileInfoAPI()

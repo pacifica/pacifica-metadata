@@ -34,14 +34,6 @@ class ProposalInstrument(CherryPyAPI):
         primary_key = CompositeKey('instrument', 'proposal')
     # pylint: enable=too-few-public-methods
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(ProposalInstrument, ProposalInstrument).elastic_mapping_builder(obj)
-        obj['instrument_id'] = {'type': 'integer'}
-        obj['proposal_id'] = {'type': 'text', 'fields': {
-            'keyword': {'type': 'keyword', 'ignore_above': 256}}}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(ProposalInstrument, self).to_hash(**flags)

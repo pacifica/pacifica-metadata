@@ -1,73 +1,21 @@
 version: '2'
 
 services:
-  elasticmaster:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.10
-    environment:
-    - bootstrap.memory_lock=true
-    - xpack.security.enabled=false
-    - xpack.monitoring.enabled=false
-    - xpack.watcher.enabled=false
-    - http.cors.enabled=true
-    - "http.cors.allow-origin=\"/.*/\""
-    - "http.cors.allow-methods=OPTIONS, HEAD, GET, POST, PUT, DELETE"
-    - "http.cors.allow-headers=\"X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization\""
-    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    mem_limit: 1g
-    ports:
-      - 9200:9200
-
-  elasticslave:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.10
-    environment:
-    - bootstrap.memory_lock=true
-    - xpack.security.enabled=false
-    - xpack.monitoring.enabled=false
-    - xpack.watcher.enabled=false
-    - http.cors.enabled=true
-    - "http.cors.allow-origin=\"/.*/\""
-    - "http.cors.allow-methods=OPTIONS, HEAD, GET, POST, PUT, DELETE"
-    - "http.cors.allow-headers=\"X-Requested-With,X-Auth-Token,Content-Type, Content-Length, Authorization\""
-    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    - discovery.zen.ping.unicast.hosts=elasticmaster
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    mem_limit: 1g
-
-  elasticlb:
-    image: dockercloud/haproxy
-    links:
-      - elasticslave:elasticslave
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
   metadatadb:
     image: postgres
-    container_name: metadatadb
     environment:
       POSTGRES_PASSWORD: metadata
       POSTGRES_DB: pacifica_metadata
       POSTGRES_USER: pacifica
-    ports:
-      - 5432:5432
 
   metadataserver:
     build:
-        context: .
-    container_name: metadataserver
+      context: .
     links:
       - metadatadb:postgres
-      - elasticmaster
     ports:
       - 8121:8121
     environment:
-      ELASTICDB_PORT: tcp://elasticmaster:9200
       PEEWEE_DATABASE: pacifica_metadata
       PEEWEE_USER: pacifica
       PEEWEE_ADDR: postgres

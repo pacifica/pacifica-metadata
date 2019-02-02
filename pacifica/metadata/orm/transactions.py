@@ -23,14 +23,6 @@ class Transactions(CherryPyAPI):
     description = TextField(null=True)
     suspense_date = ExtendDateField(null=True, index=True)
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(Transactions, Transactions).elastic_mapping_builder(obj)
-        obj['description'] = {'type': 'text', 'fields': {
-            'keyword': {'type': 'keyword', 'ignore_above': 256}}}
-        obj['suspense_date'] = {'type': 'date', 'format': 'yyyy-mm-dd'}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(Transactions, self).to_hash(**flags)

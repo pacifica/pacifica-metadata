@@ -26,12 +26,6 @@ class TransactionRelease(CherryPyAPI):
     transaction = ForeignKeyField(
         Transactions, backref='release_state', primary_key=True)
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(TransactionRelease, TransactionRelease).elastic_mapping_builder(obj)
-        obj['transaction'] = obj['authorized_person'] = {'type': 'integer'}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(TransactionRelease, self).to_hash(**flags)

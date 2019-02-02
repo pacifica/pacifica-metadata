@@ -11,10 +11,11 @@ if [[ -z $PEEWEE_DATABASE_URL ]] ; then
   PEEWEE_DATABASE_URL="${PEEWEE_PROTO}://${PEEWEE_USER_PART}${PEEWEE_ADDR_PART}/${PEEWEE_DATABASE}"
 fi
 mkdir ~/.pacifica-metadata/
+cp /usr/src/app/server.conf ~/.pacifica-metadata/cpconfig.ini
 printf '[database]\npeewee_url = '${PEEWEE_DATABASE_URL}'\n' > ~/.pacifica-metadata/config.ini
-python -c 'from pacifica.metadata.admin_cmd import dbsync; dbsync()'
+pacifica-metadata-cmd dbsync
 uwsgi \
   --http-socket 0.0.0.0:8121 \
   --master \
   --die-on-term \
-  --wsgi-file /usr/src/app/pacifica/metadata/wsgi.py "$@"
+  --module pacifica.metadata.wsgi "$@"

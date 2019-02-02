@@ -54,19 +54,6 @@ class Citations(CherryPyAPI):
     doi_reference = CharField(default='')
     encoding = CharField(default='UTF8')
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(Citations, Citations).elastic_mapping_builder(obj)
-        obj['journal_id'] = obj['journal_volume'] = \
-            obj['journal_issue'] = {'type': 'integer'}
-        obj['abstract_text'] = obj['xml_text'] = \
-            obj['page_range'] = obj['release_authorization_id'] = \
-            {'type': 'text'}
-        obj['article_title'] = obj['encoding'] = \
-            obj['doi_reference'] = {'type': 'text', 'fields': {
-                'keyword': {'type': 'keyword', 'ignore_above': 256}}}
-
     def to_hash(self, **flags):
         """Convert the citation fields to a serializable hash."""
         exclude_text = flags.get('exclude_text', False)

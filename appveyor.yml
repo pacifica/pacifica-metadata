@@ -18,9 +18,8 @@ environment:
 install:
 - ps: >
     & "$env:PYTHON\python.exe" -m virtualenv C:\pacifica;
-    Invoke-WebRequest -Uri "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.5.zip" -OutFile "elasticsearch.zip";
+    Invoke-WebRequest -Uri "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.14.zip" -OutFile "elasticsearch.zip";
     Expand-Archive "elasticsearch.zip" -DestinationPath "C:\elasticsearch";
-    Start-Process C:\elasticsearch\elasticsearch-5.6.5\bin\elasticsearch;
     C:\pacifica\Scripts\activate.ps1;
     python -m pip install --upgrade pip setuptools wheel;
     python -m pip install -r requirements-dev.txt;
@@ -41,6 +40,7 @@ before_test:
 test_script:
 - ps: >
     mkdir C:\tmp; C:\pacifica\Scripts\activate.ps1;
+    $es_proc = Start-Process C:\elasticsearch\elasticsearch-5.6.14\bin\elasticsearch -PassThru;
     pre-commit run -a;
     pip install pacifica-metadata==0.3.1;
     $env:METADATA_CPCONFIG = "$PWD/server.conf";
@@ -53,7 +53,7 @@ test_script:
     Invoke-WebRequest http://localhost:8121/users;
     python tests\test_files\loadit_test.py;
     $meta_proc | Wait-Process;
-    popd;
+    popd; $es_proc | Stop-Process;
     cd tests;
     pip install ..;
     coverage run --include='*/site-packages/pacifica/metadata/*' core/cmd_test.py dbchk --equal;
@@ -69,6 +69,6 @@ test_script:
     coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
     coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
     coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk;
-    coverage run --include='*/site-packages/pacifica/metadata/*' -a -m pytest -xv orm elastic core;
+    coverage run --include='*/site-packages/pacifica/metadata/*' -a -m pytest -xv orm core;
     coverage run --include='*/site-packages/pacifica/metadata/*' -a -m pytest -xv rest;
     coverage report -m --fail-under=100;
