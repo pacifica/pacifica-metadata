@@ -22,4 +22,3 @@ services:
       PEEWEE_PORT: 5432
       PEEWEE_PROTO: postgres
       PEEWEE_PASS: metadata
-      METADATA_CPCONFIG: /usr/src/app/server.conf
