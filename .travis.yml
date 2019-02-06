@@ -15,6 +15,7 @@ addons:
 stages:
 - lint
 - test
+- test-docker
 - deploy
 env:
   NOTIFICATIONS_URL: http://127.0.0.1:8080
@@ -73,6 +74,23 @@ jobs:
   - script: *1
     before_script: *2
     python: 2.7
+  - stage: test-docker
+    sudo: required
+    python: 3.6
+    services:
+    - docker
+    script: >
+      docker-compose build --pull;
+      docker-compose up -d;
+      MAX_TRIES=60;
+      HTTP_CODE=$(curl -sL -w "%{http_code}\\n" localhost:8121/keys -o /dev/null || true);
+      while [[ $HTTP_CODE != 200 && $MAX_TRIES > 0 ]] ; do
+        sleep 1;
+        HTTP_CODE=$(curl -sL -w "%{http_code}\\n" localhost:8121/keys -o /dev/null || true);
+        MAX_TRIES=$(( MAX_TRIES - 1 ));
+      done;
+      pip install .;
+      cd tests; python test_files/loadit_test.py
   - stage: deploy
     services: []
     language: python
