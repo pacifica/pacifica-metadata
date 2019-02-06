@@ -34,12 +34,6 @@ class InstitutionPerson(CherryPyAPI):
         primary_key = CompositeKey('person', 'institution')
     # pylint: enable=too-few-public-methods
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(InstitutionPerson, InstitutionPerson).elastic_mapping_builder(obj)
-        obj['person_id'] = obj['institution_id'] = {'type': 'integer'}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(InstitutionPerson, self).to_hash(**flags)

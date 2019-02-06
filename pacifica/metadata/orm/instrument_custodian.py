@@ -34,12 +34,6 @@ class InstrumentCustodian(CherryPyAPI):
         primary_key = CompositeKey('instrument', 'custodian')
     # pylint: enable=too-few-public-methods
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(InstrumentCustodian, InstrumentCustodian).elastic_mapping_builder(obj)
-        obj['instrument_id'] = obj['custodian_id'] = {'type': 'integer'}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(InstrumentCustodian, self).to_hash(**flags)

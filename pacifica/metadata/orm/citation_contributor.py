@@ -37,13 +37,6 @@ class CitationContributor(CherryPyAPI):
         primary_key = CompositeKey('citation', 'author')
     # pylint: enable=too-few-public-methods
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(CitationContributor, CitationContributor).elastic_mapping_builder(obj)
-        obj['citation_id'] = obj['author_id'] = obj['author_precedence'] = \
-            {'type': 'integer'}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(CitationContributor, self).to_hash(**flags)

@@ -32,9 +32,6 @@ def get_config():
         'NOTIFICATIONS_DISABLED', 'False'))
     configparser.set('notifications', 'url', getenv(
         'NOTIFICATIONS_URL', 'http://127.0.0.1:8070/receive'))
-    configparser.add_section('elasticsearch')
-    configparser.set('elasticsearch', 'url', getenv(
-        'ELASTIC_ENDPOINT', 'http://127.0.0.1:9200'))
     configparser.read(CONFIG_FILE)
     return configparser
 

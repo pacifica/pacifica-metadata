@@ -19,12 +19,9 @@ import datetime
 from dateutil import parser
 from peewee import Model, Expression, OP, AutoField, fn, CompositeKey, SQL, NodeList, BackrefAccessor
 from six import text_type
-from ..config import get_config
 from .utils import index_hash, ExtendDateTimeField
 from .utils import datetime_converts, date_converts, datetime_now_nomicrosecond
 from .globals import DB
-
-ELASTIC_ENDPOINT = get_config().get('elasticsearch', 'url')
 
 
 def db_connection_decorator(func):

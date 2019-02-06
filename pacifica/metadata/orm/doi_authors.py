@@ -32,14 +32,6 @@ class DOIAuthors(CherryPyAPI):
     affiliation = CharField(null=True)
     orcid = CharField(null=True)
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(DOIAuthors, DOIAuthors).elastic_mapping_builder(obj)
-        obj['last_name'] = obj['first_name'] = obj['email'] = obj['affiliation'] = obj['orcid'] = \
-            {'type': 'text', 'fields': {'keyword': {
-                'type': 'keyword', 'ignore_above': 256}}}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOIAuthors, self).to_hash(**flags)

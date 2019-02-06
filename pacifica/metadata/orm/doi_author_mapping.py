@@ -37,14 +37,6 @@ class DOIAuthorMapping(CherryPyAPI):
         primary_key = CompositeKey('author', 'doi', 'author_order')
     # pylint: enable=too-few-public-methods
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(DOIAuthorMapping, DOIAuthorMapping).elastic_mapping_builder(obj)
-        obj['author_order'] = obj['author'] = {'type': 'integer'}
-        obj['doi'] = {'type': 'text', 'fields': {'keyword': {
-            'type': 'keyword', 'ignore_above': 256}}}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOIAuthorMapping, self).to_hash(**flags)

@@ -37,14 +37,6 @@ class DOIInfo(CherryPyAPI):
         primary_key = CompositeKey('doi', 'key')
     # pylint: enable=too-few-public-methods
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(DOIInfo, DOIInfo).elastic_mapping_builder(obj)
-        obj['doi'] = obj['key'] = obj['value'] = \
-            {'type': 'text', 'fields': {'keyword': {
-                'type': 'keyword', 'ignore_above': 256}}}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOIInfo, self).to_hash(**flags)

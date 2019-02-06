@@ -9,8 +9,6 @@ from argparse import ArgumentParser
 from peewee import PeeweeException
 from .orm.all_objects import ORM_OBJECTS
 from .orm.sync import OrmSync, MetadataSystem
-from .elastic import try_es_connect, create_elastic_index
-from .essync import escreate, essync
 
 
 def render_obj(args):
@@ -28,14 +26,11 @@ def render_obj(args):
     )
     if args.delete:
         test_obj.delete_instance()
-        test_obj.elastic_delete(test_obj)
 
 
 def create_obj(args):
     """Create a specific object."""
     OrmSync.dbconn_blocking()
-    try_es_connect()
-    create_elastic_index()
     if not args.object.table_exists():
         args.object.create_table()
 
@@ -66,8 +61,6 @@ def dbsync(_args=None):
         MetadataSystem.get_version()
     except PeeweeException:
         OrmSync.dbconn_blocking()
-        try_es_connect()
-        create_elastic_index()
         OrmSync.create_tables()
         OrmSync.close()
         return
@@ -88,16 +81,6 @@ def create_subcommands(subparsers):
         help='render help',
         description='render and object from database w/o API'
     )
-    escreate_parser = subparsers.add_parser(
-        'escreate',
-        help='escreate help',
-        description='create elastic index and mappings'
-    )
-    essync_parser = subparsers.add_parser(
-        'essync',
-        help='essync help',
-        description='sync sql data to elastic search'
-    )
     db_parser = subparsers.add_parser(
         'dbsync',
         help='dbsync help',
@@ -110,8 +93,6 @@ def create_subcommands(subparsers):
     )
     return (
         (render_parser, render_options),
-        (escreate_parser, escreate_options),
-        (essync_parser, essync_options),
         (create_obj_parser, create_obj_options),
         (db_parser, db_options),
         (dbchk_parser, dbchk_options)
@@ -130,43 +111,6 @@ def dbchk_options(dbchk_parser):
         dest='check_equal', action='store_true'
     )
     dbchk_parser.set_defaults(func=dbchk)
-
-
-def escreate_options(escreate_parser):
-    """Add the escreate command line options."""
-    escreate_parser.add_argument(
-        '--skip-mappings',
-        help='skip creating mappings',
-        default=False,
-        action='store_true',
-        dest='skip_mappings',
-        required=False
-    )
-    escreate_parser.set_defaults(func=escreate)
-
-
-def essync_options(essync_parser):
-    """Add the essync command line options."""
-    essync_parser.add_argument(
-        '--objects-per-page', default=40000,
-        type=int, help='objects per bulk upload.',
-        required=False, dest='items_per_page'
-    )
-    essync_parser.add_argument(
-        '--threads', default=4, required=False,
-        type=int, help='number of threads to sync data',
-    )
-    essync_parser.add_argument(
-        '--object-name', dest='objects', type=objstr_to_ormobj,
-        help='object type to sync.', required=False, nargs='*',
-        default=ORM_OBJECTS
-    )
-    essync_parser.add_argument(
-        '--time-ago', dest='time_ago', type=objstr_to_timedelta,
-        help='only objects newer than X days ago.', required=False,
-        default=timedelta(days=36500)
-    )
-    essync_parser.set_defaults(func=essync)
 
 
 def objstr_to_timedelta(obj_str):

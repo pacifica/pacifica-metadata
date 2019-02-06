@@ -38,13 +38,6 @@ class FileKeyValue(CherryPyAPI):
         primary_key = CompositeKey('file', 'key', 'value')
     # pylint: enable=too-few-public-methods
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(FileKeyValue, FileKeyValue).elastic_mapping_builder(obj)
-        obj['file_id'] = obj['key_id'] = obj['value_id'] = \
-            {'type': 'integer'}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(FileKeyValue, self).to_hash(**flags)

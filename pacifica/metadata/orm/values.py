@@ -23,14 +23,6 @@ class Values(CherryPyAPI):
     value = CharField(default='', index=True)
     encoding = CharField(default='UTF8')
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(Values, Values).elastic_mapping_builder(obj)
-        obj['value'] = obj['encoding'] = \
-            {'type': 'text', 'fields': {'keyword': {
-                'type': 'keyword', 'ignore_above': 256}}}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(Values, self).to_hash(**flags)

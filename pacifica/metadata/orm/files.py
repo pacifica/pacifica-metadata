@@ -57,20 +57,6 @@ class Files(CherryPyAPI):
     encoding = CharField(default='UTF8')
     suspense_date = ExtendDateField(null=True, index=True)
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(Files, Files).elastic_mapping_builder(obj)
-        obj['transaction_id'] = {'type': 'integer'}
-        obj['size'] = {'type': 'long'}
-        obj['ctime'] = obj['mtime'] = \
-            {'type': 'date', 'format': 'yyyy-mm-dd\'T\'HH:mm:ss'}
-        obj['name'] = obj['subdir'] = obj['mimetype'] = \
-            obj['encoding'] = {'type': 'text', 'fields': {
-                'keyword': {'type': 'keyword', 'ignore_above': 256}}}
-        obj['hashsum'] = obj['hashtype'] = {'type': 'text'}
-        obj['suspense_date'] = {'type': 'date', 'format': 'yyyy-mm-dd'}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(Files, self).to_hash(**flags)

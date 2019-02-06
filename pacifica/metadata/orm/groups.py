@@ -26,15 +26,6 @@ class Groups(CherryPyAPI):
     is_admin = BooleanField(default=False)
     encoding = CharField(default='UTF8')
 
-    @staticmethod
-    def elastic_mapping_builder(obj):
-        """Build the elasticsearch mapping bits."""
-        super(Groups, Groups).elastic_mapping_builder(obj)
-        obj['name'] = obj['encoding'] = \
-            {'type': 'text', 'fields': {'keyword': {
-                'type': 'keyword', 'ignore_above': 256}}}
-        obj['is_admin'] = {'type': 'boolean'}
-
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(Groups, self).to_hash(**flags)
