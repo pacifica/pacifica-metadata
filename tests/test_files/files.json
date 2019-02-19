@@ -15,9 +15,9 @@
     "ctime": "Sat Nov 12 21:38:21 2016",
     "mimetype": "text/plain",
     "mtime": "Sat Nov 12 21:38:21 2016",
-    "name": "bar.txt",
+    "name": "bar\u00e9.txt",
     "size": 3221225472,
-    "subdir": "a/b",
+    "subdir": "a/b/\u00e9",
     "suspense_date": "Sat Nov 12 2016",
     "transaction_id": 67
   }
