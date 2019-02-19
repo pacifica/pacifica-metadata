@@ -9,7 +9,7 @@ from peewee import SqliteDatabase, DoesNotExist
 import pacifica.metadata.orm.globals as orm_db_mod
 import pacifica.metadata.orm.all_objects as orm_obj_mod
 from pacifica.metadata.orm.sync import OrmSync, MetadataSystem
-from pacifica.metadata.admin_cmd import render_obj, create_obj, bool2cmdint
+from pacifica.metadata.admin_cmd import render_obj, create_table, bool2cmdint, delete_obj
 from pacifica.metadata.admin_cmd import objstr_to_ormobj, objstr_to_whereclause, objstr_to_timedelta
 
 
@@ -67,6 +67,23 @@ class TestAdminTool(TestCase):
         self.assertTrue(hit_exception)
 
     @patch.object(OrmSync, 'dbconn_blocking')
+    def test_delete(self, test_patch):
+        """Test delete an object."""
+        test_patch.return_value = True
+        args = Namespace()
+        setattr(args, 'object', orm_obj_mod.Keys)
+        setattr(args, 'where_clause', {'key': 'test_key'})
+        setattr(args, 'recursive', True)
+        setattr(args, 'force', True)
+        test_obj = orm_obj_mod.Keys()
+        test_obj.key = 'test_key'
+        test_obj.save()
+        delete_obj(args)
+        self.assertTrue(test_patch.called)
+        with self.assertRaises(DoesNotExist):
+            orm_obj_mod.Keys().get()
+
+    @patch.object(OrmSync, 'dbconn_blocking')
     def test_render(self, test_patch):
         """Test render an object."""
         test_patch.return_value = True
@@ -74,17 +91,10 @@ class TestAdminTool(TestCase):
         setattr(args, 'object', orm_obj_mod.Keys)
         setattr(args, 'where_clause', {'key': 'test_key'})
         setattr(args, 'recursion', 1)
-        setattr(args, 'delete', True)
         test_obj = orm_obj_mod.Keys()
         test_obj.key = 'test_key'
         test_obj.save()
         render_obj(args)
-        hit_exception = False
-        try:
-            orm_obj_mod.Keys().get()
-        except DoesNotExist:
-            hit_exception = True
-        self.assertTrue(hit_exception)
         self.assertTrue(test_patch.called)
 
     @patch.object(OrmSync, 'dbconn_blocking')
@@ -94,7 +104,7 @@ class TestAdminTool(TestCase):
         self.assertTrue(MetadataSystem.is_equal())
         args = Namespace()
         setattr(args, 'object', orm_obj_mod.Keys)
-        create_obj(args)
+        create_table(args)
         self.assertTrue(test_patch.called)
 
 
@@ -121,5 +131,5 @@ class TestAdminToolNoTables(TestCase):
         test_patch.return_value = True
         args = Namespace()
         setattr(args, 'object', orm_obj_mod.Keys)
-        create_obj(args)
+        create_table(args)
         self.assertTrue(test_patch.called)
