@@ -24,11 +24,20 @@ def render_obj(args):
             indent=4
         )
     )
-    if args.delete:
-        test_obj.delete_instance()
 
 
-def create_obj(args):
+def delete_obj(args):
+    """Delete an object based on args."""
+    OrmSync.connect_and_check()
+    test_obj = args.object()
+    args.where_clause['force'] = args.force
+    args.where_clause['recursive'] = args.recursive
+    # pylint: disable=protected-access
+    test_obj._delete(**args.where_clause)
+    # pylint: enable=protected-access
+
+
+def create_table(args):
     """Create a specific object."""
     OrmSync.dbconn_blocking()
     if not args.object.table_exists():
@@ -71,10 +80,15 @@ def dbsync(_args=None):
 
 def create_subcommands(subparsers):
     """Create the subcommands from the subparsers."""
-    create_obj_parser = subparsers.add_parser(
-        'create_obj',
-        help='create_obj help',
-        description='create an object in the DB'
+    create_table_parser = subparsers.add_parser(
+        'create_table',
+        help='create_table help',
+        description='create table in the DB'
+    )
+    delete_obj_parser = subparsers.add_parser(
+        'delete_obj',
+        help='delete_obj help',
+        description='delete an object in the DB'
     )
     render_parser = subparsers.add_parser(
         'render',
@@ -93,7 +107,8 @@ def create_subcommands(subparsers):
     )
     return (
         (render_parser, render_options),
-        (create_obj_parser, create_obj_options),
+        (create_table_parser, create_table_options),
+        (delete_obj_parser, delete_obj_options),
         (db_parser, db_options),
         (dbchk_parser, dbchk_options)
     )
@@ -137,16 +152,47 @@ def objstr_to_whereclause(obj_str):
     return json_obj
 
 
-def create_obj_options(create_obj_parser):
-    """Add the create object command line options."""
-    create_obj_parser.add_argument(
+def delete_obj_options(delete_obj_parser):
+    """Delete the object command line options."""
+    delete_obj_parser.add_argument(
+        '--where-clause',
+        dest='where_clause',
+        type=objstr_to_whereclause,
+        help='object where args query.',
+        required=True
+    )
+    delete_obj_parser.add_argument(
         '--object-name',
         dest='object',
         type=objstr_to_ormobj,
         help='object type to query.',
         required=True
     )
-    create_obj_parser.set_defaults(func=create_obj)
+    delete_obj_parser.add_argument(
+        '--force',
+        dest='force',
+        default=False, action='store_true',
+        help='force delete object.'
+    )
+    delete_obj_parser.add_argument(
+        '--recursive',
+        dest='recursive',
+        default=False, action='store_true',
+        help='recursive delete related objects.'
+    )
+    delete_obj_parser.set_defaults(func=delete_obj)
+
+
+def create_table_options(create_table_parser):
+    """Add the create object command line options."""
+    create_table_parser.add_argument(
+        '--object-name',
+        dest='object',
+        type=objstr_to_ormobj,
+        help='object table to create.',
+        required=True
+    )
+    create_table_parser.set_defaults(func=create_table)
 
 
 def render_options(render_parser):
@@ -171,14 +217,6 @@ def render_options(render_parser):
         dest='recursion',
         type=int,
         help='recursive level to go',
-        required=False
-    )
-    render_parser.add_argument(
-        '--delete',
-        default='store_false',
-        action='store_true',
-        dest='delete',
-        help='delete the object',
         required=False
     )
     render_parser.set_defaults(func=render_obj)

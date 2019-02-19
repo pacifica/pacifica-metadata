@@ -129,12 +129,21 @@ class CherryPyAPI(PacificaModel):
             clean_objs.append(db_obj)
         return clean_objs
 
+    def _force_delete(self, **kwargs):
+        """Force delete entries in the database."""
+        recursive = kwargs.pop('recursive', False)
+        for obj in self.select().where(self.where_clause(kwargs)):
+            obj.delete_instance(recursive)
+
     def _delete(self, **kwargs):
         """Internal delete object method."""
+        force = kwargs.pop('force', False)
+        if force:
+            return self._force_delete(**kwargs)
         update_hash = {
             'deleted': datetime_now_nomicrosecond().isoformat()
         }
-        self._update(update_hash, **kwargs)
+        return self._update(update_hash, **kwargs)
 
     # CherryPy requires these named methods
     # Add HEAD (basically Get without returning body
