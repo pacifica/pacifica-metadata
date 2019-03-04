@@ -6,7 +6,7 @@ import cherrypy
 from pacifica.metadata.orm.all_objects import ORM_OBJECTS
 from pacifica.metadata.rest.objectinfo import ObjectInfoAPI
 from pacifica.metadata.rest.userinfo import UserInfoAPI
-from pacifica.metadata.rest.proposalinfo import ProposalInfoAPI
+from pacifica.metadata.rest.projectinfo import ProjectInfoAPI
 from pacifica.metadata.rest.transactioninfo import TransactionInfoAPI
 from pacifica.metadata.rest.fileinfo import FileInfoAPI
 from pacifica.metadata.rest.ingest import IngestAPI
@@ -41,7 +41,7 @@ class Root(object):
 
     objectinfo = ObjectInfoAPI()
     userinfo = UserInfoAPI()
-    proposalinfo = ProposalInfoAPI()
+    projectinfo = ProjectInfoAPI()
     fileinfo = FileInfoAPI()
     transactioninfo = TransactionInfoAPI()
     instrumentinfo = InstrumentInfoAPI()

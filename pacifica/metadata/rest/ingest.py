@@ -8,7 +8,7 @@ Example uploaded data::
   [
     {"destinationTable": "Transactions._id", "value": 1234},
     {"destinationTable": "Transactions.submitter", "value": 34002},
-    {"destinationTable": "Transactions.proposal", "value": 34002},
+    {"destinationTable": "Transactions.project", "value": 34002},
     {"destinationTable": "Transactions.instrument", "value": 34002},
     {"destinationTable": "TransactionKeyValue", "key": "Tag", "value": "Blah"},
     {"destinationTable": "TransactionKeyValue", "key": "Taggy", "value": "Blah"},
@@ -233,7 +233,7 @@ class IngestAPI(object):
             '_id': pull_value_by_attr(request.json, 'Transactions._id', 'value'),
             'submitter': pull_value_by_attr(request.json, 'Transactions.submitter', 'value'),
             'instrument': pull_value_by_attr(request.json, 'Transactions.instrument', 'value'),
-            'proposal': pull_value_by_attr(request.json, 'Transactions.proposal', 'value')
+            'project': pull_value_by_attr(request.json, 'Transactions.project', 'value')
         }
 
         # pylint: disable=protected-access

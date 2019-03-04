@@ -1,0 +1,10 @@
+[
+  {
+    "instrument_id": 54,
+    "project_id": "1234a"
+  },
+  {
+    "instrument_id": 54,
+    "project_id": "1236\u00e9"
+  }
+]

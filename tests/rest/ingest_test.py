@@ -49,7 +49,7 @@ class TestIngestAPI(CPCommonTest):
         putdata = [
             {'destinationTable': 'Transactions._id', 'value': 1234},
             {'destinationTable': 'Transactions.submitter', 'value': 10},
-            {'destinationTable': 'Transactions.proposal', 'value': '1234a'},
+            {'destinationTable': 'Transactions.project', 'value': '1234a'},
             {'destinationTable': 'Transactions.instrument', 'value': 54},
             {
                 'destinationTable': 'TransactionKeyValue',

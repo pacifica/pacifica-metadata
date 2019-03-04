@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Test the proposals ORM object."""
+"""Test the instruments ORM object."""
 from json import dumps
 from pacifica.metadata.orm.instruments import Instruments
 from .base_test import TestBase
@@ -24,7 +24,7 @@ SAMPLE_UNICODE_INSTRUMENT_HASH = {
 
 
 class TestInstruments(TestBase):
-    """Test the Proposals ORM object."""
+    """Test the Instruments ORM object."""
 
     obj_cls = Instruments
     obj_id = Instruments.id

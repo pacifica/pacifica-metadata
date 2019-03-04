@@ -4,7 +4,7 @@
 from cherrypy import tools
 from peewee import prefetch
 from pacifica.metadata.orm import Instruments
-from pacifica.metadata.orm import ProposalInstrument
+from pacifica.metadata.orm import ProjectInstrument
 from pacifica.metadata.rest.instrument_queries.query_base import QueryBase as InstQueryBase
 
 
@@ -22,16 +22,16 @@ class MigrateInstruments(object):
                            .order_by(Instruments.id)
                            .where(Instruments.deleted.is_null()))
 
-        proposal_collection = (ProposalInstrument.select(
-        ).order_by(ProposalInstrument.proposal))
+        project_collection = (ProjectInstrument.select(
+        ).order_by(ProjectInstrument.project))
 
-        instruments_with_proposals = prefetch(
-            inst_collection, proposal_collection)
+        instruments_with_projects = prefetch(
+            inst_collection, project_collection)
 
-        for inst in instruments_with_proposals:
+        for inst in instruments_with_projects:
             inst_entry = InstQueryBase.format_instrument_block(inst)
-            inst_entry['proposals'] = [
-                prop.proposal.id for prop in inst.proposals]
+            inst_entry['projects'] = [
+                proj.project.id for proj in inst.projects]
             instrument_list[inst.id] = inst_entry
 
         return instrument_list

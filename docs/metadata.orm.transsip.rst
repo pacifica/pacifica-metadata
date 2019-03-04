@@ -1,4 +1,4 @@
-Transaction, Submitter, Instrument, Proposal Python Module
+Transaction, Submitter, Instrument, Project Python Module
 ==========================================================
 
 .. automodule:: pacifica.metadata.orm.transsip

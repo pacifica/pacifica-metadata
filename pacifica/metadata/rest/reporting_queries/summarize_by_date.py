@@ -55,7 +55,7 @@ class SummarizeByDate(QueryBase):
             },
             'summary_totals': {
                 'upload_stats': {
-                    'proposal': {},
+                    'project': {},
                     'instrument': {},
                     'user': {}
                 },
@@ -65,7 +65,7 @@ class SummarizeByDate(QueryBase):
             },
             'transaction_info': {
                 'transaction': {},
-                'proposal': {},
+                'project': {},
                 'instrument': {},
                 'user': {}
             }
@@ -94,12 +94,12 @@ class SummarizeByDate(QueryBase):
 
     @staticmethod
     def _update_transaction_info_block(info_block, item, t_info):
-        prop = t_info['proposal']
+        proj = t_info['project']
         inst = t_info['instrument']
         submitter = t_info['submitter']
         transsip = item.transaction.transsip.get()
-        if prop not in info_block['proposal'].keys():
-            info_block['proposal'][prop] = transsip.proposal.title
+        if proj not in info_block['project'].keys():
+            info_block['project'][proj] = transsip.project.title
         if inst not in info_block['instrument'].keys():
             info_block['instrument'][inst] = transsip.instrument.name
         if submitter not in info_block['user'].keys():
@@ -109,9 +109,9 @@ class SummarizeByDate(QueryBase):
 
     @staticmethod
     def _summarize_upload_stats(upload_stats_block, transaction_info):
-        if transaction_info['proposal'] not in upload_stats_block['proposal'].keys():
-            upload_stats_block['proposal'][transaction_info['proposal']] = 0
-        upload_stats_block['proposal'][transaction_info['proposal']] += 1
+        if transaction_info['project'] not in upload_stats_block['project'].keys():
+            upload_stats_block['project'][transaction_info['project']] = 0
+        upload_stats_block['project'][transaction_info['project']] += 1
 
         if transaction_info['instrument'] not in upload_stats_block['instrument'].keys():
             upload_stats_block['instrument'][transaction_info['instrument']] = 0
@@ -182,7 +182,7 @@ class SummarizeByDate(QueryBase):
         else:
             time_basis = time_basis_list[time_basis[0:5]]
 
-        object_type_list = ['instrument', 'proposal', 'user']
+        object_type_list = ['instrument', 'project', 'user']
         if object_type not in object_type_list or object_type is None:
             object_type = 'instrument'
 

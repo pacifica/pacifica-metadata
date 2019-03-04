@@ -34,17 +34,17 @@ class TestKeysHashList(TestBase):
         """Test method to check the results of available hash list."""
         sample_key1 = {
             '_id': 127,
-            'key': 'proposal',
+            'key': 'Test Key 1',
             'encoding': 'UTF8'
         }
         sample_key2 = {
             '_id': 128,
-            'key': 'proposal',
+            'key': 'Test Key 2',
             'encoding': 'UTF8'
         }
         sample_key3 = {
             '_id': 130,
-            'key': 'proposal',
+            'key': 'Test Key 3',
             'encoding': 'UTF8'
         }
         self.base_create_obj(Keys, sample_key1)

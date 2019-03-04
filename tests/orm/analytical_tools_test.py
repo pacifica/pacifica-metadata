@@ -7,13 +7,13 @@ from .base_test import TestBase
 
 SAMPLE_TOOL_HASH = {
     '_id': 127,
-    'name': 'proposal',
+    'name': 'My Custom Code',
     'encoding': 'UTF8'
 }
 
 SAMPLE_UNICODE_TOOL_HASH = {
     '_id': 127,
-    'name': u'proposalé',
+    'name': u'My Cutstom Codé',
     'encoding': 'UTF8'
 }
 
@@ -39,7 +39,7 @@ class TestAnalyticalTools(TestBase):
     def test_tools_where_search_expr(self):
         """Test the hash portion using base object method."""
         self.base_where_clause_search_expr(
-            SAMPLE_TOOL_HASH, name_operator='ILIKE', name='%prop%')
+            SAMPLE_TOOL_HASH, name_operator='ILIKE', name='%Custom%')
 
     def test_tools_where(self):
         """Test the hash portion using base object method."""

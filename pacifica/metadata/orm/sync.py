@@ -2,14 +2,12 @@
 # -*- coding: utf-8 -*-
 """The ORM Sync Module."""
 from time import sleep
-from peewee import OperationalError, CharField, IntegerField, Model, TextField, ForeignKeyField, DateTimeField
-from playhouse.migrate import SchemaMigrator, migrate
+from peewee import OperationalError, CharField, IntegerField, Model
 from ..config import get_config
 from .globals import DB
 from .all_objects import ORM_OBJECTS
-from .all_objects import Users, Instruments, Proposals, TransSIP, Transactions, TransSAP
 
-SCHEMA_MAJOR = 1
+SCHEMA_MAJOR = 2
 SCHEMA_MINOR = 0
 
 # pylint: disable=too-few-public-methods
@@ -48,7 +46,8 @@ class OrmSync(object):
 
     versions = [
         (0, 1),
-        (1, 0)
+        (1, 0),
+        (2, 0)
     ]
 
     @staticmethod
@@ -70,54 +69,15 @@ class OrmSync(object):
 
     @classmethod
     def update_0_1_to_1_0(cls):
-        """Update from 0.1 to 1.0."""
-        migrator = SchemaMigrator(DB)
-        TransSIP.create_table()
-        TransSAP.create_table()
+        """Update schema to 1.0."""
+        from .sync_updates.update_0_1_to_1_0 import update_schema
+        update_schema()
 
-        class OldTrans(Model):
-            """This is the old transactions."""
-
-            submitter = ForeignKeyField(Users, backref='transactions')
-            instrument = ForeignKeyField(Instruments, backref='transactions')
-            proposal = ForeignKeyField(Proposals, backref='transactions')
-            created = DateTimeField()
-            updated = DateTimeField()
-            deleted = DateTimeField(null=True)
-
-            class Meta(object):
-                """This is the meta class for OldTrans."""
-
-                database = DB
-                table_name = 'transactions'
-        migrate(
-            migrator.add_column(
-                'transactions',
-                'description',
-                TextField(null=True)
-            )
-        )
-        for old_trans in OldTrans.select():
-            transsip = TransSIP()
-            for attr in ['submitter', 'instrument', 'proposal', 'created', 'updated', 'deleted']:
-                setattr(transsip, attr, getattr(old_trans, attr))
-            setattr(transsip, 'id', Transactions.get(
-                Transactions.id == old_trans.id))
-            transsip.save(force_insert=True)
-        migrate(
-            migrator.drop_column(
-                'transactions',
-                'submitter_id'
-            ),
-            migrator.drop_column(
-                'transactions',
-                'instrument_id'
-            ),
-            migrator.drop_column(
-                'transactions',
-                'proposal_id'
-            )
-        )
+    @classmethod
+    def update_1_0_to_2_0(cls):
+        """Update to the schema to move proposal to project."""
+        from .sync_updates.update_1_0_to_2_0 import update_schema
+        update_schema()
 
     @classmethod
     def update_tables(cls):

@@ -1,4 +1,4 @@
-Transaction, Submitter, Analytical Tool, Proposal Python Module
+Transaction, Submitter, Analytical Tool, Project Python Module
 ===============================================================
 
 .. automodule:: pacifica.metadata.orm.transsap

@@ -16,12 +16,12 @@ from .journals import Journals
 from .keywords import Keywords
 from .citation_keyword import CitationKeyword
 from .citation_contributor import CitationContributor
-from .proposal_group import ProposalGroup
-from .proposal_instrument import ProposalInstrument
+from .project_group import ProjectGroup
+from .project_instrument import ProjectInstrument
 from .users import Users
-from .proposal_participant import ProposalParticipant
-from .proposals import Proposals
-from .citation_proposal import CitationProposal
+from .project_participant import ProjectParticipant
+from .projects import Projects
+from .citation_project import CitationProject
 from .files import Files
 from .keys import Keys
 from .values import Values
@@ -34,7 +34,7 @@ from .groups import Groups
 from .user_group import UserGroup
 from .instrument_group import InstrumentGroup
 from .analytical_tools import AnalyticalTools
-from .atool_proposal import AToolProposal
+from .atool_project import AToolProject
 from .atool_transaction import AToolTransaction
 from .transaction_release import TransactionRelease
 from .doi_transaction import DOITransaction
@@ -49,7 +49,7 @@ ORM_OBJECTS = [
     Journals,
     Users,
     Institutions,
-    Proposals,
+    Projects,
     Instruments,
     InstrumentCustodian,
     Citations,
@@ -60,10 +60,10 @@ ORM_OBJECTS = [
     AnalyticalTools,
     CitationContributor,
     CitationKeyword,
-    ProposalInstrument,
-    ProposalParticipant,
-    ProposalGroup,
-    CitationProposal,
+    ProjectInstrument,
+    ProjectParticipant,
+    ProjectGroup,
+    CitationProject,
     Transactions,
     TransSIP,
     TransSAP,
@@ -74,7 +74,7 @@ ORM_OBJECTS = [
     TransactionKeyValue,
     UserGroup,
     InstrumentGroup,
-    AToolProposal,
+    AToolProject,
     AToolTransaction,
     TransactionRelease,
     DOIEntries,

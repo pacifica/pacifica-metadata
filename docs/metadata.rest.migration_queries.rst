@@ -6,7 +6,7 @@ Migration Queries Python Module
    :caption: Contents:
 
    metadata.rest.migration_queries.migrate_instruments
-   metadata.rest.migration_queries.migrate_proposals
+   metadata.rest.migration_queries.migrate_projects
    metadata.rest.migration_queries.migrate_users
 
 .. automodule:: pacifica.metadata.rest.migration_queries

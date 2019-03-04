@@ -11,7 +11,7 @@ from pacifica.metadata.rest.orm import CherryPyAPI
 
 class InstrumentCustodian(CherryPyAPI):
     """
-    Relates proposals and instrument objects.
+    Relates users and instrument objects.
 
     Attributes:
         +------------+--------------------------------------------+

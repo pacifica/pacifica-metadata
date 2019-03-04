@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""CherryPy Status Metadata proposalinfo base class."""
+"""CherryPy Status Metadata projectinfo base class."""
 from pacifica.metadata.orm.instrument_group import InstrumentGroup
 from pacifica.metadata.orm.groups import Groups
 

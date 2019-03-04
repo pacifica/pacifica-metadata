@@ -22,7 +22,7 @@ class TestCherryPyAPI(CPCommonTest):
         self.assertEqual(req.status_code, 200)
         users = req.json()
         self.assertEqual(len(users), 1)
-        self.assertEqual(users[0]['proposals'], None)
+        self.assertEqual(users[0]['projects'], None)
 
         req = requests.get(
             '{0}/files?page_number=1&items_per_page=1&recursion_depth=0'.format(self.url))

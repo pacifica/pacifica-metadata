@@ -1,19 +1,19 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""CherryPy Status Metadata proposalinfo base class."""
+"""CherryPy Status Metadata projectinfo base class."""
 from cherrypy import HTTPError
 from peewee import DoesNotExist, fn, JOIN
 from pacifica.metadata.orm import TransactionKeyValue, Keys, Values
 from pacifica.metadata.orm import Files, FileKeyValue, TransSIP
-from pacifica.metadata.orm import Users, Instruments, Proposals, TransactionRelease
+from pacifica.metadata.orm import Users, Instruments, Projects, TransactionRelease
 
 
 # pylint: disable=too-few-public-methods
 class QueryBase(object):
-    """Retrieves a set of proposals for a given keyword set."""
+    """Retrieves a set of projects for a given keyword set."""
 
     valid_keywords = [
-        'proposal', 'proposal_id', 'instrument', 'instrument_id', 'requesting_user',
+        'project', 'project_id', 'instrument', 'instrument_id', 'requesting_user',
         'time_frame', 'start_time', 'start', 'end_time', 'end', 'transaction_id',
         'user', 'user_id', 'person', 'person_id', 'submitter', 'submitter_id',
         'item_count', 'page'
@@ -184,7 +184,7 @@ class QueryBase(object):
         base_metadata = {
             'transaction_id': transaction_id,
             'submitter_id': transaction_entry.get('submitter'),
-            'proposal_id': transaction_entry.get('proposal'),
+            'project_id': transaction_entry.get('project'),
             'instrument_id': transaction_entry.get('instrument'),
             'file_ids': list(files.keys()),
             'submitted': transaction_entry.get('created'),
@@ -196,8 +196,8 @@ class QueryBase(object):
             submitter = Users.get(
                 Users.id == transaction_entry.get('submitter')
             ).to_hash()
-            proposal = Proposals.get(
-                Proposals.id == transaction_entry.get('proposal')
+            project = Projects.get(
+                Projects.id == transaction_entry.get('project')
             ).to_hash()
             instrument = Instruments.get(
                 Instruments.id == transaction_entry.get('instrument')
@@ -207,7 +207,7 @@ class QueryBase(object):
                     submitter.get('first_name'),
                     submitter.get('last_name')
                 ),
-                'proposal_name': proposal.get('title'),
+                'project_name': project.get('title'),
                 'instrument_name': instrument.get('display_name'),
                 'files': QueryBase._get_file_key_values(files)
             }

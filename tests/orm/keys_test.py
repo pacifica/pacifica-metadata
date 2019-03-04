@@ -7,13 +7,13 @@ from .base_test import TestBase
 
 SAMPLE_KEY_HASH = {
     '_id': 127,
-    'key': 'proposal',
+    'key': 'Test Key 1',
     'encoding': 'UTF8'
 }
 
 SAMPLE_UNICODE_KEY_HASH = {
     '_id': 127,
-    'key': u'proposalé',
+    'key': u'Tést Key 2',
     'encoding': 'UTF8'
 }
 

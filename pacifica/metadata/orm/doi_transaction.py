@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Citation proposal relationship."""
+"""DOI transaction relationship."""
 from peewee import ForeignKeyField
 from pacifica.metadata.orm.utils import index_hash, unicode_type
 from pacifica.metadata.orm.transaction_release import TransactionRelease
