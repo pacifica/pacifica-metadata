@@ -18,12 +18,12 @@ class TransactionsMultiSearch(QueryBase):
     exposed = True
 
     @staticmethod
-    def _get_transactions_from_group(instrument_group_id, proposal_id, start_time, end_time):
+    def _get_transactions_from_group(instrument_group_id, project_id, start_time, end_time):
         instrument_list = TransactionsMultiSearch._get_instruments_from_group_id(
             instrument_group_id)
 
         where_clause = Expression(1, OP.EQ, 1)
-        # now get the appropriate transactions
+        # now get the approjriate transactions
         where_clause &= TransSIP().where_clause(
             {'updated': start_time, 'updated_operator': 'gte'})
         where_clause &= TransSIP().where_clause(
@@ -31,8 +31,8 @@ class TransactionsMultiSearch(QueryBase):
 
         if instrument_list:
             where_clause &= (TransSIP.instrument << instrument_list)
-        if proposal_id:
-            where_clause &= (TransSIP.proposal == proposal_id)
+        if project_id:
+            where_clause &= (TransSIP.project == project_id)
         transactions_list_query = TransSIP.select(
             TransSIP.id).where(where_clause)
 
@@ -55,7 +55,7 @@ class TransactionsMultiSearch(QueryBase):
 
     @staticmethod
     def _check_keywords(kwargs):
-        valid_keywords = ['proposal_id',
+        valid_keywords = ['project_id',
                           'instrument_group_id', 'start_time', 'end_time']
         return {k: v for (k, v) in kwargs.items() if k in valid_keywords}
 
@@ -65,19 +65,19 @@ class TransactionsMultiSearch(QueryBase):
     @tools.json_out()
     @db_connection_decorator
     def GET(**kwargs):
-        """Return Transactions for a proposal_id and instrument_group_id."""
+        """Return Transactions for a project_id and instrument_group_id."""
         first_day_of_month, last_day_of_month = TransactionsMultiSearch._get_first_last_day()
         kwargs = TransactionsMultiSearch._check_keywords(kwargs)
 
         instrument_group_id = kwargs['instrument_group_id'] if 'instrument_group_id' in kwargs else None
-        proposal_id = kwargs['proposal_id'] if 'proposal_id' in kwargs else None
+        project_id = kwargs['project_id'] if 'project_id' in kwargs else None
         start_time = parse(
             kwargs['start_time']) if 'start_time' in kwargs else first_day_of_month
         end_time = parse(
             kwargs['end_time']) if 'end_time' in kwargs else last_day_of_month
 
         transaction_list = TransactionsMultiSearch._get_transactions_from_group(
-            instrument_group_id, proposal_id,
+            instrument_group_id, project_id,
             start_time.strftime('%Y-%m-%d'),
             end_time.strftime('%Y-%m-%d'))
 

@@ -29,7 +29,7 @@ class DetailedTransactionList(QueryBase):
                 fn.Sum(Files.size).alias('bundle_size'),
                 fn.Count(Files.id).alias('file_count'),
                 fn.Min(TransSIP.updated).alias('upload_datetime'),
-                fn.Min(TransSIP.proposal).alias('proposal_id'),
+                fn.Min(TransSIP.project).alias('project_id'),
                 fn.Min(TransSIP.instrument).alias('instrument_id')
             ).join(
                 TransSIP,
@@ -47,7 +47,7 @@ class DetailedTransactionList(QueryBase):
             'bundle_size': int(r['bundle_size']),
             'file_count': int(r['file_count']),
             'upload_datetime': SummarizeByDate.utc_to_local(r['upload_date']).strftime('%Y-%m-%d %H:%M:%S'),
-            'proposal_id': r['proposal_id'],
+            'project_id': r['project_id'],
             'instrument_id': r['instrument_id']
         } for r in query.dicts()}
 

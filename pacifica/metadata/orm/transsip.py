@@ -5,7 +5,7 @@ from peewee import ForeignKeyField, Expression, OP
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.transactions import Transactions
 from pacifica.metadata.orm.users import Users
-from pacifica.metadata.orm.proposals import Proposals
+from pacifica.metadata.orm.projects import Projects
 from pacifica.metadata.orm.instruments import Instruments
 from pacifica.metadata.orm.utils import unicode_type
 
@@ -22,7 +22,7 @@ class TransSIP(CherryPyAPI):
         +-------------------+--------------------------------------+
         | instrument        | Instrument the transaction came from |
         +-------------------+--------------------------------------+
-        | proposal          | Proposal the transaction is for      |
+        | project          | Project the transaction is for      |
         +-------------------+--------------------------------------+
         | suspense_date     | date the transaction is available    |
         +-------------------+--------------------------------------+
@@ -34,7 +34,7 @@ class TransSIP(CherryPyAPI):
     )
     submitter = ForeignKeyField(Users, backref='transsip')
     instrument = ForeignKeyField(Instruments, backref='transsip')
-    proposal = ForeignKeyField(Proposals, backref='transsip')
+    project = ForeignKeyField(Projects, backref='transsip')
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
@@ -42,7 +42,7 @@ class TransSIP(CherryPyAPI):
         obj['_id'] = int(self.__data__['id'])
         obj['submitter'] = int(self.__data__['submitter'])
         obj['instrument'] = int(self.__data__['instrument'])
-        obj['proposal'] = unicode_type(self.__data__['proposal'])
+        obj['project'] = unicode_type(self.__data__['project'])
         return obj
 
     def from_hash(self, obj):
@@ -52,7 +52,7 @@ class TransSIP(CherryPyAPI):
         attr_cls_map = [
             ('submitter', Users),
             ('instrument', Instruments),
-            ('proposal', Proposals)
+            ('project', Projects)
         ]
         for key, obj_cls in attr_cls_map:
             self._set_only_if(
@@ -70,6 +70,6 @@ class TransSIP(CherryPyAPI):
             [
                 'submitter',
                 'instrument',
-                'proposal'
+                'project'
             ]
         )

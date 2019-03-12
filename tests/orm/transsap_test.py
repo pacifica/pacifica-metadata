@@ -5,18 +5,18 @@ from json import dumps
 from pacifica.metadata.orm.transsap import TransSAP
 from pacifica.metadata.orm.transactions import Transactions
 from pacifica.metadata.orm.users import Users
-from pacifica.metadata.orm.proposals import Proposals
+from pacifica.metadata.orm.projects import Projects
 from pacifica.metadata.orm.analytical_tools import AnalyticalTools
 from .base_test import TestBase
 from .transactions_test import SAMPLE_TRANSACTION_HASH, TestTransactions
 from .users_test import SAMPLE_USER_HASH as SAMPLE_SUBMITTER_HASH, TestUsers
-from .proposals_test import SAMPLE_PROPOSAL_HASH, TestProposals
+from .projects_test import SAMPLE_PROJECT_HASH, TestProjects
 from .analytical_tools_test import SAMPLE_TOOL_HASH, TestAnalyticalTools
 
 SAMPLE_TRANSSAP_HASH = {
     '_id': SAMPLE_TRANSACTION_HASH['_id'],
     'submitter': SAMPLE_SUBMITTER_HASH['_id'],
-    'proposal': SAMPLE_PROPOSAL_HASH['_id'],
+    'project': SAMPLE_PROJECT_HASH['_id'],
     'analytical_tool': SAMPLE_TOOL_HASH['_id']
 }
 
@@ -30,10 +30,10 @@ class TestTransSAP(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """Build the object and make dependent user object."""
-        prop = Proposals()
-        TestProposals.base_create_dep_objs()
-        prop.from_hash(SAMPLE_PROPOSAL_HASH)
-        prop.save(force_insert=True)
+        proj = Projects()
+        TestProjects.base_create_dep_objs()
+        proj.from_hash(SAMPLE_PROJECT_HASH)
+        proj.save(force_insert=True)
         submitter = Users()
         TestUsers.base_create_dep_objs()
         submitter.from_hash(SAMPLE_SUBMITTER_HASH)

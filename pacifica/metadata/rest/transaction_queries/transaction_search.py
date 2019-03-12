@@ -25,9 +25,9 @@ class TransactionSearch(QueryBase):
         page_num = -1
         for term in search_terms:
             value = str(search_terms[term]).replace('+', ' ')
-            if term in ['proposal', 'proposal_id'] and value != '-1':
+            if term in ['project', 'project_id'] and value != '-1':
                 where_clause &= TransSIP().where_clause(
-                    {'proposal': value})
+                    {'project': value})
                 continue
             if term in ['instrument', 'instrument_id'] and value != '-1':
                 where_clause &= TransSIP().where_clause(

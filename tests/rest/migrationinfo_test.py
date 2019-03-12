@@ -24,6 +24,6 @@ class TestMigrationInfoAPI(CPCommonTest):
         req = requests.get(url=url, headers=header_list)
         self.assertEqual(req.status_code, 200)
 
-        url = '{0}/migrate/proposals/'.format(self.url)
+        url = '{0}/migrate/projects/'.format(self.url)
         req = requests.get(url=url, headers=header_list)
         self.assertEqual(req.status_code, 200)

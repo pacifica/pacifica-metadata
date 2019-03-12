@@ -39,7 +39,7 @@ class TestTransactionInfoAPI(CPCommonTest):
 
         # test search with single return with details
         search_terms = {
-            'proposal': '1234a',
+            'project': '1234a',
             'end': end_date.strftime('%Y-%m-%d'),
             'item_count': 10,
             'page': 1
@@ -58,7 +58,7 @@ class TestTransactionInfoAPI(CPCommonTest):
         search_terms = {
             'start': start_date.strftime('%Y-%m-%d'),
             'end': end_date.strftime('%Y-%m-%d'),
-            'proposal': '1234a',
+            'project': '1234a',
             'person_id': '10'
         }
         req = requests.get(
@@ -73,7 +73,7 @@ class TestTransactionInfoAPI(CPCommonTest):
 
         # test search with single return with simple
         search_terms = {
-            'proposal': '1234a',
+            'project': '1234a',
             'start': start_date.strftime('%Y-%m-%d')
         }
         req = requests.get(
@@ -113,7 +113,7 @@ class TestTransactionInfoAPI(CPCommonTest):
         self.assertEqual(req_json['latest_transaction_id'], 69)
 
         req = requests.get(
-            url='{0}/transactioninfo/multisearch?instrument_group_id={1}&proposal_id=1234a'.format(self.url, 1001))
+            url='{0}/transactioninfo/multisearch?instrument_group_id={1}&project_id=1234a'.format(self.url, 1001))
         self.assertEqual(req.status_code, 200)
 
     def test_bad_transactioninfo_api(self):

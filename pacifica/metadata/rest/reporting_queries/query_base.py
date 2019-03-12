@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""CherryPy Status Metadata proposalinfo base class."""
+"""CherryPy Status Metadata projectinfo base class."""
 import pytz
 
 
@@ -16,7 +16,7 @@ class QueryBase(object):
 
     object_type_mappings = {
         'instrument': 'instrument',
-        'proposal': 'proposal',
+        'project': 'project',
         'user': 'submitter'
     }
 

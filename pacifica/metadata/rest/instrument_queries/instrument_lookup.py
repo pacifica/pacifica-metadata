@@ -11,7 +11,7 @@ from pacifica.metadata.rest.instrument_queries.query_base import QueryBase
 
 # pylint: disable=too-few-public-methods
 class InstrumentLookup(QueryBase):
-    """Retrieves a set of proposals for a given keyword set."""
+    """Retrieves a set of projects for a given keyword set."""
 
     exposed = True
 
@@ -20,7 +20,7 @@ class InstrumentLookup(QueryBase):
         """Return a formatted dictionary containing the details of a given Instrument entry."""
         terms = re.findall(r'[^+ ,;]+', str(instrument_id))
         for term in terms:
-            # Take the first thing that matches standard proposal id numbering
+            # Take the first thing that matches standard project id numbering
             if re.match('[0-9]+', term):
                 instrument_id = term
                 break

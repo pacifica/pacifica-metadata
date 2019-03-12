@@ -59,10 +59,10 @@ class TestFileInfoAPI(CPCommonTest):
 
     def test_earliest_latest_api(self):
         """Test valid earliest/latest functionality."""
-        # test for proposal single proposal by modified time
+        # test for project single project by modified time
         id_list = ['1234a']
         req = self._get_earliest_latest(
-            item_type='proposal',
+            item_type='project',
             id_list=id_list,
             time_basis='modified'
         )
@@ -72,10 +72,10 @@ class TestFileInfoAPI(CPCommonTest):
         latest = parser.parse(req_json['latest'])
         self.assertTrue(latest >= earliest)
 
-        # test for proposal single proposal by submitted time
+        # test for project single project by submitted time
         id_list = ['1234a']
         req = self._get_earliest_latest(
-            item_type='proposal',
+            item_type='project',
             id_list=id_list,
             time_basis='submitted'
         )
@@ -85,10 +85,10 @@ class TestFileInfoAPI(CPCommonTest):
         latest = parser.parse(req_json['latest'])
         self.assertTrue(latest >= earliest)
 
-        # test for proposal single proposal by created time
+        # test for project single project by created time
         id_list = ['1234a']
         req = self._get_earliest_latest(
-            item_type='proposal',
+            item_type='project',
             id_list=id_list,
             time_basis='created'
         )
@@ -100,16 +100,16 @@ class TestFileInfoAPI(CPCommonTest):
 
     def test_bad_earliest_latest_api(self):
         """Test invalid earliest/latest functionality."""
-        # test for single nonexistent proposal by modified time
+        # test for single nonexistent project by modified time
         id_list = ['2345a']
         req = self._get_earliest_latest(
-            item_type='proposal',
+            item_type='project',
             id_list=id_list,
             time_basis='modified'
         )
         self.assertEqual(req.status_code, 404)
 
-        # test for single existing proposal with bad item_type
+        # test for single existing project with bad item_type
         id_list = ['1234a']
         req = self._get_earliest_latest(
             item_type='bob',
@@ -118,9 +118,9 @@ class TestFileInfoAPI(CPCommonTest):
         )
         self.assertEqual(req.status_code, 400)
 
-        # test for single existing proposal with bad time basis
+        # test for single existing project with bad time basis
         req = self._get_earliest_latest(
-            item_type='proposal',
+            item_type='project',
             id_list=id_list,
             time_basis='bob'
         )

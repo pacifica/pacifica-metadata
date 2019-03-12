@@ -9,7 +9,7 @@ REST Python Module
    metadata.rest.fileinfo_queries
    metadata.rest.instrument_queries
    metadata.rest.migration_queries
-   metadata.rest.proposal_queries
+   metadata.rest.project_queries
    metadata.rest.reporting_queries
    metadata.rest.tkvinfo_queries
    metadata.rest.tkvupload_queries
@@ -22,7 +22,7 @@ REST Python Module
    metadata.rest.migrationinfo
    metadata.rest.objectinfo
    metadata.rest.orm
-   metadata.rest.proposalinfo
+   metadata.rest.projectinfo
    metadata.rest.root
    metadata.rest.summaryinfo
    metadata.rest.tkvinfo

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Test the atool_proposal ORM object."""
+"""Test the atool_transaction ORM object."""
 from json import dumps
 from pacifica.metadata.orm.atool_transaction import AToolTransaction
 from pacifica.metadata.orm.transactions import Transactions

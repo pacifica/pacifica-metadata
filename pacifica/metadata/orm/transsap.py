@@ -5,7 +5,7 @@ from peewee import ForeignKeyField, Expression, OP
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.transactions import Transactions
 from pacifica.metadata.orm.users import Users
-from pacifica.metadata.orm.proposals import Proposals
+from pacifica.metadata.orm.projects import Projects
 from pacifica.metadata.orm.analytical_tools import AnalyticalTools
 from pacifica.metadata.orm.utils import unicode_type
 
@@ -22,7 +22,7 @@ class TransSAP(CherryPyAPI):
         +-------------------+-------------------------------------------+
         | analytical_tool   | Analytical tool the transaction came from |
         +-------------------+-------------------------------------------+
-        | proposal          | Proposal the transaction is for           |
+        | project          | Project the transaction is for           |
         +-------------------+-------------------------------------------+
         | suspense_date     | date the transaction is available         |
         +-------------------+-------------------------------------------+
@@ -34,7 +34,7 @@ class TransSAP(CherryPyAPI):
     )
     submitter = ForeignKeyField(Users, backref='transsap')
     analytical_tool = ForeignKeyField(AnalyticalTools, backref='transsap')
-    proposal = ForeignKeyField(Proposals, backref='transsap')
+    project = ForeignKeyField(Projects, backref='transsap')
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
@@ -42,7 +42,7 @@ class TransSAP(CherryPyAPI):
         obj['_id'] = int(self.__data__['id'])
         obj['submitter'] = int(self.__data__['submitter'])
         obj['analytical_tool'] = int(self.__data__['analytical_tool'])
-        obj['proposal'] = unicode_type(self.__data__['proposal'])
+        obj['project'] = unicode_type(self.__data__['project'])
         return obj
 
     def from_hash(self, obj):
@@ -51,7 +51,7 @@ class TransSAP(CherryPyAPI):
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
         attr_cls_map = [
             ('submitter', Users),
-            ('proposal', Proposals),
+            ('project', Projects),
             ('analytical_tool', AnalyticalTools)
         ]
         for key, obj_cls in attr_cls_map:
@@ -72,6 +72,6 @@ class TransSAP(CherryPyAPI):
             [
                 'analytical_tool',
                 'submitter',
-                'proposal'
+                'project'
             ]
         )

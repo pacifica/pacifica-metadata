@@ -1,0 +1,10 @@
+[
+  {
+    "person_id": 10,
+    "project_id": "1234a"
+  },
+  {
+    "person_id": 10,
+    "project_id": "1236\u00e9"
+  }
+]

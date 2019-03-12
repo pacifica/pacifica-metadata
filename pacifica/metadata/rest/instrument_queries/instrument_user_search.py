@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
 from cherrypy import tools
-from pacifica.metadata.orm import Instruments, ProposalParticipant, ProposalInstrument
+from pacifica.metadata.orm import Instruments, ProjectParticipant, ProjectInstrument
 from pacifica.metadata.rest.instrument_queries.query_base import QueryBase
 from pacifica.metadata.rest.userinfo import user_exists_decorator
 from pacifica.metadata.orm.base import db_connection_decorator
@@ -17,16 +17,16 @@ class InstrumentUserSearch(QueryBase):
     @user_exists_decorator
     def get_instruments_for_user(user_id):
         """Return a list of formatted instrument objects for the indicated user."""
-        where_clause = ProposalParticipant().where_clause(
+        where_clause = ProjectParticipant().where_clause(
             {'person_id': user_id})
 
         instrument_list = (Instruments
                            .select()
                            .distinct()
-                           .join(ProposalInstrument,
-                                 on=(ProposalInstrument.instrument == Instruments.id))
-                           .join(ProposalParticipant,
-                                 on=(ProposalParticipant.proposal == ProposalInstrument.proposal))
+                           .join(ProjectInstrument,
+                                 on=(ProjectInstrument.instrument == Instruments.id))
+                           .join(ProjectParticipant,
+                                 on=(ProjectParticipant.project == ProjectInstrument.project))
                            .where(where_clause)
                            .order_by(Instruments.display_name))
         return [QueryBase.format_instrument_block(obj) for obj in instrument_list]

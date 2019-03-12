@@ -1,0 +1,62 @@
+[
+  {
+    "_id": "1234a",
+    "abstract": "This is a currently active project with a set end date but no clos\u00e9d date",
+    "accepted_date": "Tue Oct 01 2013",
+    "actual_end_date": "Fri Sep 29 2017",
+    "actual_start_date": "Tue Oct 01 2013",
+    "closed_date": null,
+    "science_theme": "g\u00e9neral",
+    "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "suspense_date": "Sat Nov 12 2016",
+    "title": "Pacifica D\u00e9velopment (active no close)"
+  },
+  {
+    "_id": "1235",
+    "abstract": "This is an active project with no set end or clos\u00e9d date",
+    "accepted_date": "Tue Oct 01 2013",
+    "actual_end_date": null,
+    "actual_start_date": "Tue Oct 01 2013",
+    "closed_date": null,
+    "science_theme": "g\u00e9neral",
+    "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "suspense_date": "Sat Nov 12 2016",
+    "title": "Pacifica D\u00e9velopment (no close or end)"
+  },
+  {
+    "_id": "1236\u00e9",
+    "abstract": "This is an expired project with a closed and actual end dat\u00e9",
+    "accepted_date": "Tue Oct 01 2013",
+    "actual_end_date": "Mon Sep 29 2014",
+    "actual_start_date": "Tue Oct 01 2013",
+    "closed_date": "Mon Sep 29 2014",
+    "science_theme": "g\u00e9neral",
+    "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "suspense_date": "Sat Nov 12 2016",
+    "title": "Pacifica D\u00e9velopment (expired closed and end)"
+  },
+  {
+    "_id": "1237",
+    "abstract": "This is an expired project with a closed date but no actual end dat\u00e9",
+    "accepted_date": "Tue Oct 01 2013",
+    "actual_end_date": null,
+    "actual_start_date": "Tue Oct 01 2013",
+    "closed_date": "Mon Sep 29 2014",
+    "science_theme": "g\u00e9neral",
+    "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "suspense_date": "Sat Nov 12 2016",
+    "title": "Pacifica D\u00e9velopment (expired closed no end)"
+  },
+  {
+    "_id": "1238",
+    "abstract": "This is a pre-active project with a start date after today and no closed or end dat\u00e9",
+    "accepted_date": "Mon Oct 03 2016",
+    "actual_end_date": null,
+    "actual_start_date": "Fri Oct 01 2021",
+    "closed_date": null,
+    "science_theme": "g\u00e9neral",
+    "submitted_date": "Fri Sep 13 08:15:26 2013",
+    "suspense_date": "Sat Nov 12 2016",
+    "title": "Pacifica D\u00e9velopment (pre-active)"
+  }
+]

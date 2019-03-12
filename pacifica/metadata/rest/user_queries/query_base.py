@@ -1,35 +1,35 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""CherryPy Status Metadata proposalinfo base class."""
-from pacifica.metadata.orm import UserGroup, Proposals, ProposalParticipant
+"""CherryPy Status Metadata projectinfo base class."""
+from pacifica.metadata.orm import UserGroup, Projects, ProjectParticipant
 
 
 class QueryBase(object):
-    """Retrieves a set of proposals for a given keyword set."""
+    """Retrieves a set of projects for a given keyword set."""
 
     @staticmethod
     def format_user_block(user_entry, option=None):
         """Construct a dictionary from a given user instance in the metadata stack."""
         user_hash = user_entry.to_hash()
-        proposal_xref = ProposalParticipant()
-        where_exp = proposal_xref.where_clause({'person_id': user_entry.id})
-        proposal_person_query = (
-            ProposalParticipant.select().where(where_exp)).dicts()
+        project_xref = ProjectParticipant()
+        where_exp = project_xref.where_clause({'person_id': user_entry.id})
+        project_person_query = (
+            ProjectParticipant.select().where(where_exp)).dicts()
 
-        proposal_list = [prop['proposal'] for prop in proposal_person_query]
+        project_list = [proj['project'] for proj in project_person_query]
 
-        clean_proposals = {}
+        clean_projects = {}
 
-        if proposal_list:
-            proposals = Proposals.select(
-                Proposals.id, Proposals.title, Proposals.short_name,
-                Proposals.proposal_type, Proposals.science_theme
+        if project_list:
+            projects = Projects.select(
+                Projects.id, Projects.title, Projects.short_name,
+                Projects.project_type, Projects.science_theme
             ).where(
-                Proposals.id << proposal_list).dicts()
+                Projects.id << project_list).dicts()
 
-            for prop in proposals:
-                prop_id = prop['id']
-                clean_proposals[prop_id] = prop
+            for proj in projects:
+                proj_id = proj['id']
+                clean_projects[proj_id] = proj
 
         display_name = u'[User ID {0}] {1} {2} &lt;{3}&gt;'.format(
             user_entry.id,
@@ -50,7 +50,7 @@ class QueryBase(object):
                 'simple_display_name': u'{0} {1}'.format(
                     user_hash.get('first_name'), user_hash.get('last_name')),
                 'emsl_employee': False,
-                'proposals': clean_proposals
+                'projects': clean_projects
             }
         else:
             return_block = {

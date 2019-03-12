@@ -1,0 +1,10 @@
+[
+  {
+    "analytical_tool_id": 1234,
+    "project_id": "1234a"
+  },
+  {
+    "analytical_tool_id": 1235,
+    "project_id": "1236\u00e9"
+  }
+]

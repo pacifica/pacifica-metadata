@@ -4,7 +4,7 @@
 from cherrypy import tools
 from peewee import prefetch
 from pacifica.metadata.orm import Users
-from pacifica.metadata.orm import ProposalParticipant, InstrumentCustodian, InstitutionPerson
+from pacifica.metadata.orm import ProjectParticipant, InstrumentCustodian, InstitutionPerson
 from pacifica.metadata.rest.user_queries.query_base import QueryBase as UserQueryBase
 
 
@@ -21,18 +21,18 @@ class MigrateUsers(object):
                            .select()
                            .where(Users.deleted.is_null()))
 
-        proposal_collection = ProposalParticipant.select()
+        project_collection = ProjectParticipant.select()
         custodian_collection = InstrumentCustodian.select()
         institution_collection = InstitutionPerson.select()
 
         users_expanded = prefetch(
-            user_collection, proposal_collection,
+            user_collection, project_collection,
             custodian_collection, institution_collection)
 
         for user in users_expanded:
             user_entry = UserQueryBase.format_user_block(user, 'simple')
-            user_entry['proposals'] = [
-                prop.proposal.id for prop in user.proposals]
+            user_entry['projects'] = [
+                proj.project.id for proj in user.projects]
             user_entry['custodian_list'] = [
                 inst.instrument.id for inst in user.instruments]
             user_entry['institutions'] = [

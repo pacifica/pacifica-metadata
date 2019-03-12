@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Core interface for the proposalinfo metadata objects to interface with CherryPy."""
+"""Core interface for the projectinfo metadata objects to interface with CherryPy."""
 from pacifica.metadata.rest.instrument_queries.instrument_lookup import InstrumentLookup
 from pacifica.metadata.rest.instrument_queries.instrument_term_search import InstrumentTermSearch
 from pacifica.metadata.rest.instrument_queries.instrument_user_search import InstrumentUserSearch

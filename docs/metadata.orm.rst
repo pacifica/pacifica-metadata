@@ -10,13 +10,13 @@ ORM Python Module
    metadata.orm.base
    metadata.orm.sync
    metadata.orm.analytical_tools
-   metadata.orm.atool_proposal
+   metadata.orm.atool_project
    metadata.orm.atool_transaction
    metadata.orm.citations
    metadata.orm.citation_contributor
    metadata.orm.citation_doi
    metadata.orm.citation_keyword
-   metadata.orm.citation_proposal
+   metadata.orm.citation_project
    metadata.orm.citation_transaction
    metadata.orm.contributors
    metadata.orm.doi_authors
@@ -35,10 +35,10 @@ ORM Python Module
    metadata.orm.journals
    metadata.orm.keys
    metadata.orm.keywords
-   metadata.orm.proposals
-   metadata.orm.proposal_group
-   metadata.orm.proposal_instrument
-   metadata.orm.proposal_participant
+   metadata.orm.projects
+   metadata.orm.project_group
+   metadata.orm.project_instrument
+   metadata.orm.project_participant
    metadata.orm.transactions
    metadata.orm.transaction_release
    metadata.orm.transsap

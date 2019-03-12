@@ -1,3 +1,3 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Rest module for the ProposalInfo queries."""
+"""Rest module for the ProjectInfo queries."""

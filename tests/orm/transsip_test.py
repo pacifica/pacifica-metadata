@@ -5,18 +5,18 @@ from json import dumps
 from pacifica.metadata.orm.transsip import TransSIP
 from pacifica.metadata.orm.transactions import Transactions
 from pacifica.metadata.orm.users import Users
-from pacifica.metadata.orm.proposals import Proposals
+from pacifica.metadata.orm.projects import Projects
 from pacifica.metadata.orm.instruments import Instruments
 from .base_test import TestBase
 from .transactions_test import SAMPLE_TRANSACTION_HASH, TestTransactions
 from .users_test import SAMPLE_USER_HASH as SAMPLE_SUBMITTER_HASH, TestUsers
-from .proposals_test import SAMPLE_PROPOSAL_HASH, TestProposals
+from .projects_test import SAMPLE_PROJECT_HASH, TestProjects
 from .instruments_test import SAMPLE_INSTRUMENT_HASH, TestInstruments
 
 SAMPLE_TRANSSIP_HASH = {
     '_id': SAMPLE_TRANSACTION_HASH['_id'],
     'submitter': SAMPLE_SUBMITTER_HASH['_id'],
-    'proposal': SAMPLE_PROPOSAL_HASH['_id'],
+    'project': SAMPLE_PROJECT_HASH['_id'],
     'instrument': SAMPLE_INSTRUMENT_HASH['_id']
 }
 
@@ -35,10 +35,10 @@ class TestTransSIP(TestBase):
         TestUsers.base_create_dep_objs()
         submitter.from_hash(SAMPLE_SUBMITTER_HASH)
         submitter.save()
-        prop = Proposals()
-        TestProposals.base_create_dep_objs()
-        prop.from_hash(SAMPLE_PROPOSAL_HASH)
-        prop.save(force_insert=True)
+        proj = Projects()
+        TestProjects.base_create_dep_objs()
+        proj.from_hash(SAMPLE_PROJECT_HASH)
+        proj.save(force_insert=True)
         inst = Instruments()
         TestInstruments.base_create_dep_objs()
         inst.from_hash(SAMPLE_INSTRUMENT_HASH)
