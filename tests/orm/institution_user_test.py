@@ -2,28 +2,28 @@
 # -*- coding: utf-8 -*-
 """Test the file_key_values ORM object."""
 from json import dumps
-from pacifica.metadata.orm.institution_person import InstitutionPerson
+from pacifica.metadata.orm.institution_user import InstitutionUser
 from pacifica.metadata.orm.institutions import Institutions
 from pacifica.metadata.orm.users import Users
 from .base_test import TestBase
 from .institutions_test import SAMPLE_INSTITUTION_HASH, TestInstitutions
 from .users_test import SAMPLE_USER_HASH, TestUsers
 
-SAMPLE_INSTITUTION_PERSON_HASH = {
-    'person': SAMPLE_USER_HASH['_id'],
+SAMPLE_INSTITUTION_USER_HASH = {
+    'user': SAMPLE_USER_HASH['_id'],
     'institution': SAMPLE_INSTITUTION_HASH['_id']
 }
 
 
-class TestInstitutionPerson(TestBase):
-    """Test the InstitutionPerson ORM object."""
+class TestInstitutionUser(TestBase):
+    """Test the InstitutionUser ORM object."""
 
-    obj_cls = InstitutionPerson
-    obj_id = InstitutionPerson.person
+    obj_cls = InstitutionUser
+    obj_id = InstitutionUser.user
 
     @classmethod
     def base_create_dep_objs(cls):
-        """Create all objects that InstitutionPerson need."""
+        """Create all objects that InstitutionUser need."""
         inst = Institutions()
         TestInstitutions.base_create_dep_objs()
         inst.from_hash(SAMPLE_INSTITUTION_HASH)
@@ -33,14 +33,14 @@ class TestInstitutionPerson(TestBase):
         user1.from_hash(SAMPLE_USER_HASH)
         user1.save(force_insert=True)
 
-    def test_institution_person_hash(self):
+    def test_institution_user_hash(self):
         """Test the hash portion using base object method."""
-        self.base_test_hash(SAMPLE_INSTITUTION_PERSON_HASH)
+        self.base_test_hash(SAMPLE_INSTITUTION_USER_HASH)
 
-    def test_institution_person_json(self):
+    def test_institution_user_json(self):
         """Test the hash portion using base object method."""
-        self.base_test_json(dumps(SAMPLE_INSTITUTION_PERSON_HASH))
+        self.base_test_json(dumps(SAMPLE_INSTITUTION_USER_HASH))
 
-    def test_institution_person_where(self):
+    def test_institution_user_where(self):
         """Test the hash portion using base object method."""
-        self.base_where_clause(SAMPLE_INSTITUTION_PERSON_HASH)
+        self.base_where_clause(SAMPLE_INSTITUTION_USER_HASH)

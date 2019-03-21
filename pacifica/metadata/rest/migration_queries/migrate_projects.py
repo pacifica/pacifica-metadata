@@ -4,7 +4,7 @@
 from cherrypy import tools
 from peewee import prefetch
 from pacifica.metadata.orm import Projects
-from pacifica.metadata.orm import ProjectInstrument, ProjectParticipant
+from pacifica.metadata.orm import ProjectInstrument, ProjectUser
 from pacifica.metadata.rest.project_queries.query_base import QueryBase as ProjQueryBase
 
 
@@ -23,11 +23,11 @@ class MigrateProjects(object):
                            .where(Projects.deleted.is_null()))
         instrument_collection = (ProjectInstrument.select(
         ).order_by(ProjectInstrument.instrument))
-        person_collection = (ProjectParticipant.select(
-        ).order_by(ProjectParticipant.person))
+        user_collection = (ProjectUser.select(
+        ).order_by(ProjectUser.user))
 
         projects_with_links = prefetch(
-            proj_collection, instrument_collection, person_collection)
+            proj_collection, instrument_collection, user_collection)
 
         for proj in projects_with_links:
             proj_entry = ProjQueryBase.format_project_block(proj)
@@ -35,7 +35,7 @@ class MigrateProjects(object):
             proj_entry['instruments'] = [
                 inst.instrument.id for inst in proj.instruments]
             proj_entry['users'] = [
-                user_entry.person.id for user_entry in proj.users]
+                user_entry.user.id for user_entry in proj.users]
             project_list[proj.id] = proj_entry
 
         return project_list

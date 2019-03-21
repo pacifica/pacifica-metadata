@@ -11,7 +11,7 @@ from .institutions_test import SAMPLE_INSTITUTION_HASH, TestInstitutions
 
 SAMPLE_CONTRIBUTOR_HASH = {
     '_id': 192,
-    'person': SAMPLE_USER_HASH['_id'],
+    'user': SAMPLE_USER_HASH['_id'],
     'first_name': 'John',
     'middle_initial': 'F',
     'last_name': 'Doe',
@@ -21,7 +21,7 @@ SAMPLE_CONTRIBUTOR_HASH = {
 
 SAMPLE_UNICODE_CONTRIBUTOR_HASH = {
     '_id': 195,
-    'person': SAMPLE_USER_HASH['_id'],
+    'user': SAMPLE_USER_HASH['_id'],
     'first_name': u'Jéhn',
     'middle_initial': u'Fé',
     'last_name': u'Doé',

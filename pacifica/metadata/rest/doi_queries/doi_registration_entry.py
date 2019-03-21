@@ -5,7 +5,7 @@ from __future__ import print_function
 from cherrypy import tools, request, HTTPError
 from pacifica.metadata.rest.user_queries.user_search import UserSearch
 from pacifica.metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
-from pacifica.metadata.orm import DOITransaction, TransactionRelease, DOIInfo
+from pacifica.metadata.orm import DOITransaction, TransactionUser, DOIInfo
 from pacifica.metadata.orm.base import DB
 # pylint: disable=too-few-public-methods
 
@@ -26,8 +26,9 @@ class DOIRegistrationEntry(DOIRegistrationBase):
         transaction_id = infix_components.pop()
 
         # Check if transaction is released
-        tr_check_query = TransactionRelease().select().where(
-            TransactionRelease.transaction == transaction_id)
+        # NOTE: add join with relationship
+        tr_check_query = TransactionUser().select().where(
+            TransactionUser.transaction == transaction_id)
         if tr_check_query.count() == 0:
             message = 'Transaction {0} has not been released'.format(
                 transaction_id)

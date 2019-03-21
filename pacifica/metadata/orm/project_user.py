@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Project person relationship."""
+"""Project user relationship."""
 from peewee import ForeignKeyField, CompositeKey
 from pacifica.metadata.orm.utils import index_hash, unicode_type
 from pacifica.metadata.orm.projects import Projects
@@ -9,7 +9,7 @@ from pacifica.metadata.orm.base import DB
 from pacifica.metadata.rest.orm import CherryPyAPI
 
 
-class ProjectParticipant(CherryPyAPI):
+class ProjectUser(CherryPyAPI):
     """
     Relates projects and users objects.
 
@@ -17,13 +17,14 @@ class ProjectParticipant(CherryPyAPI):
         +-------------------+-------------------------------------+
         | Name              | Description                         |
         +===================+=====================================+
-        | person            | Link to the Users model             |
+        | user              | Link to the Users model             |
         +-------------------+-------------------------------------+
-        | project          | Link to the Projects model         |
+        | project           | Link to the Projects model         |
         +-------------------+-------------------------------------+
     """
 
-    person = ForeignKeyField(Users, backref='projects')
+    # NOTE: add relationship
+    user = ForeignKeyField(Users, backref='projects')
     project = ForeignKeyField(Projects, backref='users')
 
     # pylint: disable=too-few-public-methods
@@ -31,24 +32,24 @@ class ProjectParticipant(CherryPyAPI):
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB
-        primary_key = CompositeKey('person', 'project')
+        primary_key = CompositeKey('user', 'project')
     # pylint: enable=too-few-public-methods
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(ProjectParticipant, self).to_hash(**flags)
+        obj = super(ProjectUser, self).to_hash(**flags)
         obj['_id'] = index_hash(unicode_type(
-            self.__data__['project']), int(self.__data__['person']))
-        obj['person'] = int(self.__data__['person'])
+            self.__data__['project']), int(self.__data__['user']))
+        obj['user'] = int(self.__data__['user'])
         obj['project'] = unicode_type(self.__data__['project'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash into the object."""
-        super(ProjectParticipant, self).from_hash(obj)
+        super(ProjectUser, self).from_hash(obj)
         self._set_only_if(
-            'person', obj, 'person',
-            lambda: Users.get(Users.id == obj['person'])
+            'user', obj, 'user',
+            lambda: Users.get(Users.id == obj['user'])
         )
         self._set_only_if(
             'project', obj, 'project',
@@ -58,6 +59,6 @@ class ProjectParticipant(CherryPyAPI):
     @classmethod
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(ProjectParticipant, cls).where_clause(kwargs)
-        attrs = ['person', 'project']
+        where_clause = super(ProjectUser, cls).where_clause(kwargs)
+        attrs = ['user', 'project']
         return cls._where_attr_clause(where_clause, kwargs, attrs)

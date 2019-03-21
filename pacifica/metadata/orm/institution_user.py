@@ -9,7 +9,7 @@ from pacifica.metadata.orm.base import DB
 from pacifica.metadata.rest.orm import CherryPyAPI
 
 
-class InstitutionPerson(CherryPyAPI):
+class InstitutionUser(CherryPyAPI):
     """
     Relates persons and institution objects.
 
@@ -17,13 +17,14 @@ class InstitutionPerson(CherryPyAPI):
         +-------------------+-------------------------------------+
         | Name              | Description                         |
         +===================+=====================================+
-        | person            | Link to the Users model             |
+        | user              | Link to the Users model             |
         +-------------------+-------------------------------------+
         | institution       | Link to the Institutions model      |
         +-------------------+-------------------------------------+
     """
 
-    person = ForeignKeyField(Users, backref='institutions')
+    # NOTE: add relationship
+    user = ForeignKeyField(Users, backref='institutions')
     institution = ForeignKeyField(Institutions, backref='users')
 
     # pylint: disable=too-few-public-methods
@@ -31,24 +32,24 @@ class InstitutionPerson(CherryPyAPI):
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB
-        primary_key = CompositeKey('person', 'institution')
+        primary_key = CompositeKey('user', 'institution')
     # pylint: enable=too-few-public-methods
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
-        obj = super(InstitutionPerson, self).to_hash(**flags)
-        obj['_id'] = index_hash(int(self.__data__['person']),
+        obj = super(InstitutionUser, self).to_hash(**flags)
+        obj['_id'] = index_hash(int(self.__data__['user']),
                                 int(self.__data__['institution']))
-        obj['person'] = int(self.__data__['person'])
+        obj['user'] = int(self.__data__['user'])
         obj['institution'] = int(self.__data__['institution'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash into the object."""
-        super(InstitutionPerson, self).from_hash(obj)
+        super(InstitutionUser, self).from_hash(obj)
         self._set_only_if(
-            'person', obj, 'person',
-            lambda: Users.get(Users.id == obj['person'])
+            'user', obj, 'user',
+            lambda: Users.get(Users.id == obj['user'])
         )
         self._set_only_if(
             'institution', obj, 'institution',
@@ -58,6 +59,6 @@ class InstitutionPerson(CherryPyAPI):
     @classmethod
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
-        where_clause = super(InstitutionPerson, cls).where_clause(kwargs)
-        attrs = ['person', 'institution']
+        where_clause = super(InstitutionUser, cls).where_clause(kwargs)
+        attrs = ['user', 'institution']
         return cls._where_attr_clause(where_clause, kwargs, attrs)

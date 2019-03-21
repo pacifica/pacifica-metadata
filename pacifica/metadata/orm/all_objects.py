@@ -8,10 +8,10 @@ on those objects.
 """
 from .citations import Citations
 from .contributors import Contributors
-from .institution_person import InstitutionPerson
+from .institution_user import InstitutionUser
 from .institutions import Institutions
 from .instruments import Instruments
-from .instrument_custodian import InstrumentCustodian
+from .instrument_user import InstrumentUser
 from .journals import Journals
 from .keywords import Keywords
 from .citation_keyword import CitationKeyword
@@ -19,7 +19,7 @@ from .citation_contributor import CitationContributor
 from .project_group import ProjectGroup
 from .project_instrument import ProjectInstrument
 from .users import Users
-from .project_participant import ProjectParticipant
+from .project_user import ProjectUser
 from .projects import Projects
 from .citation_project import CitationProject
 from .files import Files
@@ -36,7 +36,7 @@ from .instrument_group import InstrumentGroup
 from .analytical_tools import AnalyticalTools
 from .atool_project import AToolProject
 from .atool_transaction import AToolTransaction
-from .transaction_release import TransactionRelease
+from .transaction_user import TransactionUser
 from .doi_transaction import DOITransaction
 from .citation_transaction import CitationTransaction
 from .citation_doi import CitationDOI
@@ -51,17 +51,17 @@ ORM_OBJECTS = [
     Institutions,
     Projects,
     Instruments,
-    InstrumentCustodian,
+    InstrumentUser,
     Citations,
     Contributors,
-    InstitutionPerson,
+    InstitutionUser,
     Keywords,
     Groups,
     AnalyticalTools,
     CitationContributor,
     CitationKeyword,
     ProjectInstrument,
-    ProjectParticipant,
+    ProjectUser,
     ProjectGroup,
     CitationProject,
     Transactions,
@@ -76,7 +76,7 @@ ORM_OBJECTS = [
     InstrumentGroup,
     AToolProject,
     AToolTransaction,
-    TransactionRelease,
+    TransactionUser,
     DOIEntries,
     DOIAuthors,
     DOITransaction,
