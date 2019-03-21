@@ -58,18 +58,18 @@ class TestCherryPyAPI(CPCommonTest):
         self.assertEqual(len(files), 2)
 
         # update a foreign key to Keys obj that isn't there
-        req = requests.post('{0}/file_key_value?file_id=103'.format(self.url),
-                            data='{"key_id": 107}', headers=self.headers)
+        req = requests.post('{0}/file_key_value?file=103'.format(self.url),
+                            data='{"key": 107}', headers=self.headers)
         self.assertEqual(req.status_code, 500)
 
         req = requests.put('{0}/file_key_value'.format(self.url),
-                           data='{"key_id": 107, "file_id": 103, "value_id": 103}',
+                           data='{"key": 107, "file": 103, "value": 103}',
                            headers=self.headers)
         self.assertEqual(req.status_code, 500)
 
     # try changing updating something that works
-        req = requests.post('{0}/file_key_value?file_id=103&key_id=103&value_id=103'.format(self.url),
-                            data='{"key_id": 104, "file_id": 103, "value_id": 103}',
+        req = requests.post('{0}/file_key_value?file=103&key=103&value=103'.format(self.url),
+                            data='{"key": 104, "file": 103, "value": 103}',
                             headers=self.headers)
         self.assertEqual(req.status_code, 200)
 

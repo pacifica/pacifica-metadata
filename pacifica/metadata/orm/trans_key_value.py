@@ -44,25 +44,24 @@ class TransactionKeyValue(CherryPyAPI):
         obj['_id'] = index_hash(int(self.__data__['key']),
                                 int(self.__data__['transaction']),
                                 int(self.__data__['value']))
-        obj['transaction_id'] = int(self.__data__['transaction'])
-        obj['key_id'] = int(self.__data__['key'])
-        obj['value_id'] = int(self.__data__['value'])
-        # obj['kv_pair'] = {'key': int(self.key_id), 'value': int(self.value_id)}
+        obj['transaction'] = int(self.__data__['transaction'])
+        obj['key'] = int(self.__data__['key'])
+        obj['value'] = int(self.__data__['value'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(TransactionKeyValue, self).from_hash(obj)
         self._set_only_if(
-            'transaction_id', obj, 'transaction',
-            lambda: Transactions.get(Transactions.id == obj['transaction_id'])
+            'transaction', obj, 'transaction',
+            lambda: Transactions.get(Transactions.id == obj['transaction'])
         )
         self._set_only_if(
-            'value_id', obj, 'value', lambda: Values.get(
-                Values.id == obj['value_id'])
+            'value', obj, 'value',
+            lambda: Values.get(Values.id == obj['value'])
         )
         self._set_only_if(
-            'key_id', obj, 'key', lambda: Keys.get(Keys.id == obj['key_id'])
+            'key', obj, 'key', lambda: Keys.get(Keys.id == obj['key'])
         )
 
     @classmethod
@@ -70,7 +69,4 @@ class TransactionKeyValue(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(TransactionKeyValue, cls).where_clause(kwargs)
         attrs = ['transaction', 'key', 'value']
-        for attr in attrs:
-            if '{}_id'.format(attr) in kwargs:
-                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
         return cls._where_attr_clause(where_clause, kwargs, attrs)

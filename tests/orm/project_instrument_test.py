@@ -10,8 +10,8 @@ from .instruments_test import SAMPLE_INSTRUMENT_HASH, TestInstruments
 from .projects_test import SAMPLE_PROJECT_HASH, TestProjects
 
 SAMPLE_PROJECT_INSTRUMENT_HASH = {
-    'project_id': SAMPLE_PROJECT_HASH['_id'],
-    'instrument_id': SAMPLE_INSTRUMENT_HASH['_id']
+    'project': SAMPLE_PROJECT_HASH['_id'],
+    'instrument': SAMPLE_INSTRUMENT_HASH['_id']
 }
 
 

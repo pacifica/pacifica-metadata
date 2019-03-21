@@ -1,7 +1,7 @@
 [
   {
-    "author_id": 100,
+    "author": 100,
     "author_precedence": 0,
-    "citation_id": 987
+    "citation": 987
   }
 ]

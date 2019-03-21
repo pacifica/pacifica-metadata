@@ -155,9 +155,9 @@ class IngestAPI(object):
                 # key_obj = Keys.get(key=key)
                 # value_obj = Values.get(value=value)
                 tkvs.append({
-                    'key_id': Keys.get(key=key).id,
-                    'transaction_id': transaction_hash['_id'],
-                    'value_id': Values.get(value=value).id
+                    'key': Keys.get(key=key).id,
+                    'transaction': transaction_hash['_id'],
+                    'value': Values.get(value=value).id
                 })
 
             return tkvs
@@ -180,9 +180,9 @@ class IngestAPI(object):
                 # key_obj =
                 # value_obj = Values.get(value=value)
                 fkvs.append({
-                    'key_id': Keys.get(key=key).id,
-                    'value_id': Values.get(value=value).id,
-                    'file_id': file_id
+                    'key': Keys.get(key=key).id,
+                    'value': Values.get(value=value).id,
+                    'file': file_id
                 })
 
             return fkvs
@@ -191,7 +191,7 @@ class IngestAPI(object):
             """Extract file entries as a hash from the json hash."""
             files = []
             for file_hash in pull_file_by_attr(json):
-                file_hash['transaction_id'] = transaction_hash['_id']
+                file_hash['transaction'] = transaction_hash['_id']
                 files.append(file_hash)
             return files
 

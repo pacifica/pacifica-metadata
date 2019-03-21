@@ -48,10 +48,14 @@ class CitationDOI(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash to the object."""
         super(CitationDOI, self).from_hash(obj)
-        self._set_only_if('citation', obj, 'citation',
-                          lambda: Citations.get(Citations.id == obj['citation']))
-        self._set_only_if('doi', obj, 'doi',
-                          lambda: DOIEntries.get(DOIEntries.doi == obj['doi']))
+        self._set_only_if(
+            'citation', obj, 'citation',
+            lambda: Citations.get(Citations.id == obj['citation'])
+        )
+        self._set_only_if(
+            'doi', obj, 'doi',
+            lambda: DOIEntries.get(DOIEntries.doi == obj['doi'])
+        )
 
     @classmethod
     def where_clause(cls, kwargs):

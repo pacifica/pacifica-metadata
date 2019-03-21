@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Describes an institution and its attributes."""
-from peewee import BooleanField, TextField, CharField, Expression, OP
+from peewee import BooleanField, TextField, CharField
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.utils import unicode_type
 
@@ -56,8 +56,6 @@ class Institutions(CherryPyAPI):
     def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
         where_clause = super(Institutions, cls).where_clause(kwargs)
-        if '_id' in kwargs:
-            where_clause &= Expression(Institutions.id, OP.EQ, kwargs['_id'])
         if 'is_foreign' in kwargs:
             kwargs['is_foreign'] = cls._bool_translate(kwargs['is_foreign'])
         return cls._where_attr_clause(

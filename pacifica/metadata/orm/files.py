@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Contains the Files object model primary unit of metadata for Pacifica."""
 from peewee import ForeignKeyField, CharField, BigIntegerField
-from peewee import Expression, OP
+from peewee import Expression
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.transactions import Transactions
 from pacifica.metadata.orm.utils import datetime_now_nomicrosecond, ExtendDateTimeField
@@ -67,7 +67,7 @@ class Files(CherryPyAPI):
         # pylint: disable=no-member
         obj['ctime'] = self.ctime.isoformat()
         obj['mtime'] = self.mtime.isoformat()
-        obj['transaction_id'] = int(self.__data__['transaction'])
+        obj['transaction'] = int(self.__data__['transaction'])
         # pylint: enable=no-member
         obj['size'] = int(self.size)
         obj['hashsum'] = str(self.hashsum)
@@ -100,8 +100,8 @@ class Files(CherryPyAPI):
 
         def trans_func():
             """Return the transaction for the obj id."""
-            return Transactions.get(Transactions.id == obj['transaction_id'])
-        self._set_only_if('transaction_id', obj, 'transaction', trans_func)
+            return Transactions.get(Transactions.id == obj['transaction'])
+        self._set_only_if('transaction', obj, 'transaction', trans_func)
 
     @classmethod
     def _where_date_clause(cls, where_clause, kwargs):
@@ -124,17 +124,13 @@ class Files(CherryPyAPI):
     def where_clause(cls, kwargs):
         """PeeWee specific where expression."""
         where_clause = super(Files, cls).where_clause(kwargs)
-        if 'transaction_id' in kwargs:
-            trans = int(kwargs['transaction_id'])
-            where_clause &= Expression(Files.transaction, OP.EQ, trans)
-        if '_id' in kwargs:
-            where_clause &= Expression(Files.id, OP.EQ, kwargs['_id'])
         where_clause = cls._where_date_clause(where_clause, kwargs)
         where_clause = cls._where_attr_clause(
             where_clause,
             kwargs,
             [
                 'name',
+                'transaction',
                 'subdir',
                 'mimetype',
                 'size',

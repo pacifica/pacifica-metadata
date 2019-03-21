@@ -1,12 +1,12 @@
 [
   {
-    "file_id": 103,
-    "key_id": 103,
-    "value_id": 103
+    "file": 103,
+    "key": 103,
+    "value": 103
   },
   {
-    "file_id": 103,
-    "key_id": 104,
-    "value_id": 103
+    "file": 103,
+    "key": 104,
+    "value": 103
   }
 ]

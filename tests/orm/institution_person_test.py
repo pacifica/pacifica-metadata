@@ -10,8 +10,8 @@ from .institutions_test import SAMPLE_INSTITUTION_HASH, TestInstitutions
 from .users_test import SAMPLE_USER_HASH, TestUsers
 
 SAMPLE_INSTITUTION_PERSON_HASH = {
-    'person_id': SAMPLE_USER_HASH['_id'],
-    'institution_id': SAMPLE_INSTITUTION_HASH['_id']
+    'person': SAMPLE_USER_HASH['_id'],
+    'institution': SAMPLE_INSTITUTION_HASH['_id']
 }
 
 

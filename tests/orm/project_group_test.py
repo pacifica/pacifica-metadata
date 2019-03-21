@@ -10,8 +10,8 @@ from .groups_test import SAMPLE_GROUP_HASH, TestGroups
 from .projects_test import SAMPLE_PROJECT_HASH, TestProjects
 
 SAMPLE_PROJECT_GROUP_HASH = {
-    'project_id': SAMPLE_PROJECT_HASH['_id'],
-    'group_id': SAMPLE_GROUP_HASH['_id']
+    'project': SAMPLE_PROJECT_HASH['_id'],
+    'group': SAMPLE_GROUP_HASH['_id']
 }
 
 

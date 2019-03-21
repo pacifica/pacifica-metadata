@@ -10,8 +10,8 @@ from .projects_test import SAMPLE_PROJECT_HASH, TestProjects
 from .citations_test import SAMPLE_CITATION_HASH, TestCitations
 
 SAMPLE_CITATION_PROJECT_HASH = {
-    'project_id': SAMPLE_PROJECT_HASH['_id'],
-    'citation_id': SAMPLE_CITATION_HASH['_id']
+    'project': SAMPLE_PROJECT_HASH['_id'],
+    'citation': SAMPLE_CITATION_HASH['_id']
 }
 
 

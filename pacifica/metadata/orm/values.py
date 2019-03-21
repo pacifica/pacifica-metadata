@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Contains the model for metadata values."""
-from peewee import CharField, Expression, OP
+from peewee import CharField
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.utils import unicode_type
 
@@ -44,6 +44,4 @@ class Values(CherryPyAPI):
     def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
         where_clause = super(Values, cls).where_clause(kwargs)
-        if '_id' in kwargs:
-            where_clause &= Expression(Values.id, OP.EQ, kwargs['_id'])
         return cls._where_attr_clause(where_clause, kwargs, ['value', 'encoding'])

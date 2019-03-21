@@ -1,10 +1,10 @@
 [
   {
-    "analytical_tool_id": 1234,
-    "transaction_id": 67
+    "analytical_tool": 1234,
+    "transaction": 67
   },
   {
-    "analytical_tool_id": 1235,
-    "transaction_id": 67
+    "analytical_tool": 1235,
+    "transaction": 67
   }
 ]

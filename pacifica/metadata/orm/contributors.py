@@ -56,8 +56,8 @@ class Contributors(CherryPyAPI):
         obj['last_name'] = unicode_type(self.last_name)
         obj['dept_code'] = unicode_type(self.dept_code)
         # pylint: disable=no-member
-        obj['person_id'] = int(self.__data__['person'])
-        obj['institution_id'] = int(self.__data__['institution'])
+        obj['person'] = int(self.__data__['person'])
+        obj['institution'] = int(self.__data__['institution'])
         # pylint: enable=no-member
         obj['encoding'] = str(self.encoding)
         return obj
@@ -69,10 +69,10 @@ class Contributors(CherryPyAPI):
         for attr in ['first_name', 'middle_initial', 'last_name', 'dept_code']:
             self._set_only_if(
                 attr, obj, attr, lambda k=attr: unicode_type(obj[k]))
-        self._set_only_if('person_id', obj, 'person',
-                          lambda: Users.get(Users.id == int(obj['person_id'])))
-        self._set_only_if('institution_id', obj, 'institution',
-                          lambda: Institutions.get(Institutions.id == int(obj['institution_id'])))
+        self._set_only_if('person', obj, 'person',
+                          lambda: Users.get(Users.id == int(obj['person'])))
+        self._set_only_if('institution', obj, 'institution',
+                          lambda: Institutions.get(Institutions.id == int(obj['institution'])))
         self._set_only_if('encoding', obj, 'encoding',
                           lambda: str(obj['encoding']))
 
@@ -80,9 +80,6 @@ class Contributors(CherryPyAPI):
     def where_clause(cls, kwargs):
         """Generate the PeeWee where clause used in searching."""
         where_clause = super(Contributors, cls).where_clause(kwargs)
-        for attr in ['person', 'institution']:
-            if '{}_id'.format(attr) in kwargs:
-                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
         return cls._where_attr_clause(
             where_clause,
             kwargs,

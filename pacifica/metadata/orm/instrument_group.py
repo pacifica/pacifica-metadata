@@ -39,24 +39,25 @@ class InstrumentGroup(CherryPyAPI):
         obj = super(InstrumentGroup, self).to_hash(**flags)
         obj['_id'] = index_hash(int(self.__data__['group']),
                                 int(self.__data__['instrument']))
-        obj['instrument_id'] = int(self.__data__['instrument'])
-        obj['group_id'] = int(self.__data__['group'])
+        obj['instrument'] = int(self.__data__['instrument'])
+        obj['group'] = int(self.__data__['group'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(InstrumentGroup, self).from_hash(obj)
-        self._set_only_if('instrument_id', obj, 'instrument',
-                          lambda: Instruments.get(Instruments.id == obj['instrument_id']))
-        self._set_only_if('group_id', obj, 'group',
-                          lambda: Groups.get(Groups.id == obj['group_id']))
+        self._set_only_if(
+            'instrument', obj, 'instrument',
+            lambda: Instruments.get(Instruments.id == obj['instrument'])
+        )
+        self._set_only_if(
+            'group', obj, 'group',
+            lambda: Groups.get(Groups.id == obj['group'])
+        )
 
     @classmethod
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(InstrumentGroup, cls).where_clause(kwargs)
         attrs = ['instrument', 'group']
-        for attr in attrs:
-            if '{}_id'.format(attr) in kwargs:
-                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
         return cls._where_attr_clause(where_clause, kwargs, attrs)

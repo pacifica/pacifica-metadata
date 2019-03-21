@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Contains model for Journal."""
-from peewee import CharField, FloatField, Expression, OP
+from peewee import CharField, FloatField
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.utils import unicode_type
 
@@ -56,6 +56,6 @@ class Journals(CherryPyAPI):
     def where_clause(cls, kwargs):
         """PeeWee specific where clause used for search."""
         where_clause = super(Journals, cls).where_clause(kwargs)
-        if '_id' in kwargs:
-            where_clause &= Expression(Journals.id, OP.EQ, kwargs['_id'])
-        return cls._where_attr_clause(where_clause, kwargs, ['name', 'impact_factor', 'website_url', 'encoding'])
+        return cls._where_attr_clause(
+            where_clause, kwargs, ['name', 'impact_factor', 'website_url', 'encoding']
+        )

@@ -11,22 +11,22 @@ from .institutions_test import SAMPLE_INSTITUTION_HASH, TestInstitutions
 
 SAMPLE_CONTRIBUTOR_HASH = {
     '_id': 192,
-    'person_id': SAMPLE_USER_HASH['_id'],
+    'person': SAMPLE_USER_HASH['_id'],
     'first_name': 'John',
     'middle_initial': 'F',
     'last_name': 'Doe',
     'dept_code': 'Ecology',
-    'institution_id': SAMPLE_INSTITUTION_HASH['_id']
+    'institution': SAMPLE_INSTITUTION_HASH['_id']
 }
 
 SAMPLE_UNICODE_CONTRIBUTOR_HASH = {
     '_id': 195,
-    'person_id': SAMPLE_USER_HASH['_id'],
+    'person': SAMPLE_USER_HASH['_id'],
     'first_name': u'Jéhn',
     'middle_initial': u'Fé',
     'last_name': u'Doé',
     'dept_code': u'Ecologéy',
-    'institution_id': SAMPLE_INSTITUTION_HASH['_id'],
+    'institution': SAMPLE_INSTITUTION_HASH['_id'],
     'encoding': 'UTF8'
 }
 

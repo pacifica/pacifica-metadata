@@ -17,7 +17,7 @@ from .doi_authors_test import SAMPLE_UNICODE_DOIAUTHORS_HASH as SAMPLE_UNICODE_A
 SAMPLE_DOIAUTHORMAPPING_HASH = {
     'doi': SAMPLE_DOI_HASH['doi'],
     'author_order': 1,
-    'author_id': SAMPLE_AUTHOR_HASH['_id']
+    'author': SAMPLE_AUTHOR_HASH['_id']
 }
 
 # yes a DOI can be unicode....
@@ -25,7 +25,7 @@ SAMPLE_DOIAUTHORMAPPING_HASH = {
 SAMPLE_UNICODE_DOIAUTHORMAPPING_HASH = {
     'doi': SAMPLE_UNICODE_DOI_HASH['doi'],
     'author_order': 1,
-    'author_id': SAMPLE_UNICODE_AUTHOR_HASH['_id']
+    'author': SAMPLE_UNICODE_AUTHOR_HASH['_id']
 }
 
 

@@ -10,8 +10,8 @@ from .users_test import SAMPLE_USER_HASH, TestUsers
 from .groups_test import SAMPLE_GROUP_HASH, TestGroups
 
 SAMPLE_USER_GROUP_HASH = {
-    'person_id': SAMPLE_USER_HASH['_id'],
-    'group_id': SAMPLE_GROUP_HASH['_id']
+    'person': SAMPLE_USER_HASH['_id'],
+    'group': SAMPLE_GROUP_HASH['_id']
 }
 
 

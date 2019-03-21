@@ -10,8 +10,8 @@ from .instruments_test import SAMPLE_INSTRUMENT_HASH, TestInstruments
 from .users_test import SAMPLE_USER_HASH, TestUsers
 
 SAMPLE_INSTRUMENT_CUSTODIAN_HASH = {
-    'custodian_id': SAMPLE_USER_HASH['_id'],
-    'instrument_id': SAMPLE_INSTRUMENT_HASH['_id']
+    'custodian': SAMPLE_USER_HASH['_id'],
+    'instrument': SAMPLE_INSTRUMENT_HASH['_id']
 }
 
 

@@ -1,6 +1,6 @@
 [
   {
-    "custodian_id": 10,
-    "instrument_id": 54
+    "custodian": 10,
+    "instrument": 54
   }
 ]

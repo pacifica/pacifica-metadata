@@ -216,14 +216,13 @@ class PacificaModel(Model):
     @classmethod
     def _where_attr_clause(cls, where_clause, kwargs, keys):
         """Grab keys and operators out of kwargs and return where clause."""
+        if '_id' in kwargs:
+            where_clause &= Expression(getattr(cls, 'id'), OP.EQ, kwargs['_id'])
         for key in keys:
-            if key in kwargs:
-                key_oper = OP.EQ
-                if '{0}_operator'.format(key) in kwargs:
-                    key_oper = getattr(
-                        OP, kwargs['{0}_operator'.format(key)].upper())
-                where_clause &= Expression(
-                    getattr(cls, key), key_oper, kwargs[key])
+            if key in kwargs or '{}_id'.format(key) in kwargs:
+                value = kwargs.get(key, kwargs.get('{}_id'.format(key)))
+                key_oper = getattr(OP, kwargs.get('{}_operator'.format(key), 'EQ').upper())
+                where_clause &= Expression(getattr(cls, key), key_oper, value)
         return where_clause
 
     @classmethod

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Users data model."""
-from peewee import CharField, Expression, OP
+from peewee import CharField
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.utils import unicode_type
 
@@ -67,8 +67,6 @@ class Users(CherryPyAPI):
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(Users, cls).where_clause(kwargs)
-        if '_id' in kwargs:
-            where_clause &= Expression(Users.id, OP.EQ, kwargs['_id'])
         if 'network_id' in kwargs:
             kwargs['network_id'] = kwargs['network_id'].lower()
         return cls._where_attr_clause(

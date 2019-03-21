@@ -12,9 +12,9 @@ from .keys_test import SAMPLE_KEY_HASH, TestKeys
 from .values_test import SAMPLE_VALUE_HASH, TestValues
 
 SAMPLE_FILE_KEY_VALUE_HASH = {
-    'file_id': SAMPLE_FILE_HASH['_id'],
-    'key_id': SAMPLE_KEY_HASH['_id'],
-    'value_id': SAMPLE_VALUE_HASH['_id']
+    'file': SAMPLE_FILE_HASH['_id'],
+    'key': SAMPLE_KEY_HASH['_id'],
+    'value': SAMPLE_VALUE_HASH['_id']
 }
 
 

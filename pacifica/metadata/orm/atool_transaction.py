@@ -39,25 +39,25 @@ class AToolTransaction(CherryPyAPI):
         obj = super(AToolTransaction, self).to_hash(**flags)
         obj['_id'] = index_hash(int(self.__data__['transaction']),
                                 int(self.__data__['analytical_tool']))
-        obj['transaction_id'] = int(self.__data__['transaction'])
-        obj['analytical_tool_id'] = int(self.__data__['analytical_tool'])
+        obj['transaction'] = int(self.__data__['transaction'])
+        obj['analytical_tool'] = int(self.__data__['analytical_tool'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(AToolTransaction, self).from_hash(obj)
-        self._set_only_if('analytical_tool_id', obj, 'analytical_tool',
-                          lambda: AnalyticalTools.get(
-                              AnalyticalTools.id == obj['analytical_tool_id']))
-        self._set_only_if('transaction_id', obj, 'transaction',
-                          lambda: Transactions.get(Transactions.id == obj['transaction_id']))
+        self._set_only_if(
+            'analytical_tool', obj, 'analytical_tool',
+            lambda: AnalyticalTools.get(AnalyticalTools.id == obj['analytical_tool'])
+        )
+        self._set_only_if(
+            'transaction', obj, 'transaction',
+            lambda: Transactions.get(Transactions.id == obj['transaction'])
+        )
 
     @classmethod
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(AToolTransaction, cls).where_clause(kwargs)
         attrs = ['analytical_tool', 'transaction']
-        for attr in attrs:
-            if '{}_id'.format(attr) in kwargs:
-                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
         return cls._where_attr_clause(where_clause, kwargs, attrs)
