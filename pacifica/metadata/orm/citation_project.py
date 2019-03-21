@@ -39,24 +39,25 @@ class CitationProject(CherryPyAPI):
         obj = super(CitationProject, self).to_hash(**flags)
         obj['_id'] = index_hash(int(self.__data__['citation']),
                                 unicode_type(self.__data__['project']))
-        obj['citation_id'] = int(self.__data__['citation'])
-        obj['project_id'] = unicode_type(self.__data__['project'])
+        obj['citation'] = int(self.__data__['citation'])
+        obj['project'] = unicode_type(self.__data__['project'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(CitationProject, self).from_hash(obj)
-        self._set_only_if('citation_id', obj, 'citation',
-                          lambda: Citations.get(Citations.id == obj['citation_id']))
-        self._set_only_if('project_id', obj, 'project',
-                          lambda: Projects.get(Projects.id == obj['project_id']))
+        self._set_only_if(
+            'citation', obj, 'citation',
+            lambda: Citations.get(Citations.id == obj['citation'])
+        )
+        self._set_only_if(
+            'project', obj, 'project',
+            lambda: Projects.get(Projects.id == obj['project'])
+        )
 
     @classmethod
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(CitationProject, cls).where_clause(kwargs)
         attrs = ['citation', 'project']
-        for attr in attrs:
-            if '{}_id'.format(attr) in kwargs:
-                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
         return cls._where_attr_clause(where_clause, kwargs, attrs)

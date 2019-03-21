@@ -10,8 +10,8 @@ from .transactions_test import SAMPLE_TRANSACTION_HASH, TestTransactions
 from .analytical_tools_test import SAMPLE_TOOL_HASH, TestAnalyticalTools
 
 SAMPLE_TOOL_TRANS_HASH = {
-    'transaction_id': SAMPLE_TRANSACTION_HASH['_id'],
-    'analytical_tool_id': SAMPLE_TOOL_HASH['_id']
+    'transaction': SAMPLE_TRANSACTION_HASH['_id'],
+    'analytical_tool': SAMPLE_TOOL_HASH['_id']
 }
 
 

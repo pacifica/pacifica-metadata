@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
-from peewee import CharField, Expression, OP
+from peewee import CharField
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.utils import unicode_type
 
@@ -46,6 +46,4 @@ class Keywords(CherryPyAPI):
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(Keywords, cls).where_clause(kwargs)
-        if '_id' in kwargs:
-            where_clause &= Expression(Keywords.id, OP.EQ, kwargs['_id'])
         return cls._where_attr_clause(where_clause, kwargs, ['keyword', 'encoding'])

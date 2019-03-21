@@ -25,7 +25,10 @@ class CitationTransaction(CherryPyAPI):
 
     citation = ForeignKeyField(Citations, backref='release_entries')
     transaction = ForeignKeyField(
-        TransactionRelease, backref='citations', field='transaction')
+        TransactionRelease,
+        backref='citations',
+        field='transaction'
+    )
 
     # pylint: disable=too-few-public-methods
     class Meta(object):
@@ -49,10 +52,14 @@ class CitationTransaction(CherryPyAPI):
     def from_hash(self, obj):
         """Convert the hash to the object."""
         super(CitationTransaction, self).from_hash(obj)
-        self._set_only_if('citation', obj, 'citation',
-                          lambda: Citations.get(Citations.id == obj['citation']))
-        self._set_only_if('transaction', obj, 'transaction',
-                          lambda: TransactionRelease.get(TransactionRelease.transaction == obj['transaction']))
+        self._set_only_if(
+            'citation', obj, 'citation',
+            lambda: Citations.get(Citations.id == obj['citation'])
+        )
+        self._set_only_if(
+            'transaction', obj, 'transaction',
+            lambda: TransactionRelease.get(TransactionRelease.transaction == obj['transaction'])
+        )
 
     @classmethod
     def where_clause(cls, kwargs):

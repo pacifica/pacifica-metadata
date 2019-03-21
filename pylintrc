@@ -1,3 +1,4 @@
 [SIMILARITIES]
+min-similarity-lines=8
 ignore-imports=yes
 max-line-length=120

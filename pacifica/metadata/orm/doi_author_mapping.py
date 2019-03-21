@@ -45,7 +45,7 @@ class DOIAuthorMapping(CherryPyAPI):
             unicode_type(self.__data__['doi']),
             int(self.__data__['author_order'])
         )
-        obj['author_id'] = int(self.__data__['author'])
+        obj['author'] = int(self.__data__['author'])
         obj['doi'] = unicode_type(self.__data__['doi'])
         obj['author_order'] = int(self.author_order)
         return obj
@@ -54,8 +54,8 @@ class DOIAuthorMapping(CherryPyAPI):
         """Convert the hash to the object."""
         super(DOIAuthorMapping, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
-        self._set_only_if('author_id', obj, 'author',
-                          lambda: DOIAuthors.get(DOIAuthors.id == obj['author_id']))
+        self._set_only_if('author', obj, 'author',
+                          lambda: DOIAuthors.get(DOIAuthors.id == obj['author']))
         self._set_only_if('doi', obj, 'doi',
                           lambda: DOIEntries.get(DOIEntries.doi == obj['doi']))
         self._set_only_if('author_order', obj, 'author_order',
@@ -65,5 +65,6 @@ class DOIAuthorMapping(CherryPyAPI):
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(DOIAuthorMapping, cls).where_clause(kwargs)
-        return cls._where_attr_clause(where_clause, kwargs, [
-            'doi', 'author_order', 'author_id'])
+        return cls._where_attr_clause(
+            where_clause, kwargs, ['doi', 'author_order', 'author']
+        )

@@ -39,20 +39,20 @@ class InstrumentCustodian(CherryPyAPI):
         obj = super(InstrumentCustodian, self).to_hash(**flags)
         obj['_id'] = index_hash(int(self.__data__['custodian']),
                                 int(self.__data__['instrument']))
-        obj['instrument_id'] = int(self.__data__['instrument'])
-        obj['custodian_id'] = int(self.__data__['custodian'])
+        obj['instrument'] = int(self.__data__['instrument'])
+        obj['custodian'] = int(self.__data__['custodian'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(InstrumentCustodian, self).from_hash(obj)
         self._set_only_if(
-            'instrument_id', obj, 'instrument', lambda: Instruments.get(
-                Instruments.id == obj['instrument_id'])
+            'instrument', obj, 'instrument',
+            lambda: Instruments.get(Instruments.id == obj['instrument'])
         )
         self._set_only_if(
-            'custodian_id', obj, 'custodian', lambda: Users.get(
-                Users.id == obj['custodian_id'])
+            'custodian', obj, 'custodian',
+            lambda: Users.get(Users.id == obj['custodian'])
         )
 
     @classmethod
@@ -60,7 +60,4 @@ class InstrumentCustodian(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(InstrumentCustodian, cls).where_clause(kwargs)
         attrs = ['instrument', 'custodian']
-        for attr in attrs:
-            if '{}_id'.format(attr) in kwargs:
-                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
         return cls._where_attr_clause(where_clause, kwargs, attrs)

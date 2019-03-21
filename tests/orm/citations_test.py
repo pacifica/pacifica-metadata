@@ -10,7 +10,7 @@ from .journals_test import SAMPLE_JOURNAL_HASH, TestJournals
 SAMPLE_CITATION_HASH = {
     '_id': 43,
     'article_title': 'Applications of Dove-Tail Joints in Log Cabin Constructions',
-    'journal_id': SAMPLE_JOURNAL_HASH['_id'],
+    'journal': SAMPLE_JOURNAL_HASH['_id'],
     'journal_volume': 43,
     'journal_issue': 42,
     'page_range': '34-45',
@@ -31,7 +31,7 @@ northern Yukon.
 SAMPLE_UNICODE_CITATION_HASH = {
     '_id': 43,
     'article_title': u'abcdé',
-    'journal_id': SAMPLE_JOURNAL_HASH['_id'],
+    'journal': SAMPLE_JOURNAL_HASH['_id'],
     'journal_volume': 43,
     'journal_issue': 42,
     'page_range': '34-45',

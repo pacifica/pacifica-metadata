@@ -44,27 +44,24 @@ class FileKeyValue(CherryPyAPI):
         obj['_id'] = index_hash(int(self.__data__['key']),
                                 int(self.__data__['file']),
                                 int(self.__data__['value']))
-        obj['file_id'] = int(self.__data__['file'])
-        obj['key_id'] = int(self.__data__['key'])
-        obj['value_id'] = int(self.__data__['value'])
+        obj['file'] = int(self.__data__['file'])
+        obj['key'] = int(self.__data__['key'])
+        obj['value'] = int(self.__data__['value'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(FileKeyValue, self).from_hash(obj)
-        self._set_only_if('file_id', obj, 'file',
-                          lambda: Files.get(Files.id == obj['file_id']))
-        self._set_only_if('key_id', obj, 'key',
-                          lambda: Keys.get(Keys.id == obj['key_id']))
-        self._set_only_if('value_id', obj, 'value',
-                          lambda: Values.get(Values.id == obj['value_id']))
+        self._set_only_if('file', obj, 'file',
+                          lambda: Files.get(Files.id == obj['file']))
+        self._set_only_if('key', obj, 'key',
+                          lambda: Keys.get(Keys.id == obj['key']))
+        self._set_only_if('value', obj, 'value',
+                          lambda: Values.get(Values.id == obj['value']))
 
     @classmethod
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(FileKeyValue, cls).where_clause(kwargs)
         attrs = ['file', 'key', 'value']
-        for attr in attrs:
-            if '{}_id'.format(attr) in kwargs:
-                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
         return cls._where_attr_clause(where_clause, kwargs, attrs)

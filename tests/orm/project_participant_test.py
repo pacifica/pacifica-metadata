@@ -10,8 +10,8 @@ from .projects_test import SAMPLE_PROJECT_HASH, TestProjects
 from .users_test import SAMPLE_USER_HASH, TestUsers
 
 SAMPLE_PROJECT_PARTICIPANT_HASH = {
-    'person_id': SAMPLE_USER_HASH['_id'],
-    'project_id': SAMPLE_PROJECT_HASH['_id']
+    'person': SAMPLE_USER_HASH['_id'],
+    'project': SAMPLE_PROJECT_HASH['_id']
 }
 
 

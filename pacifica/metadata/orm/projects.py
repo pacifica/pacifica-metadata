@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Projects data model."""
-from peewee import TextField, CharField, Expression, OP
+from peewee import TextField, CharField, Expression
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.utils import ExtendDateTimeField, ExtendDateField
 from pacifica.metadata.orm.utils import date_converts, datetime_now_nomicrosecond
@@ -146,8 +146,6 @@ class Projects(CherryPyAPI):
         where_clause = super(Projects, cls).where_clause(kwargs)
         where_clause = cls._where_date_clause(where_clause, kwargs)
         where_clause = cls._where_datetime_clause(where_clause, kwargs)
-        if '_id' in kwargs:
-            where_clause &= Expression(Projects.id, OP.EQ, kwargs['_id'])
         return cls._where_attr_clause(
             where_clause,
             kwargs,

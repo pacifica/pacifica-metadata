@@ -44,7 +44,7 @@ class DOIEntries(CherryPyAPI):
         obj['status'] = unicode_type(self.status)
         obj['released'] = bool(self.released)
         obj['site_url'] = unicode_type(self.site_url)
-        obj['creator_id'] = int(self.__data__['creator'])
+        obj['creator'] = int(self.__data__['creator'])
         obj['encoding'] = str(self.encoding)
         return obj
 
@@ -60,8 +60,8 @@ class DOIEntries(CherryPyAPI):
                           lambda: bool(obj['released']))
         self._set_only_if('site_url', obj, 'site_url',
                           lambda: unicode_type(obj['site_url']))
-        self._set_only_if('creator_id', obj, 'creator',
-                          lambda: Users.get(Users.id == obj['creator_id']))
+        self._set_only_if('creator', obj, 'creator',
+                          lambda: Users.get(Users.id == obj['creator']))
         self._set_only_if('encoding', obj, 'encoding',
                           lambda: str(obj['encoding']))
 
@@ -69,4 +69,7 @@ class DOIEntries(CherryPyAPI):
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(DOIEntries, cls).where_clause(kwargs)
-        return cls._where_attr_clause(where_clause, kwargs, ['doi', 'status', 'released', 'encoding', 'creator'])
+        return cls._where_attr_clause(
+            where_clause, kwargs,
+            ['doi', 'status', 'released', 'encoding', 'creator']
+        )

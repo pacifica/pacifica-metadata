@@ -10,8 +10,8 @@ from .contributors_test import SAMPLE_CONTRIBUTOR_HASH, TestContributors
 from .citations_test import SAMPLE_CITATION_HASH, TestCitations
 
 SAMPLE_CITATION_CONTRIBUTOR_HASH = {
-    'citation_id': SAMPLE_CITATION_HASH['_id'],
-    'author_id': SAMPLE_CONTRIBUTOR_HASH['_id'],
+    'citation': SAMPLE_CITATION_HASH['_id'],
+    'author': SAMPLE_CONTRIBUTOR_HASH['_id'],
     'author_precedence': 20
 }
 

@@ -10,8 +10,8 @@ from .instruments_test import SAMPLE_INSTRUMENT_HASH, TestInstruments
 from .groups_test import SAMPLE_GROUP_HASH, TestGroups
 
 SAMPLE_INSTRUMENT_GROUP_HASH = {
-    'instrument_id': SAMPLE_INSTRUMENT_HASH['_id'],
-    'group_id': SAMPLE_GROUP_HASH['_id']
+    'instrument': SAMPLE_INSTRUMENT_HASH['_id'],
+    'group': SAMPLE_GROUP_HASH['_id']
 }
 
 

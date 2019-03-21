@@ -62,5 +62,7 @@ class DOIAuthors(CherryPyAPI):
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(DOIAuthors, cls).where_clause(kwargs)
-        return cls._where_attr_clause(where_clause, kwargs, [
-            'last_name', 'first_name', 'email', 'affiliation', 'orcid'])
+        return cls._where_attr_clause(
+            where_clause, kwargs,
+            ['last_name', 'first_name', 'email', 'affiliation', 'orcid']
+        )

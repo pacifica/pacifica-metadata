@@ -39,20 +39,20 @@ class ProjectGroup(CherryPyAPI):
         obj = super(ProjectGroup, self).to_hash(**flags)
         obj['_id'] = index_hash(unicode_type(
             self.__data__['project']), int(self.__data__['group']))
-        obj['group_id'] = int(self.__data__['group'])
-        obj['project_id'] = unicode_type(self.__data__['project'])
+        obj['group'] = int(self.__data__['group'])
+        obj['project'] = unicode_type(self.__data__['project'])
         return obj
 
     def from_hash(self, obj):
         """Convert the hash into the object."""
         super(ProjectGroup, self).from_hash(obj)
         self._set_only_if(
-            'project_id', obj, 'project',
-            lambda: Projects.get(Projects.id == obj['project_id'])
+            'project', obj, 'project',
+            lambda: Projects.get(Projects.id == obj['project'])
         )
         self._set_only_if(
-            'group_id', obj, 'group',
-            lambda: Groups.get(Groups.id == obj['group_id'])
+            'group', obj, 'group',
+            lambda: Groups.get(Groups.id == obj['group'])
         )
 
     @classmethod
@@ -60,7 +60,4 @@ class ProjectGroup(CherryPyAPI):
         """Where clause for the various elements."""
         where_clause = super(ProjectGroup, cls).where_clause(kwargs)
         attrs = ['group', 'project']
-        for attr in attrs:
-            if '{}_id'.format(attr) in kwargs:
-                kwargs[attr] = kwargs.pop('{}_id'.format(attr))
         return cls._where_attr_clause(where_clause, kwargs, attrs)

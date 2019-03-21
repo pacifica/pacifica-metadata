@@ -10,8 +10,8 @@ from .keywords_test import SAMPLE_KEYWORD_HASH, TestKeywords
 from .citations_test import SAMPLE_CITATION_HASH, TestCitations
 
 SAMPLE_CITATION_KEYWORD_HASH = {
-    'citation_id': SAMPLE_CITATION_HASH['_id'],
-    'keyword_id': SAMPLE_KEYWORD_HASH['_id']
+    'citation': SAMPLE_CITATION_HASH['_id'],
+    'keyword': SAMPLE_KEYWORD_HASH['_id']
 }
 
 

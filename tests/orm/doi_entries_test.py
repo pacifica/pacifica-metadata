@@ -14,7 +14,7 @@ SAMPLE_DOIENTRIES_HASH = {
     'status': 'completed',
     'site_url': 'https://release.datahub.pnnl.gov/released_data/127',
     'encoding': 'UTF8',
-    'creator_id': SAMPLE_CREATOR_HASH['_id']
+    'creator': SAMPLE_CREATOR_HASH['_id']
 }
 
 # yes a DOI can be unicode....
@@ -24,7 +24,7 @@ SAMPLE_UNICODE_DOIENTRIES_HASH = {
     'status': 'completed',
     'site_url': 'https://release.datahub.pnnl.gov/released_data/127',
     'encoding': 'UTF8',
-    'creator_id': SAMPLE_UNICODE_CREATOR_HASH['_id']
+    'creator': SAMPLE_UNICODE_CREATOR_HASH['_id']
 }
 
 

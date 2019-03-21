@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Citations model for tracking journal articles."""
-from peewee import IntegerField, TextField, CharField, ForeignKeyField, Expression, OP
+from peewee import IntegerField, TextField, CharField, ForeignKeyField
 from pacifica.metadata.orm.journals import Journals
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.utils import unicode_type
@@ -64,7 +64,7 @@ class Citations(CherryPyAPI):
             obj['abstract_text'] = unicode_type(self.abstract_text)
             obj['xml_text'] = unicode_type(self.xml_text)
         # pylint: disable=no-member
-        obj['journal_id'] = int(self.__data__['journal'])
+        obj['journal'] = int(self.__data__['journal'])
         # pylint: enable=no-member
         obj['journal_volume'] = int(self.journal_volume)
         obj['journal_issue'] = int(self.journal_issue)
@@ -78,8 +78,10 @@ class Citations(CherryPyAPI):
         """Convert the object into the citation object fields."""
         super(Citations, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
-        self._set_only_if('journal_id', obj, 'journal',
-                          lambda: Journals.get(Journals.id == int(obj['journal_id'])))
+        self._set_only_if(
+            'journal', obj, 'journal',
+            lambda: Journals.get(Journals.id == int(obj['journal']))
+        )
         for key in ['journal_volume', 'journal_issue']:
             self._set_only_if(key, obj, key, lambda k=key: int(obj[k]))
         for key in ['page_range', 'release_authorization_id', 'encoding',
@@ -93,15 +95,11 @@ class Citations(CherryPyAPI):
     def where_clause(cls, kwargs):
         """Generate the PeeWee where clause used in searching."""
         where_clause = super(Citations, cls).where_clause(kwargs)
-        if 'journal_id' in kwargs:
-            journal = int(kwargs['journal_id'])
-            where_clause &= Expression(Citations.journal, OP.EQ, journal)
-        if '_id' in kwargs:
-            where_clause &= Expression(Citations.id, OP.EQ, int(kwargs['_id']))
         return cls._where_attr_clause(
             where_clause,
             kwargs,
             [
+                'journal',
                 'article_title',
                 'journal_volume',
                 'journal_issue',
