@@ -22,7 +22,7 @@ class TransSIP(CherryPyAPI):
         +-------------------+--------------------------------------+
         | instrument        | Instrument the transaction came from |
         +-------------------+--------------------------------------+
-        | project          | Project the transaction is for      |
+        | project           | Project the transaction is for      |
         +-------------------+--------------------------------------+
         | suspense_date     | date the transaction is available    |
         +-------------------+--------------------------------------+

@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """Project instrument relationship."""
 from peewee import ForeignKeyField, CompositeKey
-from pacifica.metadata.orm.utils import index_hash, unicode_type
-from pacifica.metadata.orm.projects import Projects
-from pacifica.metadata.orm.instruments import Instruments
-from pacifica.metadata.orm.base import DB
-from pacifica.metadata.rest.orm import CherryPyAPI
+from .utils import index_hash, unicode_type
+from .projects import Projects
+from .instruments import Instruments
+from .base import DB
+from ..rest.orm import CherryPyAPI
 
 
 class ProjectInstrument(CherryPyAPI):
@@ -19,7 +19,7 @@ class ProjectInstrument(CherryPyAPI):
         +===================+=====================================+
         | instrument        | Link to the Instrument model        |
         +-------------------+-------------------------------------+
-        | project          | Link to the Project model          |
+        | project           | Link to the Project model          |
         +-------------------+-------------------------------------+
     """
 

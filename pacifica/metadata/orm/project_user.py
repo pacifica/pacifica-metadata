@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """Project user relationship."""
 from peewee import ForeignKeyField, CompositeKey
-from pacifica.metadata.orm.utils import index_hash, unicode_type
-from pacifica.metadata.orm.projects import Projects
-from pacifica.metadata.orm.users import Users
-from pacifica.metadata.orm.base import DB
-from pacifica.metadata.rest.orm import CherryPyAPI
+from ..rest.orm import CherryPyAPI
+from .utils import index_hash, unicode_type
+from .projects import Projects
+from .users import Users
+from .base import DB
 
 
 class ProjectUser(CherryPyAPI):
@@ -19,7 +19,7 @@ class ProjectUser(CherryPyAPI):
         +===================+=====================================+
         | user              | Link to the Users model             |
         +-------------------+-------------------------------------+
-        | project           | Link to the Projects model         |
+        | project           | Link to the Projects model          |
         +-------------------+-------------------------------------+
     """
 

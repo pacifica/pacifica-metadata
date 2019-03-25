@@ -26,6 +26,8 @@ def main():
         'files',
         'groups',
         'keys',
+        'relationships',
+        'data_sources',
         'keywords',
         'values',
         'atool_transaction',
@@ -49,7 +51,9 @@ def main():
         'doi_transaction',
         'doi_author_mapping',
         'citation_transaction',
-        'citation_doi'
+        'citation_doi',
+        'instrument_data_source',
+        'instrument_key_value'
     ]
     for obj in object_order:
         mdclient.create(obj, loads(
