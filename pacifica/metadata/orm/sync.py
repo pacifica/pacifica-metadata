@@ -8,7 +8,7 @@ from .globals import DB
 from .all_objects import ORM_OBJECTS
 
 SCHEMA_MAJOR = 2
-SCHEMA_MINOR = 0
+SCHEMA_MINOR = 1
 
 # pylint: disable=too-few-public-methods
 
@@ -47,7 +47,8 @@ class OrmSync(object):
     versions = [
         (0, 1),
         (1, 0),
-        (2, 0)
+        (2, 0),
+        (2, 1)
     ]
 
     @staticmethod
@@ -77,6 +78,12 @@ class OrmSync(object):
     def update_1_0_to_2_0(cls):
         """Update to the schema to move proposal to project."""
         from .sync_updates.update_1_0_to_2_0 import update_schema
+        update_schema()
+
+    @classmethod
+    def update_2_0_to_2_1(cls):
+        """Update to the schema to move proposal to project."""
+        from .sync_updates.update_2_0_to_2_1 import update_schema
         update_schema()
 
     @classmethod
