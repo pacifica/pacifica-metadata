@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 """TransSAP model."""
 from peewee import ForeignKeyField, Expression, OP
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.transactions import Transactions
-from pacifica.metadata.orm.users import Users
-from pacifica.metadata.orm.projects import Projects
-from pacifica.metadata.orm.analytical_tools import AnalyticalTools
-from pacifica.metadata.orm.utils import unicode_type
+from ..rest.orm import CherryPyAPI
+from .transactions import Transactions
+from .users import Users
+from .projects import Projects
+from .analytical_tools import AnalyticalTools
+from .utils import unicode_type
 
 
 class TransSAP(CherryPyAPI):
@@ -22,7 +22,7 @@ class TransSAP(CherryPyAPI):
         +-------------------+-------------------------------------------+
         | analytical_tool   | Analytical tool the transaction came from |
         +-------------------+-------------------------------------------+
-        | project           | Project the transaction is for           |
+        | project           | Project the transaction is for            |
         +-------------------+-------------------------------------------+
         | suspense_date     | date the transaction is available         |
         +-------------------+-------------------------------------------+

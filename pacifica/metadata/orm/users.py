@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """Users data model."""
 from peewee import CharField
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.utils import unicode_type
+from ..rest.orm import CherryPyAPI
+from .utils import unicode_type
 
 
 class Users(CherryPyAPI):

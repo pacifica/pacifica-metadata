@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """TransactionKeyValue links Transactions and Keys and Values objects."""
 from peewee import ForeignKeyField, CompositeKey
-from pacifica.metadata.orm.base import DB
-from pacifica.metadata.orm.utils import index_hash
-from pacifica.metadata.orm.transactions import Transactions
-from pacifica.metadata.orm.analytical_tools import AnalyticalTools
-from pacifica.metadata.rest.orm import CherryPyAPI
+from .base import DB
+from .utils import index_hash
+from .transactions import Transactions
+from .analytical_tools import AnalyticalTools
+from ..rest.orm import CherryPyAPI
 
 
 class AToolTransaction(CherryPyAPI):

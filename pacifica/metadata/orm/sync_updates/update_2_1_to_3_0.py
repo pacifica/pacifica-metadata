@@ -1,8 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Update Schema from 2.0 to 3.0."""
+import uuid
+from peewee import ForeignKeyField, UUIDField
 from playhouse.migrate import SchemaMigrator, migrate
 from ..relationships import Relationships
+from ..transaction_user import TransactionUser
 from ..data_sources import DataSources
 from ..instrument_data_source import InstrumentDataSource
 from ..instrument_key_value import InstrumentKeyValue
@@ -55,8 +58,57 @@ def _create_tables():
     InstrumentKeyValue.create_table()
 
 
+def _add_relationship_columns():
+    table_rel = {
+        'institutionuser': ('member_of', 'institution_user'),
+        'instrumentuser': ('custodian', 'instrument_user'),
+        'projectuser': ('member_of', 'project_user'),
+        'projectinstrument': ('member_of', 'project_instrument'),
+        'transactionuser': ('authorized_releaser', 'transaction_user')
+    }
+    migrator = SchemaMigrator(DB)
+    DB.execute_sql('alter table citationtransaction drop constraint citationtransaction_transaction_id_fkey')
+    DB.execute_sql('drop index citationtransaction_transaction_id')
+    DB.execute_sql('alter table doitransaction drop constraint doitransaction_transaction_id_fkey')
+    DB.execute_sql('drop index doitransaction_transaction_id')
+    migrate(
+        migrator.rename_column('citationtransaction', 'transaction_id', 'trans_old_id'),
+        migrator.rename_column('doitransaction', 'transaction_id', 'trans_old_id')
+    )
+    for table_name, rel_info in table_rel.items():
+        DB.execute_sql('alter table {} drop constraint {}_pkey'.format(table_name, table_name))
+        rel_name, backref = rel_info
+        rel_obj = Relationships.get(Relationships.name == rel_name)
+        migrate(
+            migrator.add_column(
+                table_name, 'relationship_id',
+                ForeignKeyField(Relationships, field=Relationships.uuid, default=rel_obj.uuid, backref=backref)
+            ),
+            migrator.add_column(
+                table_name, 'uuid',
+                UUIDField(primary_key=True, default=uuid.uuid4, index=True)
+            ),
+            migrator.add_index(
+                table_name,
+                [fkey_meta.column for fkey_meta in DB.get_foreign_keys(table_name)],
+                unique=True
+            )
+        )
+    migrate(
+        migrator.add_column(
+            'citationtransaction', 'transaction_id',
+            ForeignKeyField(TransactionUser, default=None, null=True, field=TransactionUser.uuid)
+        ),
+        migrator.add_column(
+            'doitransaction', 'transaction_id',
+            ForeignKeyField(TransactionUser, default=None, null=True, field=TransactionUser.uuid)
+        )
+    )
+
+
 def update_schema():
     """Update schema from 2.0 to 3.0."""
     _rename_tables()
     _rename_columns()
     _create_tables()
+    _add_relationship_columns()

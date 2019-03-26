@@ -3,8 +3,8 @@
 """Contains the model for metadata keys."""
 import uuid
 from peewee import CharField, TextField, UUIDField
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.utils import unicode_type
+from ..rest.orm import CherryPyAPI
+from .utils import unicode_type
 
 
 class Relationships(CherryPyAPI):

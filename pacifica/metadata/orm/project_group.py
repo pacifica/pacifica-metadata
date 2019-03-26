@@ -19,7 +19,7 @@ class ProjectGroup(CherryPyAPI):
         +===================+=====================================+
         | group             | Link to the Group model             |
         +-------------------+-------------------------------------+
-        | project           | Link to the Project model          |
+        | project           | Link to the Project model           |
         +-------------------+-------------------------------------+
     """
 

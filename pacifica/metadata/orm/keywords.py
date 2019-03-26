@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
 from peewee import CharField
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.utils import unicode_type
+from ..rest.orm import CherryPyAPI
+from .utils import unicode_type
 
 
 class Keywords(CherryPyAPI):

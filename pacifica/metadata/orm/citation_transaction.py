@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
 from peewee import ForeignKeyField, CompositeKey
-from pacifica.metadata.orm.base import DB
-from pacifica.metadata.orm.citations import Citations
-from pacifica.metadata.orm.transaction_user import TransactionUser
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.utils import index_hash
+from .base import DB
+from .citations import Citations
+from .transaction_user import TransactionUser
+from ..rest.orm import CherryPyAPI
+from .utils import index_hash
 
 
 class CitationTransaction(CherryPyAPI):
@@ -24,11 +24,7 @@ class CitationTransaction(CherryPyAPI):
     """
 
     citation = ForeignKeyField(Citations, backref='release_entries')
-    transaction = ForeignKeyField(
-        TransactionUser,
-        backref='citations',
-        field='transaction'
-    )
+    transaction = ForeignKeyField(TransactionUser, backref='citations')
 
     # pylint: disable=too-few-public-methods
     class Meta(object):

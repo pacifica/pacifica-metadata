@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """Keywords linked to citations."""
 from peewee import ForeignKeyField, CompositeKey
-from pacifica.metadata.orm.utils import index_hash
-from pacifica.metadata.orm.citations import Citations
-from pacifica.metadata.orm.keywords import Keywords
-from pacifica.metadata.orm.base import DB
-from pacifica.metadata.rest.orm import CherryPyAPI
+from .utils import index_hash
+from .citations import Citations
+from .keywords import Keywords
+from .base import DB
+from ..rest.orm import CherryPyAPI
 
 
 class CitationKeyword(CherryPyAPI):

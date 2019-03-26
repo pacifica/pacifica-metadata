@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """Transactions model."""
 from peewee import TextField, Expression
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.utils import unicode_type, ExtendDateField, date_converts
+from ..rest.orm import CherryPyAPI
+from .utils import unicode_type, ExtendDateField, date_converts
 
 
 class Transactions(CherryPyAPI):
