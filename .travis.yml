@@ -15,6 +15,7 @@ addons:
 stages:
 - lint
 - test
+- test-migration
 - test-docker
 - deploy
 env:
@@ -30,7 +31,7 @@ env:
   pacifica-metadata --stop-after-a-moment & METADATA_PID=$!;
   curl -Lo data.zip https://github.com/pacifica/pacifica-metadata/archive/v0.3.1.zip;
   unzip data.zip; pushd pacifica-metadata-0.3.1;
-  curl localhost:8121/users;
+  curl --connect-timeout 10 localhost:8121/users;
   python tests/test_files/loadit_test.py; wait $METADATA_PID;
   popd; popd; sudo service elasticsearch stop;
 - cd tests
@@ -74,6 +75,24 @@ jobs:
   - script: *1
     before_script: *2
     python: 2.7
+  - stage: test-migration
+    python: 3.6
+    script: >
+      curl -o apgdiff.zip https://www.apgdiff.com/download/apgdiff-2.4-bin.zip;
+      unzip apgdiff.zip;
+      psql -c 'create database pacifica_metadata;' -U postgres;
+      psql -c 'create database pacifica_metadata_upgrade;' -U postgres;
+      pip install pacifica-metadata==0.3.1;
+      export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata_upgrade";
+      pacifica-metadata-cmd dbsync;
+      pip install .;
+      pacifica-metadata-cmd dbsync;
+      export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata";
+      pacifica-metadata-cmd dbsync;
+      pg_dump -U postgres -f orig_schema.dump.sql pacifica_metadata;
+      pg_dump -U postgres -f update_schema.dump.sql pacifica_metadata_upgrade;
+      java -jar apgdiff-2.4/apgdiff-2.4.jar update_schema.dump.sql orig_schema.dump.sql;
+      if [[ $(java -jar apgdiff-2.4/apgdiff-2.4.jar update_schema.dump.sql orig_schema.dump.sql | wc -l) -gt 0 ]] ; then exit -1; fi
   - stage: test-docker
     sudo: required
     python: 3.6
