@@ -15,6 +15,7 @@ class TestDOIUploadAPI(CPCommonTest):
 
     def test_doiupload_api(self):
         """Test the POST method."""
+        header_list = {'Content-Type': 'application/json'}
         entry_path = realpath('test_files')
         entry_data = loads(open(
             '{0}/{1}.json'.format(
@@ -23,7 +24,8 @@ class TestDOIUploadAPI(CPCommonTest):
             )
         ).read())
 
-        header_list = {'Content-Type': 'application/json'}
+        self._setup_released_transaction()
+
         req = requests.post(
             url='{0}/doiupload/new_entry'.format(self.url),
             json=entry_data,

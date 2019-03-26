@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Utilities for common metadata tools."""
+import uuid
+import json
 from hashlib import md5
 from datetime import datetime, date
 from peewee import DateTimeField, DateField, text_type
@@ -48,6 +50,19 @@ def datetime_converts(time_obj):
     elif isinstance(time_obj, int):
         return datetime.utcfromtimestamp(time_obj).replace(microsecond=0)
     return None
+
+
+class UUIDEncoder(json.JSONEncoder):
+    """UUID Encoder to JSON."""
+
+    # pylint: disable=method-hidden
+    def default(self, o):
+        """Encode tne UUID by returning it's hex value."""
+        if isinstance(o, uuid.UUID):
+            # if the obj is uuid, we simply return the value of uuid
+            return o.hex
+        return json.JSONEncoder.default(self, o)  # pragma: no cover straight out of the docs
+    # pylint: enable=method-hidden
 
 
 class ExtendDateTimeField(DateTimeField):

@@ -1,10 +1,14 @@
 [
   {
     "instrument": 54,
-    "project": "1234a"
+    "project": "1234a",
+    "relationship": "ad417f50-5401-446d-8e5f-69892777f9b1",
+    "uuid": "38196412-bcaa-4b61-8912-62a51d260939"
   },
   {
     "instrument": 54,
-    "project": "1236\u00e9"
+    "project": "1236\u00e9",
+    "relationship": "ad417f50-5401-446d-8e5f-69892777f9b1",
+    "uuid": "70ac648b-bfc2-470a-9b2d-b4e9c470a78c"
   }
 ]

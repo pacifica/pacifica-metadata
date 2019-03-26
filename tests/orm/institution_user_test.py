@@ -4,13 +4,17 @@
 from json import dumps
 from pacifica.metadata.orm.institution_user import InstitutionUser
 from pacifica.metadata.orm.institutions import Institutions
+from pacifica.metadata.orm.relationships import Relationships
 from pacifica.metadata.orm.users import Users
 from .base_test import TestBase
 from .institutions_test import SAMPLE_INSTITUTION_HASH, TestInstitutions
 from .users_test import SAMPLE_USER_HASH, TestUsers
+from .relationships_test import SAMPLE_RELATIONSHIP_HASH, TestRelationships
 
 SAMPLE_INSTITUTION_USER_HASH = {
+    'uuid': '0e921e85-ef20-47b3-91e1-fb9adc26f65a',
     'user': SAMPLE_USER_HASH['_id'],
+    'relationship': SAMPLE_RELATIONSHIP_HASH['uuid'],
     'institution': SAMPLE_INSTITUTION_HASH['_id']
 }
 
@@ -24,6 +28,10 @@ class TestInstitutionUser(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that InstitutionUser need."""
+        rel = Relationships()
+        TestRelationships.base_create_dep_objs()
+        rel.from_hash(SAMPLE_RELATIONSHIP_HASH)
+        rel.save(force_insert=True)
         inst = Institutions()
         TestInstitutions.base_create_dep_objs()
         inst.from_hash(SAMPLE_INSTITUTION_HASH)

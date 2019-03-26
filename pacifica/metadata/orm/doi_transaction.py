@@ -29,10 +29,12 @@ class DOITransaction(CherryPyAPI):
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOITransaction, self).to_hash(**flags)
-        obj['_id'] = index_hash(unicode_type(self.__data__['doi']),
-                                int(self.__data__['transaction']))
+        obj['_id'] = index_hash(
+            unicode_type(self.__data__['doi']),
+            str(self.__data__['transaction'])
+        )
         obj['doi'] = unicode_type(self.__data__['doi'])
-        obj['transaction'] = int(self.__data__['transaction'])
+        obj['transaction'] = str(self.__data__['transaction'])
         return obj
 
     def from_hash(self, obj):
@@ -41,7 +43,7 @@ class DOITransaction(CherryPyAPI):
         self._set_only_if('doi', obj, 'doi',
                           lambda: DOIEntries.get(DOIEntries.doi == obj['doi']))
         self._set_only_if('transaction', obj, 'transaction',
-                          lambda: TransactionUser.get(TransactionUser.transaction == obj['transaction']))
+                          lambda: TransactionUser.get(TransactionUser.uuid == obj['transaction']))
 
     @classmethod
     def where_clause(cls, kwargs):

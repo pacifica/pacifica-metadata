@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Test the REST interfaces."""
+import requests
 import cherrypy
 from cherrypy.test import helper
 from pacifica.metadata.orm import ORM_OBJECTS
@@ -19,6 +20,21 @@ class CPCommonTest(helper.CPWebCase):
     url = 'http://{0}:{1}'.format(HOST, PORT)
     headers = {'content-type': 'application/json'}
     __test__ = False
+
+    def _setup_released_transaction(self):
+        header_list = {'Content-Type': 'application/json'}
+        resp = requests.get(url='{0}/relationships?name=authorized_releaser'.format(self.url))
+        rel_uuid = resp.json()[0]['uuid']
+        resp = requests.post(
+            url='{0}/transaction_user'.format(self.url),
+            json={
+                'transaction': 67,
+                'relationship': rel_uuid,
+                'user': 11
+            },
+            headers=header_list
+        )
+        self.assertEqual(resp.status_code, 200)
 
     @classmethod
     def teardown_class(cls):

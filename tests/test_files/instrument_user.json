@@ -1,6 +1,8 @@
 [
   {
     "instrument": 54,
-    "user": 10
+    "relationship": "ad417f50-5401-446d-8e5f-69892777f9b1",
+    "user": 10,
+    "uuid": "f60eae42-78ef-4690-8d30-176db025396d"
   }
 ]

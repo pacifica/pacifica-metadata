@@ -28,8 +28,8 @@ class ProjectInstrument(CherryPyAPI):
     """
 
     uuid = UUIDField(primary_key=True, default=uuid.uuid4, index=True)
-    instrument = ForeignKeyField(Instruments, backref='projects')
     project = ForeignKeyField(Projects, backref='instruments')
+    instrument = ForeignKeyField(Instruments, backref='projects')
     relationship = ForeignKeyField(Relationships, backref='relationship')
 
     # pylint: disable=too-few-public-methods

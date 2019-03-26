@@ -38,10 +38,10 @@ class CitationTransaction(CherryPyAPI):
         """Convert the object to a hash."""
         obj = super(CitationTransaction, self).to_hash(**flags)
         obj['_id'] = index_hash(
-            int(self.__data__['transaction']),
+            str(self.__data__['transaction']),
             int(self.__data__['citation'])
         )
-        obj['transaction'] = int(self.__data__['transaction'])
+        obj['transaction'] = str(self.__data__['transaction'])
         obj['citation'] = int(self.__data__['citation'])
         return obj
 
@@ -54,7 +54,7 @@ class CitationTransaction(CherryPyAPI):
         )
         self._set_only_if(
             'transaction', obj, 'transaction',
-            lambda: TransactionUser.get(TransactionUser.transaction == obj['transaction'])
+            lambda: TransactionUser.get(TransactionUser.uuid == obj['transaction'])
         )
 
     @classmethod

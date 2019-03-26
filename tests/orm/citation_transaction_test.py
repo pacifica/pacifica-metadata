@@ -11,7 +11,7 @@ from .transaction_user_test import SAMPLE_TRANS_USER_HASH, TestTransactionUser
 
 SAMPLE_CITATION_TRANS_HASH = {
     'citation': SAMPLE_CITATION_HASH['_id'],
-    'transaction': SAMPLE_TRANS_USER_HASH['transaction']
+    'transaction': SAMPLE_TRANS_USER_HASH['uuid']
 }
 
 

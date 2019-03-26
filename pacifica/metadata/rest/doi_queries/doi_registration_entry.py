@@ -5,7 +5,7 @@ from __future__ import print_function
 from cherrypy import tools, request, HTTPError
 from pacifica.metadata.rest.user_queries.user_search import UserSearch
 from pacifica.metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
-from pacifica.metadata.orm import DOITransaction, TransactionUser, DOIInfo
+from pacifica.metadata.orm import DOITransaction, TransactionUser, DOIInfo, Relationships
 from pacifica.metadata.orm.base import DB
 # pylint: disable=too-few-public-methods
 
@@ -26,9 +26,13 @@ class DOIRegistrationEntry(DOIRegistrationBase):
         transaction_id = infix_components.pop()
 
         # Check if transaction is released
-        # NOTE: add join with relationship
-        tr_check_query = TransactionUser().select().where(
-            TransactionUser.transaction == transaction_id)
+        # pylint: disable=no-member
+        tr_check_query = TransactionUser().select().join(Relationships).where(
+            (Relationships.name == 'authorized_releaser') &
+            (TransactionUser.relationship == Relationships.uuid) &
+            (TransactionUser.transaction == transaction_id)
+        )
+        # pylint: enable=no-member
         if tr_check_query.count() == 0:
             message = 'Transaction {0} has not been released'.format(
                 transaction_id)
@@ -46,7 +50,7 @@ class DOIRegistrationEntry(DOIRegistrationBase):
             # add doi to transaction mapping
             doi_trans_map_item = {
                 'doi': doi_info.get('doi'),
-                'transaction': transaction_id
+                'transaction': tr_check_query.execute()[0].uuid
             }
             doi_trans_mapping, mapping_created = DOITransaction.get_or_create(
                 **doi_trans_map_item)

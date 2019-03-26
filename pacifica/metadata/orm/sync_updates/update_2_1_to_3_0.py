@@ -58,13 +58,14 @@ def _create_tables():
     InstrumentKeyValue.create_table()
 
 
+# pylint: disable=too-many-locals
 def _add_relationship_columns():
     table_rel = {
-        'institutionuser': ('member_of', 'institution_user'),
-        'instrumentuser': ('custodian', 'instrument_user'),
-        'projectuser': ('member_of', 'project_user'),
-        'projectinstrument': ('member_of', 'project_instrument'),
-        'transactionuser': ('authorized_releaser', 'transaction_user')
+        'institutionuser': ('member_of', 'institution_user', ('institution_id', 'user_id')),
+        'instrumentuser': ('custodian', 'instrument_user', ('instrument_id', 'user_id')),
+        'projectuser': ('member_of', 'project_user', ('project_id', 'user_id')),
+        'projectinstrument': ('member_of', 'project_instrument', ('instrument_id', 'project_id')),
+        'transactionuser': ('authorized_releaser', 'transaction_user', ('transaction_id', 'user_id'))
     }
     migrator = SchemaMigrator(DB)
     DB.execute_sql('alter table citationtransaction drop constraint citationtransaction_transaction_id_fkey')
@@ -77,7 +78,7 @@ def _add_relationship_columns():
     )
     for table_name, rel_info in table_rel.items():
         DB.execute_sql('alter table {} drop constraint {}_pkey'.format(table_name, table_name))
-        rel_name, backref = rel_info
+        rel_name, backref, pkey_columns = rel_info
         rel_obj = Relationships.get(Relationships.name == rel_name)
         migrate(
             migrator.add_column(
@@ -86,7 +87,7 @@ def _add_relationship_columns():
             ),
             migrator.add_column(
                 table_name, 'uuid',
-                UUIDField(primary_key=True, default=uuid.uuid4, index=True)
+                UUIDField(null=True)
             ),
             migrator.add_index(
                 table_name,
@@ -94,16 +95,61 @@ def _add_relationship_columns():
                 unique=True
             )
         )
+        for row in DB.execute_sql('select {} from {}'.format(','.join(pkey_columns), table_name)):
+            condition = []
+            for key, value in zip(pkey_columns, row):
+                param_val = value if isinstance(value, int) else u"'{}'".format(value)
+                condition.append(u'{} = {}'.format(key, param_val))
+            condition = u' and '.join(condition)
+            DB.execute_sql(u'update {} set uuid = %s where {}'.format(table_name, condition), (str(uuid.uuid4()),))
+        DB.execute_sql('alter table {} add constraint {}_pkey primary key (uuid)'.format(table_name, table_name))
     migrate(
         migrator.add_column(
             'citationtransaction', 'transaction_id',
-            ForeignKeyField(TransactionUser, default=None, null=True, field=TransactionUser.uuid)
+            ForeignKeyField(TransactionUser, index=True, default=None, null=True, field=TransactionUser.uuid)
         ),
         migrator.add_column(
             'doitransaction', 'transaction_id',
-            ForeignKeyField(TransactionUser, default=None, null=True, field=TransactionUser.uuid)
+            ForeignKeyField(TransactionUser, index=True, default=None, null=True, field=TransactionUser.uuid)
         )
     )
+    for row in DB.execute_sql('select trans_old_id from citationtransaction'):
+        cursor = DB.execute_sql('select uuid from transactionuser where transaction_id = {}'.format(row[0]))
+        new_uuid = list(cursor)[0][0]
+        DB.execute_sql(
+            "update citationtransaction set transaction_id = '{}' where trans_old_id = {}".format(new_uuid, row[0]))
+    for row in DB.execute_sql('select trans_old_id from doitransaction'):
+        cursor = DB.execute_sql('select uuid from transactionuser where transaction_id = {}'.format(row[0]))
+        new_uuid = list(cursor)[0][0]
+        DB.execute_sql(
+            "update doitransaction set transaction_id = '{}' where trans_old_id = {}".format(
+                new_uuid, row[0]
+            )
+        )
+    migrate(
+        migrator.drop_column('citationtransaction', 'trans_old_id'),
+        migrator.drop_column('doitransaction', 'trans_old_id'),
+        migrator.add_not_null('citationtransaction', 'transaction_id'),
+        migrator.add_not_null('doitransaction', 'transaction_id'),
+    )
+    for table_name, rel_info in table_rel.items():
+        rel_name, backref, pkey_columns = rel_info
+        new_index_name = '_'.join([table_name, pkey_columns[1], pkey_columns[0], 'relationship_id'])
+        old_index_name = '_'.join([table_name, pkey_columns[0], pkey_columns[1]])
+        DB.execute_sql('drop index if exists {}'.format(old_index_name))
+        old_index_name = '_'.join([table_name, pkey_columns[1], pkey_columns[0]])
+        DB.execute_sql('drop index if exists {}'.format(old_index_name))
+        DB.execute_sql('create unique index {} on {} ({})'.format(
+            new_index_name, table_name,
+            ','.join([pkey_columns[1], pkey_columns[0], 'relationship_id'])
+        ))
+    DB.execute_sql(
+        'alter table {table} add constraint {table}_pkey primary key (citation_id, transaction_id)'.format(
+            table='citationtransaction'
+        )
+    )
+    DB.execute_sql('create index transactionuser_transaction_id on transactionuser (transaction_id)')
+# pylint: enable=too-many-locals
 
 
 def update_schema():

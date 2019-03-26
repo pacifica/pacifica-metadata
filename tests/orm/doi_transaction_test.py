@@ -11,7 +11,7 @@ from .transaction_user_test import SAMPLE_TRANS_USER_HASH, TestTransactionUser
 
 SAMPLE_DOI_TRANS_HASH = {
     'doi': SAMPLE_DOIENTRIES_HASH['doi'],
-    'transaction': SAMPLE_TRANS_USER_HASH['transaction']
+    'transaction': SAMPLE_TRANS_USER_HASH['uuid']
 }
 
 

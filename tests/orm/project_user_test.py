@@ -5,12 +5,16 @@ from json import dumps
 from pacifica.metadata.orm.project_user import ProjectUser
 from pacifica.metadata.orm.projects import Projects
 from pacifica.metadata.orm.users import Users
+from pacifica.metadata.orm.relationships import Relationships
 from .base_test import TestBase
 from .projects_test import SAMPLE_PROJECT_HASH, TestProjects
 from .users_test import SAMPLE_USER_HASH, TestUsers
+from .relationships_test import SAMPLE_RELATIONSHIP_HASH, TestRelationships
 
 SAMPLE_PROJECT_USER_HASH = {
+    'uuid': 'dd274533-baa1-4373-aa12-a2abf2683bf7',
     'user': SAMPLE_USER_HASH['_id'],
+    'relationship': SAMPLE_RELATIONSHIP_HASH['uuid'],
     'project': SAMPLE_PROJECT_HASH['_id']
 }
 
@@ -24,6 +28,10 @@ class TestProjectUser(TestBase):
     @classmethod
     def base_create_dep_objs(cls):
         """Create all objects that ProjectUser need."""
+        rel = Relationships()
+        TestRelationships.base_create_dep_objs()
+        rel.from_hash(SAMPLE_RELATIONSHIP_HASH)
+        rel.save(force_insert=True)
         proj3 = Projects()
         TestProjects.base_create_dep_objs()
         proj3.from_hash(SAMPLE_PROJECT_HASH)

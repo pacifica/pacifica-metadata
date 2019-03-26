@@ -18,6 +18,8 @@ class TransactionUser(CherryPyAPI):
         +-------------------+-----------------------------------------------+
         | Name              | Description                                   |
         +===================+===============================================+
+        | uuid              | uuid for the relationship                     |
+        +-------------------+-----------------------------------------------+
         | transaction       | transaction to be acted upon                  |
         +-------------------+-----------------------------------------------+
         | relationship      | relationship to transaction                   |
