@@ -13,6 +13,8 @@ from .institutions import Institutions
 from .instruments import Instruments
 from .instrument_user import InstrumentUser
 from .journals import Journals
+from .relationships import Relationships
+from .data_sources import DataSources
 from .keywords import Keywords
 from .citation_keyword import CitationKeyword
 from .citation_contributor import CitationContributor
@@ -44,6 +46,9 @@ from .doi_entries import DOIEntries
 from .doi_authors import DOIAuthors
 from .doi_author_mapping import DOIAuthorMapping
 from .doi_info import DOIInfo
+from .instrument_data_source import InstrumentDataSource
+from .instrument_key_value import InstrumentKeyValue
+
 
 ORM_OBJECTS = [
     Journals,
@@ -51,13 +56,15 @@ ORM_OBJECTS = [
     Institutions,
     Projects,
     Instruments,
-    InstrumentUser,
     Citations,
     Contributors,
-    InstitutionUser,
+    Relationships,
+    DataSources,
     Keywords,
     Groups,
     AnalyticalTools,
+    InstrumentUser,
+    InstitutionUser,
     CitationContributor,
     CitationKeyword,
     ProjectInstrument,
@@ -83,5 +90,7 @@ ORM_OBJECTS = [
     CitationTransaction,
     CitationDOI,
     DOIAuthorMapping,
-    DOIInfo
+    DOIInfo,
+    InstrumentDataSource,
+    InstrumentKeyValue
 ]

@@ -3,7 +3,7 @@
 """CherryPy Status Transaction Metadata object class."""
 from cherrypy import tools, request
 from pacifica.metadata.rest.transaction_queries.query_base import QueryBase
-from pacifica.metadata.orm import TransactionUser, DOITransaction, CitationTransaction
+from pacifica.metadata.orm import TransactionUser, DOITransaction, CitationTransaction, Relationships
 from pacifica.metadata.rest.user_queries.user_lookup import UserLookup
 from pacifica.metadata.orm.base import db_connection_decorator
 
@@ -62,22 +62,32 @@ class TransactionReleaseState(QueryBase):
     @staticmethod
     def _get_release_info(transaction_list):
         # pylint: disable=no-member
-        # NOTE: add join with relationships table
         releases = (TransactionUser
                     .select(TransactionUser.transaction,
                             TransactionUser.user,
                             TransactionUser.updated.alias('release_date'))
-                    .where(TransactionUser.transaction << transaction_list).dicts())
+                    .join(Relationships)
+                    .where(
+                        (Relationships.name == 'authorized_releaser') &
+                        (Relationships.uuid == TransactionUser.relationship) &
+                        (TransactionUser.transaction << transaction_list)
+                    ).dicts())
         # pylint: enable=no-member
         return releases
 
     @staticmethod
     def _get_doi_release(transaction_id):
         output_results = None
+        rel_obj = Relationships.get(Relationships.name == 'authorized_releaser')
         # pylint: disable=no-member
         doi_releases = (DOITransaction
                         .select()
-                        .where(DOITransaction.transaction_id == transaction_id))
+                        .join(TransactionUser)
+                        .where(
+                            (TransactionUser.relationship == str(rel_obj.uuid)) &
+                            (DOITransaction.transaction == TransactionUser.uuid) &
+                            (TransactionUser.transaction == transaction_id)
+                        ))
         # pylint: enable=no-member
         if doi_releases.exists():
             output_results = []
@@ -99,10 +109,16 @@ class TransactionReleaseState(QueryBase):
     @staticmethod
     def _get_citation_release(transaction_id):
         output_results = None
+        rel_obj = Relationships.get(Relationships.name == 'authorized_releaser')
         # pylint: disable=no-member
         citation_releases = (CitationTransaction
                              .select()
-                             .where(CitationTransaction.transaction_id == transaction_id))
+                             .join(TransactionUser)
+                             .where(
+                                 (TransactionUser.relationship == str(rel_obj.uuid)) &
+                                 (CitationTransaction.transaction == TransactionUser.uuid) &
+                                 (TransactionUser.transaction == transaction_id)
+                             ))
         # pylint: enable=no-member
         if citation_releases.exists():
             output_results = []

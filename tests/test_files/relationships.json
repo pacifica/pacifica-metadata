@@ -1,0 +1,14 @@
+[
+  {
+    "description": "This is a t\u00e9st relationship.",
+    "display_name": "T\u00e9st Relationship 1",
+    "name": "t\u00e9st_rel_1",
+    "uuid": "ad417f50-5401-446d-8e5f-69892777f9b1"
+  },
+  {
+    "description": "This is a t\u00e9st relationship.",
+    "display_name": "T\u00e9st Relationship 2",
+    "name": "t\u00e9st_rel_2",
+    "uuid": "69fb126a-a97a-4709-b9ce-58b3f84bdcb7"
+  }
+]

@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """Project group relationship."""
 from peewee import ForeignKeyField, CompositeKey
-from pacifica.metadata.orm.utils import index_hash, unicode_type
-from pacifica.metadata.orm.projects import Projects
-from pacifica.metadata.orm.groups import Groups
-from pacifica.metadata.orm.base import DB
-from pacifica.metadata.rest.orm import CherryPyAPI
+from .utils import index_hash, unicode_type
+from .projects import Projects
+from .groups import Groups
+from .base import DB
+from ..rest.orm import CherryPyAPI
 
 
 class ProjectGroup(CherryPyAPI):
@@ -19,7 +19,7 @@ class ProjectGroup(CherryPyAPI):
         +===================+=====================================+
         | group             | Link to the Group model             |
         +-------------------+-------------------------------------+
-        | project          | Link to the Project model          |
+        | project           | Link to the Project model           |
         +-------------------+-------------------------------------+
     """
 

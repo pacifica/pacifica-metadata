@@ -147,6 +147,8 @@ class TestTransactionInfoAPI(CPCommonTest):
 
     def test_transaction_release(self):
         """Test the transaction release data."""
+        self._setup_released_transaction()
+        header_list = {'Content-Type': 'application/json'}
         str_transaction_id = 67
         req = requests.get(
             '{0}/transactioninfo/release_state/{1}'.format(self.url, str_transaction_id))
@@ -159,7 +161,7 @@ class TestTransactionInfoAPI(CPCommonTest):
         req = requests.post(
             '{0}/transactioninfo/release_state'.format(self.url),
             data='[{}, {}]'.format(str_transaction_id, 67),
-            headers={'content-type': 'application/json'}
+            headers=header_list
         )
         data = loads(req.text)
         self.assertTrue('67' in data)

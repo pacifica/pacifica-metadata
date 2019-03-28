@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """CitationContributor links citations and their authors."""
 from peewee import IntegerField, ForeignKeyField, CompositeKey
-from pacifica.metadata.orm.utils import index_hash
-from pacifica.metadata.orm.base import DB
-from pacifica.metadata.orm.citations import Citations
-from pacifica.metadata.orm.contributors import Contributors
-from pacifica.metadata.rest.orm import CherryPyAPI
+from .utils import index_hash
+from .base import DB
+from .citations import Citations
+from .contributors import Contributors
+from ..rest.orm import CherryPyAPI
 
 
 class CitationContributor(CherryPyAPI):

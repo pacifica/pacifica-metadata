@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """UserGroup links Groups and Users and objects."""
 from peewee import ForeignKeyField, CompositeKey
-from pacifica.metadata.orm.utils import index_hash
-from pacifica.metadata.orm.base import DB
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.groups import Groups
-from pacifica.metadata.orm.users import Users
+from .utils import index_hash
+from .base import DB
+from ..rest.orm import CherryPyAPI
+from .groups import Groups
+from .users import Users
 
 
 class UserGroup(CherryPyAPI):

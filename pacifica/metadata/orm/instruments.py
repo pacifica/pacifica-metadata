@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """Instrument model describing data generators."""
 from peewee import CharField, BooleanField
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.utils import unicode_type
+from ..rest.orm import CherryPyAPI
+from .utils import unicode_type
 
 
 class Instruments(CherryPyAPI):

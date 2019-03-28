@@ -5,7 +5,20 @@ import cherrypy
 from cherrypy import HTTPError
 from peewee import DoesNotExist
 from pacifica.metadata.orm.base import PacificaModel, db_connection_decorator
-from pacifica.metadata.orm.utils import datetime_now_nomicrosecond, datetime_converts
+from pacifica.metadata.orm.utils import datetime_now_nomicrosecond, datetime_converts, UUIDEncoder
+
+
+def json_handler(*args, **kwargs):
+    """JSON handler to encode the data value."""
+    # pylint: disable=protected-access
+    value = cherrypy.serving.request._json_inner_handler(*args, **kwargs)
+    # pylint: enable=protected-access
+    return _encode(value)
+
+
+def _encode(value):
+    for chunk in UUIDEncoder().iterencode(value):
+        yield chunk.encode('utf-8')
 
 
 class CherryPyAPI(PacificaModel):
@@ -150,7 +163,7 @@ class CherryPyAPI(PacificaModel):
     # pylint: disable=invalid-name
 
     @cherrypy.tools.json_in()
-    @cherrypy.tools.json_out()
+    @cherrypy.tools.json_out(handler=json_handler)
     @db_connection_decorator
     def GET(self, **kwargs):
         """
@@ -161,7 +174,7 @@ class CherryPyAPI(PacificaModel):
         return self._select(**kwargs)
 
     @cherrypy.tools.json_in()
-    @cherrypy.tools.json_out()
+    @cherrypy.tools.json_out(handler=json_handler)
     @db_connection_decorator
     def PUT(self):
         """
@@ -172,7 +185,7 @@ class CherryPyAPI(PacificaModel):
         self._insert(cherrypy.request.json)
 
     @cherrypy.tools.json_in()
-    @cherrypy.tools.json_out()
+    @cherrypy.tools.json_out(handler=json_handler)
     @db_connection_decorator
     def POST(self, **kwargs):
         """

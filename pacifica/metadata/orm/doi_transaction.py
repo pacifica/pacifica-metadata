@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """DOI transaction relationship."""
 from peewee import ForeignKeyField
-from pacifica.metadata.orm.utils import index_hash, unicode_type
-from pacifica.metadata.orm.transaction_user import TransactionUser
-from pacifica.metadata.orm.doi_entries import DOIEntries
-from pacifica.metadata.rest.orm import CherryPyAPI
+from .utils import index_hash, unicode_type
+from .transaction_user import TransactionUser
+from .doi_entries import DOIEntries
+from ..rest.orm import CherryPyAPI
 
 
 class DOITransaction(CherryPyAPI):
@@ -24,17 +24,17 @@ class DOITransaction(CherryPyAPI):
 
     doi = ForeignKeyField(
         DOIEntries, backref='transactions', field='doi', column_name='doi', primary_key=True)
-    # NOTE: relink to transaction user enforce relationship with authorized release relationship
-    transaction = ForeignKeyField(
-        TransactionUser, field='transaction', backref='doi_releases')
+    transaction = ForeignKeyField(TransactionUser, backref='doi_releases')
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(DOITransaction, self).to_hash(**flags)
-        obj['_id'] = index_hash(unicode_type(self.__data__['doi']),
-                                int(self.__data__['transaction']))
+        obj['_id'] = index_hash(
+            unicode_type(self.__data__['doi']),
+            str(self.__data__['transaction'])
+        )
         obj['doi'] = unicode_type(self.__data__['doi'])
-        obj['transaction'] = int(self.__data__['transaction'])
+        obj['transaction'] = str(self.__data__['transaction'])
         return obj
 
     def from_hash(self, obj):
@@ -43,7 +43,7 @@ class DOITransaction(CherryPyAPI):
         self._set_only_if('doi', obj, 'doi',
                           lambda: DOIEntries.get(DOIEntries.doi == obj['doi']))
         self._set_only_if('transaction', obj, 'transaction',
-                          lambda: TransactionUser.get(TransactionUser.transaction == obj['transaction']))
+                          lambda: TransactionUser.get(TransactionUser.uuid == obj['transaction']))
 
     @classmethod
     def where_clause(cls, kwargs):

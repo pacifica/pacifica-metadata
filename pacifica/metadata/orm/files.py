@@ -1,12 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Contains the Files object model primary unit of metadata for Pacifica."""
-from peewee import ForeignKeyField, CharField, BigIntegerField
-from peewee import Expression
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.transactions import Transactions
-from pacifica.metadata.orm.utils import datetime_now_nomicrosecond, ExtendDateTimeField
-from pacifica.metadata.orm.utils import unicode_type, ExtendDateField, date_converts
+from peewee import ForeignKeyField, CharField, BigIntegerField, Expression
+from ..rest.orm import CherryPyAPI
+from .transactions import Transactions
+from .utils import datetime_now_nomicrosecond, ExtendDateTimeField
+from .utils import unicode_type, ExtendDateField, date_converts
 
 
 # pylint: disable=too-many-instance-attributes

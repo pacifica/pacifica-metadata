@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 """Projects data model."""
 from peewee import TextField, CharField, Expression
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.utils import ExtendDateTimeField, ExtendDateField
-from pacifica.metadata.orm.utils import date_converts, datetime_now_nomicrosecond
-from pacifica.metadata.orm.utils import unicode_type
+from ..rest.orm import CherryPyAPI
+from .utils import ExtendDateTimeField, ExtendDateField, unicode_type
+from .utils import date_converts, datetime_now_nomicrosecond
 
 
 # pylint: disable=too-many-instance-attributes
@@ -17,25 +16,25 @@ class Projects(CherryPyAPI):
         +-------------------+-------------------------------------+
         | Name              | Description                         |
         +===================+=====================================+
-        | title             | Title of the project               |
+        | title             | Title of the project                |
         +-------------------+-------------------------------------+
-        | abstract          | Long abstract of the project       |
+        | abstract          | Long abstract of the project        |
         +-------------------+-------------------------------------+
         | science_theme     | science group or theme assigned to  |
         +-------------------+-------------------------------------+
-        | project_type     | kind or type of project            |
+        | project_type      | kind or type of project             |
         +-------------------+-------------------------------------+
-        | submitted_date    | date project entered the system    |
+        | submitted_date    | date project entered the system     |
         +-------------------+-------------------------------------+
-        | accepted_date     | date project was accepted          |
+        | accepted_date     | date project was accepted           |
         +-------------------+-------------------------------------+
-        | actual_start_date | date the project was started       |
+        | actual_start_date | date the project was started        |
         +-------------------+-------------------------------------+
-        | actual_end_date   | date the project was ended         |
+        | actual_end_date   | date the project was ended          |
         +-------------------+-------------------------------------+
-        | closed_date       | date the project was terminated    |
+        | closed_date       | date the project was terminated     |
         +-------------------+-------------------------------------+
-        | suspense_date     | date the project is made available |
+        | suspense_date     | date the project is made available  |
         +-------------------+-------------------------------------+
         | encoding          | encoding of the other text attrs    |
         +-------------------+-------------------------------------+

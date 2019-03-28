@@ -1,10 +1,14 @@
 [
   {
     "project": "1234a",
-    "user": 10
+    "relationship": "ad417f50-5401-446d-8e5f-69892777f9b1",
+    "user": 10,
+    "uuid": "45d17677-833f-4835-9714-1839cd315e5d"
   },
   {
     "project": "1236\u00e9",
-    "user": 10
+    "relationship": "ad417f50-5401-446d-8e5f-69892777f9b1",
+    "user": 10,
+    "uuid": "7f910244-6209-49c7-a6a8-d00baf049152"
   }
 ]

@@ -1,0 +1,9 @@
+[
+  {
+    "description": "This is a t\u00e9st data source.",
+    "display_name": "Test Data Sourc\u00e9",
+    "name": "t\u00e9st_data_source_1",
+    "uri": "cifs://user:password@fs.example.com/some_share/some_dir",
+    "uuid": "9e91733d-d702-482b-b6be-fa956b3aa877"
+  }
+]

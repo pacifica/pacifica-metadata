@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """Citations model for tracking journal articles."""
 from peewee import IntegerField, TextField, CharField, ForeignKeyField
-from pacifica.metadata.orm.journals import Journals
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.utils import unicode_type
+from .journals import Journals
+from ..rest.orm import CherryPyAPI
+from .utils import unicode_type
 
 
 # Citations has too many attributes...

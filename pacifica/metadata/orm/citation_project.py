@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 """Citation project relationship."""
 from peewee import ForeignKeyField, CompositeKey
-from pacifica.metadata.orm.utils import index_hash, unicode_type
-from pacifica.metadata.orm.projects import Projects
-from pacifica.metadata.orm.citations import Citations
-from pacifica.metadata.orm.base import DB
-from pacifica.metadata.rest.orm import CherryPyAPI
+from .utils import index_hash, unicode_type
+from .projects import Projects
+from .citations import Citations
+from .base import DB
+from ..rest.orm import CherryPyAPI
 
 
 class CitationProject(CherryPyAPI):
@@ -19,7 +19,7 @@ class CitationProject(CherryPyAPI):
         +===================+=====================================+
         | citation          | Link to the Citation model          |
         +-------------------+-------------------------------------+
-        | project          | Link to the Project model          |
+        | project           | Link to the Project model           |
         +-------------------+-------------------------------------+
     """
 

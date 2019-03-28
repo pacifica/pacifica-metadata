@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 """Contributors model describes an author to a journal article."""
 from peewee import CharField, ForeignKeyField
-from pacifica.metadata.orm.users import Users
-from pacifica.metadata.orm.institutions import Institutions
-from pacifica.metadata.rest.orm import CherryPyAPI
-from pacifica.metadata.orm.utils import unicode_type
+from .users import Users
+from .institutions import Institutions
+from ..rest.orm import CherryPyAPI
+from .utils import unicode_type
 
 
 # pylint: disable=too-many-instance-attributes
@@ -17,7 +17,7 @@ class Contributors(CherryPyAPI):
         +-------------------+-------------------------------------+
         | Name              | Description                         |
         +===================+=====================================+
-        | person            | Link to the User model              |
+        | user              | Link to the User model              |
         +-------------------+-------------------------------------+
         | institution       | Link to the Institution model       |
         +-------------------+-------------------------------------+
