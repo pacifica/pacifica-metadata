@@ -3,7 +3,7 @@
 """CherryPy Status Transaction Metadata object class."""
 from cherrypy import tools, request
 from pacifica.metadata.rest.transaction_queries.query_base import QueryBase
-from pacifica.metadata.orm import TransactionRelease, DOITransaction, CitationTransaction
+from pacifica.metadata.orm import TransactionUser, DOITransaction, CitationTransaction
 from pacifica.metadata.rest.user_queries.user_lookup import UserLookup
 from pacifica.metadata.orm.base import db_connection_decorator
 
@@ -25,11 +25,12 @@ class TransactionReleaseState(QueryBase):
 
         for release in releases:
             found_transactions.append(release['transaction'])
-            if release['authorized_person'] not in user_lookup_cache:
-                user_lookup_cache[release['authorized_person']] = UserLookup.get_user_info_block(
-                    release['authorized_person'], 'simple')
+            # NOTE: we should change this back to authorized_user with relationship link
+            if release['user'] not in user_lookup_cache:
+                user_lookup_cache[release['user']] = UserLookup.get_user_info_block(
+                    release['user'], 'simple')
             release.update({
-                'authorized_person': user_lookup_cache[release['authorized_person']],
+                'user': user_lookup_cache[release['user']],
                 'release_state': 'released', 'display_state': 'Released',
                 'release_date': release['release_date'].isoformat(),
                 'total_size_bytes': transactions[release['transaction']]['total_file_size_bytes'],
@@ -53,7 +54,7 @@ class TransactionReleaseState(QueryBase):
             set(transaction_list) - set(found_transactions))
         for txn in missing_transactions:
             output_results[txn] = {
-                'authorized_person': None, 'release_state': 'not_released',
+                'user': None, 'release_state': 'not_released',
                 'display_state': 'Not Released', 'transaction': txn
             }
         return output_results
@@ -61,11 +62,12 @@ class TransactionReleaseState(QueryBase):
     @staticmethod
     def _get_release_info(transaction_list):
         # pylint: disable=no-member
-        releases = (TransactionRelease
-                    .select(TransactionRelease.transaction,
-                            TransactionRelease.authorized_person,
-                            TransactionRelease.updated.alias('release_date'))
-                    .where(TransactionRelease.transaction << transaction_list).dicts())
+        # NOTE: add join with relationships table
+        releases = (TransactionUser
+                    .select(TransactionUser.transaction,
+                            TransactionUser.user,
+                            TransactionUser.updated.alias('release_date'))
+                    .where(TransactionUser.transaction << transaction_list).dicts())
         # pylint: enable=no-member
         return releases
 

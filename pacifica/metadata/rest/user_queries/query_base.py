@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """CherryPy Status Metadata projectinfo base class."""
-from pacifica.metadata.orm import UserGroup, Projects, ProjectParticipant
+from pacifica.metadata.orm import UserGroup, Projects, ProjectUser
 
 
 class QueryBase(object):
@@ -11,10 +11,10 @@ class QueryBase(object):
     def format_user_block(user_entry, option=None):
         """Construct a dictionary from a given user instance in the metadata stack."""
         user_hash = user_entry.to_hash()
-        project_xref = ProjectParticipant()
+        project_xref = ProjectUser()
         where_exp = project_xref.where_clause({'person_id': user_entry.id})
         project_person_query = (
-            ProjectParticipant.select().where(where_exp)).dicts()
+            ProjectUser.select().where(where_exp)).dicts()
 
         project_list = [proj['project'] for proj in project_person_query]
 

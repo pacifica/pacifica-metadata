@@ -39,7 +39,7 @@ class Contributors(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
-    person = ForeignKeyField(Users, backref='contributions')
+    user = ForeignKeyField(Users, backref='contributions')
     first_name = CharField(default='')
     middle_initial = CharField(default='')
     last_name = CharField(default='')
@@ -56,7 +56,7 @@ class Contributors(CherryPyAPI):
         obj['last_name'] = unicode_type(self.last_name)
         obj['dept_code'] = unicode_type(self.dept_code)
         # pylint: disable=no-member
-        obj['person'] = int(self.__data__['person'])
+        obj['user'] = int(self.__data__['user'])
         obj['institution'] = int(self.__data__['institution'])
         # pylint: enable=no-member
         obj['encoding'] = str(self.encoding)
@@ -69,8 +69,8 @@ class Contributors(CherryPyAPI):
         for attr in ['first_name', 'middle_initial', 'last_name', 'dept_code']:
             self._set_only_if(
                 attr, obj, attr, lambda k=attr: unicode_type(obj[k]))
-        self._set_only_if('person', obj, 'person',
-                          lambda: Users.get(Users.id == int(obj['person'])))
+        self._set_only_if('user', obj, 'user',
+                          lambda: Users.get(Users.id == int(obj['user'])))
         self._set_only_if('institution', obj, 'institution',
                           lambda: Institutions.get(Institutions.id == int(obj['institution'])))
         self._set_only_if('encoding', obj, 'encoding',
@@ -84,7 +84,7 @@ class Contributors(CherryPyAPI):
             where_clause,
             kwargs,
             [
-                'person',
+                'user',
                 'institution',
                 'first_name',
                 'last_name',

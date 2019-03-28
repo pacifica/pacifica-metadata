@@ -5,7 +5,7 @@ from cherrypy import HTTPError
 from peewee import DoesNotExist, fn, JOIN
 from pacifica.metadata.orm import TransactionKeyValue, Keys, Values
 from pacifica.metadata.orm import Files, FileKeyValue, TransSIP
-from pacifica.metadata.orm import Users, Instruments, Projects, TransactionRelease
+from pacifica.metadata.orm import Users, Instruments, Projects, TransactionUser
 
 
 # pylint: disable=too-few-public-methods
@@ -166,8 +166,9 @@ class QueryBase(object):
     def _get_base_transaction_metadata(transaction_entry, option=None):
         transaction_id = transaction_entry.get('_id')
         files = QueryBase._get_file_list(transaction_id)
-        release_state_obj = TransactionRelease.select().where(
-            TransactionRelease.transaction == transaction_id)
+        # NOTE: add join with relationship table
+        release_state_obj = TransactionUser.select().where(
+            TransactionUser.transaction == transaction_id)
         if release_state_obj.exists():
             rso = release_state_obj.get().to_hash()
             release_state_info = {

@@ -4,7 +4,7 @@
 from peewee import ForeignKeyField, CompositeKey
 from pacifica.metadata.orm.base import DB
 from pacifica.metadata.orm.citations import Citations
-from pacifica.metadata.orm.transaction_release import TransactionRelease
+from pacifica.metadata.orm.transaction_user import TransactionUser
 from pacifica.metadata.rest.orm import CherryPyAPI
 from pacifica.metadata.orm.utils import index_hash
 
@@ -17,7 +17,7 @@ class CitationTransaction(CherryPyAPI):
         +-------------------+--------------------------------------------+
         | Name              | Description                                |
         +===================+============================================+
-        | transaction       | Link to the TransactionRelease model       |
+        | transaction       | Link to the TransactionUser model       |
         +-------------------+--------------------------------------------+
         | citation          | Link to the Citations model                |
         +-------------------+--------------------------------------------+
@@ -25,7 +25,7 @@ class CitationTransaction(CherryPyAPI):
 
     citation = ForeignKeyField(Citations, backref='release_entries')
     transaction = ForeignKeyField(
-        TransactionRelease,
+        TransactionUser,
         backref='citations',
         field='transaction'
     )
@@ -58,7 +58,7 @@ class CitationTransaction(CherryPyAPI):
         )
         self._set_only_if(
             'transaction', obj, 'transaction',
-            lambda: TransactionRelease.get(TransactionRelease.transaction == obj['transaction'])
+            lambda: TransactionUser.get(TransactionUser.transaction == obj['transaction'])
         )
 
     @classmethod

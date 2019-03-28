@@ -23,6 +23,7 @@ class ProjectInstrument(CherryPyAPI):
         +-------------------+-------------------------------------+
     """
 
+    # NOTE: add relationship
     instrument = ForeignKeyField(Instruments, backref='projects')
     project = ForeignKeyField(Projects, backref='instruments')
 

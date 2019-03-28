@@ -3,7 +3,7 @@
 """CherryPy Status Metadata object class."""
 import re
 from cherrypy import tools, HTTPError
-from pacifica.metadata.orm import Projects, ProjectParticipant
+from pacifica.metadata.orm import Projects, ProjectUser
 from pacifica.metadata.rest.project_queries.query_base import QueryBase
 from pacifica.metadata.rest.userinfo import user_exists_decorator
 from pacifica.metadata.orm.base import db_connection_decorator
@@ -19,8 +19,8 @@ class ProjectUserSearch(QueryBase):
     def get_projects_for_user(user_id):
         """Return a list of formatted project objects for the indicated user."""
         # get list of project_ids for this user
-        where_clause = ProjectParticipant().where_clause(
-            {'person_id': user_id})
+        where_clause = ProjectUser().where_clause(
+            {'user_id': user_id})
         # pylint: disable=no-member
         projects = (Projects
                     .select(
@@ -29,7 +29,7 @@ class ProjectUserSearch(QueryBase):
                         Projects.accepted_date, Projects.submitted_date,
                         Projects.project_type
                     )
-                    .join(ProjectParticipant)
+                    .join(ProjectUser)
                     .where(where_clause)
                     .order_by(Projects.title))
         # pylint: enable=no-member
