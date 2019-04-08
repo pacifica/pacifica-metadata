@@ -46,7 +46,7 @@ class Relationships(CherryPyAPI):
             {
                 'name': 'principle_investigator',
                 'display_name': 'Principle Investigator',
-                'description': 'subject is the prinsiple investigator of the object'
+                'description': 'subject is the principle investigator of the object'
             },
             {
                 'name': 'custodian',
