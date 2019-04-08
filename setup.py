@@ -16,7 +16,7 @@ setup(
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     description='Pacifica Metadata',
-    url='https://pypi.python.org/pypi/pacifica-metadata/',
+    url='https://github.com/pacifica/pacifica-metadata/',
     long_description=open(path.join(
         path.abspath(path.dirname(__file__)),
         'README.md')).read(),
