@@ -16,6 +16,7 @@ There are also CherryPy methods for creating, updating, getting
 and deleting these objects in from a web service layer.
 """
 import datetime
+import uuid
 from dateutil import parser
 from peewee import Model, Expression, OP, AutoField, fn, CompositeKey, SQL, NodeList, BackrefAccessor
 from six import text_type
@@ -76,6 +77,16 @@ class PacificaModel(Model):
     def _set_only_if(self, key, obj, dest_attr, func):
         if key in obj:
             setattr(self, dest_attr, func())
+
+    def _set_only_if_by_name(self, attr, obj, cls):
+        self._set_only_if(
+            '{}_name'.format(attr), obj, attr,
+            lambda: cls.get(cls.name == obj['{}_name'.format(attr)])
+        )
+        self._set_only_if(
+            attr, obj, attr,
+            lambda: cls.get(cls.uuid == uuid.UUID(obj[attr]))
+        )
 
     def _set_date_part(self, date_part, obj):
         self._set_only_if(date_part, obj, date_part,

@@ -59,10 +59,8 @@ class InstrumentDataSource(CherryPyAPI):
             'instrument', obj, 'instrument',
             lambda: Instruments.get(Instruments.id == int(obj['instrument']))
         )
-        attr_rel_cls = [
-            ('data_source', DataSources),
-            ('relationship', Relationships)
-        ]
+        self._set_only_if_by_name('relationship', obj, Relationships)
+        attr_rel_cls = [('data_source', DataSources)]
         for attr, rel_cls in attr_rel_cls:
             self._set_only_if(
                 attr, obj, attr, lambda cls=rel_cls, o=obj, a=attr: cls.get(cls.uuid == uuid.UUID(o[a]))
