@@ -55,10 +55,7 @@ class InstrumentUser(CherryPyAPI):
         super(InstrumentUser, self).from_hash(obj)
         self._set_only_if('uuid', obj, 'uuid',
                           lambda: uuid.UUID(obj['uuid']))
-        self._set_only_if(
-            'relationship', obj, 'relationship',
-            lambda: Relationships.get(Relationships.uuid == uuid.UUID(obj['relationship']))
-        )
+        self._set_only_if_by_name('relationship', obj, Relationships)
         self._set_only_if(
             'instrument', obj, 'instrument',
             lambda: Instruments.get(Instruments.id == obj['instrument'])
