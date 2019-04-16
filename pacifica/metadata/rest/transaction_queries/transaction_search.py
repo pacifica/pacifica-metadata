@@ -23,6 +23,7 @@ class TransactionSearch(QueryBase):
         query = trans.select()
         item_count = 100
         page_num = -1
+        offset = -1
         for term in search_terms:
             value = str(search_terms[term]).replace('+', ' ')
             if term in ['project', 'project_id'] and value != '-1':
@@ -55,13 +56,18 @@ class TransactionSearch(QueryBase):
                 page_num = int(value)
         query = query.where(where_clause)
         total_transaction_count = query.count()
+        if item_count > 0 and (page_num > 0 or offset >= 0):
+            offset = item_count * (page_num - 1)
+            query = query.limit(item_count).offset(offset)
+
+        query = query.order_by(TransSIP.id.desc())
+
         transaction_search_stats = {
             'total_count': total_transaction_count,
             'items_per_page': item_count,
-            'page_num': page_num
+            'page': page_num,
+            'offset': offset
         }
-        if item_count > 0 and page_num > 0:
-            query = query.paginate(page_num, item_count)
 
         return [t.id for t in query], transaction_search_stats
 
