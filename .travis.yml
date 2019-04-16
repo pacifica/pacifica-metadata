@@ -22,7 +22,7 @@ env:
   NOTIFICATIONS_URL: http://127.0.0.1:8080
   PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
 ".script": &1
-- pip install pacifica-metadata==0.3.1
+- pip install pacifica-metadata==0.3.1 'elasticsearch<7'
 - export METADATA_CPCONFIG="$PWD/server.conf"
 - export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata_upgrade"
 - pacifica-metadata-cmd dbsync

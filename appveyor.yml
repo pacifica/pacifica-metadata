@@ -42,7 +42,7 @@ test_script:
     mkdir C:\tmp; C:\pacifica\Scripts\activate.ps1;
     $es_proc = Start-Process C:\elasticsearch\elasticsearch-5.6.14\bin\elasticsearch -PassThru;
     pre-commit run -a;
-    pip install pacifica-metadata==0.3.1;
+    pip install pacifica-metadata==0.3.1 elasticsearch<7;
     $env:METADATA_CPCONFIG = "$PWD/server.conf";
     $env:PEEWEE_URL = "postgres://postgres:Password12!@localhost/pacifica_metadata_upgrade";
     pacifica-metadata-cmd dbsync; mkdir C:\pacifica-metadata;
