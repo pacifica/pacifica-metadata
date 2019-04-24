@@ -8,12 +8,16 @@ from .base_test import TestBase
 SAMPLE_VALUE_HASH = {
     '_id': 127,
     'value': '43278a',
+    'display_name': '43278a',
+    'description': '43278a',
     'encoding': 'UTF8'
 }
 
 SAMPLE_UNICODE_VALUE_HASH = {
     '_id': 127,
     'value': u'43278é',
+    'display_name': u'43278é',
+    'description': u'43278é',
     'encoding': 'UTF8'
 }
 

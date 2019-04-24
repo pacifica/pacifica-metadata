@@ -8,12 +8,16 @@ from .base_test import TestBase
 SAMPLE_KEY_HASH = {
     '_id': 127,
     'key': 'Test Key 1',
+    'display_name': 'Test Key 1',
+    'description': 'Test Key 1',
     'encoding': 'UTF8'
 }
 
 SAMPLE_UNICODE_KEY_HASH = {
     '_id': 127,
     'key': u'Tést Key 2',
+    'display_name': u'Tést Key 2',
+    'description': u'Tést Key 2',
     'encoding': 'UTF8'
 }
 

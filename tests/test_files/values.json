@@ -1,10 +1,14 @@
 [
   {
     "_id": 103,
+    "description": "The value is 27",
+    "display_name": "27",
     "value": "27"
   },
   {
     "_id": 104,
+    "description": "The value is 19",
+    "display_name": "19",
     "value": "19"
   }
 ]

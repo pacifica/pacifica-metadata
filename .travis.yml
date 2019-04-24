@@ -1,17 +1,11 @@
 language: python
+dist: xenial
 services:
 - postgresql
 - elasticsearch
 cache:
   directories:
   - $HOME/.cache/pre-commit
-addons:
-  apt:
-    sources:
-    - elasticsearch-5.x
-    packages:
-    - elasticsearch
-    - oracle-java8-set-default
 stages:
 - lint
 - test
@@ -82,7 +76,7 @@ jobs:
       unzip apgdiff.zip;
       psql -c 'create database pacifica_metadata;' -U postgres;
       psql -c 'create database pacifica_metadata_upgrade;' -U postgres;
-      pip install pacifica-metadata==0.3.1;
+      pip install pacifica-metadata==0.3.1 'elasticsearch<7';
       export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata_upgrade";
       pacifica-metadata-cmd dbsync;
       pip install .;

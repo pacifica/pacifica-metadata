@@ -7,7 +7,9 @@ from .base_test import TestBase
 
 SAMPLE_GROUP_HASH = {
     '_id': 10,
-    'name': 'Custodians',
+    'name': 'custodians',
+    'display_name': 'Custodians',
+    'description': 'Members of this group are responsible for something.',
     'is_admin': True,
     'encoding': 'UTF8'
 }
@@ -15,6 +17,8 @@ SAMPLE_GROUP_HASH = {
 SAMPLE_UNICODE_GROUP_HASH = {
     '_id': 11,
     'name': u'Bléh',
+    'display_name': u'Bléh',
+    'description': u'Bléh',
     'is_admin': False,
     'encoding': 'UTF8'
 }

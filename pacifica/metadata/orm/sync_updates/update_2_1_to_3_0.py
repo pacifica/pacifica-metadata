@@ -2,13 +2,15 @@
 # -*- coding: utf-8 -*-
 """Update Schema from 2.0 to 3.0."""
 import uuid
-from peewee import ForeignKeyField, UUIDField
+from peewee import ForeignKeyField, UUIDField, Model, CompositeKey, DateTimeField
 from playhouse.migrate import SchemaMigrator, migrate
 from ..relationships import Relationships
+from ..instruments import Instruments
+from ..keys import Keys
+from ..values import Values
 from ..transaction_user import TransactionUser
 from ..data_sources import DataSources
 from ..instrument_data_source import InstrumentDataSource
-from ..instrument_key_value import InstrumentKeyValue
 from ..globals import DB
 
 
@@ -52,10 +54,28 @@ def _rename_tables():
 
 
 def _create_tables():
+    class OldInstKeyValue(Model):
+        """This is the original Instrument Key Value object."""
+
+        instrument = ForeignKeyField(Instruments)
+        key = ForeignKeyField(Keys)
+        value = ForeignKeyField(Values)
+        created = DateTimeField(index=True)
+        updated = DateTimeField(index=True)
+        deleted = DateTimeField(index=True, null=True)
+
+        # pylint: disable=too-few-public-methods
+        class Meta(object):
+            """PeeWee meta class contains the database and the primary key."""
+
+            database = DB
+            primary_key = CompositeKey('instrument', 'key', 'value')
+            table_name = 'instrumentkeyvalue'
+            legacy_table_names = False
     Relationships.create_table()
     DataSources.create_table()
     InstrumentDataSource.create_table()
-    InstrumentKeyValue.create_table()
+    OldInstKeyValue.create_table()
 
 
 # pylint: disable=too-many-locals
