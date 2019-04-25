@@ -128,7 +128,7 @@ class TestFileInfoAPI(CPCommonTest):
 
     def test_files_with_tkv(self):
         """Test fileinfo retrieval with k/v pairs."""
-        key = 'Temp F'
+        key = 'temp_f'
         value = 27
         req = self._get_files_with_tkv(key, value)
         self.assertEqual(req.status_code, 200)
@@ -138,7 +138,7 @@ class TestFileInfoAPI(CPCommonTest):
     def test_bad_files_with_tkv(self):
         """Test fileinfo retrieval with k/v pairs."""
         # nonexistent key
-        key = 'Temp Q'
+        key = 'temp_q'
         value = 27
         req = self._get_files_with_tkv(key, value)
         self.assertEqual(req.status_code, 200)
@@ -146,7 +146,7 @@ class TestFileInfoAPI(CPCommonTest):
         self.assertEqual(len(req_json), 0)
 
         # nonexistent value, valid key
-        key = 'Temp F'
+        key = 'temp_f'
         value = 29
         req = self._get_files_with_tkv(key, value)
         self.assertEqual(req.status_code, 200)
@@ -154,7 +154,7 @@ class TestFileInfoAPI(CPCommonTest):
         self.assertEqual(len(req_json), 0)
 
         # valid key, valid value, no relations
-        key = 'Temp C'
+        key = 'temp_c'
         value = 27
         req = self._get_files_with_tkv(key, value)
         self.assertEqual(req.status_code, 200)
@@ -162,7 +162,7 @@ class TestFileInfoAPI(CPCommonTest):
         self.assertEqual(len(req_json), 0)
 
         # valid key, valid value, relation, no files
-        key = 'Temp F'
+        key = 'temp_f'
         value = 19
         req = self._get_files_with_tkv(key, value)
         self.assertEqual(req.status_code, 200)

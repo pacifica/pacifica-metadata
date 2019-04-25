@@ -1,10 +1,14 @@
 [
   {
     "_id": 103,
-    "key": "T\u00e9mp C"
+    "description": "This key represents the temperature in celcius.",
+    "display_name": "T\u00e9mperature Celcius",
+    "key": "t\u00e9mp_c"
   },
   {
     "_id": 104,
-    "key": "Temp F"
+    "description": "This key represents the temperature in fahrenheit",
+    "display_name": "Temperature Fahrenheit",
+    "key": "temp_f"
   }
 ]

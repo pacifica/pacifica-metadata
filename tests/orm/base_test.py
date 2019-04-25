@@ -112,7 +112,10 @@ class TestBase(TestCase):
         chk_obj = self.base_where_clause_search(obj, kwargs)[0]
         chk_obj_hash = chk_obj.to_hash()
         for key in obj_hash.keys():
-            self.assertEqual(chk_obj_hash[key], obj_hash[key])
+            self.assertEqual(
+                chk_obj_hash[key], obj_hash[key],
+                unicode_type('{} not equal to {}').format(chk_obj_hash[key], obj_hash[key])
+            )
 
     def base_where_clause(self, obj_hash):
         """
@@ -129,4 +132,7 @@ class TestBase(TestCase):
             chk_obj = self.base_where_clause_search(obj, {key: val})[0]
             chk_obj_hash = chk_obj.to_hash()
             for chkkey in obj_hash.keys():
-                self.assertEqual(chk_obj_hash[chkkey], obj_hash[chkkey])
+                self.assertEqual(
+                    chk_obj_hash[chkkey], obj_hash[chkkey],
+                    unicode_type('{} not equal to {}').format(chk_obj_hash[chkkey], obj_hash[chkkey])
+                )

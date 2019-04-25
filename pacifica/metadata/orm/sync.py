@@ -7,7 +7,7 @@ from ..config import get_config
 from .globals import DB
 from .all_objects import ORM_OBJECTS
 
-SCHEMA_MAJOR = 3
+SCHEMA_MAJOR = 4
 SCHEMA_MINOR = 0
 
 # pylint: disable=too-few-public-methods
@@ -49,7 +49,8 @@ class OrmSync(object):
         (1, 0),
         (2, 0),
         (2, 1),
-        (3, 0)
+        (3, 0),
+        (4, 0)
     ]
 
     @staticmethod
@@ -91,6 +92,12 @@ class OrmSync(object):
     def update_2_1_to_3_0(cls):
         """Update to the schema to create relationships."""
         from .sync_updates.update_2_1_to_3_0 import update_schema
+        update_schema()
+
+    @classmethod
+    def update_3_0_to_4_0(cls):
+        """Update to the schema to create relationships."""
+        from .sync_updates.update_3_0_to_4_0 import update_schema
         update_schema()
 
     @classmethod

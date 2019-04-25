@@ -1,17 +1,23 @@
 [
   {
     "_id": 0,
+    "description": "Member of this group have administrative powers.",
+    "display_name": "Administrators",
     "is_admin": true,
     "name": "admin"
   },
   {
     "_id": 1000,
+    "description": "Members of this group are users of the system.",
+    "display_name": "Users",
     "is_admin": false,
     "name": "users"
   },
   {
     "_id": 1001,
+    "description": "Members of this group are NMR Instrum\u00e9nts.",
+    "display_name": "NMR Instrum\u00e9nts",
     "is_admin": false,
-    "name": "NMR Instrum\u00e9nts"
+    "name": "nmr_instrum\u00e9nts"
   }
 ]

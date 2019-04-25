@@ -39,9 +39,24 @@ class Relationships(CherryPyAPI):
         super(Relationships, cls).create_table()
         static_relationships = [
             {
+                'name': 'upload_required',
+                'display_name': 'Required for Upload',
+                'description': 'This relationship means that the objects are required for upload to be asserted.'
+            },
+            {
+                'name': 'search_required',
+                'display_name': 'Required for Search',
+                'description': 'This relationship means that the objects are required for search to be asserted.'
+            },
+            {
                 'name': 'member_of',
                 'display_name': 'Member of',
                 'description': 'subject is a member of the object'
+            },
+            {
+                'name': 'co_principle_investigator',
+                'display_name': 'Co-Principle Investigator',
+                'description': 'subject is the co-principle investigator of the object'
             },
             {
                 'name': 'principle_investigator',
