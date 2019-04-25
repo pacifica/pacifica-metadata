@@ -68,10 +68,7 @@ class InstrumentKeyValue(CherryPyAPI):
                 attr, obj, attr,
                 lambda cls=rel_cls, a=attr: cls.get(cls.id == obj[a])
             )
-        self._set_only_if(
-            'relationship', obj, 'relationship',
-            lambda: Relationships.get(Relationships.uuid == obj['relationship'])
-        )
+        self._set_only_if_by_name('relationship', obj, Relationships)
 
     @classmethod
     def where_clause(cls, kwargs):
