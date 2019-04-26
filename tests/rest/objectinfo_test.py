@@ -43,5 +43,5 @@ class TestObjectInfoAPI(CPCommonTest):
         self.assertTrue(
             "'DoesNotExist' is not a valid class object name" in req.text)
         req = requests.get('{0}/objectinfo'.format(self.url))
-        self.assertEqual(req.status_code, 404)
-        self.assertTrue('No object class name found' in req.text)
+        self.assertEqual(req.status_code, 200)
+        self.assertTrue('users' in loads(req.text))

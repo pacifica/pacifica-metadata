@@ -301,11 +301,15 @@ class PacificaModel(Model):
                 }
         where_clause = where_clause if where_clause else {}
         # pylint: disable=no-value-for-parameter
+        field_types = {}
+        for field_name, field in cls._meta.fields.items():
+            field_types[field_name] = str(field.field_type)
         js_object = {
             'callable_name': cls.__module__.split('.').pop().lower(),
             'last_changed_date': cls.last_change_date(),
             'primary_keys': cls.get_primary_keys(),
             'field_list': cls._meta.sorted_field_names,
+            'field_types': field_types,
             'foreign_keys': cls.cls_foreignkeys(),
             'related_models': related_model_info,
             'related_names': cls.cls_revforeignkeys(),
