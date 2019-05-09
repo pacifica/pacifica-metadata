@@ -32,6 +32,12 @@ def get_config():
         'NOTIFICATIONS_DISABLED', 'False'))
     configparser.set('notifications', 'url', getenv(
         'NOTIFICATIONS_URL', 'http://127.0.0.1:8070/receive'))
+    configparser.set('notifications', 'ingest_eventtype', getenv(
+        'NOTIFICATIONS_INGEST_EVENT_TYPE', 'org.pacifica.metadata.ingest'))
+    configparser.set('notifications', 'ingest_source', getenv(
+        'NOTIFICATIONS_INGEST_SOURCE', 'http://metadata.pacifica.org/transactions?_id={_id}'))
+    configparser.set('notifications', 'ingest_eventid', getenv(
+        'NOTIFICATIONS_INGEST_EVENTID', 'metadata.ingest.{_id}'))
     configparser.read(CONFIG_FILE)
     return configparser
 
