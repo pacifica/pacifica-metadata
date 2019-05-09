@@ -38,6 +38,12 @@ def get_config():
         'NOTIFICATIONS_INGEST_SOURCE', 'http://metadata.pacifica.org/transactions?_id={_id}'))
     configparser.set('notifications', 'ingest_eventid', getenv(
         'NOTIFICATIONS_INGEST_EVENTID', 'metadata.ingest.{_id}'))
+    configparser.set('notifications', 'orm_eventtype', getenv(
+        'NOTIFICATIONS_ORM_EVENT_TYPE', 'org.pacifica.metadata.orm'))
+    configparser.set('notifications', 'orm_source', getenv(
+        'NOTIFICATIONS_ORM_SOURCE', 'http://metadata.pacifica.org/{object_name}?{args}'))
+    configparser.set('notifications', 'orm_eventid', getenv(
+        'NOTIFICATIONS_ORM_EVENTID', 'metadata.orm.{object_name}.{uuid}'))
     configparser.read(CONFIG_FILE)
     return configparser
 

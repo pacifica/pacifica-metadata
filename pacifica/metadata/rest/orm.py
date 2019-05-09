@@ -1,11 +1,18 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Core interface for each ORM object to interface with CherryPy."""
+try:
+    from urllib import urlencode
+except ImportError:  # pragma: no cover only python 2/3
+    from urllib.parse import urlencode
+from uuid import uuid4
 import cherrypy
 from cherrypy import HTTPError
 from peewee import DoesNotExist
 from pacifica.metadata.orm.base import PacificaModel, db_connection_decorator
 from pacifica.metadata.orm.utils import datetime_now_nomicrosecond, datetime_converts, UUIDEncoder
+from .events import emit_event
+from ..config import get_config
 
 
 def json_handler(*args, **kwargs):
@@ -30,6 +37,41 @@ class CherryPyAPI(PacificaModel):
         'recursion_exclude': []
     }
     exposed = True
+
+    @staticmethod
+    def _primary_keys_as_dict(obj):
+        """Turn the primary keys for self into get parameters for web access."""
+        ret = {}
+        for pkey in obj.get_primary_keys():
+            if pkey == 'id':
+                ret['_id'] = obj.to_hash()['_id']
+            else:
+                ret[pkey] = obj.to_hash()[pkey]
+        return ret
+
+    @classmethod
+    def _primary_keys_as_getargs(cls, obj):
+        """Return primary keys as get args."""
+        return urlencode(cls._primary_keys_as_dict(obj))
+
+    def _send_orm_event(self, obj, method):
+        if not get_config().getboolean('notifications', 'disabled'):
+            emit_event(
+                eventType=get_config().get('notifications', 'orm_eventtype'),
+                source=get_config().get('notifications', 'orm_source').format(
+                    object_name=obj.get_object_info()['callable_name'],
+                    args=self._primary_keys_as_getargs(obj)
+                ),
+                eventID=get_config().get('notifications', 'orm_eventid').format(
+                    object_name=obj.get_object_info()['callable_name'],
+                    uuid=uuid4()
+                ),
+                data={
+                    'obj_type': obj.get_object_info()['callable_name'],
+                    'obj_primary_keys': self._primary_keys_as_dict(obj),
+                    'method': method
+                }
+            )
 
     def _select(self, **kwargs):
         """Internal select method."""
@@ -65,6 +107,7 @@ class CherryPyAPI(PacificaModel):
             'updated', datetime_now_nomicrosecond())
         did_something = False
         for obj in self.select().where(self.where_clause(kwargs)):
+            self._send_orm_event(obj, 'update')
             did_something = True
             obj.from_hash(update_hash)
             obj.save()
@@ -107,9 +150,14 @@ class CherryPyAPI(PacificaModel):
             message += 'Remove or change the duplicated id values'
             raise HTTPError(400, message)
         clean_objs = self._insert_many_format(objs)
+        # this is a PostgreSQL specific option...
         # pylint: disable=no-value-for-parameter
-        self.__class__.insert_many(clean_objs).execute()
+        id_list = self.__class__.insert_many(clean_objs).execute()
         # pylint: enable=no-value-for-parameter
+        if not get_config().getboolean('notifications', 'disabled'):
+            for obj_ids in id_list:
+                obj = self.select().where(self.where_clause(dict(zip(self.get_primary_keys(), obj_ids))))[0]
+                self._send_orm_event(obj, 'insert')
 
     @classmethod
     def check_for_key_existence(cls, object_list):
@@ -146,6 +194,7 @@ class CherryPyAPI(PacificaModel):
         """Force delete entries in the database."""
         recursive = kwargs.pop('recursive', False)
         for obj in self.select().where(self.where_clause(kwargs)):
+            self._send_orm_event(obj, 'delete')
             obj.delete_instance(recursive)
 
     def _delete(self, **kwargs):
