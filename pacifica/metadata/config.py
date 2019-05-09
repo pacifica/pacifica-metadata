@@ -41,7 +41,7 @@ def get_config():
     configparser.set('notifications', 'orm_eventtype', getenv(
         'NOTIFICATIONS_ORM_EVENT_TYPE', 'org.pacifica.metadata.orm'))
     configparser.set('notifications', 'orm_source', getenv(
-        'NOTIFICATIONS_ORM_SOURCE', 'http://metadata.pacifica.org/{object_name}?{args}'))
+        'NOTIFICATIONS_ORM_SOURCE', 'http://metadata.pacifica.org/{object_name}'))
     configparser.set('notifications', 'orm_eventid', getenv(
         'NOTIFICATIONS_ORM_EVENTID', 'metadata.orm.{object_name}.{uuid}'))
     configparser.read(CONFIG_FILE)

@@ -1,11 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Core interface for each ORM object to interface with CherryPy."""
-try:
-    from urllib import urlencode
-except ImportError:  # pragma: no cover only python 2/3
-    from urllib.parse import urlencode
 from uuid import uuid4
+import json
 import cherrypy
 from cherrypy import HTTPError
 from peewee import DoesNotExist
@@ -49,26 +46,21 @@ class CherryPyAPI(PacificaModel):
                 ret[pkey] = obj.to_hash()[pkey]
         return ret
 
-    @classmethod
-    def _primary_keys_as_getargs(cls, obj):
-        """Return primary keys as get args."""
-        return urlencode(cls._primary_keys_as_dict(obj))
-
-    def _send_orm_event(self, obj, method):
+    @staticmethod
+    def _send_orm_event(obj_cls, objs, method):
         if not get_config().getboolean('notifications', 'disabled'):
             emit_event(
                 eventType=get_config().get('notifications', 'orm_eventtype'),
                 source=get_config().get('notifications', 'orm_source').format(
-                    object_name=obj.get_object_info()['callable_name'],
-                    args=self._primary_keys_as_getargs(obj)
+                    object_name=obj_cls.get_object_info()['callable_name']
                 ),
                 eventID=get_config().get('notifications', 'orm_eventid').format(
-                    object_name=obj.get_object_info()['callable_name'],
+                    object_name=obj_cls.get_object_info()['callable_name'],
                     uuid=uuid4()
                 ),
                 data={
-                    'obj_type': obj.get_object_info()['callable_name'],
-                    'obj_primary_keys': self._primary_keys_as_dict(obj),
+                    'obj_type': obj_cls.get_object_info()['callable_name'],
+                    'obj_primary_keys': objs,
                     'method': method
                 }
             )
@@ -106,13 +98,21 @@ class CherryPyAPI(PacificaModel):
         update_hash['updated'] = update_hash.get(
             'updated', datetime_now_nomicrosecond())
         did_something = False
-        for obj in self.select().where(self.where_clause(kwargs)):
-            self._send_orm_event(obj, 'update')
+        query = self.select().where(self.where_clause(kwargs))
+        for obj in query:
             did_something = True
             obj.from_hash(update_hash)
             obj.save()
         if not did_something:
             raise HTTPError(500, "Get args didn't select any objects.")
+        self._send_orm_event(
+            self.__class__,
+            [
+                self._primary_keys_as_dict(obj)
+                for obj in query
+            ],
+            'update'
+        )
 
     def _set_or_create(self, objs):
         """Set or create the object if it doesn't already exist."""
@@ -153,11 +153,25 @@ class CherryPyAPI(PacificaModel):
         # this is a PostgreSQL specific option...
         # pylint: disable=no-value-for-parameter
         id_list = self.__class__.insert_many(clean_objs).execute()
+        clean_id_list = []
+        for obj_ids in id_list:
+            new_objids = []
+            for obj_id in obj_ids:
+                try:
+                    json.dumps(obj_id)
+                    new_objids.append(obj_id)
+                except TypeError:
+                    new_objids.append(str(obj_id))
+            clean_id_list.append(new_objids)
         # pylint: enable=no-value-for-parameter
-        if not get_config().getboolean('notifications', 'disabled'):
-            for obj_ids in id_list:
-                obj = self.select().where(self.where_clause(dict(zip(self.get_primary_keys(), obj_ids))))[0]
-                self._send_orm_event(obj, 'insert')
+        self._send_orm_event(
+            self.__class__,
+            [
+                dict(zip(self.get_primary_keys(), obj_ids))
+                for obj_ids in clean_id_list
+            ],
+            'insert'
+        )
 
     @classmethod
     def check_for_key_existence(cls, object_list):
@@ -193,9 +207,17 @@ class CherryPyAPI(PacificaModel):
     def _force_delete(self, **kwargs):
         """Force delete entries in the database."""
         recursive = kwargs.pop('recursive', False)
-        for obj in self.select().where(self.where_clause(kwargs)):
-            self._send_orm_event(obj, 'delete')
+        query = self.select().where(self.where_clause(kwargs))
+        for obj in query:
             obj.delete_instance(recursive)
+        self._send_orm_event(
+            self.__class__,
+            [
+                self._primary_keys_as_dict(obj)
+                for obj in query
+            ],
+            'delete'
+        )
 
     def _delete(self, **kwargs):
         """Internal delete object method."""
