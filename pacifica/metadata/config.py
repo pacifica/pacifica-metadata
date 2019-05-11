@@ -32,6 +32,30 @@ def get_config():
         'NOTIFICATIONS_DISABLED', 'False'))
     configparser.set('notifications', 'url', getenv(
         'NOTIFICATIONS_URL', 'http://127.0.0.1:8070/receive'))
+    configparser.set('notifications', 'ingest_eventtype', getenv(
+        'NOTIFICATIONS_INGEST_EVENT_TYPE', 'org.pacifica.metadata.ingest'))
+    configparser.set('notifications', 'ingest_source', getenv(
+        'NOTIFICATIONS_INGEST_SOURCE', 'http://metadata.pacifica.org/transactions?_id={_id}'))
+    configparser.set('notifications', 'ingest_eventid', getenv(
+        'NOTIFICATIONS_INGEST_EVENTID', 'metadata.ingest.{_id}'))
+    configparser.set('notifications', 'orm_eventtype', getenv(
+        'NOTIFICATIONS_ORM_EVENT_TYPE', 'org.pacifica.metadata.orm'))
+    configparser.set('notifications', 'orm_source', getenv(
+        'NOTIFICATIONS_ORM_SOURCE', 'http://metadata.pacifica.org/{object_name}'))
+    configparser.set('notifications', 'orm_eventid', getenv(
+        'NOTIFICATIONS_ORM_EVENTID', 'metadata.orm.{object_name}.{uuid}'))
+    configparser.set('notifications', 'doientry_eventtype', getenv(
+        'NOTIFICATIONS_DOIENTRY_EVENT_TYPE', 'org.pacifica.metadata.doientry'))
+    configparser.set('notifications', 'doientry_source', getenv(
+        'NOTIFICATIONS_DOIENTRY_SOURCE', 'http://metadata.pacifica.org/doientry'))
+    configparser.set('notifications', 'doientry_eventid', getenv(
+        'NOTIFICATIONS_DOIENTRY_EVENTID', 'metadata.doi.{uuid}'))
+    configparser.set('notifications', 'doiupdate_eventtype', getenv(
+        'NOTIFICATIONS_DOIUPDATE_EVENT_TYPE', 'org.pacifica.metadata.doiupdate'))
+    configparser.set('notifications', 'doiupdate_source', getenv(
+        'NOTIFICATIONS_DOIUPDATE_SOURCE', 'http://metadata.pacifica.org/doientry?doi={doi}'))
+    configparser.set('notifications', 'doiupdate_eventid', getenv(
+        'NOTIFICATIONS_DOIUPDATE_EVENTID', 'metadata.doi.{doi}.{uuid}'))
     configparser.read(CONFIG_FILE)
     return configparser
 

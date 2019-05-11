@@ -2,12 +2,15 @@
 # -*- coding: utf-8 -*-
 """CherryPy DOI Registration Updater object class."""
 from __future__ import print_function
+from uuid import uuid4
 from xml.etree import ElementTree
 from cherrypy import tools, request, HTTPError
 from dateutil.parser import parse
-from pacifica.metadata.rest.doi_queries.doi_registration_base import DOIRegistrationBase
-from pacifica.metadata.orm import DOIAuthors, DOIAuthorMapping, DOIEntries
-from pacifica.metadata.orm.base import DB
+from ...orm import DOIAuthors, DOIAuthorMapping, DOIEntries
+from ...orm.base import DB
+from ...config import get_config
+from ..events import emit_event
+from .doi_registration_base import DOIRegistrationBase
 
 # pylint: disable=too-few-public-methods
 
@@ -131,4 +134,13 @@ class DOIRegistrationUpdate(DOIRegistrationBase):
         doi_string = DOIRegistrationUpdate._process_updated_osti_info(
             osti_xml_string)
 
+        emit_event(
+            eventType=get_config().get('notifications', 'doiupdate_eventtype'),
+            source=get_config().get('notifications', 'doiupdate_source'),
+            eventID=get_config().get('notifications', 'doiupdate_eventid').format(
+                doi=doi_string,
+                uuid=uuid4()
+            ),
+            data=doi_string
+        )
         return doi_string
