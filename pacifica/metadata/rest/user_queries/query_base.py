@@ -12,7 +12,7 @@ class QueryBase(object):
         """Construct a dictionary from a given user instance in the metadata stack."""
         user_hash = user_entry.to_hash()
         project_xref = ProjectUser()
-        where_exp = project_xref.where_clause({'person_id': user_entry.id})
+        where_exp = project_xref.where_clause({'user': user_entry.id})
         project_person_query = (
             ProjectUser.select().where(where_exp)).dicts()
 
