@@ -265,6 +265,8 @@ class PacificaModel(Model):
             # pylint: enable=no-value-for-parameter
             inst_key = index_hash(*obj.values())
             hash_list.append(inst_key)
+            if 'uuid' in obj:
+                obj['uuid'] = str(obj['uuid'])
             entry = {
                 'key_list': obj,
                 'index_hash': inst_key
