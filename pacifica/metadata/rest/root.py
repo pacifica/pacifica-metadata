@@ -51,6 +51,14 @@ class Root(object):
     tkvinfo = TkvInfoAPI()
     tkvupload = TkvUploadAPI()
     doiupload = DOIUploadAPI()
+
+    @staticmethod
+    @cherrypy.tools.json_out()
+    # pylint: disable=invalid-name
+    def GET():
+        """Return happy message about functioning service."""
+        return {'message': 'Pacifica Metadata Up and Running'}
+    # pylint: enable=invalid-name
 # pylint: enable=too-few-public-methods
 
 

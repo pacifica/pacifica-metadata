@@ -143,3 +143,10 @@ class TestCherryPyAPI(CPCommonTest):
         self.assertEqual(chk_obj.id, 4097)
         obj._meta.database.close()
         # pylint: enable=protected-access
+
+    def test_status_url(self):
+        """Test the root level status page."""
+        resp = requests.get(self.url)
+        self.assertEqual(resp.status_code, 200, 'Status code should be 200 OK')
+        self.assertTrue('message' in resp.json(), 'Status should be object with message key.')
+        self.assertEqual(resp.json()['message'], 'Pacifica Metadata Up and Running', 'message should be specific.')
