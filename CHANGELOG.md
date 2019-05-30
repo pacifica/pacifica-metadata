@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Endpoints for querying for status of data
 - Endpoints for querying for reporting of data
 
+## [0.10.2] - 2019-05-30
+### Changed
+- Fix #223 Add Nice Status Url by [@dmlb2000](https://github.com/dmlb2000)
+- Fix #225 Add UUID check for JSON serialization [@dmlb2000](https://github.com/dmlb2000)
+- Fix user lookup clause in user queries endpoint [@kauberry](https://github.com/kauberry)
+
 ## [0.10.1] - 2019-05-18
 ### Added
 - Metadata model
