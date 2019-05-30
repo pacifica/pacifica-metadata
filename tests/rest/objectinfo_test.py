@@ -11,7 +11,7 @@ class TestObjectInfoAPI(CPCommonTest):
 
     __test__ = True
 
-    def test_objectinfo_api(self):
+    def test_objectinfo_api_basic(self):
         """Test the GET method."""
         req = requests.get(
             '{0}/objectinfo?object_class_name=list'.format(self.url))
@@ -34,6 +34,12 @@ class TestObjectInfoAPI(CPCommonTest):
         req_json = loads(req.text)
         self.assertTrue('hash_list' in req_json)
         self.assertTrue('hash_lookup' in req_json)
+
+    def test_objectinfo_api_complex(self):
+        """Test the GET method."""
+        req = requests.get(
+            '{0}/objectinfo/project_user/hashlist'.format(self.url))
+        self.assertEqual(req.status_code, 200)
 
     def test_bad_objectinfo_api(self):
         """Test the GET method with bad data."""
