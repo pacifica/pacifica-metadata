@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Endpoints for querying for status of data
 - Endpoints for querying for reporting of data
 
+## [0.10.3] - 2019-06-05
+### Changed
+- Fix #233 Loosen where clause for users by [@kauberry](https://github.com/kauberry)
+- Fix #231 Update Docs by [@dmlb2000](https://github.com/dmlb2000)
+
 ## [0.10.2] - 2019-05-30
 ### Changed
 - Fix #223 Add Nice Status Url by [@dmlb2000](https://github.com/dmlb2000)
