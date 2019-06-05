@@ -28,9 +28,9 @@ ORM Python Module
    metadata.orm.file_key_value
    metadata.orm.groups
    metadata.orm.institutions
-   metadata.orm.institution_person
+   metadata.orm.institution_user
    metadata.orm.instruments
-   metadata.orm.instrument_custodian
+   metadata.orm.instrument_user
    metadata.orm.instrument_group
    metadata.orm.journals
    metadata.orm.keys
@@ -38,9 +38,9 @@ ORM Python Module
    metadata.orm.projects
    metadata.orm.project_group
    metadata.orm.project_instrument
-   metadata.orm.project_participant
+   metadata.orm.project_user
    metadata.orm.transactions
-   metadata.orm.transaction_release
+   metadata.orm.transaction_user
    metadata.orm.transsap
    metadata.orm.transsip
    metadata.orm.trans_key_value

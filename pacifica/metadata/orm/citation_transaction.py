@@ -17,7 +17,7 @@ class CitationTransaction(CherryPyAPI):
         +-------------------+--------------------------------------------+
         | Name              | Description                                |
         +===================+============================================+
-        | transaction       | Link to the TransactionUser model       |
+        | transaction       | Link to the TransactionUser model          |
         +-------------------+--------------------------------------------+
         | citation          | Link to the Citations model                |
         +-------------------+--------------------------------------------+

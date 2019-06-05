@@ -38,7 +38,7 @@ class Files(CherryPyAPI):
         +---------------+-------------------------------------------+
         | mimetype      | mimetype of the file, if any              |
         +---------------+-------------------------------------------+
-        | suspense_date | date the project is made available       |
+        | suspense_date | date the project is made available        |
         +---------------+-------------------------------------------+
         | encoding      | encoding in the file name or subdir field |
         +---------------+-------------------------------------------+

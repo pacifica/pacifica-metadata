@@ -1,7 +1,7 @@
-Project Participant Python Module
+Transaction User Python Module
 =============================================
 
-.. automodule:: pacifica.metadata.orm.project_participant
+.. automodule:: pacifica.metadata.orm.transaction_user
    :members:
    :private-members:
    :special-members:

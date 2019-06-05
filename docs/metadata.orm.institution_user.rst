@@ -1,7 +1,7 @@
-ElasticSearch Sync Python Module
+Institution User Python Module
 =============================================
 
-.. automodule:: pacifica.metadata.essync
+.. automodule:: pacifica.metadata.orm.institution_user
    :members:
    :private-members:
    :special-members:

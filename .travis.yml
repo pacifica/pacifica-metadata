@@ -11,6 +11,7 @@ stages:
 - test
 - test-migration
 - test-docker
+- test-docs
 - deploy
 env:
   NOTIFICATIONS_URL: http://127.0.0.1:8080
@@ -104,6 +105,15 @@ jobs:
       done;
       pip install .;
       cd tests; python test_files/loadit_test.py
+  - stage: test-docs
+    python: 3.6
+    script: >
+      pip install .;
+      cd docs;
+      sphinx-build -T -E -b readthedocs -d _build/doctrees-readthedocs -D language=en . _build/html;
+      sphinx-build -T -b readthedocssinglehtmllocalmedia -d _build/doctrees-readthedocssinglehtmllocalmedia -D language=en . _build/localmedia;
+      sphinx-build -b latex -D language=en -d _build/doctrees . _build/latex;
+      sphinx-build -T -b epub -d _build/doctrees-epub -D language=en . _build/epub
   - stage: deploy
     services: []
     language: python
