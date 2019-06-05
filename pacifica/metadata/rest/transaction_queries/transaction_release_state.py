@@ -68,8 +68,6 @@ class TransactionReleaseState(QueryBase):
                             TransactionUser.updated.alias('release_date'))
                     .join(Relationships)
                     .where(
-                        (Relationships.name == 'authorized_releaser') &
-                        (Relationships.uuid == TransactionUser.relationship) &
                         (TransactionUser.transaction << transaction_list)
                     ).dicts())
         # pylint: enable=no-member
