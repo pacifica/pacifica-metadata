@@ -1,7 +1,7 @@
-Transaction Release Python Module
+Project User Python Module
 =============================================
 
-.. automodule:: pacifica.metadata.orm.transaction_release
+.. automodule:: pacifica.metadata.orm.project_user
    :members:
    :private-members:
    :special-members:

@@ -7,13 +7,11 @@ Metadata Python Module
 
    metadata.config
    metadata.globals
-   metadata.elastic
    metadata.orm
    metadata.rest
    metadata.wsgi
    metadata.client
    metadata.admin_cmd
-   metadata.essync
 
 .. automodule:: pacifica.metadata
    :members:

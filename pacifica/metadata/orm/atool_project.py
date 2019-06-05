@@ -17,7 +17,7 @@ class AToolProject(CherryPyAPI):
         +-------------------+-------------------------------------+
         | Name              | Description                         |
         +===================+=====================================+
-        | project          | Link to the Projects model         |
+        | project           | Link to the Projects model          |
         +-------------------+-------------------------------------+
         | analytical_tool   | Link to the AnalyticalTools model   |
         +-------------------+-------------------------------------+
