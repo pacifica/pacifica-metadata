@@ -279,13 +279,13 @@ class PacificaModel(Model):
         """Return the primary keys for the object."""
         # pylint: disable=no-member
         primary_key = cls._meta.primary_key
+        keys = [primary_key.name]
         if isinstance(primary_key, CompositeKey) and cls._meta.refs:
-            return list(primary_key.field_names)
+            keys = list(primary_key.field_names)
         elif primary_key.name == 'uuid':
             keys = [x.name for x in cls._meta.refs if x.name != 'relationship']
-            return keys
         # pylint: enable=no-member
-        return [primary_key.name]
+        return keys
 
     @classmethod
     def get_object_info(cls, where_clause=None):
