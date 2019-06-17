@@ -281,6 +281,9 @@ class PacificaModel(Model):
         primary_key = cls._meta.primary_key
         if isinstance(primary_key, CompositeKey) and cls._meta.refs:
             return list(primary_key.field_names)
+        elif primary_key.name == 'uuid':
+            keys = [x.name for x in cls._meta.refs if x.name != 'relationship']
+            return keys
         # pylint: enable=no-member
         return [primary_key.name]
 
