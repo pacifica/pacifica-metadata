@@ -283,9 +283,13 @@ class PacificaModel(Model):
         if isinstance(primary_key, CompositeKey) and cls._meta.refs:
             keys = list(primary_key.field_names)
         elif primary_key.name == 'uuid':
-            keys = [x.name for x in cls._meta.refs if x.name != 'relationship']
+            keys = PacificaModel._extract_meta_refs(cls._meta_refs)
         # pylint: enable=no-member
         return keys
+
+    @staticmethod
+    def _extract_meta_refs(meta_refs):
+        return [x.name for x in meta_refs if x.name != 'relationship']
 
     @classmethod
     def get_object_info(cls, where_clause=None):
