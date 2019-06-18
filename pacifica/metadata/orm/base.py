@@ -18,7 +18,7 @@ and deleting these objects in from a web service layer.
 import datetime
 import uuid
 from dateutil import parser
-from peewee import Model, Expression, OP, AutoField, fn, CompositeKey, SQL, NodeList, BackrefAccessor
+from peewee import Model, Expression, OP, AutoField, fn, SQL, NodeList, BackrefAccessor
 from six import text_type
 from .utils import index_hash, ExtendDateTimeField
 from .utils import datetime_converts, date_converts, datetime_now_nomicrosecond
