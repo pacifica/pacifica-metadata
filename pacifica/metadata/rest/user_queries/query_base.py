@@ -40,6 +40,7 @@ class QueryBase(object):
         if option != 'simple':
             return_block = {
                 'category': user_hash.get('last_name')[:1],
+                'user_id': user_hash.get('_id'),
                 'person_id': user_hash.get('_id'),
                 'first_name': user_hash.get('first_name'),
                 'last_name': user_hash.get('last_name'),
@@ -54,6 +55,7 @@ class QueryBase(object):
             }
         else:
             return_block = {
+                'user_id': user_hash.get('_id'),
                 'person_id': user_hash.get('_id'),
                 'first_name': user_hash.get('first_name'),
                 'last_name': user_hash.get('last_name'),
@@ -72,7 +74,7 @@ class QueryBase(object):
     @staticmethod
     def _is_admin_user(user_entry):
         is_admin = False
-        where_exp = UserGroup().where_clause({'person_id': user_entry.id})
+        where_exp = UserGroup().where_clause({'user_id': user_entry.id})
         for group in UserGroup.select().where(where_exp):
             if group.user_id == user_entry.id:
                 is_admin = True
@@ -82,7 +84,7 @@ class QueryBase(object):
     @staticmethod
     def compose_help_block_message():
         """Assemble a block of relevant help text to be returned with an invalid request."""
-        message = 'You must supply either a numeric person id (like "/userinfo/<person_id>")'
+        message = 'You must supply either a numeric person id (like "/userinfo/<user_id>")'
         message += ' or search for one using the form '
         message += '"/userinfo/search/<search_term_1>+<search_term_2>"'
         return message
