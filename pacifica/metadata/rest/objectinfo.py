@@ -48,7 +48,7 @@ class ObjectInfoAPI(object):
 
         myclass = ObjectInfoAPI.get_class_object_from_name(object_class_name)
         if operation == 'hashlist':
-            available_hash_list, hash_dict = myclass.available_hash_list()
+            available_hash_list, hash_dict = myclass.available_hash_list(where_clause.keys())
             js_object = {
                 'hash_list': available_hash_list,
                 'hash_lookup': hash_dict
