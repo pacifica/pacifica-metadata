@@ -53,7 +53,10 @@ def main():
         'citation_transaction',
         'citation_doi',
         'instrument_data_source',
-        'instrument_key_value'
+        'instrument_key_value',
+        'datasets',
+        'dataset_file',
+        'dataset_project_user'
     ]
     for obj in object_order:
         mdclient.create(obj, loads(

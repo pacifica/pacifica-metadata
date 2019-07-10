@@ -17,13 +17,13 @@ class UserGroup(CherryPyAPI):
         +-------------------+-------------------------------------+
         | Name              | Description                         |
         +===================+=====================================+
-        | person            | Link to the Users model             |
+        | user              | Link to the Users model             |
         +-------------------+-------------------------------------+
         | group             | Link to the Groups model            |
         +-------------------+-------------------------------------+
     """
 
-    person = ForeignKeyField(Users, backref='groups')
+    user = ForeignKeyField(Users, backref='groups')
     group = ForeignKeyField(Groups, backref='members')
 
     # pylint: disable=too-few-public-methods
@@ -31,15 +31,15 @@ class UserGroup(CherryPyAPI):
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB
-        primary_key = CompositeKey('person', 'group')
+        primary_key = CompositeKey('user', 'group')
     # pylint: enable=too-few-public-methods
 
     def to_hash(self, **flags):
         """Convert the object to a hash."""
         obj = super(UserGroup, self).to_hash(**flags)
         obj['_id'] = index_hash(
-            int(self.__data__['person']), int(self.__data__['group']))
-        obj['person'] = int(self.__data__['person'])
+            int(self.__data__['user']), int(self.__data__['group']))
+        obj['user'] = int(self.__data__['user'])
         obj['group'] = int(self.__data__['group'])
         return obj
 
@@ -47,8 +47,8 @@ class UserGroup(CherryPyAPI):
         """Convert the hash into the object."""
         super(UserGroup, self).from_hash(obj)
         self._set_only_if(
-            'person', obj, 'person',
-            lambda: Users.get(Users.id == obj['person'])
+            'user', obj, 'user',
+            lambda: Users.get(Users.id == obj['user'])
         )
         self._set_only_if(
             'group', obj, 'group',
@@ -59,5 +59,5 @@ class UserGroup(CherryPyAPI):
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(UserGroup, cls).where_clause(kwargs)
-        attrs = ['person', 'group']
+        attrs = ['user', 'group']
         return cls._where_attr_clause(where_clause, kwargs, attrs)

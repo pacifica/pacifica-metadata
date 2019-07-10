@@ -8,6 +8,7 @@ on those objects.
 """
 from .citations import Citations
 from .contributors import Contributors
+from .datasets import Datasets
 from .institution_user import InstitutionUser
 from .institutions import Institutions
 from .instruments import Instruments
@@ -30,6 +31,8 @@ from .values import Values
 from .transsip import TransSIP
 from .transsap import TransSAP
 from .transactions import Transactions
+from .dataset_file import DatasetFile
+from .dataset_project_user import DatasetProjectUser
 from .file_key_value import FileKeyValue
 from .trans_key_value import TransactionKeyValue
 from .groups import Groups
@@ -58,6 +61,7 @@ ORM_OBJECTS = [
     Instruments,
     Citations,
     Contributors,
+    Datasets,
     Relationships,
     DataSources,
     Keywords,
@@ -80,6 +84,8 @@ ORM_OBJECTS = [
     FileKeyValue,
     TransactionKeyValue,
     UserGroup,
+    DatasetFile,
+    DatasetProjectUser,
     InstrumentGroup,
     AToolProject,
     AToolTransaction,
