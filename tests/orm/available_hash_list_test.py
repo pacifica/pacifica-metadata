@@ -27,7 +27,7 @@ class TestKeysHashList(TestBase):
         check_list = UserGroup.get_primary_keys()
         self.assertTrue(isinstance(check_list, list))
         self.assertTrue(len(check_list) == 2)
-        self.assertTrue('person' in check_list)
+        self.assertTrue('user' in check_list)
         self.assertTrue('group' in check_list)
 
     def test_hash_list_with_keys(self):

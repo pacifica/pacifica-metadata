@@ -19,6 +19,9 @@ ORM Python Module
    metadata.orm.citation_project
    metadata.orm.citation_transaction
    metadata.orm.contributors
+   metadata.orm.datasets
+   metadata.orm.dataset_file
+   metadata.orm.dataset_user_project
    metadata.orm.doi_authors
    metadata.orm.doi_author_mapping
    metadata.orm.doi_entries

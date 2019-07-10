@@ -74,7 +74,7 @@ class QueryBase(object):
         is_admin = False
         where_exp = UserGroup().where_clause({'person_id': user_entry.id})
         for group in UserGroup.select().where(where_exp):
-            if group.person_id == user_entry.id:
+            if group.user_id == user_entry.id:
                 is_admin = True
                 break
         return is_admin
