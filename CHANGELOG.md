@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Endpoints for querying for status of data
 - Endpoints for querying for reporting of data
 
+## [0.11.1] - 2019-07-10
+### Changed
+- QuickFix #244 Missed column renames by [@dmlb2000](https://github.com/dmlb2000)
+
 ## [0.11.0] - 2019-07-10
 ### Changed
 - Fix #240 Add Dataset model and relationships by [@dmlb2000](https://github.com/dmlb2000)
