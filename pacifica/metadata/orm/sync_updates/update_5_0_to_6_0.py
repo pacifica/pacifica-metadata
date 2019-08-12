@@ -10,7 +10,7 @@ def _update_relationships():
         'principle_investigator': 'principal_investigator'
     }
     for old_val, new_val in row_map.items():
-        DB.execute_sql('update relationships set name = {} where name = {};'.format(new_val, old_val))
+        DB.execute_sql('update relationships set name = \'?\' where name = \'?\';', (new_val, old_val))
 
 
 def _lower_email_address():
