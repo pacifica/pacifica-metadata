@@ -46,7 +46,7 @@ class Users(CherryPyAPI):
             obj['network_id'] = unicode_type(self.network_id).lower()
         else:
             obj['network_id'] = None
-        obj['email_address'] = unicode_type(self.email_address)
+        obj['email_address'] = unicode_type(self.email_address).lower()
         obj['encoding'] = str(self.encoding)
         return obj
 
@@ -54,12 +54,10 @@ class Users(CherryPyAPI):
         """Convert the hash into the object."""
         super(Users, self).from_hash(obj)
         self._set_only_if('_id', obj, 'id', lambda: int(obj['_id']))
-        for attr in ['first_name', 'middle_initial', 'last_name', 'email_address']:
-            # pylint: disable=cell-var-from-loop
-            self._set_only_if(attr, obj, attr, lambda: unicode_type(obj[attr]))
-            # pylint: enable=cell-var-from-loop
-        self._set_only_if('network_id', obj, 'network_id',
-                          lambda: unicode_type(obj['network_id']).lower())
+        for attr in ['first_name', 'middle_initial', 'last_name']:
+            self._set_only_if(attr, obj, attr, lambda a=attr: unicode_type(obj[a]))
+        for attr in ['network_id', 'email_address']:
+            self._set_only_if(attr, obj, attr, lambda a=attr: unicode_type(obj[a]).lower())
         self._set_only_if('encoding', obj, 'encoding',
                           lambda: str(obj['encoding']))
 
@@ -67,8 +65,9 @@ class Users(CherryPyAPI):
     def where_clause(cls, kwargs):
         """Where clause for the various elements."""
         where_clause = super(Users, cls).where_clause(kwargs)
-        if 'network_id' in kwargs:
-            kwargs['network_id'] = kwargs['network_id'].lower()
+        for attr in ['network_id', 'email_address']:
+            if attr in kwargs:
+                kwargs[attr] = kwargs[attr].lower()
         return cls._where_attr_clause(
             where_clause,
             kwargs,
