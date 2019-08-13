@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Endpoints for querying for status of data
 - Endpoints for querying for reporting of data
 
+## [0.12.0] - 2019-08-12
+### Changed
+- Fix #247 and #246 spelling error and email lowercase [@dmlb2000](https://github.com/dmlb2000)
+- Unlock psycopg2 dependency [@dmlb2000](https://github.com/dmlb2000)
+
 ## [0.11.1] - 2019-07-10
 ### Changed
 - QuickFix #244 Missed column renames by [@dmlb2000](https://github.com/dmlb2000)
