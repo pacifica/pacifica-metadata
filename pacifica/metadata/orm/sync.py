@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 """The ORM Sync Module."""
 from time import sleep
+from types import MethodType
+from importlib import import_module
 from peewee import OperationalError, CharField, IntegerField, Model
 from ..config import get_config
 from .globals import DB
 from .all_objects import ORM_OBJECTS
 
-SCHEMA_MAJOR = 6
+SCHEMA_MAJOR = 7
 SCHEMA_MINOR = 0
 
 # pylint: disable=too-few-public-methods
@@ -44,6 +46,7 @@ class OrmSync(object):
     http://docs.peewee-orm.com/en/latest/peewee/playhouse.html#migrate
     """
 
+    method_format = 'update_{}_to_{}'
     versions = [
         (0, 1),
         (1, 0),
@@ -52,7 +55,8 @@ class OrmSync(object):
         (3, 0),
         (4, 0),
         (5, 0),
-        (6, 0)
+        (6, 0),
+        (7, 0)
     ]
 
     @staticmethod
@@ -73,48 +77,6 @@ class OrmSync(object):
         raise OperationalError('Failed database connect retry.')
 
     @classmethod
-    def update_0_1_to_1_0(cls):
-        """Update schema to 1.0."""
-        from .sync_updates.update_0_1_to_1_0 import update_schema
-        update_schema()
-
-    @classmethod
-    def update_1_0_to_2_0(cls):
-        """Update to the schema to move proposal to project."""
-        from .sync_updates.update_1_0_to_2_0 import update_schema
-        update_schema()
-
-    @classmethod
-    def update_2_0_to_2_1(cls):
-        """Update to the schema to move proposal to project."""
-        from .sync_updates.update_2_0_to_2_1 import update_schema
-        update_schema()
-
-    @classmethod
-    def update_2_1_to_3_0(cls):
-        """Update to the schema to create relationships."""
-        from .sync_updates.update_2_1_to_3_0 import update_schema
-        update_schema()
-
-    @classmethod
-    def update_3_0_to_4_0(cls):
-        """Update to the schema to create relationships."""
-        from .sync_updates.update_3_0_to_4_0 import update_schema
-        update_schema()
-
-    @classmethod
-    def update_4_0_to_5_0(cls):
-        """Update to the schema to create relationships."""
-        from .sync_updates.update_4_0_to_5_0 import update_schema
-        update_schema()
-
-    @classmethod
-    def update_5_0_to_6_0(cls):
-        """Update to the schema to create relationships."""
-        from .sync_updates.update_5_0_to_6_0 import update_schema
-        update_schema()
-
-    @classmethod
     def update_tables(cls):
         """Update the database to the current version."""
         verlist = cls.versions
@@ -125,11 +87,10 @@ class OrmSync(object):
         with DB.atomic():
             for db_ver in verlist[verlist.index(db_ver):-1]:
                 next_db_ver = verlist[verlist.index(db_ver)+1]
-                method_name = 'update_{}_to_{}'.format(
+                getattr(cls, cls.method_format.format(
                     '{}_{}'.format(*db_ver),
                     '{}_{}'.format(*next_db_ver)
-                )
-                getattr(cls, method_name)()
+                ))()
             MetadataSystem.drop_table()
             MetadataSystem.create_table()
             MetadataSystem.get_or_create_version()
@@ -159,6 +120,25 @@ class OrmSync(object):
                 '{}.{}'.format(*(MetadataSystem.get_version())),
                 '{}.{}'.format(SCHEMA_MAJOR, SCHEMA_MINOR)
             ))
+
+
+for ver_index in range(len(OrmSync.versions)-1):
+    def update_version(cls, index=ver_index):
+        """Update to the schema to create relationships."""
+        old_ver = cls.versions[index]
+        new_ver = cls.versions[index+1]
+        mod_name = '.sync_updates.update_{}_to_{}'.format('{}_{}'.format(*old_ver), '{}_{}'.format(*new_ver))
+        module = import_module(mod_name, 'pacifica.metadata.orm')
+        module.update_schema()
+    old_version = OrmSync.versions[ver_index]
+    new_version = OrmSync.versions[ver_index+1]
+    setattr(
+        OrmSync,
+        OrmSync.method_format.format(
+            '{}_{}'.format(*old_version),
+            '{}_{}'.format(*new_version)
+        ), MethodType(update_version, OrmSync)
+    )
 
 
 class MetadataSystem(Model):
