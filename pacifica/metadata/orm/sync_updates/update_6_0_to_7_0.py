@@ -37,7 +37,7 @@ def _update_relationships():
         },
     }
     for old_name, new_parts in row_map.items():
-        try:  # pragma: no cover this doesn't always happen depending on state of user db
+        try:
             rel_obj = OldRelationships.select().where(OldRelationships.name == old_name).get()
             rel_obj.name = new_parts['name']
             rel_obj.display_name = new_parts['display_name']
