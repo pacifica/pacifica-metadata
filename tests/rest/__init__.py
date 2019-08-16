@@ -8,7 +8,7 @@ from pacifica.metadata.orm import ORM_OBJECTS
 from pacifica.metadata.orm.sync import OrmSync, DB
 from pacifica.metadata.rest.root import Root, error_page_default
 from pacifica.metadata.globals import CHERRYPY_CONFIG
-from test_files.loadit_test import main
+from ..test_files.loadit_test import main
 
 
 # pylint: disable=too-few-public-methods

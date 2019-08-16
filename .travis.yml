@@ -1,7 +1,6 @@
 language: python
 dist: xenial
 services:
-- postgresql
 - elasticsearch
 cache:
   directories:
@@ -16,67 +15,32 @@ stages:
 env:
   NOTIFICATIONS_URL: http://127.0.0.1:8080
   PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
-".script": &1
-- pip install pacifica-metadata==0.3.1 'elasticsearch<7'
-- export METADATA_CPCONFIG="$PWD/server.conf"
-- export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata_upgrade"
-- pacifica-metadata-cmd dbsync
-- >
-  pushd $(mktemp -d);
-  pacifica-metadata --stop-after-a-moment & METADATA_PID=$!;
-  curl -Lo data.zip https://github.com/pacifica/pacifica-metadata/archive/v0.3.1.zip;
-  unzip data.zip; pushd pacifica-metadata-0.3.1;
-  curl --connect-timeout 10 localhost:8121/users;
-  python tests/test_files/loadit_test.py; wait $METADATA_PID;
-  popd; popd; sudo service elasticsearch stop;
-- cd tests
-- pip install ..
-- >
-  coverage run --include='*/site-packages/pacifica/metadata/*' core/cmd_test.py dbchk --equal;
-  ret_val=$?;
-  if [[ $ret_val == 0 ]] ; then exit -1; fi;
-- >
-  coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk;
-  ret_val=$?;
-  if [[ $ret_val == 0 ]] ; then exit -1; fi;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk --equal;
-- >
-  export PEEWEE_URL="sqliteext:///db.sqlite3";
-  coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
-  export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata";
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a -m pytest -xv orm core
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a -m pytest -xv rest
+script:
+- coverage run --include='pacifica/metadata/*' -m pytest -xv tests/orm tests/core
+- coverage run --include='pacifica/metadata/*' -a -m pytest -xv tests/rest
 - coverage report -m --fail-under 100
-".before_script": &2
-- psql -c 'create database pacifica_metadata;' -U postgres
-- psql -c 'create database pacifica_metadata_upgrade;' -U postgres
+before_script:
+- pip install ansible
+- ansible-galaxy install pacifica.ansible_pacifica pacifica.ansible_travis
+- ansible-playbook ~/.ansible/roles/pacifica.ansible_travis/molecule/common/playbook.yml -i ~/.ansible/roles/pacifica.ansible_travis/molecule/common/inventory.yml -e "ansible_python_interpreter=/home/travis/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/python travis_virtualenv=python${TRAVIS_PYTHON_VERSION} github_repository=metadata"
 - pushd tests; python cherrypy_catch_test.py & echo $! > cherrypy-catch.pid; popd;
 jobs:
   include:
   - stage: lint
     python: 3.6
+    before_script: skip
     script: pre-commit run -a
   - python: 2.7
+    before_script: skip
     script: pre-commit run -a
   - stage: test
-    script: *1
-    before_script: *2
     python: 3.6
-  - script: *1
-    before_script: *2
-    python: 2.7
+  - python: 2.7
   - stage: test-migration
     python: 3.6
     script: >
       curl -o apgdiff.zip https://www.apgdiff.com/download/apgdiff-2.4-bin.zip;
       unzip apgdiff.zip;
-      psql -c 'create database pacifica_metadata;' -U postgres;
-      psql -c 'create database pacifica_metadata_upgrade;' -U postgres;
       pip install pacifica-metadata==0.3.1 'elasticsearch<7';
       export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata_upgrade";
       pacifica-metadata-cmd dbsync;
@@ -93,6 +57,7 @@ jobs:
     python: 3.6
     services:
     - docker
+    before_script: skip
     script: >
       docker-compose build --pull;
       docker-compose up -d;
@@ -107,6 +72,7 @@ jobs:
       cd tests; python test_files/loadit_test.py
   - stage: test-docs
     python: 3.6
+    before_script: skip
     script: >
       pip install .;
       cd docs;
@@ -118,6 +84,7 @@ jobs:
     services: []
     language: python
     before_install: skip
+    before_script: skip
     script: skip
     python: 3.6
     deploy:
@@ -132,6 +99,7 @@ jobs:
   - services: []
     language: python
     before_install: skip
+    before_script: skip
     script: skip
     python: 2.7
     deploy:
