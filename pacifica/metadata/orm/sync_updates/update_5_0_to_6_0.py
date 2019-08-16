@@ -18,6 +18,6 @@ def _lower_email_address():
 
 
 def update_schema():
-    """Update schema from 4.0 to 5.0."""
+    """Update schema from 5.0 to 6.0."""
     _update_relationships()
     _lower_email_address()

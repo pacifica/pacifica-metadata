@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Update Schema from 2.0 to 3.0."""
+"""Update Schema from 4.0 to 5.0."""
 from playhouse.migrate import SchemaMigrator, migrate
 from ..datasets import Datasets
 from ..dataset_file import DatasetFile

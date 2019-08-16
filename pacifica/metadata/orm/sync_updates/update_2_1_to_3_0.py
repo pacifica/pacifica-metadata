@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""Update Schema from 2.0 to 3.0."""
+"""Update Schema from 2.1 to 3.0."""
 import uuid
 from peewee import ForeignKeyField, UUIDField, Model, CompositeKey, DateTimeField
 from playhouse.migrate import SchemaMigrator, migrate
@@ -173,7 +173,7 @@ def _add_relationship_columns():
 
 
 def update_schema():
-    """Update schema from 2.0 to 3.0."""
+    """Update schema from 2.1 to 3.0."""
     _rename_tables()
     _rename_columns()
     _create_tables()

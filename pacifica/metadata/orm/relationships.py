@@ -55,13 +55,13 @@ class Relationships(CherryPyAPI):
             },
             {
                 'name': 'co_principal_investigator',
-                'display_name': 'Co-Principle Investigator',
-                'description': 'subject is the co-principle investigator of the object'
+                'display_name': 'Co-Principal Investigator',
+                'description': 'subject is the co-principal investigator of the object'
             },
             {
                 'name': 'principal_investigator',
-                'display_name': 'Principle Investigator',
-                'description': 'subject is the principle investigator of the object'
+                'display_name': 'Principal Investigator',
+                'description': 'subject is the principal investigator of the object'
             },
             {
                 'name': 'custodian',
