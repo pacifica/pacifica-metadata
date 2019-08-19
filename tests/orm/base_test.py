@@ -22,12 +22,13 @@ class TestBase(TestCase):
 
     def setUp(self):
         """Setup the database with in memory sqlite."""
-        main('dbsync')
+        self._models = self.dependent_cls()
+        DB.connect()
+        DB.create_tables(self._models)
 
     def tearDown(self):
         """Tear down the database."""
-        DB.drop_tables(ORM_OBJECTS)
-        DB.drop_tables([MetadataSystem])
+        DB.drop_tables(self._models)
         DB.close()
 
     @staticmethod
