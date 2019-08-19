@@ -4,10 +4,12 @@
 from datetime import datetime
 from unittest import TestCase
 from json import dumps, loads
-from peewee import SqliteDatabase
 from pacifica.metadata.orm.base import PacificaModel
 from pacifica.metadata.orm import ORM_OBJECTS
 from pacifica.metadata.orm.utils import unicode_type
+from pacifica.metadata.admin_cmd import main
+from pacifica.metadata.orm.sync import MetadataSystem
+from pacifica.metadata.orm.globals import DB
 
 
 class TestBase(TestCase):
@@ -20,18 +22,13 @@ class TestBase(TestCase):
 
     def setUp(self):
         """Setup the database with in memory sqlite."""
-        self._test_db = SqliteDatabase(':memory:')
-        self._models = self.dependent_cls()
-        for model in self._models:
-            model.bind(self._test_db, bind_refs=False, bind_backrefs=False)
-        self._test_db.connect()
-        self._test_db.create_tables(self._models)
+        main('dbsync')
 
     def tearDown(self):
         """Tear down the database."""
-        self._test_db.drop_tables(self._models)
-        self._test_db.close()
-        self._test_db = None
+        DB.drop_tables(ORM_OBJECTS)
+        DB.drop_tables([MetadataSystem])
+        DB.close()
 
     @staticmethod
     def dependent_cls():
