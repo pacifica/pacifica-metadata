@@ -21,6 +21,8 @@ class TestBase(TestCase):
     @classmethod
     def setUpClass(cls):
         """Connect to the database."""
+        if not DB.is_closed():  # pragma: no cover this is just in case
+            DB.close()
         DB.connect()
 
     def setUp(self):
