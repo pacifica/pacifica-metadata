@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Test the REST interfaces."""
+import os
 import requests
 import cherrypy
 from cherrypy.test import helper
 from pacifica.metadata.orm import ORM_OBJECTS
 from pacifica.metadata.orm.sync import OrmSync, DB
 from pacifica.metadata.rest.root import Root, error_page_default
-from pacifica.metadata.globals import CHERRYPY_CONFIG
 from ..test_files.loadit_test import main
 
 
@@ -62,7 +62,8 @@ class CPCommonTest(helper.CPWebCase):
         # logger.addHandler(logging.StreamHandler())
         ########
         OrmSync.create_tables()
+        server_conf = os.path.join(os.path.dirname(__file__), '..', '..', 'server.conf')
         cherrypy.config.update({'error_page.default': error_page_default})
-        cherrypy.config.update(CHERRYPY_CONFIG)
-        cherrypy.tree.mount(Root(), '/', CHERRYPY_CONFIG)
+        cherrypy.config.update(server_conf)
+        cherrypy.tree.mount(Root(), '/', server_conf)
 # pylint: enable=too-few-public-methods
