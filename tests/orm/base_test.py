@@ -18,15 +18,23 @@ class TestBase(TestCase):
     obj_id = PacificaModel.id
     # pylint: enable=no-member
 
-    def setUp(self):
-        """Setup the database with in memory sqlite."""
-        self._models = self.dependent_cls()
+    @classmethod
+    def setUpClass(cls):
+        """Connect to the database."""
         DB.connect()
+
+    def setUp(self):
+        """Setup the database."""
+        self._models = self.dependent_cls()
         DB.create_tables(self._models)
 
     def tearDown(self):
         """Tear down the database."""
         DB.drop_tables(self._models)
+
+    @classmethod
+    def tearDownClass(cls):
+        """Close the database connection."""
         DB.close()
 
     @staticmethod
