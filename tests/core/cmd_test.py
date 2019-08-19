@@ -45,7 +45,7 @@ import os
 import zipfile
 from unittest import TestCase
 from tempfile import mkdtemp
-from shutil import rmtree, copyfileobj
+from shutil import rmtree
 try:
     import sh
 except ImportError:
@@ -102,7 +102,8 @@ class AdminCmdBase(object):
 
     def setUp(self):
         """Setup a virtualenv and install the original version."""
-        self.python_cmd('-m', 'virtualenv', '--python', sys.executable, self.virtualenv_dir, _out=sys.stdout, _err=sys.stderr)
+        self.python_cmd('-m', 'virtualenv', '--python', sys.executable,
+                        self.virtualenv_dir, _out=sys.stdout, _err=sys.stderr)
 
     def tearDown(self):
         """Undo all the state we have."""
@@ -120,7 +121,8 @@ class AdminCmdBase(object):
     @classmethod
     def _upgrade_package(cls, *pkg_names):
         """Install a package into virtualenv."""
-        sh.Command(cls.python_venv_cmd)('-m', 'pip', 'install', '--upgrade', *pkg_names, _out=sys.stdout, _err=sys.stderr)
+        sh.Command(cls.python_venv_cmd)('-m', 'pip', 'install', '--upgrade',
+                                        *pkg_names, _out=sys.stdout, _err=sys.stderr)
 
     @classmethod
     def _install_metadata(cls, version, update=True):
@@ -136,8 +138,8 @@ class AdminCmdBase(object):
     @classmethod
     def _load_metadata(cls):
         """Start CherryPy and load the data."""
-        sh.Command(cls.python_venv_cmd)('-m', 'pacifica.metadata', '--stop-after-a-moment', _bg=True, _out=sys.stdout, _err=sys.stderr)
-
+        sh.Command(cls.python_venv_cmd)('-m', 'pacifica.metadata',
+                                        '--stop-after-a-moment', _bg=True, _out=sys.stdout, _err=sys.stderr)
 
     @classmethod
     def _upgrade_path(cls, *versions):
@@ -182,5 +184,9 @@ class TestAdminChk(AdminCmdBase, TestCase):
 
     @AdminCmdBase.setup_upgrade_path('0.3.1', dbsync=False)
     def test_admin_chk(self):
-        self.assertEqual(main('dbchk'), -1, "the dbchk command should exit -1 with out of date db")
-        self.assertEqual(main('dbchk', '--equal'), -1, "the dbchk equal command should exit -1 with out of date db")
+        """Check the database and admin commands return values."""
+        self.assertEqual(main('dbchk'), -1, 'the dbchk command should exit -1 with out of date db')
+        self.assertEqual(main('dbchk', '--equal'), -1, 'the dbchk equal command should exit -1 with out of date db')
+        self.assertEqual(main('dbsync'), 0, 'The return code for dbsync should be success')
+        self.assertEqual(main('dbchk'), 0, 'The return code for dbchk should be success')
+        self.assertEqual(main('dbchk', '--equal'), 0, 'The return code for dbchk should be success')
