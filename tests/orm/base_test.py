@@ -7,8 +7,6 @@ from json import dumps, loads
 from pacifica.metadata.orm.base import PacificaModel
 from pacifica.metadata.orm import ORM_OBJECTS
 from pacifica.metadata.orm.utils import unicode_type
-from pacifica.metadata.admin_cmd import main
-from pacifica.metadata.orm.sync import MetadataSystem
 from pacifica.metadata.orm.globals import DB
 
 
