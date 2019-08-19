@@ -149,8 +149,10 @@ class AdminCmdBase(object):
             cls._install_metadata(version)
 
     @classmethod
-    def setup_upgrade_path(cls, *versions, dbsync=True):
+    def setup_upgrade_path(cls, *versions, **kwargs):
         """Decorator to execute an upgrade path to setup a test."""
+        dbsync = kwargs.get('dbsync', True)
+
         def real_decorator(func):
             """real decorator we use on the function."""
             def wrapper(*args, **kwargs):
