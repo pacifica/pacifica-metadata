@@ -20,6 +20,7 @@ script:
 - coverage run --include='pacifica/metadata/*' -a -m pytest -xv tests/rest
 - coverage report -m --fail-under 100
 before_script:
+- sudo mount -o remount,size=25% /var/ramfs
 - pip install ansible
 - ansible-galaxy install pacifica.ansible_pacifica pacifica.ansible_travis
 - ansible-playbook ~/.ansible/roles/pacifica.ansible_travis/molecule/common/playbook.yml -i ~/.ansible/roles/pacifica.ansible_travis/molecule/common/inventory.yml -e "ansible_python_interpreter=/home/travis/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/python travis_virtualenv=python${TRAVIS_PYTHON_VERSION} github_repository=metadata"
@@ -35,9 +36,12 @@ jobs:
     script: pre-commit run -a
   - stage: test
     python: 3.6
+    sudo: required
   - python: 2.7
+    sudo: required
   - stage: test-migration
     python: 3.6
+    sudo: required
     script: >
       curl -o apgdiff.zip https://www.apgdiff.com/download/apgdiff-2.4-bin.zip;
       unzip apgdiff.zip;
