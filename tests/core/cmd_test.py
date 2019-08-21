@@ -4,41 +4,6 @@
 Test script to run the command interface for testing.
 
 We need to actually run the tests here using pytest.
-
-
-- pip install pacifica-metadata==0.3.1 'elasticsearch<7'
-- export METADATA_CPCONFIG="$PWD/server.conf"
-- export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata_upgrade"
-- pacifica-metadata-cmd dbsync
-- >
-  pushd $(mktemp -d);
-  pacifica-metadata --stop-after-a-moment & METADATA_PID=$!;
-  curl -Lo data.zip https://github.com/pacifica/pacifica-metadata/archive/v0.3.1.zip;
-  unzip data.zip; pushd pacifica-metadata-0.3.1;
-  curl --connect-timeout 10 localhost:8121/users;
-  python tests/test_files/loadit_test.py; wait $METADATA_PID;
-  popd; popd; sudo service elasticsearch stop;
-- cd tests
-- pip install ..
-- >
-  coverage run --include='*/site-packages/pacifica/metadata/*' core/cmd_test.py dbchk --equal;
-  ret_val=$?;
-  if [[ $ret_val == 0 ]] ; then exit -1; fi;
-- >
-  coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk;
-  ret_val=$?;
-  if [[ $ret_val == 0 ]] ; then exit -1; fi;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk --equal;
-- >
-  export PEEWEE_URL="sqliteext:///db.sqlite3";
-  coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
-  export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata";
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbsync;
-- coverage run --include='*/site-packages/pacifica/metadata/*' -a core/cmd_test.py dbchk;
-
 """
 import sys
 import os
@@ -66,10 +31,28 @@ except ImportError:
     sh = Sh()
 import peewee
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from pacifica.metadata.admin_cmd import main
 from pacifica.metadata.orm.globals import DB
 from pacifica.metadata.orm.sync import MetadataSystem
 from pacifica.metadata.orm import ORM_OBJECTS, Relationships
+
+
+def requests_retry_session(retries=3, backoff_factor=0.5, status_forcelist=(500, 502, 504), session=None):
+    """Retry requests session with backoff etc."""
+    session = session or requests.Session()
+    retry = Retry(
+        total=retries,
+        read=retries,
+        connect=retries,
+        backoff_factor=backoff_factor,
+        status_forcelist=status_forcelist,
+    )
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+    return session
 
 
 class AdminCmdBase(object):
@@ -137,7 +120,7 @@ class AdminCmdBase(object):
             data_fd.write(resp.content)
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(dest_path)
-        resp = requests.get('http://127.0.0.1:8121/keys', timeout=None)
+        resp = requests_retry_session().get('http://127.0.0.1:8121/keys')
         assert resp.status_code == 200
         sh.Command(cls.python_venv_cmd)(os.path.join(
             cls.testdata_dir, 'src', 'pacifica-metadata-{}'.format(version), 'tests', 'test_files', 'loadit_test.py'))
