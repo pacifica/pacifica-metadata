@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Endpoints for querying for status of data
 - Endpoints for querying for reporting of data
 
+## [0.12.1] - 2019-08-21
+### Changed
+- Fix #251 regression spelling error by [@dmlb2000](https://github.com/dmlb2000)
+- Pull #253 refactor unit testing by [@dmlb2000](https://github.com/dmlb2000)
+
 ## [0.12.0] - 2019-08-12
 ### Changed
 - Fix #247 and #246 spelling error and email lowercase [@dmlb2000](https://github.com/dmlb2000)
