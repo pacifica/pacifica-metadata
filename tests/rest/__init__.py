@@ -6,7 +6,7 @@ import requests
 import cherrypy
 from cherrypy.test import helper
 from pacifica.metadata.orm import ORM_OBJECTS
-from pacifica.metadata.orm.sync import OrmSync, DB
+from pacifica.metadata.orm.sync import OrmSync, DB, MetadataSystem
 from pacifica.metadata.rest.root import Root, error_page_default
 from ..test_files.loadit_test import main
 
@@ -42,6 +42,7 @@ class CPCommonTest(helper.CPWebCase):
         super(CPCommonTest, cls).teardown_class()
         for dbobj in ORM_OBJECTS:
             dbobj.drop_table(cascade=True)
+        DB.drop_tables([MetadataSystem])
         if not DB.is_closed():
             DB.close()
 
@@ -61,6 +62,12 @@ class CPCommonTest(helper.CPWebCase):
         # logger.setLevel(logging.DEBUG)
         # logger.addHandler(logging.StreamHandler())
         ########
+        # import logging
+        # logger = logging.getLogger('peewee')
+        # logger.addHandler(logging.StreamHandler())
+        # logger.setLevel(logging.DEBUG)
+        ########
+        OrmSync.dbconn_blocking()
         OrmSync.create_tables()
         server_conf = os.path.join(os.path.dirname(__file__), '..', '..', 'server.conf')
         cherrypy.config.update({'error_page.default': error_page_default})
