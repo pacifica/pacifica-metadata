@@ -83,25 +83,6 @@ class AdminCmdBase(object):
 
     # this is for unittest and pytest
     # pylint: disable=invalid-name
-    @classmethod
-    def setUpClass(cls):
-        """Setup the datadir so we can import data."""
-        resp = requests.get('https://github.com/pacifica/pacifica-metadata/archive/v0.3.1.zip')
-        assert resp.status_code == 200
-        if not os.path.isdir(cls.testdata_dir):
-            os.makedirs(cls.testdata_dir)
-        zip_path = os.path.join(cls.testdata_dir, 'data.zip')
-        dest_path = os.path.join(cls.testdata_dir, 'src')
-        with open(zip_path, 'wb') as data_fd:
-            data_fd.write(resp.content)
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(dest_path)
-
-    @classmethod
-    def tearDownClass(cls):
-        """Undo all the state we have."""
-        rmtree(cls.testdata_dir)
-
     def setUp(self):
         """Setup a virtualenv and install the original version."""
         self.python_cmd('-m', 'virtualenv', '--python', sys.executable,
@@ -109,8 +90,9 @@ class AdminCmdBase(object):
 
     def tearDown(self):
         """Undo all the state we have."""
+        rmtree(self.testdata_dir)
         rmtree(self.virtualenv_dir)
-        DB.drop_tables(ORM_OBJECTS)
+        DB.drop_tables(ORM_OBJECTS, cascade=True)
         DB.drop_tables([MetadataSystem])
         DB.close()
     # pylint: enable=invalid-name
@@ -138,10 +120,28 @@ class AdminCmdBase(object):
             '-c', 'import sys; from pacifica.metadata.admin_cmd import main; sys.exit(main())', 'dbsync')
 
     @classmethod
-    def _load_metadata(cls):
+    def _load_metadata(cls, version):
         """Start CherryPy and load the data."""
-        sh.Command(cls.python_venv_cmd)('-m', 'pacifica.metadata',
-                                        '--stop-after-a-moment', _bg=True, _out=sys.stdout, _err=sys.stderr)
+        proc = sh.Command(cls.python_venv_cmd)(
+            '-m', 'pacifica.metadata', '--stop-after-a-moment',
+            '--cpconfig', os.path.join(os.path.dirname(__file__), '..', '..', 'server.conf'),
+            _bg=True, _out=sys.stdout, _err=sys.stderr
+        )
+        resp = requests.get('https://github.com/pacifica/pacifica-metadata/archive/v{}.zip'.format(version))
+        assert resp.status_code == 200
+        if not os.path.isdir(cls.testdata_dir):
+            os.makedirs(cls.testdata_dir)
+        zip_path = os.path.join(cls.testdata_dir, 'data.zip')
+        dest_path = os.path.join(cls.testdata_dir, 'src')
+        with open(zip_path, 'wb') as data_fd:
+            data_fd.write(resp.content)
+        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(dest_path)
+        resp = requests.get('http://127.0.0.1:8121/keys', timeout=3)
+        assert resp.status_code == 200
+        sh.Command(cls.python_venv_cmd)(os.path.join(
+            cls.testdata_dir, 'src', 'pacifica-metadata-{}'.format(version), 'tests', 'test_files', 'loadit_test.py'))
+        proc.wait()
 
     @classmethod
     def _upgrade_path(cls, *versions):
@@ -149,6 +149,8 @@ class AdminCmdBase(object):
         cls._install_package('elasticsearch<7')
         for version in versions:
             cls._install_metadata(version)
+        if versions:
+            cls._load_metadata(versions[-1])
 
     @classmethod
     def setup_upgrade_path(cls, *versions, **kwargs):
@@ -180,6 +182,11 @@ class AdminCmdBase(object):
 
 class TestUpgradePaths(AdminCmdBase, TestCase):
     """Test some upgrade paths."""
+
+    @AdminCmdBase.setup_upgrade_path()
+    def test_blank_dbsync(self):
+        """We need to verify that dbsync will work with empty db."""
+        self._database_sanity(self)
 
     @AdminCmdBase.setup_upgrade_path('0.3.1')
     def test_full_upgrade(self):
