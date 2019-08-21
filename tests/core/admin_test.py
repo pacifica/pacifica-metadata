@@ -18,6 +18,8 @@ class TestAdminTool(TestCase):
 
     def setUp(self):
         """Setup the database with in memory sqlite."""
+        if not orm_db_mod.DB.is_closed():
+            orm_db_mod.DB.close()
         orm_db_mod.DB.connect()
         orm_db_mod.DB.create_tables(orm_obj_mod.ORM_OBJECTS)
         MetadataSystem.create_table()
@@ -26,6 +28,7 @@ class TestAdminTool(TestCase):
     def tearDown(self):
         """Tear down the database."""
         orm_db_mod.DB.drop_tables(orm_obj_mod.ORM_OBJECTS)
+        MetadataSystem.drop_table()
         orm_db_mod.DB.close()
 
     def test_bool2cmdint(self):

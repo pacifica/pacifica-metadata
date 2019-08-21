@@ -16,8 +16,7 @@ env:
   NOTIFICATIONS_URL: http://127.0.0.1:8080
   PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
 script:
-- coverage run --include='pacifica/metadata/*' -m pytest -xv tests/orm tests/core
-- coverage run --include='pacifica/metadata/*' -a -m pytest -xv tests/rest
+- coverage run --include='pacifica/metadata/*' -m pytest -xv tests
 - coverage report -m --fail-under 100
 before_script:
 - sudo mount -o remount,size=25% /var/ramfs

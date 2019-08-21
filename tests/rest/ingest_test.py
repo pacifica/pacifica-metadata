@@ -102,6 +102,7 @@ class TestIngestAPI(CPCommonTest):
         putdata[9]['_id'] += 10
         # notifications url shouldn't be listening
         # however accepting the data should be okay
+        orig_url = os.environ['NOTIFICATIONS_URL']
         os.environ['NOTIFICATIONS_URL'] = 'http://127.0.0.1:8070'
         req = requests.put(
             '{0}/ingest'.format(self.url), data=dumps(putdata), headers={'content-type': 'application/json'})
@@ -116,3 +117,4 @@ class TestIngestAPI(CPCommonTest):
         self.assertTrue('traceback' in loads(req.text))
         self.assertTrue('ValueError' in loads(req.text)['traceback'])
         self.assertEqual(req.status_code, 500)
+        os.environ['NOTIFICATIONS_URL'] = orig_url
