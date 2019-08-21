@@ -120,7 +120,7 @@ class AdminCmdBase(object):
             data_fd.write(resp.content)
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
             zip_ref.extractall(dest_path)
-        resp = requests_retry_session().get('http://127.0.0.1:8121/keys')
+        resp = requests_retry_session().get('http://127.0.0.1:8121/keys', timeout=5)
         assert resp.status_code == 200
         sh.Command(cls.python_venv_cmd)(os.path.join(
             cls.testdata_dir, 'src', 'pacifica-metadata-{}'.format(version), 'tests', 'test_files', 'loadit_test.py'))
