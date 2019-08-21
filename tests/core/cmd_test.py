@@ -88,6 +88,8 @@ class AdminCmdBase(object):
         """Setup the datadir so we can import data."""
         resp = requests.get('https://github.com/pacifica/pacifica-metadata/archive/v0.3.1.zip')
         assert resp.status_code == 200
+        if not os.path.isdir(cls.testdata_dir):
+            os.makedirs(cls.testdata_dir)
         zip_path = os.path.join(cls.testdata_dir, 'data.zip')
         dest_path = os.path.join(cls.testdata_dir, 'src')
         with open(zip_path, 'wb') as data_fd:

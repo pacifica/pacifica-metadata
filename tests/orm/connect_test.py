@@ -3,7 +3,7 @@
 """Test the connection logic see that it works as expected."""
 import os
 from unittest import TestCase
-from peewee import SqliteDatabase, OperationalError
+from peewee import OperationalError
 import pacifica.metadata.orm.sync as orm_sync
 
 
@@ -12,7 +12,6 @@ class TestConnections(TestCase):
 
     def test_db_connect_and_fail(self):
         """Try to connect to a database and fail."""
-        orm_sync.DB = SqliteDatabase('file:///root/foo.db')
         os.environ['DATABASE_CONNECT_ATTEMPTS'] = '1'
         os.environ['DATABASE_CONNECT_WAIT'] = '1'
         hit_exception = False
