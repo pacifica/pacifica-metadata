@@ -72,10 +72,10 @@ def dbsync(_args=None):
         OrmSync.dbconn_blocking()
         OrmSync.create_tables()
         OrmSync.close()
-        return
+        return 0
     OrmSync.update_tables()
     OrmSync.close()
-    return
+    return 0
 
 
 def create_subcommands(subparsers):

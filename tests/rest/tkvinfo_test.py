@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """Test the ORM interface SummaryInfoAPI."""
 import datetime
-from os.path import realpath
+from os.path import realpath, join, dirname
 from json import loads
 import requests
 from . import CPCommonTest
@@ -12,13 +12,13 @@ class TestSummaryTkvAPI(CPCommonTest):
     """Test the SummaryInfoAPI class."""
 
     __test__ = True
+    entry_path = realpath(join(dirname(__file__), '..', 'test_files'))
 
     def test_tkvinfo_insert(self):
         """Test various aspects of the tkvalue interface."""
-        path = realpath('test_files')
         insert_data = loads(open(
             '{0}/{1}.json'.format(
-                path,
+                self.entry_path,
                 'tkv_upload_test'
             )
         ).read())

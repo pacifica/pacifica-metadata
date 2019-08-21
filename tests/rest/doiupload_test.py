@@ -3,7 +3,7 @@
 """Test the ORM interface DOIUpload."""
 from __future__ import print_function
 from json import loads
-from os.path import realpath
+from os.path import realpath, dirname, join
 import requests
 from . import CPCommonTest
 
@@ -12,14 +12,14 @@ class TestDOIUploadAPI(CPCommonTest):
     """Test the DOIUploadAPI class."""
 
     __test__ = True
+    entry_path = realpath(join(dirname(__file__), '..', 'test_files'))
 
     def test_doiupload_api(self):
         """Test the POST method."""
         header_list = {'Content-Type': 'application/json'}
-        entry_path = realpath('test_files')
         entry_data = loads(open(
             '{0}/{1}.json'.format(
-                entry_path,
+                self.entry_path,
                 'doiupload_api'
             )
         ).read())
@@ -50,10 +50,9 @@ class TestDOIUploadAPI(CPCommonTest):
 
     def test_doi_entry_mod_time_update(self):
         """Test the method for touching a DOI Entry to update its modification time."""
-        entry_path = realpath('test_files')
         entry_data = loads(open(
             '{0}/{1}.json'.format(
-                entry_path,
+                self.entry_path,
                 'doi_entries'
             )
         ).read())
@@ -70,10 +69,9 @@ class TestDOIUploadAPI(CPCommonTest):
 
     def test_osti_update(self):
         """Test the POST method for information updates."""
-        path = realpath('test_files')
         update_data = open(
             '{0}/{1}.xml'.format(
-                path,
+                self.entry_path,
                 'osti_update'
             )
         ).read()
@@ -89,7 +87,7 @@ class TestDOIUploadAPI(CPCommonTest):
 
         update_data = open(
             '{0}/{1}.xml'.format(
-                path,
+                self.entry_path,
                 'osti_update_missing_trans'
             )
         ).read()
@@ -105,7 +103,7 @@ class TestDOIUploadAPI(CPCommonTest):
         # Process return with no records
         update_data = open(
             '{0}/{1}.xml'.format(
-                path,
+                self.entry_path,
                 'osti_update_empty'
             )
         ).read()
@@ -121,7 +119,7 @@ class TestDOIUploadAPI(CPCommonTest):
         # Process invalid XML doc
         update_data = open(
             '{0}/{1}.xml'.format(
-                path,
+                self.entry_path,
                 'osti_update_bad'
             )
         ).read()
@@ -136,7 +134,7 @@ class TestDOIUploadAPI(CPCommonTest):
         # Process invalid XML doc
         update_data = open(
             '{0}/{1}.xml'.format(
-                path,
+                self.entry_path,
                 'osti_update_bad'
             )
         ).read()

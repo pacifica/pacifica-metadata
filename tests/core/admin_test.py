@@ -5,7 +5,7 @@ from argparse import Namespace
 from datetime import timedelta
 from unittest import TestCase
 from mock import patch
-from peewee import SqliteDatabase, DoesNotExist
+from peewee import DoesNotExist
 import pacifica.metadata.orm.globals as orm_db_mod
 import pacifica.metadata.orm.all_objects as orm_obj_mod
 from pacifica.metadata.orm.sync import OrmSync, MetadataSystem
@@ -18,11 +18,8 @@ class TestAdminTool(TestCase):
 
     def setUp(self):
         """Setup the database with in memory sqlite."""
-        orm_db_mod.DB = SqliteDatabase(':memory:')
-        for model in orm_obj_mod.ORM_OBJECTS:
-            model.bind(orm_db_mod.DB, bind_refs=False, bind_backrefs=False)
-        MetadataSystem.bind(orm_db_mod.DB, bind_refs=False,
-                            bind_backrefs=False)
+        if not orm_db_mod.DB.is_closed():
+            orm_db_mod.DB.close()
         orm_db_mod.DB.connect()
         orm_db_mod.DB.create_tables(orm_obj_mod.ORM_OBJECTS)
         MetadataSystem.create_table()
@@ -31,8 +28,8 @@ class TestAdminTool(TestCase):
     def tearDown(self):
         """Tear down the database."""
         orm_db_mod.DB.drop_tables(orm_obj_mod.ORM_OBJECTS)
+        MetadataSystem.drop_table()
         orm_db_mod.DB.close()
-        orm_db_mod.DB = None
 
     def test_bool2cmdint(self):
         """Test the bool2cmdint method."""
@@ -113,9 +110,6 @@ class TestAdminToolNoTables(TestCase):
 
     def setUp(self):
         """Setup the database with in memory sqlite."""
-        orm_db_mod.DB = SqliteDatabase('file:cachedb?mode=memory&cache=shared')
-        for model in orm_obj_mod.ORM_OBJECTS:
-            model.bind(orm_db_mod.DB, bind_refs=False, bind_backrefs=False)
         orm_db_mod.DB.connect()
 
     def tearDown(self):
@@ -123,7 +117,6 @@ class TestAdminToolNoTables(TestCase):
         orm_db_mod.DB.drop_tables(orm_obj_mod.ORM_OBJECTS)
         MetadataSystem.drop_table()
         orm_db_mod.DB.close()
-        orm_db_mod.DB = None
 
     @patch.object(OrmSync, 'dbconn_blocking')
     def test_create_no_tables(self, test_patch):

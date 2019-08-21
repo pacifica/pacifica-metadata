@@ -4,10 +4,10 @@
 from datetime import datetime
 from unittest import TestCase
 from json import dumps, loads
-from peewee import SqliteDatabase
 from pacifica.metadata.orm.base import PacificaModel
 from pacifica.metadata.orm import ORM_OBJECTS
 from pacifica.metadata.orm.utils import unicode_type
+from pacifica.metadata.orm.globals import DB
 
 
 class TestBase(TestCase):
@@ -18,20 +18,26 @@ class TestBase(TestCase):
     obj_id = PacificaModel.id
     # pylint: enable=no-member
 
+    @classmethod
+    def setUpClass(cls):
+        """Connect to the database."""
+        if not DB.is_closed():  # pragma: no cover this is just in case
+            DB.close()
+        DB.connect()
+
     def setUp(self):
-        """Setup the database with in memory sqlite."""
-        self._test_db = SqliteDatabase(':memory:')
+        """Setup the database."""
         self._models = self.dependent_cls()
-        for model in self._models:
-            model.bind(self._test_db, bind_refs=False, bind_backrefs=False)
-        self._test_db.connect()
-        self._test_db.create_tables(self._models)
+        DB.create_tables(self._models)
 
     def tearDown(self):
         """Tear down the database."""
-        self._test_db.drop_tables(self._models)
-        self._test_db.close()
-        self._test_db = None
+        DB.drop_tables(self._models)
+
+    @classmethod
+    def tearDownClass(cls):
+        """Close the database connection."""
+        DB.close()
 
     @staticmethod
     def dependent_cls():
