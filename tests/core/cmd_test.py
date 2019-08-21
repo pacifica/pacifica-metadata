@@ -166,6 +166,17 @@ class AdminCmdBase(object):
             return wrapper
         return real_decorator
 
+    @staticmethod
+    def _database_sanity(testinst):
+        """We need to check basic sanity of good data model."""
+        testinst.assertEqual(
+            Relationships.select().where(
+                Relationships.name == 'principal_investigator'
+            ).get().name,
+            'principal_investigator',
+            'principal investigator should exist by name'
+        )
+
 
 class TestUpgradePaths(AdminCmdBase, TestCase):
     """Test some upgrade paths."""
@@ -175,14 +186,14 @@ class TestUpgradePaths(AdminCmdBase, TestCase):
         """Test the full upgrade."""
         with self.assertRaises(peewee.DoesNotExist):
             Relationships.select().where(Relationships.name == 'something_not_there').get()
-        self.assertEqual(Relationships.select().where(Relationships.name == 'principal_investigator').get().name, 'principal_investigator')
+        self._database_sanity(self)
 
     @AdminCmdBase.setup_upgrade_path('0.3.1', '0.10.3')
     def test_partial_upgrade(self):
         """Test the full upgrade."""
         with self.assertRaises(peewee.DoesNotExist):
             Relationships.select().where(Relationships.name == 'principle_investigator').get()
-        self.assertEqual(Relationships.select().where(Relationships.name == 'principal_investigator').get().name, 'principal_investigator')
+        self._database_sanity(self)
 
 
 class TestAdminChk(AdminCmdBase, TestCase):
@@ -197,4 +208,4 @@ class TestAdminChk(AdminCmdBase, TestCase):
         self.assertEqual(main('dbsync'), 0, 'The return code for dbsync a second time is also good')
         self.assertEqual(main('dbchk'), 0, 'The return code for dbchk should be success')
         self.assertEqual(main('dbchk', '--equal'), 0, 'The return code for dbchk should be success')
-        self.assertEqual(Relationships.select().where(Relationships.name == 'principal_investigator').get().name, 'principal_investigator')
+        self._database_sanity(self)
