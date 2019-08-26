@@ -31,8 +31,6 @@ class DOIRegistrationEntry(DOIRegistrationBase):
         # Check if transaction is released
         # pylint: disable=no-member
         tr_check_query = TransactionUser().select().join(Relationships).where(
-            (Relationships.name == 'authorized_releaser') &
-            (TransactionUser.relationship == Relationships.uuid) &
             (TransactionUser.transaction == transaction_id)
         )
         # pylint: enable=no-member
