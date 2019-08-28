@@ -76,13 +76,11 @@ class TransactionReleaseState(QueryBase):
     @staticmethod
     def _get_doi_release(transaction_id):
         output_results = None
-        rel_obj = Relationships.get(Relationships.name == 'authorized_releaser')
         # pylint: disable=no-member
         doi_releases = (DOITransaction
                         .select()
                         .join(TransactionUser)
                         .where(
-                            (TransactionUser.relationship == str(rel_obj.uuid)) &
                             (DOITransaction.transaction == TransactionUser.uuid) &
                             (TransactionUser.transaction == transaction_id)
                         ))
@@ -107,13 +105,11 @@ class TransactionReleaseState(QueryBase):
     @staticmethod
     def _get_citation_release(transaction_id):
         output_results = None
-        rel_obj = Relationships.get(Relationships.name == 'authorized_releaser')
         # pylint: disable=no-member
         citation_releases = (CitationTransaction
                              .select()
                              .join(TransactionUser)
                              .where(
-                                 (TransactionUser.relationship == str(rel_obj.uuid)) &
                                  (CitationTransaction.transaction == TransactionUser.uuid) &
                                  (TransactionUser.transaction == transaction_id)
                              ))
