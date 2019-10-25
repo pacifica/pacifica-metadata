@@ -51,7 +51,7 @@ class TestKeysHashList(TestBase):
         self.base_create_obj(Keys, sample_key2)
         self.base_create_obj(Keys, sample_key3)
         third_obj = Keys()
-        hash_list, hash_dict = third_obj.available_hash_list()
+        hash_list, hash_dict = third_obj.available_hash_list(['key', 'encoding'])
         self.assertTrue(len(hash_list) == 3)
         # some sanity checking for the layout of the two objects
         for hashed_key in hash_list:
