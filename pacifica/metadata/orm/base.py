@@ -264,10 +264,13 @@ class PacificaModel(Model):
         # pylint: disable=no-value-for-parameter
         for obj in all_keys_query.execute():
             # pylint: enable=no-value-for-parameter
-            inst_key = index_hash(*obj.values())
+            val_list = []
+            for key, val in obj.items():
+                if isinstance(val, uuid.UUID):
+                    obj[key] = str(val)
+                val_list.append(obj[key])
+            inst_key = index_hash(*val_list)
             hash_list.append(inst_key)
-            if 'uuid' in obj:
-                obj['uuid'] = str(obj['uuid'])
             entry = {
                 'key_list': obj,
                 'index_hash': inst_key
