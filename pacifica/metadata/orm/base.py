@@ -269,7 +269,7 @@ class PacificaModel(Model):
             inst_key = index_hash(*[obj[x] for x in columns])
             hash_list.append(inst_key)
             entry = {
-                'key_list': {k:obj[k] for k in columns},
+                'key_list': {k: obj[k] for k in columns},
                 'index_hash': inst_key
             }
             hash_dict[inst_key] = entry
