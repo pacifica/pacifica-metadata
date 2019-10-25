@@ -260,19 +260,16 @@ class PacificaModel(Model):
             columns = cls.get_primary_keys()
         hash_list = []
         hash_dict = {}
-        all_keys_query = cls.select(*[getattr(cls, key) for key in columns]).dicts()
+        # all_keys_query = cls.select(*[getattr(cls, key) for key in columns])
+        all_keys_query = cls.select()
         # pylint: disable=no-value-for-parameter
-        for obj in all_keys_query.execute():
+        for entry in all_keys_query.execute():
             # pylint: enable=no-value-for-parameter
-            val_list = []
-            for key, val in obj.items():
-                if isinstance(val, uuid.UUID):
-                    obj[key] = str(val)
-                val_list.append(obj[key])
-            inst_key = index_hash(*val_list)
+            obj = entry.to_hash()
+            inst_key = index_hash(*[obj[x] for x in columns])
             hash_list.append(inst_key)
             entry = {
-                'key_list': obj,
+                'key_list': {k:obj[k] for k in columns},
                 'index_hash': inst_key
             }
             hash_dict[inst_key] = entry
