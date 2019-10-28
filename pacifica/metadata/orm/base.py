@@ -256,7 +256,7 @@ class PacificaModel(Model):
         This structure allows for easy evaluation of updates or current vs old data
         for any object in the database.
         """
-        where_clause = {k:v for k,v in columns_and_where_clause.items() if v}
+        where_clause = {k: v for k, v in columns_and_where_clause.items() if v}
         columns = columns_and_where_clause.keys()
 
         if not columns:
@@ -268,10 +268,10 @@ class PacificaModel(Model):
         all_keys_query = cls.select().where(cls.where_clause(where_clause))
 
         # pylint: disable=no-value-for-parameter
-        reporting_columns = {k: obj[k] for k in columns}
         for entry in all_keys_query.execute():
             # pylint: enable=no-value-for-parameter
             obj = entry.to_hash()
+            reporting_columns = {k: obj[k] for k in columns}
             inst_key = index_hash(*reporting_columns.values())
             hash_list.append(inst_key)
             entry = {
