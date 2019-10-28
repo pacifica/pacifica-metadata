@@ -249,19 +249,25 @@ class PacificaModel(Model):
         return text_type(last_change_string)
 
     @classmethod
-    def available_hash_list(cls, columns=None):
+    def available_hash_list(cls, columns_and_where_clause=None):
         """
         Generate a hashable structure of all keys and values of keys.
 
         This structure allows for easy evaluation of updates or current vs old data
         for any object in the database.
         """
-        if not columns:
+        if not columns_and_where_clause:
             columns = cls.get_primary_keys()
+            where_clause = None
+        else:
+            columns = columns_and_where_clause.keys()
+            where_clause = {k:v for k,v in columns_and_where_clause.items() if v}
+
         hash_list = []
         hash_dict = {}
         # all_keys_query = cls.select(*[getattr(cls, key) for key in columns])
-        all_keys_query = cls.select()
+        all_keys_query = cls.select().where(cls.where_clause(where_clause))
+
         # pylint: disable=no-value-for-parameter
         for entry in all_keys_query.execute():
             # pylint: enable=no-value-for-parameter
