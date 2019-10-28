@@ -256,15 +256,11 @@ class PacificaModel(Model):
         This structure allows for easy evaluation of updates or current vs old data
         for any object in the database.
         """
-        where_clause = {k:v for k,v in columns_and_where_clause.items() if v}
-        columns = columns_and_where_clause.keys()
-
-        if not columns_and_where_clause:
-            columns = cls.get_primary_keys()
+        where_clause, columns = PacificaModel.filter_where_clause(columns_and_where_clause)
 
         hash_list = []
         hash_dict = {}
-        # all_keys_query = cls.select(*[getattr(cls, key) for key in columns])
+
         all_keys_query = cls.select().where(cls.where_clause(where_clause))
 
         # pylint: disable=no-value-for-parameter
@@ -279,6 +275,15 @@ class PacificaModel(Model):
             }
             hash_dict[inst_key] = entry
         return hash_list, hash_dict
+
+    @staticmethod
+    def filter_where_clause(columns_and_where_clause=None):
+        where_clause = {k:v for k,v in columns_and_where_clause.items() if v}
+        columns = columns_and_where_clause.keys()
+
+        if not columns_and_where_clause:
+            columns = cls.get_primary_keys()
+        return where_clause, columns
 
     @classmethod
     def get_primary_keys(cls):
