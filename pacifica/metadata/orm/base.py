@@ -256,12 +256,11 @@ class PacificaModel(Model):
         This structure allows for easy evaluation of updates or current vs old data
         for any object in the database.
         """
+        where_clause = {k:v for k,v in columns_and_where_clause.items() if v}
+        columns = columns_and_where_clause.keys()
+
         if not columns_and_where_clause:
             columns = cls.get_primary_keys()
-            where_clause = None
-        else:
-            columns = columns_and_where_clause.keys()
-            where_clause = {k:v for k,v in columns_and_where_clause.items() if v}
 
         hash_list = []
         hash_dict = {}
