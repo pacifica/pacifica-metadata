@@ -271,7 +271,7 @@ class PacificaModel(Model):
         for entry in all_keys_query.execute():
             # pylint: enable=no-value-for-parameter
             obj = entry.to_hash()
-            reporting_columns = {k: obj[k] for k in columns}
+            reporting_columns = {k: obj[k] for k in columns if k in obj}
             inst_key = index_hash(*reporting_columns.values())
             hash_list.append(inst_key)
             entry = {
