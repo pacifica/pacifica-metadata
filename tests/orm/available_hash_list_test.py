@@ -51,7 +51,7 @@ class TestKeysHashList(TestBase):
         self.base_create_obj(Keys, sample_key2)
         self.base_create_obj(Keys, sample_key3)
         third_obj = Keys()
-        hash_list, hash_dict = third_obj.available_hash_list()
+        hash_list, hash_dict = third_obj.available_hash_list({'key': None, 'encoding': None})
         self.assertTrue(len(hash_list) == 3)
         # some sanity checking for the layout of the two objects
         for hashed_key in hash_list:
@@ -59,5 +59,4 @@ class TestKeysHashList(TestBase):
             obj_key_meta = hash_dict[hashed_key]
             self.assertTrue('index_hash' in obj_key_meta)
             self.assertTrue('key_list' in obj_key_meta)
-            self.assertTrue('id' in obj_key_meta['key_list'])
             self.assertTrue(hashed_key == obj_key_meta['index_hash'])

@@ -249,27 +249,33 @@ class PacificaModel(Model):
         return text_type(last_change_string)
 
     @classmethod
-    def available_hash_list(cls, columns=None):
+    def available_hash_list(cls, columns_and_where_clause=None):
         """
         Generate a hashable structure of all keys and values of keys.
 
         This structure allows for easy evaluation of updates or current vs old data
         for any object in the database.
         """
+        where_clause = {k: v for k, v in columns_and_where_clause.items() if v}
+        columns = columns_and_where_clause.keys()
+
         if not columns:
             columns = cls.get_primary_keys()
+
         hash_list = []
         hash_dict = {}
-        all_keys_query = cls.select(*[getattr(cls, key) for key in columns]).dicts()
+        # all_keys_query = cls.select(*[getattr(cls, key) for key in columns])
+        all_keys_query = cls.select().where(cls.where_clause(where_clause))
+
         # pylint: disable=no-value-for-parameter
-        for obj in all_keys_query.execute():
+        for entry in all_keys_query.execute():
             # pylint: enable=no-value-for-parameter
-            inst_key = index_hash(*obj.values())
+            obj = entry.to_hash()
+            reporting_columns = {k: obj[k] for k in columns if k in obj}
+            inst_key = index_hash(*reporting_columns.values())
             hash_list.append(inst_key)
-            if 'uuid' in obj:
-                obj['uuid'] = str(obj['uuid'])
             entry = {
-                'key_list': obj,
+                'key_list': reporting_columns,
                 'index_hash': inst_key
             }
             hash_dict[inst_key] = entry
