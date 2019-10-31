@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Endpoints for querying for status of data
 - Endpoints for querying for reporting of data
 
+## [0.12.2] - 2019-10-31
+### Changed
+- Fix #258 Add more handling of hashlist creation by [@kauberry](https://github.com/kauberry)
+
 ## [0.12.1] - 2019-08-21
 ### Changed
 - Fix #251 regression spelling error by [@dmlb2000](https://github.com/dmlb2000)
