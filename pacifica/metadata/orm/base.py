@@ -257,11 +257,12 @@ class PacificaModel(Model):
         for any object in the database.
         """
         where_clause = {k: v for k, v in columns_and_where_clause.items() if v}
-        columns = columns_and_where_clause.keys()
+        columns = list(columns_and_where_clause.keys())
 
         if not columns:
             columns = cls.get_primary_keys()
 
+        columns.sort()
         hash_list = []
         hash_dict = {}
         # all_keys_query = cls.select(*[getattr(cls, key) for key in columns])
