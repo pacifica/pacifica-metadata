@@ -17,6 +17,7 @@ and deleting these objects in from a web service layer.
 """
 import datetime
 import uuid
+from collections import OrderedDict
 from dateutil import parser
 from peewee import Model, Expression, OP, AutoField, fn, CompositeKey, SQL, NodeList, BackrefAccessor
 from six import text_type
@@ -272,8 +273,9 @@ class PacificaModel(Model):
         for entry in all_keys_query.execute():
             # pylint: enable=no-value-for-parameter
             obj = entry.to_hash()
-            reporting_columns = {k: obj[k] for k in columns if k in obj}
-            inst_key = index_hash(*reporting_columns.values())
+            reporting_columns = OrderedDict([(k, obj[k]) for k in columns if k in obj])
+            index_values = [obj[k] for k in columns]
+            inst_key = index_hash(*index_values)
             hash_list.append(inst_key)
             entry = {
                 'key_list': reporting_columns,
