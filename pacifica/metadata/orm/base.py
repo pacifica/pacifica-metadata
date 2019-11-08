@@ -274,7 +274,7 @@ class PacificaModel(Model):
             # pylint: enable=no-value-for-parameter
             obj = entry.to_hash()
             reporting_columns = OrderedDict([(k, obj[k]) for k in columns if k in obj])
-            index_values = [obj[k] for k in columns]
+            index_values = [obj[k] for k in columns if k in obj]
             inst_key = index_hash(*index_values)
             hash_list.append(inst_key)
             entry = {
