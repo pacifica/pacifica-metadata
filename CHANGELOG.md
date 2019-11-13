@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Endpoints for querying for status of data
 - Endpoints for querying for reporting of data
 
+## [0.12.3] - 2019-11-13
+### Changed
+- Fix #262 Add OrderedDict hashlist creation by [@kauberry](https://github.com/kauberry)
+
 ## [0.12.2] - 2019-10-31
 ### Changed
 - Fix #258 Add more handling of hashlist creation by [@kauberry](https://github.com/kauberry)
