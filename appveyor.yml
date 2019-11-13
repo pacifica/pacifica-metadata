@@ -22,6 +22,7 @@ install:
     Expand-Archive "elasticsearch.zip" -DestinationPath "C:\elasticsearch";
     C:\pacifica\Scripts\activate.ps1;
     python -m pip install --upgrade pip setuptools wheel;
+    python -m pip install pywin32==225;
     python -m pip install -r requirements-dev.txt;
     python -m pip install 'celery[eventlet]' eventlet;
     echo 'Done';
