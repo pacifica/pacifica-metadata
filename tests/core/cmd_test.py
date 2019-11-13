@@ -130,6 +130,8 @@ class AdminCmdBase(object):
     def _upgrade_path(cls, *versions):
         cls._upgrade_package('pip', 'setuptools', 'wheel')
         cls._install_package('elasticsearch<7')
+        if sys.platform == 'win32':
+            cls._install_package('pywin32!=226')
         for version in versions:
             cls._install_metadata(version)
         if versions:
