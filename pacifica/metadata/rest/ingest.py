@@ -37,7 +37,6 @@ Example uploaded data::
 """
 from __future__ import print_function
 import hashlib
-from six import binary_type
 from cherrypy import request, tools
 from pacifica.metadata.config import get_config
 from pacifica.metadata.orm.transsip import TransSIP
@@ -82,7 +81,7 @@ class IngestAPI(object):
         except ValueError:
             return False
         hashd = getattr(hashlib, hashtype)()
-        hashd.update(binary_type())
+        hashd.update(b'')
         if len(hashsum) != len(hashd.hexdigest()):
             return False
         return True

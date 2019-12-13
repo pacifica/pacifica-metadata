@@ -3,4 +3,3 @@ peewee>2
 psycopg2
 python-dateutil
 requests
-six

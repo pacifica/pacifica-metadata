@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """CherryPy File Details object class."""
-from six import text_type
 from cherrypy import tools, HTTPError, request
 from pacifica.metadata.orm import Files
 
@@ -21,7 +20,7 @@ class FileDetailsLookup(object):
             raise HTTPError('404 Not Found', message)
         return [{
             'file_id': f.id,
-            'relative_local_path': text_type('{0}/{1}').format(f.subdir.rstrip('/'), f.name),
+            'relative_local_path': str('{0}/{1}').format(f.subdir.rstrip('/'), f.name),
             'file_size_bytes': f.size,
             'hashtype': f.hashtype,
             'hashsum': f.hashsum
