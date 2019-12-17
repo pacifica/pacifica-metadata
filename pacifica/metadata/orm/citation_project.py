@@ -27,7 +27,7 @@ class CitationProject(CherryPyAPI):
     project = ForeignKeyField(Projects, backref='citations')
 
     # pylint: disable=too-few-public-methods
-    class Meta(object):
+    class Meta:
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB

@@ -53,7 +53,7 @@ from .events import emit_event
 # pylint: disable=too-few-public-methods
 
 
-class IngestAPI(object):
+class IngestAPI:
     """Uploader ingest API."""
 
     exposed = True

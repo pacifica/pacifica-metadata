@@ -5,7 +5,7 @@ from pacifica.metadata.orm.instrument_group import InstrumentGroup
 from pacifica.metadata.orm.groups import Groups
 
 
-class QueryBase(object):
+class QueryBase:
     """Retrieves a set of instruments for a given keyword set."""
 
     @staticmethod

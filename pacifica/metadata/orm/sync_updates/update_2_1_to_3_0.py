@@ -65,7 +65,7 @@ def _create_tables():
         deleted = DateTimeField(index=True, null=True)
 
         # pylint: disable=too-few-public-methods
-        class Meta(object):
+        class Meta:
             """PeeWee meta class contains the database and the primary key."""
 
             database = DB
@@ -97,7 +97,7 @@ def _add_relationship_columns():
         migrator.rename_column('doitransaction', 'transaction_id', 'trans_old_id')
     )
     for table_name, rel_info in table_rel.items():
-        DB.execute_sql('alter table {} drop constraint {}_pkey'.format(table_name, table_name))
+        DB.execute_sql('alter table {0} drop constraint {0}_pkey'.format(table_name))
         rel_name, backref, pkey_columns = rel_info
         rel_obj = Relationships.get(Relationships.name == rel_name)
         migrate(
@@ -122,7 +122,7 @@ def _add_relationship_columns():
                 condition.append(u'{} = {}'.format(key, param_val))
             condition = u' and '.join(condition)
             DB.execute_sql(u'update {} set uuid = %s where {}'.format(table_name, condition), (str(uuid.uuid4()),))
-        DB.execute_sql('alter table {} add constraint {}_pkey primary key (uuid)'.format(table_name, table_name))
+        DB.execute_sql('alter table {0} add constraint {0}_pkey primary key (uuid)'.format(table_name))
     migrate(
         migrator.add_column(
             'citationtransaction', 'transaction_id',

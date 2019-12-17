@@ -15,7 +15,7 @@ SCHEMA_MINOR = 0
 # pylint: disable=too-few-public-methods
 
 
-class OrmSync(object):
+class OrmSync:
     """
     Special module for syncing the orm.
 
@@ -147,7 +147,7 @@ class MetadataSystem(Model):
     part = CharField(primary_key=True)
     value = IntegerField(default=-1)
 
-    class Meta(object):
+    class Meta:
         """Meta object containing the database connection."""
 
         database = DB  # This model uses the pacifica_cart database.

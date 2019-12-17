@@ -9,7 +9,7 @@ from pacifica.metadata.orm import Users, Instruments, Projects, TransactionUser
 
 
 # pylint: disable=too-few-public-methods
-class QueryBase(object):
+class QueryBase:
     """Retrieves a set of projects for a given keyword set."""
 
     valid_keywords = [
@@ -34,7 +34,7 @@ class QueryBase(object):
                     .dicts())
         # pylint: enable=no-member
 
-        return [tkv for tkv in tkv_list]
+        return list(tkv_list)
 
     @staticmethod
     def _get_file_list(transaction_id):

@@ -5,7 +5,7 @@ import pytz
 
 
 # pylint: disable=too-few-public-methods
-class QueryBase(object):
+class QueryBase:
     """Formats summary data for other classes down the tree."""
 
     time_basis_mappings = {

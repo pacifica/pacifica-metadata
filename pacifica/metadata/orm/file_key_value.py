@@ -31,7 +31,7 @@ class FileKeyValue(CherryPyAPI):
     value = ForeignKeyField(Values, backref='file_links')
 
     # pylint: disable=too-few-public-methods
-    class Meta(object):
+    class Meta:
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB

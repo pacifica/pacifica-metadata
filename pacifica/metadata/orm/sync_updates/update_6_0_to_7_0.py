@@ -16,7 +16,7 @@ def _update_relationships():
         description = TextField(default='')
         encoding = CharField(default='UTF8')
 
-        class Meta(object):
+        class Meta:
             """PeeWee meta class contains the database and the primary key."""
 
             database = DB

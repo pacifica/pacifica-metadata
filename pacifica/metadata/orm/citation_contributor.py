@@ -30,7 +30,7 @@ class CitationContributor(CherryPyAPI):
     author_precedence = IntegerField(default=1)
 
     # pylint: disable=too-few-public-methods
-    class Meta(object):
+    class Meta:
         """PeeWee meta class contains database and primary keys."""
 
         database = DB

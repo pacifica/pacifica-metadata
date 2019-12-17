@@ -8,7 +8,7 @@ from pacifica.metadata.rest.project_queries.project_has_data import ProjectHasDa
 
 
 # pylint: disable=too-few-public-methods
-class ProjectInfoAPI(object):
+class ProjectInfoAPI:
     """ProjectInfo API."""
 
     exposed = True

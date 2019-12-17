@@ -8,7 +8,7 @@ from pacifica.metadata.orm.base import DB
 
 
 # pylint: disable=too-few-public-methods
-class UploadEntries(object):
+class UploadEntries:
     """Uploads new transaction key/value pairs to Pacifica."""
 
     upload_keys_cache = {}

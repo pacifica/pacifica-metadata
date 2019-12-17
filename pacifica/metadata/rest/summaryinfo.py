@@ -6,7 +6,7 @@ from pacifica.metadata.rest.reporting_queries.detailed_transactions_list import 
 
 
 # pylint: disable=too-few-public-methods
-class SummaryInfoAPI(object):
+class SummaryInfoAPI:
     """SummaryInfo API."""
 
     exposed = True

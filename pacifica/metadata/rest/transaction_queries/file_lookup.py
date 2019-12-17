@@ -23,12 +23,11 @@ class FileLookup(QueryBase):
         if transaction_id is not None and re.match('[0-9]+', transaction_id):
             cherrypy.log.error('file details request')
             return QueryBase._get_file_list(transaction_id)
-        else:
-            message = 'Invalid file details lookup request. '
-            message += "'{0}' is not a valid transaction_id".format(
-                transaction_id)
-            cherrypy.log.error(message)
-            raise HTTPError(
-                status='400 Invalid Request Options',
-                message=QueryBase.compose_help_block_message()
-            )
+        message = 'Invalid file details lookup request. '
+        message += "'{0}' is not a valid transaction_id".format(
+            transaction_id)
+        cherrypy.log.error(message)
+        raise HTTPError(
+            status='400 Invalid Request Options',
+            message=QueryBase.compose_help_block_message()
+        )

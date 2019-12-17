@@ -29,9 +29,9 @@ def date_converts(date_obj):
     """Standardize on converting to date objects."""
     if isinstance(date_obj, (str, unicode_type)):
         return parser.parse(date_obj).date()
-    elif isinstance(date_obj, date):
+    if isinstance(date_obj, date):
         return date_obj
-    elif isinstance(date_obj, int):
+    if isinstance(date_obj, int):
         return datetime.utcfromtimestamp(date_obj).date()
     return None
 
@@ -45,9 +45,9 @@ def datetime_converts(time_obj):
     """Standardize on converting to datetime objects."""
     if isinstance(time_obj, (str, unicode_type)):
         return parser.parse(time_obj).replace(microsecond=0)
-    elif isinstance(time_obj, datetime):
+    if isinstance(time_obj, datetime):
         return time_obj.replace(microsecond=0)
-    elif isinstance(time_obj, int):
+    if isinstance(time_obj, int):
         return datetime.utcfromtimestamp(time_obj).replace(microsecond=0)
     return None
 

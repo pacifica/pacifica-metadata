@@ -7,7 +7,7 @@ from pacifica.metadata.orm.base import db_connection_decorator
 
 
 # pylint: disable=too-few-public-methods
-class KVsForTransaction(object):
+class KVsForTransaction:
     """Retrieves a list of key/value pairs for a transaction_id."""
 
     exposed = True

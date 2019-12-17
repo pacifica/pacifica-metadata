@@ -10,7 +10,7 @@ from pacifica.metadata.rest.transaction_queries.transaction_release_state import
 
 
 # pylint: disable=too-few-public-methods
-class TransactionInfoAPI(object):
+class TransactionInfoAPI:
     """TransactionInfoAPI API."""
 
     exposed = True

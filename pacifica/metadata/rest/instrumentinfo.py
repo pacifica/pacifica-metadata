@@ -8,7 +8,7 @@ from pacifica.metadata.rest.instrument_queries.instrument_categories import Inst
 
 
 # pylint: disable=too-few-public-methods
-class InstrumentInfoAPI(object):
+class InstrumentInfoAPI:
     """InstrumentInfo API."""
 
     exposed = True

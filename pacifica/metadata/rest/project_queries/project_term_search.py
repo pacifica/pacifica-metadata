@@ -55,8 +55,7 @@ class ProjectTermSearch(QueryBase):
         """Return a set of projects for a given user."""
         if search_term is not None:
             return ProjectTermSearch.search_for_project(search_term)
-        else:
-            raise cherrypy.HTTPError(
-                '400 No Search Terms Provided',
-                QueryBase.project_help_block_message()
-            )
+        raise cherrypy.HTTPError(
+            '400 No Search Terms Provided',
+            QueryBase.project_help_block_message()
+        )

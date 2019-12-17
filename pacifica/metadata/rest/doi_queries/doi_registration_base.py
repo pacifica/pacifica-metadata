@@ -7,7 +7,7 @@ from pacifica.metadata.orm.utils import datetime_now_nomicrosecond
 # pylint: disable=too-few-public-methods
 
 
-class DOIRegistrationBase(object):
+class DOIRegistrationBase:
     """Base class for DOI registration functionality."""
 
     @staticmethod

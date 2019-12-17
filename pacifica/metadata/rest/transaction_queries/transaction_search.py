@@ -89,9 +89,8 @@ class TransactionSearch(QueryBase):
                 '400 Invalid Request Options',
                 QueryBase.compose_help_block_message()
             )
-        else:
-            transactions, transaction_search_stats = TransactionSearch._search_transactions(
-                kwargs)
+        transactions, transaction_search_stats = TransactionSearch._search_transactions(
+            kwargs)
 
         results = QueryBase._get_transaction_info_blocks(transactions, option)
         results.update(transaction_search_stats)

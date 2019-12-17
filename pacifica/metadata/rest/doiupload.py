@@ -7,7 +7,7 @@ from pacifica.metadata.rest.doi_queries.doi_modified_time_update import DOIModif
 
 
 # pylint: disable=too-few-public-methods
-class DOIUploadAPI(object):
+class DOIUploadAPI:
     """InstrumentInfo API."""
 
     exposed = True

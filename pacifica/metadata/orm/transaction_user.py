@@ -34,7 +34,7 @@ class TransactionUser(CherryPyAPI):
     relationship = ForeignKeyField(Relationships, backref='transaction_user')
 
     # pylint: disable=too-few-public-methods
-    class Meta(object):
+    class Meta:
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB

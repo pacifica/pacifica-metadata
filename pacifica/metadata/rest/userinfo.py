@@ -29,7 +29,7 @@ def user_exists_decorator(func):
 
 
 # pylint: disable=too-few-public-methods
-class UserInfoAPI(object):
+class UserInfoAPI:
     """UserInfo API."""
 
     exposed = True

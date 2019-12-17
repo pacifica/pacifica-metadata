@@ -2,18 +2,15 @@
 # -*- coding: utf-8 -*-
 """CherryPy File Details object class."""
 from datetime import datetime
+from urllib.parse import unquote
 from dateutil.parser import parse
 from cherrypy import tools
 from pacifica.metadata.orm import TransactionKeyValue, Keys, Values, TransSIP
 from pacifica.metadata.orm.base import db_connection_decorator
-try:
-    from urllib.parse import unquote
-except ImportError:  # pragma: no cover
-    from urlparse import unquote
 
 
 # pylint: disable=too-few-public-methods
-class ValuesForKey(object):
+class ValuesForKey:
     """Retrieves a list of values for a given key from the trans_key_value table."""
 
     exposed = True

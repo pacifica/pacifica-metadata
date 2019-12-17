@@ -5,7 +5,7 @@ from pacifica.metadata.rest.tkvupload_queries.upload_entries import UploadEntrie
 
 
 # pylint: disable=too-few-public-methods
-class TkvUploadAPI(object):
+class TkvUploadAPI:
     """InstrumentInfo API."""
 
     exposed = True
