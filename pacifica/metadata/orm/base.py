@@ -20,7 +20,6 @@ import uuid
 from collections import OrderedDict
 from dateutil import parser
 from peewee import Model, Expression, OP, AutoField, fn, CompositeKey, SQL, NodeList, BackrefAccessor
-from six import text_type
 from .utils import index_hash, ExtendDateTimeField
 from .utils import datetime_converts, date_converts, datetime_now_nomicrosecond
 from .globals import DB
@@ -247,7 +246,7 @@ class PacificaModel(Model):
             if last_change_date is not None else '1970-01-01 00:00:00'
         last_change_string = last_change_date.isoformat(' ') \
             if isinstance(last_change_date, datetime.datetime) else parser.parse(last_change_string).isoformat(' ')
-        return text_type(last_change_string)
+        return str(last_change_string)
 
     @classmethod
     def available_hash_list(cls, columns_and_where_clause=None):
