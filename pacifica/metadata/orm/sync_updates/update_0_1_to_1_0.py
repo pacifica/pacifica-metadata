@@ -13,7 +13,7 @@ class OldProposals(Model):
     id = CharField(primary_key=True)
 
     # pylint: disable=too-few-public-methods
-    class Meta(object):
+    class Meta:
         """This is the meta class for OldTrans."""
 
         database = DB
@@ -33,7 +33,7 @@ class OldTrans(Model):
     deleted = DateTimeField(null=True)
 
     # pylint: disable=too-few-public-methods
-    class Meta(object):
+    class Meta:
         """This is the meta class for OldTrans."""
 
         database = DB
@@ -57,7 +57,7 @@ class OldTransSIP(Model):
     deleted = DateTimeField(null=True)
 
     # pylint: disable=too-few-public-methods
-    class Meta(object):
+    class Meta:
         """This is the meta class for OldTrans."""
 
         database = DB
@@ -81,7 +81,7 @@ class OldTransSAP(Model):
     deleted = DateTimeField(null=True)
 
     # pylint: disable=too-few-public-methods
-    class Meta(object):
+    class Meta:
         """This is the meta class for OldTrans."""
 
         database = DB

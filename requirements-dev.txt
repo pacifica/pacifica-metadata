@@ -2,14 +2,14 @@
 coverage
 httpretty
 mock
-pbs
+pbs; sys_platform == 'win32'
 pep257
 pre-commit
-pylint<2.0
+pylint>2
 pytest
 radon
 readthedocs-sphinx-ext
 recommonmark
-sh
+sh; sys_platform != 'win32'
 sphinx
 sphinx-rtd-theme

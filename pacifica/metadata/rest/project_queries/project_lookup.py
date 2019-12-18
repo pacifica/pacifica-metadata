@@ -64,12 +64,11 @@ class ProjectLookup(QueryBase):
         if project_id is not None and re.match('[0-9]+[a-z]*', project_id):
             cherrypy.log.error('project details request')
             return ProjectLookup._get_project_details(project_id)
-        else:
-            message = 'Invalid project details lookup request. '
-            message += "'{0}' is not a valid project_id".format(
-                project_id)
-            cherrypy.log.error(message)
-            raise HTTPError(
-                status='400 Invalid Request Options',
-                message=QueryBase.project_help_block_message()
-            )
+        message = 'Invalid project details lookup request. '
+        message += "'{0}' is not a valid project_id".format(
+            project_id)
+        cherrypy.log.error(message)
+        raise HTTPError(
+            status='400 Invalid Request Options',
+            message=QueryBase.project_help_block_message()
+        )

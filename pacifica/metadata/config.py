@@ -3,10 +3,7 @@
 """Configuration reading and validation module."""
 import logging
 from os import getenv
-try:
-    from ConfigParser import SafeConfigParser
-except ImportError:  # pragma: no cover python 2 vs 3 issue
-    from configparser import ConfigParser as SafeConfigParser
+from configparser import ConfigParser as SafeConfigParser
 from pacifica.metadata.globals import CONFIG_FILE
 
 

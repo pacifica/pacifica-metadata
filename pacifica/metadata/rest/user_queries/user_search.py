@@ -58,9 +58,8 @@ class UserSearch(QueryBase):
         if search_term is not None and search_term:
             cherrypy.log.error('search request')
             return UserSearch.search_for_user(search_term, option)
-        else:
-            cherrypy.log.error('invalid request')
-            raise cherrypy.HTTPError(
-                '400 Invalid Request Options',
-                QueryBase.compose_help_block_message()
-            )
+        cherrypy.log.error('invalid request')
+        raise cherrypy.HTTPError(
+            '400 Invalid Request Options',
+            QueryBase.compose_help_block_message()
+        )

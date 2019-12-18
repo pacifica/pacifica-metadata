@@ -47,7 +47,6 @@ class TestBase(TestCase):
     @classmethod
     def base_create_dep_objs(cls):
         """Create dependent objects."""
-        pass
 
     def base_create_obj(self, cls, obj_hash):
         """Create obj based on the class given."""

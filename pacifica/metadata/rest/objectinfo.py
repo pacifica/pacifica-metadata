@@ -8,7 +8,7 @@ from pacifica.metadata.orm.base import db_connection_decorator
 
 
 # pylint: disable=too-few-public-methods
-class ObjectInfoAPI(object):
+class ObjectInfoAPI:
     """ObjectInfoAPI API."""
 
     lower_obj = {
@@ -59,6 +59,5 @@ class ObjectInfoAPI(object):
                     message = "'{0}' is not a valid class object name".format(object_class_name)
                     raise cherrypy.HTTPError(404, message)
                 return list(cls.lower_obj.keys())
-            else:
-                js_object = myclass.get_object_info(where_clause)
+            js_object = myclass.get_object_info(where_clause)
         return js_object

@@ -4,7 +4,7 @@
 from pacifica.metadata.orm import UserGroup, Projects, ProjectUser
 
 
-class QueryBase(object):
+class QueryBase:
     """Retrieves a set of projects for a given keyword set."""
 
     @staticmethod

@@ -67,7 +67,7 @@ class PacificaModel(Model):
     deleted = ExtendDateTimeField(null=True, index=True)
 
     # pylint: disable=too-few-public-methods
-    class Meta(object):
+    class Meta:
         """PeeWee meta class contains the db connection."""
 
         database = DB

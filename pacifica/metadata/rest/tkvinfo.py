@@ -6,7 +6,7 @@ from pacifica.metadata.rest.tkvinfo_queries.kvs_for_transaction import KVsForTra
 
 
 # pylint: disable=too-few-public-methods
-class TkvInfoAPI(object):
+class TkvInfoAPI:
     """Transaction Key Value Info API."""
 
     exposed = True

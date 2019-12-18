@@ -7,7 +7,7 @@ from pacifica.metadata.rest.fileinfo_queries.files_with_tkv import FilesWithTran
 
 
 # pylint: disable=too-few-public-methods
-class FileInfoAPI(object):
+class FileInfoAPI:
     """FileInfoAPI."""
 
     exposed = True

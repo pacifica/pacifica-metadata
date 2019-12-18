@@ -1,18 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """CherryPy File Details object class."""
+from urllib.parse import unquote
 from cherrypy import tools
 from peewee import DoesNotExist, fn
 from pacifica.metadata.orm import Files, TransactionKeyValue, Keys, Values
 from pacifica.metadata.orm.base import db_connection_decorator
-try:
-    from urllib.parse import unquote
-except ImportError:  # pragma: no cover
-    from urlparse import unquote
 
 
 # pylint: disable=too-few-public-methods
-class FilesWithTransactionKeyValue(object):
+class FilesWithTransactionKeyValue:
     """Retrieves file details for a list of files having a certain key/value combo."""
 
     exposed = True

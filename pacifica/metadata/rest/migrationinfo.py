@@ -7,7 +7,7 @@ from pacifica.metadata.rest.migration_queries.migrate_users import MigrateUsers
 
 
 # pylint: disable=too-few-public-methods
-class MigrationInfoAPI(object):
+class MigrationInfoAPI:
     """MigrationInfo API."""
 
     exposed = True

@@ -6,7 +6,7 @@ from pacifica.metadata.orm import Files
 
 
 # pylint: disable=too-few-public-methods
-class FileDetailsLookup(object):
+class FileDetailsLookup:
     """Retrieves file details for a list of file id's."""
 
     exposed = True

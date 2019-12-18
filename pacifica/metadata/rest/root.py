@@ -30,7 +30,7 @@ def error_page_default(**kwargs):
 
 
 # pylint: disable=too-few-public-methods
-class Root(object):
+class Root:
     """
     CherryPy root object class.
 

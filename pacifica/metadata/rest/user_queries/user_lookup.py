@@ -42,9 +42,8 @@ class UserLookup(QueryBase):
         if person_id is not None and re.match('[0-9]+', person_id):
             cherrypy.log.error('id lookup request')
             return UserLookup.get_user_info_block(person_id, option)
-        else:
-            cherrypy.log.error('invalid request')
-            raise cherrypy.HTTPError(
-                '400 Invalid Lookup Options',
-                QueryBase.compose_help_block_message()
-            )
+        cherrypy.log.error('invalid request')
+        raise cherrypy.HTTPError(
+            '400 Invalid Lookup Options',
+            QueryBase.compose_help_block_message()
+        )

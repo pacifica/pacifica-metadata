@@ -8,7 +8,7 @@ from pacifica.metadata.orm import ProjectUser, InstrumentUser, InstitutionUser
 from pacifica.metadata.rest.user_queries.query_base import QueryBase as UserQueryBase
 
 
-class MigrateUsers(object):
+class MigrateUsers:
     """Generate a streamlined query for importing instrument entities and linkages."""
 
     exposed = True

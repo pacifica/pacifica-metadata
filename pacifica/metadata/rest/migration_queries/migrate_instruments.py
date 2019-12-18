@@ -8,7 +8,7 @@ from pacifica.metadata.orm import ProjectInstrument
 from pacifica.metadata.rest.instrument_queries.query_base import QueryBase as InstQueryBase
 
 
-class MigrateInstruments(object):
+class MigrateInstruments:
     """Generate a streamlined query for importing instrument entities and linkages."""
 
     exposed = True

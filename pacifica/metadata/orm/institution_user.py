@@ -32,7 +32,7 @@ class InstitutionUser(CherryPyAPI):
     relationship = ForeignKeyField(Relationships, backref='institution_user')
 
     # pylint: disable=too-few-public-methods
-    class Meta(object):
+    class Meta:
         """PeeWee meta class contains the database and the primary key."""
 
         database = DB

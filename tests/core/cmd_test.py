@@ -16,7 +16,7 @@ try:
 except ImportError:
     import pbs
 
-    class Sh(object):
+    class Sh:
         """Sh style wrapper."""
 
         def __getattr__(self, attr):
@@ -55,7 +55,7 @@ def requests_retry_session(retries=3, backoff_factor=0.5, status_forcelist=(500,
     return session
 
 
-class AdminCmdBase(object):
+class AdminCmdBase:
     """Test base class for setting up update environments."""
 
     virtualenv_dir = mkdtemp()

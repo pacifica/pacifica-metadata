@@ -8,7 +8,7 @@ from pacifica.metadata.orm import ProjectInstrument, ProjectUser
 from pacifica.metadata.rest.project_queries.query_base import QueryBase as ProjQueryBase
 
 
-class MigrateProjects(object):
+class MigrateProjects:
     """Generate a streamlined query for importing project entities and linkages."""
 
     exposed = True

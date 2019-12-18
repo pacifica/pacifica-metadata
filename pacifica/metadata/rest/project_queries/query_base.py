@@ -4,7 +4,7 @@
 import datetime
 
 
-class QueryBase(object):
+class QueryBase:
     """Retrieves a set of projects for a given keyword set."""
 
     @staticmethod
@@ -20,9 +20,8 @@ class QueryBase(object):
         now = datetime.datetime.now().date()
 
         project_state = 'inactive'
-        currently_active = True if _pe.actual_start_date is not None and _pe.actual_start_date < now else False
-        currently_closed = True if currently_active and _pe.actual_end_date is not None and \
-            _pe.actual_end_date < now else False
+        currently_active = bool(_pe.actual_start_date is not None and _pe.actual_start_date < now)
+        currently_closed = bool(currently_active and _pe.actual_end_date is not None and _pe.actual_end_date < now)
 
         if not currently_active:
             project_state = 'pre_active'
@@ -32,8 +31,8 @@ class QueryBase(object):
             else:
                 project_state = 'closed'
 
-        currently_active = True if project_state == 'active' and (
-            _pe.actual_end_date is None or _pe.actual_end_date >= now) else False
+        currently_active = bool(project_state == 'active' and (
+            _pe.actual_end_date is None or _pe.actual_end_date >= now))
         project_state = 'invalid' if _pe.actual_start_date is None and _pe.actual_end_date is None else project_state
         title = _pe.title if _pe.title is not None else '<Title Unspecified>'
         year = _pe.actual_end_date.year if _pe.actual_end_date is not None else 'Unknown'

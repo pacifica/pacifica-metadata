@@ -47,12 +47,11 @@ class InstrumentLookup(QueryBase):
         if instrument_id is not None and re.match('[0-9]+', instrument_id):
             cherrypy.log.error('instrument details request')
             return InstrumentLookup._get_instrument_details(instrument_id)
-        else:
-            message = 'Invalid instrument details lookup request. '
-            message += "'{0}' is not a valid instrument_id".format(
-                instrument_id)
-            cherrypy.log.error(message)
-            raise HTTPError(
-                status='400 Invalid Request Options',
-                message=QueryBase.instrument_help_block_message()
-            )
+        message = 'Invalid instrument details lookup request. '
+        message += "'{0}' is not a valid instrument_id".format(
+            instrument_id)
+        cherrypy.log.error(message)
+        raise HTTPError(
+            status='400 Invalid Request Options',
+            message=QueryBase.instrument_help_block_message()
+        )
