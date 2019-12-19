@@ -2,6 +2,7 @@ language: python
 dist: bionic
 services:
 - elasticsearch
+python: 3.6
 cache:
   directories:
   - $HOME/.cache/pre-commit
@@ -29,14 +30,21 @@ before_script:
 jobs:
   include:
   - stage: lint
-    python: 3.6
-    before_script: skip
+    script: pre-commit run -a
+  - python: 3.7
+    script: pre-commit run -a
+  - python: 3.8
     script: pre-commit run -a
   - stage: test
-    python: 3.6
     sudo: required
+  - python: 3.7
+  - python: 3.8
+    script:
+      - coverage run --include='pacifica/metadata/*' --omit='pacifica/metadata/admin_cmd*,pacifica/metadata/orm/sync*' -m pytest -xv tests/orm
+      - coverage run --include='pacifica/metadata/*' --omit='pacifica/metadata/admin_cmd*,pacifica/metadata/orm/sync*' -a -m pytest -xv tests/core
+      - coverage run --include='pacifica/metadata/*' --omit='pacifica/metadata/admin_cmd*,pacifica/metadata/orm/sync*' -a -m pytest -xv tests/rest
+      - coverage report -m --fail-under 100
   - stage: test-migration
-    python: 3.6
     sudo: required
     script: >
       curl -o apgdiff.zip https://www.apgdiff.com/download/apgdiff-2.4-bin.zip;
@@ -54,7 +62,7 @@ jobs:
       if [[ $(java -jar apgdiff-2.4/apgdiff-2.4.jar update_schema.dump.sql orig_schema.dump.sql | wc -l) -gt 0 ]] ; then exit -1; fi
   - stage: test-docker
     sudo: required
-    python: 3.6
+    python: 3.8
     services:
     - docker
     before_script: skip
@@ -71,7 +79,7 @@ jobs:
       pip install .;
       cd tests; python test_files/loadit_test.py
   - stage: test-docs
-    python: 3.6
+    python: 3.8
     before_script: skip
     script: >
       pip install .;
@@ -86,7 +94,7 @@ jobs:
     before_install: skip
     before_script: skip
     script: skip
-    python: 3.6
+    python: 3.8
     deploy:
       skip_cleanup: true
       provider: pypi
