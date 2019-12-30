@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Endpoints for querying for status of data
 - Endpoints for querying for reporting of data
 
+## [0.12.4] - 2019-12-30
+### Changed
+- Pull #265 Add support for Python 3.7 and 3.8 by [@dmlb2000](https://github.com/dmlb2000)
+- Pull #266 Update PyLint to 2.0+ by [@dmlb2000](https://github.com/dmlb2000)
+- Pull #265 Remove Python 2.7 support by [@dmlb2000](https://github.com/dmlb2000)
+
 ## [0.12.3] - 2019-11-13
 ### Changed
 - Fix #262 Add OrderedDict hashlist creation by [@kauberry](https://github.com/kauberry)
