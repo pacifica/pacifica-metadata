@@ -1,9 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
-from cherrypy import tools, request
+from cherrypy import tools, HTTPError
 from collections import defaultdict
-from dateutil import parser
 from peewee import fn
 from pacifica.metadata.rest.reporting_queries.query_base import QueryBase
 from pacifica.metadata.orm import TransSIP
@@ -40,8 +39,10 @@ class TransactionReporting(QueryBase):
         for r in transaction_query.dicts():
             transaction_results[r['project_id']][r['instrument_id']] = {
                 'transaction_count': int(r['transaction_count']),
-                'upload_date_start': SummarizeByDate.utc_to_local(r['earliest_upload_date']).date().strftime('%Y-%m-%d'),
-                'upload_date_end': SummarizeByDate.utc_to_local(r['latest_upload_date']).date().strftime('%Y-%m-%d'),
+                'upload_date_start': SummarizeByDate.utc_to_local(
+                    r['earliest_upload_date']).date().strftime('%Y-%m-%d'),
+                'upload_date_end': SummarizeByDate.utc_to_local(
+                    r['latest_upload_date']).date().strftime('%Y-%m-%d'),
                 'project_id': r['project_id'],
                 'instrument_id': r['instrument_id'],
                 'uploaded_by_id': r['uploaded_by_id']
@@ -52,22 +53,17 @@ class TransactionReporting(QueryBase):
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
     @staticmethod
-    @tools.json_in()
     @tools.json_out()
     @db_connection_decorator
     def GET(start_date=None, end_date=None):
         """Return a transaction summary for a given date range."""
-        if start_date is not None:
-            start = parser.parse(start_date)
-        else:
+        if start_date is None:
             raise HTTPError(
                 '400 Invalid Start Date',
                 'No starting date specified'
             )
 
-        if end_date is not None:
-            end = parser.parse(end_date)
-        else:
+        if end_date is None:
             raise HTTPError(
                 '400 Invalid End Date',
                 'No ending date specified'
