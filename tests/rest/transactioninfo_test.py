@@ -116,6 +116,10 @@ class TestTransactionInfoAPI(CPCommonTest):
             url='{0}/transactioninfo/multisearch?instrument_group_id={1}&project_id=1234a'.format(self.url, 1001))
         self.assertEqual(req.status_code, 200)
 
+        req = requests.get(
+            url='{0}/transactioninfo/summary/{1}/{2}'.format(self.url, '2017-07-01', '2017-07-30'))
+        self.assertEqual(req.status_code, 200)
+
     def test_bad_transactioninfo_api(self):
         """Test the GET method with bad data."""
         # test by_id
@@ -144,6 +148,10 @@ class TestTransactionInfoAPI(CPCommonTest):
             '{0}/transactioninfo/search/details'.format(self.url))
         self.assertEqual(req.status_code, 400)
         self.assertTrue('Invalid Request Options' in req.text)
+
+        req = requests.get(
+            '{0}/transactioninfo/summary/{1}/{2}'.format(self.url, 'bob', ''))')
+        self.assertEqual(req.status_code, 400)
 
     def test_transaction_release(self):
         """Test the transaction release data."""

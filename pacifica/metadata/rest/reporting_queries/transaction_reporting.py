@@ -36,16 +36,16 @@ class TransactionReporting(QueryBase):
         # pylint: enable=no-member
         transaction_results = defaultdict(dict)
 
-        for r in transaction_query.dicts():
-            transaction_results[r['project_id']][r['instrument_id']] = {
-                'transaction_count': int(r['transaction_count']),
+        for rec in transaction_query.dicts():
+            transaction_results[rec['project_id']][rec['instrument_id']] = {
+                'transaction_count': int(rec['transaction_count']),
                 'upload_date_start': SummarizeByDate.utc_to_local(
-                    r['earliest_upload_date']).date().strftime('%Y-%m-%d'),
+                    rec['earliest_upload_date']).date().strftime('%Y-%m-%d'),
                 'upload_date_end': SummarizeByDate.utc_to_local(
-                    r['latest_upload_date']).date().strftime('%Y-%m-%d'),
-                'project_id': r['project_id'],
-                'instrument_id': r['instrument_id'],
-                'uploaded_by_id': r['uploaded_by_id']
+                    rec['latest_upload_date']).date().strftime('%Y-%m-%d'),
+                'project_id': rec['project_id'],
+                'instrument_id': rec['instrument_id'],
+                'uploaded_by_id': rec['uploaded_by_id']
             }
 
         return transaction_results
