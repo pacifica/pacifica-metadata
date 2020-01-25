@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
-from cherrypy import tools, HTTPError
 from collections import defaultdict
+from cherrypy import tools, HTTPError
 from peewee import fn
 from pacifica.metadata.rest.reporting_queries.query_base import QueryBase
 from pacifica.metadata.orm import TransSIP
