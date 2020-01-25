@@ -153,6 +153,10 @@ class TestTransactionInfoAPI(CPCommonTest):
             '{0}/transactioninfo/summary/{1}/{2}'.format(self.url, 'bob', ''))
         self.assertEqual(req.status_code, 400)
 
+        req = requests.get(
+            '{0}/transactioninfo/summary/{1}/{2}'.format(self.url, '2017-07-01', 'bob'))
+        self.assertEqual(req.status_code, 400)
+
     def test_transaction_release(self):
         """Test the transaction release data."""
         self._setup_released_transaction()
