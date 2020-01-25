@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """CherryPy Status Metadata object class."""
 from cherrypy import tools, request
+from collections import defaultdict
 from dateutil import parser
 from peewee import fn
 from pacifica.metadata.rest.reporting_queries.query_base import QueryBase
@@ -20,30 +21,33 @@ class TransactionReporting(QueryBase):
     def get_transaction_date_range_details(start_date, end_date):
         """Return a transaction set grouped on instrument and project for a given time span."""
         # pylint: disable=no-member
-        query = (
-            TransSip().select(
-                fn.Count(TransSip.id).alias('transaction_count'),
+        transaction_query = (
+            TransSIP().select(
+                fn.Count(TransSIP.id).alias('transaction_count'),
                 fn.Min(TransSIP.updated).alias('earliest_upload_date'),
                 fn.Max(TransSIP.updated).alias('latest_upload_date'),
-                fn.Min(TransSip.submitter).alias('uploaded_by_id'),
-                TransSip.project.alias('project_id'),
-                TransSip.instrument.alias('instrument_id')
+                fn.Min(TransSIP.submitter).alias('uploaded_by_id'),
+                TransSIP.project.alias('project_id'),
+                TransSIP.instrument.alias('instrument_id')
             )
-            .group_by(TransSip.project, TransSip.instrument)
-            .having(fn.Min(TransSip.updated >= start_date))
-            .having(fn.Max(TransSip.updated <= end_date))
+            .group_by(TransSIP.project, TransSIP.instrument)
+            .having(fn.Min(TransSIP.updated) >= start_date)
+            .having(fn.Max(TransSIP.updated) <= end_date)
         )
         # pylint: enable=no-member
-        return [
-            {
+        transaction_results = defaultdict(dict)
+
+        for r in transaction_query.dicts():
+            transaction_results[r['project_id']][r['instrument_id']] = {
                 'transaction_count': int(r['transaction_count']),
                 'upload_date_start': SummarizeByDate.utc_to_local(r['earliest_upload_date']).date().strftime('%Y-%m-%d'),
                 'upload_date_end': SummarizeByDate.utc_to_local(r['latest_upload_date']).date().strftime('%Y-%m-%d'),
                 'project_id': r['project_id'],
                 'instrument_id': r['instrument_id'],
                 'uploaded_by_id': r['uploaded_by_id']
-            } for r in query.dicts()
-        ]
+            }
+
+        return transaction_results
 
     # Cherrypy requires these named methods.
     # pylint: disable=invalid-name
