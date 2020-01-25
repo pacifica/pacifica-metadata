@@ -150,11 +150,11 @@ class TestTransactionInfoAPI(CPCommonTest):
         self.assertTrue('Invalid Request Options' in req.text)
 
         req = requests.get(
-            '{0}/transactioninfo/summary/{1}/{2}'.format(self.url, 'bob', ''))
+            '{0}/transactioninfo/summary/{1}/{2}'.format(self.url, '', ''))
         self.assertEqual(req.status_code, 400)
 
         req = requests.get(
-            '{0}/transactioninfo/summary/{1}/{2}'.format(self.url, '2017-07-01', 'bob'))
+            '{0}/transactioninfo/summary/{1}/{2}'.format(self.url, '2017-07-01', ''))
         self.assertEqual(req.status_code, 400)
 
     def test_transaction_release(self):
