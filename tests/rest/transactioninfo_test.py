@@ -117,7 +117,7 @@ class TestTransactionInfoAPI(CPCommonTest):
         self.assertEqual(req.status_code, 200)
 
         req = requests.get(
-            url='{0}/transactioninfo/summary/{1}/{2}'.format(self.url, '2017-07-01', '2017-07-30'))
+            url='{0}/transactioninfo/summary/{1}/{2}'.format(self.url, '2015-07-01', '2019-07-30'))
         self.assertEqual(req.status_code, 200)
 
     def test_bad_transactioninfo_api(self):
