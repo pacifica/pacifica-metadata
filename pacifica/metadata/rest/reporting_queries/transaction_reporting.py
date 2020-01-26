@@ -36,7 +36,7 @@ class TransactionReporting(QueryBase):
         # pylint: enable=no-member
         transaction_results = defaultdict(dict)
 
-        print("* * * transaction_query *  * *")
+        print('* * * transaction_query *  * *')
         print(transaction_query.dicts())
 
         for rec in transaction_query.dicts():
