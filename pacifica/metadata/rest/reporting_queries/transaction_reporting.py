@@ -37,7 +37,7 @@ class TransactionReporting(QueryBase):
         transaction_results = defaultdict(dict)
 
         print("* * * transaction_query *  * *")
-        print(transaction_query.dicts()
+        print(transaction_query.dicts())
 
         for rec in transaction_query.dicts():
             transaction_results[rec['project_id']][rec['instrument_id']] = {
