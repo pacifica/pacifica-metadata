@@ -116,7 +116,7 @@ class TestTransactionInfoAPI(CPCommonTest):
             url='{0}/transactioninfo/multisearch?instrument_group_id={1}&project_id=1234a'.format(self.url, 1001))
         self.assertEqual(req.status_code, 200)
 
-        end_date = datetime.date.today() + datetime.timedelta(days = 1)
+        end_date = datetime.date.today() + datetime.timedelta(days=1)
         req = requests.get(
             url='{0}/transactioninfo/summary/{1}/{2}'.format(self.url, '2015-07-01', end_date.isoformat()))
         self.assertEqual(req.status_code, 200)
