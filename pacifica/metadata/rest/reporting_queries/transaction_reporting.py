@@ -43,8 +43,7 @@ class TransactionReporting(QueryBase):
                 'upload_date_end': SummarizeByDate.utc_to_local(
                     rec['latest_upload_date']).date().strftime('%Y-%m-%d'),
                 'project_id': rec['project_id'],
-                'instrument_id': rec['instrument_id'],
-                'uploaded_by_id': rec['uploaded_by_id']
+                'instrument_id': rec['instrument_id']
             }
 
         return transaction_results
