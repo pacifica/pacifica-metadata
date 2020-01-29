@@ -25,7 +25,6 @@ class TransactionReporting(QueryBase):
                 fn.Count(TransSIP.id).alias('transaction_count'),
                 fn.Min(TransSIP.updated).alias('earliest_upload_date'),
                 fn.Max(TransSIP.updated).alias('latest_upload_date'),
-                fn.Min(TransSIP.submitter).alias('uploaded_by_id'),
                 TransSIP.project.alias('project_id'),
                 TransSIP.instrument.alias('instrument_id')
             )
