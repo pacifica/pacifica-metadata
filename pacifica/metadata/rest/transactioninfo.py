@@ -7,6 +7,7 @@ from pacifica.metadata.rest.transaction_queries.transaction_last import Transact
 from pacifica.metadata.rest.transaction_queries.file_lookup import FileLookup
 from pacifica.metadata.rest.transaction_queries.transactions_multi_search import TransactionsMultiSearch
 from pacifica.metadata.rest.transaction_queries.transaction_release_state import TransactionReleaseState
+from pacifica.metadata.rest.reporting_queries.transaction_reporting import TransactionReporting
 
 
 # pylint: disable=too-few-public-methods
@@ -23,3 +24,4 @@ class TransactionInfoAPI(object):
         self.last = TransactionLast()
         self.release_state = TransactionReleaseState()
         self.multisearch = TransactionsMultiSearch()
+        self.summary = TransactionReporting()
