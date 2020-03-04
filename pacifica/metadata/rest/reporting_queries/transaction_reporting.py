@@ -20,6 +20,20 @@ class TransactionReporting(QueryBase):
     def get_transaction_date_range_details(start_date, end_date):
         """Return a transaction set grouped on instrument and project for a given time span."""
         # pylint: disable=no-member
+
+        transsip_alias = TransSIP.alias()
+
+        subquery = (transsip_alias
+                    .select(
+                        transsip_alias.id,
+                        transsip_alias.project,
+                        transsip_alias.instrument,
+                        transsip_alias.updated
+                    )
+                    .where(transsip_alias.updated >= start_date)
+                    .where(transsip_alias.updated <= end_date)
+                    .alias('data_subselect'))
+
         transaction_query = (
             TransSIP().select(
                 fn.Count(TransSIP.id).alias('transaction_count'),
@@ -28,10 +42,16 @@ class TransactionReporting(QueryBase):
                 TransSIP.project.alias('project_id'),
                 TransSIP.instrument.alias('instrument_id')
             )
+            .join(subquery, on=(
+                (TransSIP.id == subquery.c.id_id)
+            ))
             .group_by(TransSIP.project, TransSIP.instrument)
-            .having(fn.Min(TransSIP.updated) >= start_date)
-            .having(fn.Max(TransSIP.updated) <= end_date)
-        )
+            .order_by(TransSIP.project, TransSIP.instrument))
+
+
+
+        print("transsip select =>")
+        print(transaction_query.sql())
         # pylint: enable=no-member
         transaction_results = defaultdict(dict)
 
