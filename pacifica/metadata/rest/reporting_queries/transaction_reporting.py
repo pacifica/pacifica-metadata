@@ -48,10 +48,6 @@ class TransactionReporting(QueryBase):
             .group_by(TransSIP.project, TransSIP.instrument)
             .order_by(TransSIP.project, TransSIP.instrument))
 
-
-
-        print("transsip select =>")
-        print(transaction_query.sql())
         # pylint: enable=no-member
         transaction_results = defaultdict(dict)
 
