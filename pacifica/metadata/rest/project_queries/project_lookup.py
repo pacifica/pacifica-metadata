@@ -5,7 +5,7 @@ import re
 import cherrypy
 from cherrypy import tools, HTTPError
 from peewee import DoesNotExist
-from pacifica.metadata.orm import Projects, Instruments, ProjectInstrument
+from pacifica.metadata.orm import Projects, Instruments, TransSIP
 from pacifica.metadata.rest.project_queries.query_base import QueryBase
 from pacifica.metadata.orm.base import db_connection_decorator
 
@@ -31,7 +31,7 @@ class ProjectLookup(QueryBase):
                 project_id)
             raise HTTPError('404 Not Found', message)
 
-        proj_inst = ProjectInstrument()
+        proj_inst = TransSIP()
         pi_where_clause = proj_inst.where_clause(
             {'project_id': project_id})
         instrument_entries = (Instruments
@@ -41,7 +41,7 @@ class ProjectLookup(QueryBase):
                                   Instruments.active
                               )
                               .order_by(Instruments.id)
-                              .join(ProjectInstrument)
+                              .join(TransSIP)
                               .where(pi_where_clause))
         instruments = {i.id: {
             'id': i.id,
