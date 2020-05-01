@@ -209,17 +209,18 @@ class PacificaModel(Model):
     def where_clause(cls, kwargs):
         """PeeWee specific extension meant to be passed to a PeeWee get or select."""
         where_clause = Expression(1, OP.EQ, 1)
-        if 'include_deleted' not in kwargs and 'deleted' not in kwargs:
-            where_clause &= Expression(
-                getattr(cls, 'deleted'), OP.IS, None)
+        # if 'include_deleted' not in kwargs and 'deleted' not in kwargs:
+        #     where_clause &= Expression(
+        #         getattr(cls, 'deleted'), OP.IS, None)
         if 'deleted' in kwargs:
-            if kwargs['deleted'] is None:
-                where_clause &= Expression(
-                    getattr(cls, 'deleted'), OP.IS, None)
-            else:
+            if kwargs['deleted']:
                 date_obj = datetime_converts(kwargs['deleted'])
                 where_clause &= Expression(
-                    getattr(cls, 'deleted'), OP.EQ, date_obj)
+                getattr(cls, 'deleted'), OP.EQ, date_obj)
+            else:
+                where_clause &= Expression(
+                    getattr(cls, 'deleted'), OP.IS, None)
+
         for date in ['updated', 'created']:
             if date in kwargs:
                 date_obj, date_oper = cls._date_operator_compare(date, kwargs)
