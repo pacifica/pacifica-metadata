@@ -209,14 +209,9 @@ class PacificaModel(Model):
     def where_clause(cls, kwargs):
         """PeeWee specific extension meant to be passed to a PeeWee get or select."""
         where_clause = Expression(1, OP.EQ, 1)
-        if 'deleted' in kwargs:
-            if kwargs['deleted']:
-                date_obj = datetime_converts(kwargs['deleted'])
-                where_clause &= Expression(
-                    getattr(cls, 'deleted'), OP.EQ, date_obj)
-            else:
-                where_clause &= Expression(
-                    getattr(cls, 'deleted'), OP.IS, None)
+        if 'deleted' not in kwargs:
+            where_clause &= Expression(
+                getattr(cls, 'deleted'), OP.IS, None)
 
         for date in ['updated', 'created']:
             if date in kwargs:
@@ -257,7 +252,10 @@ class PacificaModel(Model):
         This structure allows for easy evaluation of updates or current vs old data
         for any object in the database.
         """
+
         where_clause = {k: v for k, v in columns_and_where_clause.items() if v}
+        where_clause['deleted'] = None
+
         columns = list(columns_and_where_clause.keys())
 
         if not columns:
@@ -268,6 +266,8 @@ class PacificaModel(Model):
         hash_dict = {}
         # all_keys_query = cls.select(*[getattr(cls, key) for key in columns])
         all_keys_query = cls.select().where(cls.where_clause(where_clause))
+
+        print(all_keys_query.sql())
 
         # pylint: disable=no-value-for-parameter
         for entry in all_keys_query.execute():
