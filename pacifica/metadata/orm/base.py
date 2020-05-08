@@ -266,8 +266,6 @@ class PacificaModel(Model):
         # all_keys_query = cls.select(*[getattr(cls, key) for key in columns])
         all_keys_query = cls.select().where(cls.where_clause(where_clause))
 
-        print(all_keys_query.sql())
-
         # pylint: disable=no-value-for-parameter
         for entry in all_keys_query.execute():
             # pylint: enable=no-value-for-parameter
