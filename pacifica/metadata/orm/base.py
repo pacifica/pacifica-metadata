@@ -209,9 +209,9 @@ class PacificaModel(Model):
     def where_clause(cls, kwargs):
         """PeeWee specific extension meant to be passed to a PeeWee get or select."""
         where_clause = Expression(1, OP.EQ, 1)
-            if 'deleted' not in kwargs:
-                where_clause &= Expression(
-                    getattr(cls, 'deleted'), OP.IS, None)
+        if 'deleted' not in kwargs:
+            where_clause &= Expression(
+                getattr(cls, 'deleted'), OP.IS, None)
 
         for date in ['updated', 'created']:
             if date in kwargs:
