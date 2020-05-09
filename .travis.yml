@@ -1,108 +1,112 @@
 language: python
 dist: bionic
 services:
-- elasticsearch
+  - elasticsearch
 python: 3.6
 cache:
   directories:
-  - $HOME/.cache/pre-commit
+    - $HOME/.cache/pre-commit
 stages:
-- lint
-- test
-- test-migration
-- test-docker
-- test-docs
-- deploy
+  - lint
+  - test
+  - test-migration
+  - test-docker
+  - test-docs
+  - deploy
 env:
   NOTIFICATIONS_URL: http://127.0.0.1:8080
   PEEWEE_URL: postgres://postgres:@localhost/pacifica_metadata
 script:
-- coverage run --include='pacifica/metadata/*' -m pytest -xv tests/orm
-- coverage run --include='pacifica/metadata/*' -a -m pytest -xv tests/core
-- coverage run --include='pacifica/metadata/*' -a -m pytest -xv tests/rest
-- coverage report -m --fail-under 100
+  - pip uninstall -y pacifica-metadata
+  - cd tests
+  - coverage run --include='*/pacifica/metadata/*' -m pytest -xsv orm
+  - coverage run --include='*/pacifica/metadata/*' -a -m pytest -xsv core
+  - coverage run --include='*/pacifica/metadata/*' -a -m pytest -xsv rest
+  - coverage report -m --fail-under 100
 before_script:
-- sudo mount -o remount,size=25% /var/ramfs
-- pip install ansible
-- ansible-galaxy install pacifica.ansible_pacifica pacifica.ansible_travis
-- ansible-playbook ~/.ansible/roles/pacifica.ansible_travis/molecule/common/playbook.yml -i ~/.ansible/roles/pacifica.ansible_travis/molecule/common/inventory.yml -e "ansible_python_interpreter=/home/travis/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/python travis_virtualenv=python${TRAVIS_PYTHON_VERSION} github_repository=metadata"
-- pushd tests; python cherrypy_catch_test.py & echo $! > cherrypy-catch.pid; popd;
+  - sudo mount -o remount,size=25% /var/ramfs
+  - pip install ansible
+  - ansible-galaxy install pacifica.ansible_pacifica pacifica.ansible_travis
+  - ansible-playbook ~/.ansible/roles/pacifica.ansible_travis/molecule/common/playbook.yml -i ~/.ansible/roles/pacifica.ansible_travis/molecule/common/inventory.yml -e "ansible_python_interpreter=/home/travis/virtualenv/python${TRAVIS_PYTHON_VERSION}/bin/python travis_virtualenv=python${TRAVIS_PYTHON_VERSION} github_repository=metadata"
+  - pushd tests; python cherrypy_catch_test.py & echo $! > cherrypy-catch.pid; popd;
 jobs:
   include:
-  - stage: lint
-    script: pre-commit run -a
-  - python: 3.7
-    script: pre-commit run -a
-  - python: 3.8
-    script: pre-commit run -a
-  - stage: test
-    sudo: required
-  - python: 3.7
-  - python: 3.8
-    script:
-      - coverage run --include='pacifica/metadata/*' --omit='pacifica/metadata/admin_cmd*,pacifica/metadata/orm/sync*' -m pytest -xv tests/orm
-      - coverage run --include='pacifica/metadata/*' --omit='pacifica/metadata/admin_cmd*,pacifica/metadata/orm/sync*' -a -m pytest -xv tests/core
-      - coverage run --include='pacifica/metadata/*' --omit='pacifica/metadata/admin_cmd*,pacifica/metadata/orm/sync*' -a -m pytest -xv tests/rest
-      - coverage report -m --fail-under 100
-  - stage: test-migration
-    sudo: required
-    script: >
-      curl -o apgdiff.zip https://www.apgdiff.com/download/apgdiff-2.4-bin.zip;
-      unzip apgdiff.zip;
-      pip install pacifica-metadata==0.3.1 'elasticsearch<7';
-      export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata_upgrade";
-      pacifica-metadata-cmd dbsync;
-      pip install .;
-      pacifica-metadata-cmd dbsync;
-      export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata";
-      pacifica-metadata-cmd dbsync;
-      pg_dump -U postgres -f orig_schema.dump.sql pacifica_metadata;
-      pg_dump -U postgres -f update_schema.dump.sql pacifica_metadata_upgrade;
-      java -jar apgdiff-2.4/apgdiff-2.4.jar update_schema.dump.sql orig_schema.dump.sql;
-      if [[ $(java -jar apgdiff-2.4/apgdiff-2.4.jar update_schema.dump.sql orig_schema.dump.sql | wc -l) -gt 0 ]] ; then exit -1; fi
-  - stage: test-docker
-    sudo: required
-    python: 3.8
-    services:
-    - docker
-    before_script: skip
-    script: >
-      docker-compose build --pull;
-      docker-compose up -d;
-      MAX_TRIES=60;
-      HTTP_CODE=$(curl -sL -w "%{http_code}\\n" localhost:8121/keys -o /dev/null || true);
-      while [[ $HTTP_CODE != 200 && $MAX_TRIES > 0 ]] ; do
-        sleep 1;
+    - stage: lint
+      script: pre-commit run -a
+    - python: 3.7
+      script: pre-commit run -a
+    - python: 3.8
+      script: pre-commit run -a
+    - stage: test
+      sudo: required
+    - python: 3.7
+    - python: 3.8
+      script:
+        - pip uninstall -y pacifica-metadata
+        - cd tests
+        - coverage run --include='*/pacifica/metadata/*' --omit='*/pacifica/metadata/admin_cmd*,*/pacifica/metadata/orm/sync*' -m pytest -xv orm
+        - coverage run --include='*/pacifica/metadata/*' --omit='*/pacifica/metadata/admin_cmd*,*/pacifica/metadata/orm/sync*' -a -m pytest -xv core
+        - coverage run --include='*/pacifica/metadata/*' --omit='*/pacifica/metadata/admin_cmd*,*/pacifica/metadata/orm/sync*' -a -m pytest -xv rest
+        - coverage report -m --fail-under 100
+    - stage: test-migration
+      sudo: required
+      script: >
+        curl -o apgdiff.zip https://www.apgdiff.com/download/apgdiff-2.4-bin.zip;
+        unzip apgdiff.zip;
+        pip install pacifica-metadata==0.3.1 'elasticsearch<7';
+        export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata_upgrade";
+        pacifica-metadata-cmd dbsync;
+        pip install .;
+        pacifica-metadata-cmd dbsync;
+        export PEEWEE_URL="postgres://postgres:@localhost/pacifica_metadata";
+        pacifica-metadata-cmd dbsync;
+        pg_dump -U postgres -f orig_schema.dump.sql pacifica_metadata;
+        pg_dump -U postgres -f update_schema.dump.sql pacifica_metadata_upgrade;
+        java -jar apgdiff-2.4/apgdiff-2.4.jar update_schema.dump.sql orig_schema.dump.sql;
+        if [[ $(java -jar apgdiff-2.4/apgdiff-2.4.jar update_schema.dump.sql orig_schema.dump.sql | wc -l) -gt 0 ]] ; then exit -1; fi
+    - stage: test-docker
+      sudo: required
+      python: 3.8
+      services:
+      - docker
+      before_script: skip
+      script: >
+        docker-compose build --pull;
+        docker-compose up -d;
+        MAX_TRIES=60;
         HTTP_CODE=$(curl -sL -w "%{http_code}\\n" localhost:8121/keys -o /dev/null || true);
-        MAX_TRIES=$(( MAX_TRIES - 1 ));
-      done;
-      pip install .;
-      cd tests; python test_files/loadit_test.py
-  - stage: test-docs
-    python: 3.8
-    before_script: skip
-    script: >
-      pip install .;
-      cd docs;
-      sphinx-build -T -E -b readthedocs -d _build/doctrees-readthedocs -D language=en . _build/html;
-      sphinx-build -T -b readthedocssinglehtmllocalmedia -d _build/doctrees-readthedocssinglehtmllocalmedia -D language=en . _build/localmedia;
-      sphinx-build -b latex -D language=en -d _build/doctrees . _build/latex;
-      sphinx-build -T -b epub -d _build/doctrees-epub -D language=en . _build/epub
-  - stage: deploy
-    services: []
-    language: python
-    before_install: skip
-    before_script: skip
-    script: skip
-    python: 3.8
-    deploy:
-      skip_cleanup: true
-      provider: pypi
-      user: dmlb2000
-      distributions: sdist bdist_wheel
-      password:
-        secure: QldhKXUmkWsrHuI0JLEmN65A5nwC2JqG4r80BwmAyAVYSJ3OOX3a91S0N30hUL3/BZp12+0VUwyLYYfwFvOGx5lymkmjLQXtgT/tUFHnyci1JPsBK3KmSNixqGzRQGvtuiSVutXmuD5+pAR2RoZ0NcPUPwZ8wZ/Xqgq6YdSO7EpqT607F+eV8lOZzamMkrZ2qESf17w3KmCbzwNupiGUyWBd2SuPCgQS9K8hjwye0oPijSUsqTTkHKr5hEsmdv1eUbLAGZzoEMZyyXYpSsIu0X6DBZRt1k5m9XEw2wQlVeNeayPlgva/QlswzcUbdCZUpAKcaTm8X2pzSfYdzX3VksqyGHHeC93HiHZBLkVlqa4H1aHJPLJRZp0kvadq1DQWO1rh8gWl/QhKiqDk8J4KqsFaoW8aFK+x0YANJXitQJ5xQve85QY/d+M9hHPgkawHbhkssbVLAjzLgvUpbvcRgghmZ6/Aafo74KXuxfAtp4xThEYXT0zoVzULgVHYMWJFNeLLvimvjRozgbC98mqr5lFxhQG9vmTX5hB/AcljisdOzHrPftyZPvSFMqgdiJjqcHrf5uuVBP5JAxM7PKqCHXTtxzTgEi58H/CFzAf1/2Vnh07nN31/5IdNwttonzb2EdbToz3ReCIf8roQGnt/hhNi9UiupOe9cFvXoWCWmZk=
-      on:
-        tags: true
+        while [[ $HTTP_CODE != 200 && $MAX_TRIES > 0 ]] ; do
+          sleep 1;
+          HTTP_CODE=$(curl -sL -w "%{http_code}\\n" localhost:8121/keys -o /dev/null || true);
+          MAX_TRIES=$(( MAX_TRIES - 1 ));
+        done;
+        pip install .;
+        cd tests; python test_files/loadit_test.py
+    - stage: test-docs
+      python: 3.8
+      before_script: skip
+      script: >
+        cd docs;
+        sphinx-build -T -E -b readthedocs -d _build/doctrees-readthedocs -D language=en . _build/html;
+        sphinx-build -T -b readthedocssinglehtmllocalmedia -d _build/doctrees-readthedocssinglehtmllocalmedia -D language=en . _build/localmedia;
+        sphinx-build -b latex -D language=en -d _build/doctrees . _build/latex;
+        sphinx-build -T -b epub -d _build/doctrees-epub -D language=en . _build/epub
+    - stage: deploy
+      services: []
+      language: python
+      before_install: skip
+      before_script: skip
+      script: skip
+      python: 3.8
+      deploy:
+        skip_cleanup: true
+        provider: pypi
+        user: dmlb2000
+        distributions: sdist bdist_wheel
+        password:
+          secure: QldhKXUmkWsrHuI0JLEmN65A5nwC2JqG4r80BwmAyAVYSJ3OOX3a91S0N30hUL3/BZp12+0VUwyLYYfwFvOGx5lymkmjLQXtgT/tUFHnyci1JPsBK3KmSNixqGzRQGvtuiSVutXmuD5+pAR2RoZ0NcPUPwZ8wZ/Xqgq6YdSO7EpqT607F+eV8lOZzamMkrZ2qESf17w3KmCbzwNupiGUyWBd2SuPCgQS9K8hjwye0oPijSUsqTTkHKr5hEsmdv1eUbLAGZzoEMZyyXYpSsIu0X6DBZRt1k5m9XEw2wQlVeNeayPlgva/QlswzcUbdCZUpAKcaTm8X2pzSfYdzX3VksqyGHHeC93HiHZBLkVlqa4H1aHJPLJRZp0kvadq1DQWO1rh8gWl/QhKiqDk8J4KqsFaoW8aFK+x0YANJXitQJ5xQve85QY/d+M9hHPgkawHbhkssbVLAjzLgvUpbvcRgghmZ6/Aafo74KXuxfAtp4xThEYXT0zoVzULgVHYMWJFNeLLvimvjRozgbC98mqr5lFxhQG9vmTX5hB/AcljisdOzHrPftyZPvSFMqgdiJjqcHrf5uuVBP5JAxM7PKqCHXTtxzTgEi58H/CFzAf1/2Vnh07nN31/5IdNwttonzb2EdbToz3ReCIf8roQGnt/hhNi9UiupOe9cFvXoWCWmZk=
+        on:
+          tags: true
 install:
-- pip install -r requirements-dev.txt
+  - pip install .
+  - pip install -r requirements-dev.txt
