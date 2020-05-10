@@ -36,6 +36,7 @@ for obj_cls in ORM_OBJECTS:
     print(head_line)
     column_tuples = []
     # pylint: disable=protected-access
+    # pylint: disable=no-member
     for obj_attr_name, obj_cls_attr in obj_cls._meta.fields.items():
         attr_type = type(obj_cls_attr)
         # pylint: disable=too-many-boolean-expressions

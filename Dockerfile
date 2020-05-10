@@ -1,10 +1,8 @@
-FROM python:3.6
+FROM python:3.8
 
 WORKDIR /usr/src/app
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir uwsgi pymysql psycopg2 cryptography
 COPY . .
-RUN pip install .
+RUN pip install --no-cache-dir .
+RUN pip install --no-cache-dir uwsgi pymysql psycopg2 cryptography
 EXPOSE 8121
 ENTRYPOINT [ "/bin/bash", "/usr/src/app/entrypoint.sh" ]

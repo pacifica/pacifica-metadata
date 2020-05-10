@@ -43,7 +43,7 @@ def _update_relationships():
             rel_obj.display_name = new_parts['display_name']
             rel_obj.description = new_parts['description']
             rel_obj.save()
-        except DoesNotExist:
+        except DoesNotExist:  # pragma: no cover old code
             # it may not exist since the original table was created with principal
             pass
 
