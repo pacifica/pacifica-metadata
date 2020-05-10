@@ -212,6 +212,10 @@ class PacificaModel(Model):
         if 'deleted' not in kwargs:
             where_clause &= Expression(
                 getattr(cls, 'deleted'), OP.IS, None)
+        elif kwargs['deleted']:
+            date_obj = datetime_converts(kwargs['deleted'])
+            where_clause &= Expression(
+                getattr(cls, 'deleted'), OP.EQ, date_obj)
 
         for date in ['updated', 'created']:
             if date in kwargs:
