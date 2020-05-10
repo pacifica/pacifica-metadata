@@ -179,15 +179,8 @@ class TestUpgradePaths(AdminCmdBase, TestCase):
         """We need to verify that dbsync will work with empty db."""
         self._database_sanity(self)
 
-    @AdminCmdBase.setup_upgrade_path('0.3.1')
+    @AdminCmdBase.setup_upgrade_path('0.10.3')
     def test_full_upgrade(self):
-        """Test the full upgrade."""
-        with self.assertRaises(peewee.DoesNotExist):
-            Relationships.select().where(Relationships.name == 'something_not_there').get()
-        self._database_sanity(self)
-
-    @AdminCmdBase.setup_upgrade_path('0.3.1', '0.10.3')
-    def test_partial_upgrade(self):
         """Test the full upgrade."""
         with self.assertRaises(peewee.DoesNotExist):
             Relationships.select().where(Relationships.name == 'principle_investigator').get()
@@ -197,7 +190,7 @@ class TestUpgradePaths(AdminCmdBase, TestCase):
 class TestAdminChk(AdminCmdBase, TestCase):
     """Test the admin chk commands to get coverage."""
 
-    @AdminCmdBase.setup_upgrade_path('0.3.1', dbsync=False)
+    @AdminCmdBase.setup_upgrade_path('0.10.3', dbsync=False)
     def test_admin_chk(self):
         """Check the database and admin commands return values."""
         self.assertEqual(main('dbchk'), -1, 'the dbchk command should exit -1 with out of date db')

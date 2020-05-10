@@ -141,6 +141,7 @@ class TestCherryPyAPI(CPCommonTest):
         self.assertEqual(chk_obj.id, 4096)
         chk_obj = Keys.get_by_id(4097)
         self.assertEqual(chk_obj.id, 4097)
+        # pylint: disable=no-member
         obj._meta.database.close()
         # pylint: enable=protected-access
 
