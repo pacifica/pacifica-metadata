@@ -91,7 +91,7 @@ class TestDBDates(TestBase):
             'created_operator': 'LT'
         }
         objs = self.base_where_clause_search(third_obj, search_expr)
-        self.assertEqual(len(objs), 2)
+        self.assertEqual(len(objs), 1)
         search_expr = {
             'created': '0',
             'created_0': date_check_min.replace(microsecond=0).isoformat(),

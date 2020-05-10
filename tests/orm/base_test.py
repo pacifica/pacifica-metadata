@@ -134,7 +134,10 @@ class TestBase(TestCase):
         """
         obj = self.base_create_obj(self.obj_cls, obj_hash)
         for (key, val) in obj_hash.items():
-            chk_obj = self.base_where_clause_search(obj, {key: val})[0]
+            test_kwargs = {key: val}
+            if key != 'deleted':
+                test_kwargs['deleted'] = None
+            chk_obj = self.base_where_clause_search(obj, test_kwargs)[0]
             chk_obj_hash = chk_obj.to_hash()
             for chkkey in obj_hash.keys():
                 self.assertEqual(
