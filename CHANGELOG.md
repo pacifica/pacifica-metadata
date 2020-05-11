@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Endpoints for querying for status of data
 - Endpoints for querying for reporting of data
 
+## [0.13.0] - 2020-05-10
+### Changed
+- Pull #271 and #275 Add Transaction Reporting API by [@kauberry](https://github.com/kauberry)
+- Pull #278 Project Lookup Refinement by [@dmlb2000](https://github.com/dmlb2000)
+- Pull #281 Update Packaging (pip>=20) by [@dmlb2000](https://github.com/dmlb2000)
+- Pull #280 Default Filter Soft Deletes by [@kauberry](https://github.com/kauberry)
+
 ## [0.12.4] - 2019-12-30
 ### Changed
 - Pull #265 Add support for Python 3.7 and 3.8 by [@dmlb2000](https://github.com/dmlb2000)
