@@ -26,10 +26,10 @@ store the JSON data:
 ```
 
 Then, provide the contents of the new file as the body for a HTTP PUT request
-using the `curl` command:
+using the `curl` command with the HTTP header specified:
 
 ```sh
-curl -X PUT -T create.json 'http://localhost:8121/users'
+curl -H 'Content-Type: application/json' -X PUT -T create.json 'http://localhost:8121/users'
 ```
 
 ### Reading an Object
@@ -138,7 +138,7 @@ Then, provide the contents of the new file as the body for a HTTP POST request
 using the `curl` command:
 
 ```sh
-curl -X POST -T update.json 'http://localhost:8121/users?last_name=Doe&first_name=John'
+curl -H 'Content-Type: application/json' -X POST -T update.json 'http://localhost:8121/users?last_name=Doe&first_name=John'
 ```
 
 Finally, verify the modifications by retrieving the most recent version of the
