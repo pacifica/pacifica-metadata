@@ -303,4 +303,4 @@ class TestClient(TestCase):
             client.update(class_type, params, post_body)
         except PMClientError as ex:
             self.assertTrue('301' in str(ex))
-            self.assertTrue('This is the error.'in str(ex))
+            self.assertTrue('This is the error.' in str(ex))
