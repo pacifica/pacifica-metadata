@@ -60,6 +60,8 @@ def requests_retry_session(retries=3, backoff_factor=0.5, status_forcelist=(500,
 # The complication here is that older versions of the metadata service can't install
 # in Python versions > 3.7. The psycopg2 package required for those older versions
 # do not compile against Python > 3.7.
+
+
 @pytest.mark.skipif(sys.version_info > (3, 8), reason='requires python3.7 or less')
 class AdminCmdBase:
     """Test base class for setting up update environments."""

@@ -257,7 +257,6 @@ class PacificaModel(Model):
         for any object in the database.
         """
         where_clause = {k: v for k, v in columns_and_where_clause.items() if v}
-        where_clause['deleted'] = None
 
         columns = list(columns_and_where_clause.keys())
 

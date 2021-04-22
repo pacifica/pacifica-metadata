@@ -2,3 +2,6 @@
 min-similarity-lines=8
 ignore-imports=yes
 max-line-length=120
+
+[MESSAGES CONTROL]
+disable=super-with-arguments, raise-missing-from
